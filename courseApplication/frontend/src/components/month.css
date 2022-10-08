@@ -1,0 +1,32 @@
+.month{
+    display: grid;
+    grid-template-areas: 'mon tue wed thur fri sat sun'
+}
+
+.day0{
+    grid-column: 1;
+}
+
+.day1{
+    grid-column: 2;
+}
+
+.day2{
+    grid-column: 3;
+}
+
+.day3{
+    grid-column: 4;
+}
+
+.day4{
+    grid-column: 5;
+}
+
+.day5{
+    grid-column: 6;
+}
+
+.day6{
+    grid-column: 7;
+}
