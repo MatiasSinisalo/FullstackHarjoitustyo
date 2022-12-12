@@ -1,4 +1,4 @@
-require("dotenv").config()
+const config = require('./config')
 const { ApolloServer, gql } = require('apollo-server')
 const resolvers = require('./resolvers')
 const typeDefs = require('./typedefs')
@@ -7,7 +7,7 @@ const mongoose = require ('mongoose')
 
 
 
-mongoose.connect(process.env.MONGODB_URI).then(() => {
+mongoose.connect(config.MONGODB_URI).then(() => {
     console.log("connected to database")
 })
 
