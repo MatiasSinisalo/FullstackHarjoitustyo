@@ -1,10 +1,11 @@
 require("dotenv").config()
 const { ApolloServer, gql } = require('apollo-server')
+const resolvers = require('./resolvers')
 const User = require('./models/user')
 const mongoose = require ('mongoose')
 const bcrypt = require('bcrypt')
 
-const userService = require('./services/userService')
+
 
 mongoose.connect(process.env.MONGODB_URI).then(() => {
     console.log("connected to database")
@@ -43,21 +44,6 @@ const typeDefs = gql`
     }
 
 `
-const resolvers  = {
-    Query: {
-        allUsers: async () => {
-            const allUsers = User.find({})
-            return allUsers
-        }
-    },
-    Mutation: {
-        createUser: async (root, args) => {
-            const newUser = args
-            const createdUser = userService.createNewUser(newUser.username, newUser.name, newUser.password)
-            return createdUser
-        }
-    }
-}
 
 
 
