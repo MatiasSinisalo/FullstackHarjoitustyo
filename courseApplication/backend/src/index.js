@@ -2,9 +2,8 @@ require("dotenv").config()
 const { ApolloServer, gql } = require('apollo-server')
 const resolvers = require('./resolvers')
 const typeDefs = require('./typedefs')
-const User = require('./models/user')
 const mongoose = require ('mongoose')
-const bcrypt = require('bcrypt')
+
 
 
 
