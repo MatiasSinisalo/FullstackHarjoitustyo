@@ -4,6 +4,8 @@ const User = require('./models/user')
 const mongoose = require ('mongoose')
 const bcrypt = require('bcrypt')
 
+const userService = require('./services/userService')
+
 mongoose.connect(process.env.MONGODB_URI).then(() => {
     console.log("connected to database")
 })
@@ -51,20 +53,8 @@ const resolvers  = {
     Mutation: {
         createUser: async (root, args) => {
             const newUser = args
-
-            const hashedPassword = await bcrypt.hash(newUser.username, 10)
-            const userToSave = {
-                username: newUser.username,
-                name: newUser.name,
-                passwordHash: hashedPassword
-            }
-
-            const userObj = User(userToSave)
-            await userObj.save()
-
-            delete(newUser.password)
-            console.log(newUser)
-            return newUser
+            const createdUser = userService.createNewUser(newUser.username, newUser.name, newUser.password)
+            return createdUser
         }
     }
 }
