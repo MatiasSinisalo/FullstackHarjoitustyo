@@ -2,7 +2,7 @@ const User = require('../models/user')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const config = require('../config')
-
+const {UserInputError} = require('apollo-server')
 
 const createNewUser = async (username, name, password) => {
     const newUser = {
@@ -32,7 +32,7 @@ const logIn = async (username, password) => {
     if(userInDatabase){
         const validPassword = await bcrypt.compare(password, userInDatabase.passwordHash)
        
-        if(validPassword == true){
+        if(validPassword){
            
             const userInfo = {
                 username: userInDatabase.username,
@@ -43,6 +43,9 @@ const logIn = async (username, password) => {
 
         }
     }
+
+    throw new UserInputError("invalid username or password")
+    return null
 }
 
 
