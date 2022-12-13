@@ -5,7 +5,10 @@ const typeDefs = require('../typedefs')
 const resolvers = require('../resolvers')
 const config = require('../config')
 
-const userCreateQuery = 'mutation Mutation {  createUser(password: "12345", name: "name", username: "username2") {    name    username  }}'
+const User = require('../models/user')
+
+
+const userCreateQuery = 'mutation Mutation {  createUser(password: "12345", name: "name", username: "username") {    name    username  }}'
 const allUsersQuery = 'query AllUsers {  allUsers {    name    username  }}'
 
 const { ApolloServer, gql } = require('apollo-server')
@@ -23,6 +26,11 @@ mongoose.set('strictQuery', false)
 beforeAll(async () => {
    const url = await testServer.listen()
    await mongoose.connect(config.MONGODB_URI)
+   
+   //we use different database for tests, lets clear the database
+   await User.deleteMany({})
+
+
    console.log(`test server ready`)
 })
 
@@ -33,12 +41,16 @@ describe('user tests', () => {
         const response = await testServer.executeOperation({query: userCreateQuery, variables: {}})
         console.log(response)
         expect(response.errors).toBeUndefined();
-        expect(response.createUser === {name: 'name', username: 'username2'})
+        expect(response.createUser === {name: 'name', username: 'username'})
     
     })
 })
 
-afterAll(() => {
+afterAll(async () => {
+
+    //we use different database for tests, lets clear the database
+    await User.deleteMany({})
+
     mongoose.connection.close()
 })
 
