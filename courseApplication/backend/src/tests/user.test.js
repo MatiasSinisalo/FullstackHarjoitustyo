@@ -36,13 +36,17 @@ beforeAll(async () => {
 
 describe('user tests', () => {
 
-    test('user create query returns created user correctly', async () => {  
+    test('user create query returns and saves created user correctly', async () => {  
        
         const response = await testServer.executeOperation({query: userCreateQuery, variables: {}})
         console.log(response)
         expect(response.errors).toBeUndefined();
-        expect(response.createUser === {name: 'name', username: 'username'})
-    
+        expect(response.data.createUser).toEqual({name: 'name', username: 'username'})
+
+        const usersQuery = await User.find({username: 'username'})
+        expect(usersQuery.length).toEqual(1)
+        expect(usersQuery[0].username).toEqual('username')
+        expect(usersQuery[0].name).toEqual('name')
     })
 })
 
