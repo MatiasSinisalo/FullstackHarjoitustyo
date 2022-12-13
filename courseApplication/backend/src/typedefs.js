@@ -7,6 +7,10 @@ const typeDefs = gql`
     }
 
     
+    type Token{
+        value: String!
+    }
+
     type Query{
         allUsers: [User!]!
     }
@@ -18,6 +22,11 @@ const typeDefs = gql`
             name: String!
             password: String!
         ):User
+
+        logIn(
+            username: String!
+            password: String!
+        ):Token
     }
 
 `

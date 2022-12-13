@@ -15,7 +15,15 @@ const resolvers  = {
             const newUser = args
             const createdUser = userService.createNewUser(newUser.username, newUser.name, newUser.password)
             return createdUser
+        },
+        logIn: async (root, args) => {
+            const username = args.username
+            const password = args.password
+
+            const token = userService.logIn(username, password)
+            return {value: token}
         }
+
     }
 }
 

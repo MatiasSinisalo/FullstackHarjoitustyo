@@ -4,9 +4,6 @@ const resolvers = require('./resolvers')
 const typeDefs = require('./typedefs')
 const mongoose = require ('mongoose')
 
-
-
-
 mongoose.connect(config.MONGODB_URI).then(() => {
     console.log("connected to database")
 })
@@ -15,7 +12,7 @@ mongoose.connect(config.MONGODB_URI).then(() => {
 const start = () => {
     const server = new ApolloServer({
         typeDefs,
-        resolvers ,
+        resolvers,
     })
     
     server.listen().then(({url}) => {
