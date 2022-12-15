@@ -8,3 +8,5 @@ mutation LogIn($username: String!, $password: String!) {
     }
   }
 `
+
+module.exports = {LOGIN}
