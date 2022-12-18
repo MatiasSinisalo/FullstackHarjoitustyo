@@ -5,9 +5,7 @@ const userService = require('./services/userService')
 const resolvers  = {
     Query: {
         allUsers: async () => {
-            console.log("hello")
             const allUsers = await User.find({})
-            console.log("there")
             return allUsers
         },
         me: async (root, args, context) => {
