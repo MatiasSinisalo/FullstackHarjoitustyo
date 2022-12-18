@@ -117,7 +117,7 @@ describe('user tests', () => {
             }
 
             const currentUserQuery = await request('http://localhost:4000/').post('/').send(queryForCurrentUser)
-            console.log(currentUserQuery)
+           
             expect(currentUserQuery.body.data).toEqual(null)
         })
 
@@ -134,7 +134,7 @@ describe('user tests', () => {
             }
 
             const currentUserQuery = await request('http://localhost:4000/').post('/').send(queryForCurrentUser).set('Authorization', authorization)
-            console.log(currentUserQuery)
+           
             expect(currentUserQuery.body.data).toEqual(null)
         })
     })

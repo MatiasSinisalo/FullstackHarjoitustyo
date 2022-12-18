@@ -6,7 +6,7 @@ const context = async ({ req }) => {
    {
     return {userForToken: null}
    }
-   console.log("req")
+   
    const authorization = req.headers.authorization
    if(!authorization)
    {
