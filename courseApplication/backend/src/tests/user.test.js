@@ -120,6 +120,23 @@ describe('user tests', () => {
             console.log(currentUserQuery)
             expect(currentUserQuery.body.data).toEqual(null)
         })
+
+        test('query "Me" returns null if invalid token is given', async () => {
+            const response = await testServer.executeOperation({query: userCreateQuery, variables: {}})
+            const logInResponse = await testServer.executeOperation({query: userLogInQuery, variables: {username: "username", password: "12345"}})
+            const token = logInResponse.data.logIn
+            
+            const authorization = `bearer ${token.value.toString()}abc`
+            
+            const queryForCurrentUser = {
+                query: meQuery,
+                variables: {},
+            }
+
+            const currentUserQuery = await request('http://localhost:4000/').post('/').send(queryForCurrentUser).set('Authorization', authorization)
+            console.log(currentUserQuery)
+            expect(currentUserQuery.body.data).toEqual(null)
+        })
     })
 })
 

@@ -15,12 +15,21 @@ const context = async ({ req }) => {
    
    if(authorization.toLowerCase().startsWith('bearer '))
    {
-    const token = jwt.verify(authorization.substring(7), config.SECRET)
-    const userForToken = await User.findById(token.id)
-    if(userForToken)
+    //jwt verify can fail and cause internal server error if the token is invalid
+    try
     {
-        return {userForToken}
+        const token = jwt.verify(authorization.substring(7), config.SECRET)
+        const userForToken = await User.findById(token.id)
+        if(userForToken)
+        {
+            return {userForToken}
+        }
     }
+    catch
+    {
+        return {userForToken: null}   
+    }
+
    }
 
    return {userForToken: null}
