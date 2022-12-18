@@ -22,7 +22,6 @@ const createNewUser = async (username, name, password) => {
     await userObj.save()
 
     delete(newUser.password)
-    console.log(newUser)
     return newUser
 }
 

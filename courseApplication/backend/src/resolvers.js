@@ -12,7 +12,7 @@ const resolvers  = {
         },
         me: async (root, args, context) => {
             if(!context.userForToken){
-                throw new UserInputError("UnAuthorized!")
+                throw new UserInputError("Unauthorized")
             }
 
             const currentUserInformation = userService.getUser(context.userForToken)

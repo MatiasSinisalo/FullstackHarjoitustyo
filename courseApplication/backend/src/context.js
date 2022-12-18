@@ -2,16 +2,15 @@ const config = require("./config")
 const User = require("./models/user")
 const jwt = require('jsonwebtoken')
 const context = async ({ req }) => {
-   
    if(!req)
    {
-    return null
+    return {userForToken: null}
    }
-   
+   console.log("req")
    const authorization = req.headers.authorization
    if(!authorization)
    {
-    return null
+    return {userForToken: null}
    }
    
    if(authorization.toLowerCase().startsWith('bearer '))
@@ -24,7 +23,8 @@ const context = async ({ req }) => {
     }
    }
 
-   return null
+   return {userForToken: null}
+   
 }
 
 module.exports = context
