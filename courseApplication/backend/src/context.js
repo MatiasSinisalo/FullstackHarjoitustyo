@@ -8,7 +8,6 @@ const context = async ({ req }) => {
     return null
    }
    
-   console.log(req)
    const authorization = req.headers.authorization
    if(!authorization)
    {
@@ -19,7 +18,6 @@ const context = async ({ req }) => {
    {
     const token = jwt.verify(authorization.substring(7), config.SECRET)
     const userForToken = await User.findById(token.id)
-    console.log(userForToken)
     if(userForToken)
     {
         return {userForToken}
