@@ -26,6 +26,11 @@ const createNewUser = async (username, name, password) => {
     return newUser
 }
 
+const getUser = async (userId) => {
+    const user = await User.findById(userId)
+    return user
+}
+
 const logIn = async (username, password) => {
     const userInDatabase = await User.findOne({username: username})
   
@@ -50,4 +55,4 @@ const logIn = async (username, password) => {
 
 
 
-module.exports = {createNewUser, logIn}
+module.exports = {createNewUser, logIn, getUser}

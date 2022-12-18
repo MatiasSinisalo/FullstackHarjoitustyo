@@ -1,3 +1,4 @@
+const { UserInputError } = require('apollo-server-core')
 const User = require('./models/user')
 const userService = require('./services/userService')
 
@@ -8,6 +9,14 @@ const resolvers  = {
             const allUsers = await User.find({})
             console.log("there")
             return allUsers
+        },
+        me: async (root, args, context) => {
+            if(!context.userForToken){
+                throw new UserInputError("UnAuthorized!")
+            }
+
+            const currentUserInformation = userService.getUser(context.userForToken)
+            return currentUserInformation
         }
     },
     Mutation: {
