@@ -9,10 +9,7 @@ import Dashboard from "./components/Dashboard";
 import Messages from "./components/Messages";
 import LogIn from "./components/LogIn";
 
-
-
-
-function App() {
+const App = () =>{
   const courses = [
     {
       id: 0,
