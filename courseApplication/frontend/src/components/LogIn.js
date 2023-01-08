@@ -27,9 +27,9 @@ const LogIn = () =>{
   
 
       <form onSubmit={submitLogInForm}>
-        <input type = "text" name = "username"></input>
+        <input id="usernameInputField" type = "text" name = "username"></input>
         <br></br>
-        <input type="password" name="password"></input>
+        <input id="passwordInputField" type="password" name="password"></input>
         <br></br>
         <input type = "submit" value="LogIn"></input>
       </form>
