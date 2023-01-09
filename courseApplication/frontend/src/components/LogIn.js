@@ -7,13 +7,12 @@ const LogIn = () =>{
     
     
     const submitLogInForm = async (event) => {
-      console.log("trying to log in")
       event.preventDefault()
       const username = event.target.username.value
       const password = event.target.password.value
       
       const token = await LogInAsUser(username, password)
-      console.log(token)
+      
       if(token)
       {
         navigate('/dashboard')
