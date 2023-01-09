@@ -3,6 +3,7 @@ import {
   Routes, Route, Link,
   useParams
 } from "react-router-dom"
+import { useState } from "react";
 import Calendar from "./components/Calendar";
 import {CourseBrowser, CreateCourse, Course} from "./components/Course";
 import Dashboard from "./components/Dashboard";
@@ -11,7 +12,9 @@ import LogIn from "./components/LogIn";
 import { useUserLogIn } from './services/logInService'
 import {useNavigate} from 'react-router-dom'
 
+
 const App = () =>{
+  const [user, setUser] = useState({username: null, token: null})
   const courses = [
     {
       id: 0,
@@ -29,6 +32,7 @@ const App = () =>{
     const token = await LogInAsUser(username, password)
     if(token)
     {
+      setUser({username: "not implemented yet", token: token.value})
       navigate('/dashboard')
     }
   } 
