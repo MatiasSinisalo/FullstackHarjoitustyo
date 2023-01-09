@@ -1,11 +1,11 @@
-import { useMutation } from '@apollo/client'
+import client from '../client'
 import {LOGIN} from '../queries/userQueries'
 
 export const useUserLogIn = () => {
-    const [login, loginQueryResult] = useMutation(LOGIN)
+   
     
     const getToken = async (username, password) => {
-        const result = await login({variables: {username, password}})
+        const result = await client.mutate({mutation: LOGIN, variables: {username, password}})
         if(result.data.logIn)
         {
             console.log("logged in")
