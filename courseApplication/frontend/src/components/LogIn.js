@@ -12,7 +12,8 @@ const LogIn = () =>{
       const username = event.target.username.value
       const password = event.target.password.value
       
-      const token = LogInAsUser(username, password)
+      const token = await LogInAsUser(username, password)
+      console.log(token)
       if(token)
       {
         navigate('/dashboard')
