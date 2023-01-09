@@ -8,6 +8,8 @@ import {CourseBrowser, CreateCourse, Course} from "./components/Course";
 import Dashboard from "./components/Dashboard";
 import Messages from "./components/Messages";
 import LogIn from "./components/LogIn";
+import { useUserLogIn } from './services/logInService'
+import {useNavigate} from 'react-router-dom'
 
 const App = () =>{
   const courses = [
@@ -20,12 +22,21 @@ const App = () =>{
       name: "dev2"
     }
   ]
-
+  const navigate = useNavigate()
+  
+  const LogInAsUser = useUserLogIn()
+  const handleLogIn = async (username, password) => {
+    const token = await LogInAsUser(username, password)
+    if(token)
+    {
+      navigate('/dashboard')
+    }
+  } 
 
   return (
-    <Router>
+    
       <Routes>
-        <Route path="/" element={<LogIn/>}/>
+        <Route path="/" element={<LogIn handleLogIn={handleLogIn}/>}/>
         <Route path="/dashboard" element={<Dashboard/>}/>
         <Route path="/calendar" element={<Calendar/>}/>
         <Route path="/messages" element={<Messages/>}/>
@@ -33,7 +44,7 @@ const App = () =>{
         <Route path="/CreateCourse" element={<CreateCourse/>}/>
         <Route path="/course/:id" element={<Course courses={courses}/>}/>
       </Routes>
-    </Router>
+    
   );
 }
 

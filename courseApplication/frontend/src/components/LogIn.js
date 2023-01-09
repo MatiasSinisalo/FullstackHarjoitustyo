@@ -1,23 +1,9 @@
-import {useNavigate} from 'react-router-dom'
-import { useUserLogIn } from '../services/logInService'
-
-const LogIn = () =>{
-    const navigate = useNavigate()
-    const LogInAsUser = useUserLogIn()
-    
-    
+const LogIn = ({handleLogIn}) =>{
     const submitLogInForm = async (event) => {
       event.preventDefault()
       const username = event.target.username.value
       const password = event.target.password.value
-      
-      const token = await LogInAsUser(username, password)
-      
-      if(token)
-      {
-        navigate('/dashboard')
-      }
-    
+      handleLogIn(username, password)
     }
 
 
