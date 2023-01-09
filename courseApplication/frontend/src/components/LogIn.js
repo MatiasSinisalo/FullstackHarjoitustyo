@@ -1,9 +1,9 @@
-import { useMutation } from '@apollo/client'
-import {LOGIN} from '../queries/userQueries'
 import {useNavigate} from 'react-router-dom'
+import { useUserLogIn } from '../services/logInService'
+
 const LogIn = () =>{
     const navigate = useNavigate()
-    const [login, loginQueryResult] = useMutation(LOGIN)
+    const LogInAsUser = useUserLogIn()
     
     
     const submitLogInForm = async (event) => {
@@ -11,13 +11,13 @@ const LogIn = () =>{
       event.preventDefault()
       const username = event.target.username.value
       const password = event.target.password.value
-      const result = await login({variables: {username, password}})
-      if(result.data.logIn)
+      
+      const token = LogInAsUser(username, password)
+      if(token)
       {
-        console.log("logged in")
         navigate('/dashboard')
       }
-      console.log(result)
+    
     }
 
 
