@@ -24,15 +24,17 @@ const mockClient = {
     }
 }
 
-
-test('useUserLogIn hook returns token returned if username and password are correct', async () => {
-    const getToken = useUserLogIn(mockClient)
-    const token = await getToken("username", "password")
-    expect(token).toBe('abc1234')
+describe('useUserLogIn hook tests', () => {
+    test('useUserLogIn hook returns token returned if username and password are correct', async () => {
+        const getToken = useUserLogIn(mockClient)
+        const token = await getToken("username", "password")
+        expect(token).toBe('abc1234')
+    })
+    
+    test('useUserLogIn hook returns null if if username and password are incorrect', async () => {
+        const getToken = useUserLogIn(mockClient)
+        const token = await getToken("incorrect", "incorrect password")
+        expect(token).toBeUndefined()
+    })
 })
 
-test('useUserLogIn hook returns null if if username and password are incorrect', async () => {
-    const getToken = useUserLogIn(mockClient)
-    const token = await getToken("incorrect", "incorrect password")
-    expect(token).toBeUndefined()
-})
