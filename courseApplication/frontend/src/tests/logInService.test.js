@@ -36,5 +36,11 @@ describe('useUserLogIn hook tests', () => {
         const token = await getToken("incorrect", "incorrect password")
         expect(token).toBeUndefined()
     })
+
+    test('useUserLogIn hook returns null if if password is incorrect', async () => {
+        const getToken = useUserLogIn(mockClient)
+        const token = await getToken("username", "incorrect password")
+        expect(token).toBeUndefined()
+    })
 })
 
