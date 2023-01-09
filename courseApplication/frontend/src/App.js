@@ -33,6 +33,7 @@ const App = () =>{
     if(token)
     {
       setUser({username: "not implemented yet", token: token.value})
+      localStorage.setItem('courseApplicationUserToken', token.value)
       navigate('/dashboard')
     }
   } 
