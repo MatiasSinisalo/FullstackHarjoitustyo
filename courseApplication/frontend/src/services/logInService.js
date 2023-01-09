@@ -19,7 +19,6 @@ export const useUserLogIn = (apolloClient) => {
 }
 
 export const useUser = (apolloClient) => {
-    const [user, setUser] = useState({username: null, user: null, token: null})
     const getToken = useUserLogIn(apolloClient)
 
     const LogInAsUser = async (username, password) => {
@@ -28,13 +27,12 @@ export const useUser = (apolloClient) => {
         {
             localStorage.setItem('courseApplicationUserToken', token.value)
             const userInfo = await client.query({query: ME})
-            setUser({username: userInfo.data.me.username, user: userInfo.data.me.name, token: token.value})
-            //console.log(user)
+            console.log(userInfo)
+            return {username: userInfo.data.me.username, user: userInfo.data.me.name, token: token.value}
         }
+        return null
     }
 
-    return {
-        user,
-        LogInAsUser
-    }
+    return LogInAsUser
+    
 } 

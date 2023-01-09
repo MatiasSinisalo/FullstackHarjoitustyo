@@ -3,7 +3,7 @@ import {
   Routes, Route, Link,
   useParams
 } from "react-router-dom"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Calendar from "./components/Calendar";
 import {CourseBrowser, CreateCourse, Course} from "./components/Course";
 import Dashboard from "./components/Dashboard";
@@ -16,8 +16,11 @@ import { useApolloClient} from "@apollo/client";
 
 
 const App = () =>{
-  const {user, LogInAsUser} = useUser()
+  
+ 
   const client = useApolloClient()
+  const LogInAsUser = useUser(client)
+  const [user, setUser] = useState({username: null, name: null, token: null})
   const courses = [
     {
       id: 0,
@@ -31,9 +34,11 @@ const App = () =>{
   const navigate = useNavigate()
   
   const handleLogIn = async (username, password) => {
-    await LogInAsUser(username, password)
-    if(user.username)
+    const userInfo = await LogInAsUser(username, password)
+    console.log(userInfo)
+    if(userInfo)
     {
+      setUser(userInfo)
       navigate('/dashboard')
     }
   } 
