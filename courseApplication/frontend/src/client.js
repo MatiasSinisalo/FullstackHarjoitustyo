@@ -13,7 +13,7 @@ const tokenHeader = setContext((_, { headers }) => {
     const token = localStorage.getItem('courseApplicationUserToken')
     if(token)
     {
-        return {headers: {...headers, authorization: `bearer: ${token}`}}
+        return {headers: {...headers, authorization: `bearer ${token}`}}
     }
     else
     {

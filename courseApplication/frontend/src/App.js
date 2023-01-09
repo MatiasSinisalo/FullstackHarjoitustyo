@@ -11,10 +11,13 @@ import Messages from "./components/Messages";
 import LogIn from "./components/LogIn";
 import { useUserLogIn } from './services/logInService'
 import {useNavigate} from 'react-router-dom'
+import { ME } from './queries/userQueries'
+import { useApolloClient} from "@apollo/client";
 
 
 const App = () =>{
-  const [user, setUser] = useState({username: null, token: null})
+  const [user, setUser] = useState({username: null, user: null, token: null})
+  const client = useApolloClient()
   const courses = [
     {
       id: 0,
@@ -32,8 +35,11 @@ const App = () =>{
     const token = await LogInAsUser(username, password)
     if(token)
     {
-      setUser({username: "not implemented yet", token: token.value})
+      
       localStorage.setItem('courseApplicationUserToken', token.value)
+      const userInfo = await client.query({query: ME})
+      setUser({username: userInfo.data.me.username, user: userInfo.data.me.name, token: token.value})
+      //console.log(user)
       navigate('/dashboard')
     }
   } 
@@ -42,7 +48,7 @@ const App = () =>{
     
       <Routes>
         <Route path="/" element={<LogIn handleLogIn={handleLogIn}/>}/>
-        <Route path="/dashboard" element={<Dashboard/>}/>
+        <Route path="/dashboard" element={<Dashboard user={user}/>}/>
         <Route path="/calendar" element={<Calendar/>}/>
         <Route path="/messages" element={<Messages/>}/>
         <Route path="/CourseBrowser" element={<CourseBrowser courses={courses}/>}/>
