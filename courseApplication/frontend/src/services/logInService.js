@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import client from '../client'
 import {LOGIN, ME} from '../queries/userQueries'
 
 export const useUserLogIn = (apolloClient) => {
-    const appClient = apolloClient == undefined ? client : apolloClient
+    const appClient = apolloClient
     
     const getToken = async (username, password) => {
         const result = await appClient.mutate({mutation: LOGIN, variables: {username, password}})
