@@ -26,8 +26,8 @@ export const useUser = (apolloClient) => {
         if(token)
         {
             localStorage.setItem('courseApplicationUserToken', token.value)
-            const userInfo = await client.query({query: ME})
-            console.log(userInfo)
+            const userInfo = await apolloClient.query({query: ME})
+            //console.log(userInfo)
             return {username: userInfo.data.me.username, user: userInfo.data.me.name, token: token.value}
         }
         return null
