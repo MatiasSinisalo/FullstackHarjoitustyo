@@ -44,9 +44,16 @@ const App = () =>{
     }
   } 
 
+  const handleLogOut = () => {
+    console.log("logging out")
+    localStorage.removeItem('courseApplicationUserToken')
+    setUser({username: null, name: null, token: null})
+    navigate('/')
+  }
+
   return (
     <>
-      <NavBar user={user}></NavBar>
+      <NavBar user={user} logOut={handleLogOut}></NavBar>
       <Routes>
         <Route path="/" element={<LogIn handleLogIn={handleLogIn}/>}/>
         <Route path="/dashboard" element={<Dashboard user={user}/>}/>

@@ -1,9 +1,9 @@
-const NavBar = ({user}) => {
-    if(user)
+const NavBar = ({user, logOut}) => {
+    if(user.username)
     {
         return (
             <div>
-                <button>Log Out</button>
+                <button onClick={logOut}>Log Out</button>
             </div>
         )
     }
