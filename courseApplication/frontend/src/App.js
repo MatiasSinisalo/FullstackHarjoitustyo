@@ -13,6 +13,7 @@ import { useUser, useUserLogIn } from './services/logInService'
 import {useNavigate} from 'react-router-dom'
 
 import { useApolloClient} from "@apollo/client";
+import NavBar from "./components/NavBar";
 
 
 const App = () =>{
@@ -44,6 +45,8 @@ const App = () =>{
   } 
 
   return (
+    <>
+      <NavBar user={user}></NavBar>
       <Routes>
         <Route path="/" element={<LogIn handleLogIn={handleLogIn}/>}/>
         <Route path="/dashboard" element={<Dashboard user={user}/>}/>
@@ -53,6 +56,7 @@ const App = () =>{
         <Route path="/CreateCourse" element={<CreateCourse/>}/>
         <Route path="/course/:id" element={<Course courses={courses}/>}/>
       </Routes>
+      </>
   );
 }
 
