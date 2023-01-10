@@ -1,4 +1,4 @@
-import { useUserLogIn, useUser } from "../services/logInService"
+import { LogInAsUser, getToken } from "../services/logInService"
 import client from "../client"
 
 const successfullTokenResult = {
@@ -37,20 +37,19 @@ const mockClient = {
 
 describe('useUserLogIn hook tests', () => {
     test('useUserLogIn hook returns token returned if username and password are correct', async () => {
-        const getToken = useUserLogIn(mockClient)
-        const token = await getToken("username", "password")
+       
+        const token = await getToken("username", "password", mockClient)
         expect(token.value).toBe('abc1234')
     })
     
     test('useUserLogIn hook returns null if if username and password are incorrect', async () => {
-        const getToken = useUserLogIn(mockClient)
-        const token = await getToken("incorrect", "incorrect password")
+       
+        const token = await getToken("incorrect", "incorrect password", mockClient)
         expect(token).toBeUndefined()
     })
 
     test('useUserLogIn hook returns null if if password is incorrect', async () => {
-        const getToken = useUserLogIn(mockClient)
-        const token = await getToken("username", "incorrect password")
+        const token = await getToken("username", "incorrect password", mockClient)
         expect(token).toBeUndefined()
     })
 })
@@ -59,21 +58,21 @@ describe('useUserLogIn hook tests', () => {
 
 describe('useUser hook tests', () => {
     test('LogInAsUser returns username, name, and token if username and password are correct', async () => {
-        const LogInAsUser = useUser(mockClient)
-        const userData = await LogInAsUser("username", "password")
+       
+        const userData = await LogInAsUser("username", "password", mockClient)
         console.log(userData)
         expect(userData).toEqual({username: "username", name: "name", token: "abc1234"})
     })
     
     test('LogInAsUser returns null if if username and password are incorrect', async () => {
-        const LogInAsUser = useUser(mockClient)
-        const userData = await LogInAsUser("incorrect", "incorrect password")
+       
+        const userData = await LogInAsUser("incorrect", "incorrect password", mockClient)
         expect(userData).toBe(null)
     })
 
     test('LogInAsUser returns null if if password is incorrect', async () => {
-        const LogInAsUser = useUser(mockClient)
-        const userData = await LogInAsUser("username", "incorrect")
+        
+        const userData = await LogInAsUser("username", "incorrect", mockClient)
         expect(userData).toBe(null)
     })
 })
