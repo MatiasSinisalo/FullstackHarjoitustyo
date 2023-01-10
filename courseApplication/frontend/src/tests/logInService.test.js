@@ -56,7 +56,7 @@ describe('getToken tests', () => {
 
 
 
-describe('useUser hook tests', () => {
+describe('LogInAsUser tests', () => {
     test('LogInAsUser returns username, name, and token if username and password are correct', async () => {
        
         const userData = await LogInAsUser("username", "password", mockClient)
