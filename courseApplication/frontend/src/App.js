@@ -14,8 +14,8 @@ import {useNavigate} from 'react-router-dom'
 
 import { useApolloClient} from "@apollo/client";
 import NavBar from "./components/NavBar";
-import { useDispatch } from "react-redux";
-import { userLogIn } from "./reducers/userReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUser, userLogIn } from "./reducers/userReducer";
 
 
 const App = () =>{
@@ -23,7 +23,6 @@ const App = () =>{
  
   const client = useApolloClient()
   const LogInAsUser = useUser(client)
-  const [user, setUser] = useState({username: null, name: null, token: null})
   const dispatch = useDispatch()
 
   
@@ -45,7 +44,7 @@ const App = () =>{
     console.log(userInfo)
     if(userInfo)
     {
-      setUser(userInfo)
+      dispatch(updateUser(userInfo))
       navigate('/dashboard')
     }
   } 
@@ -53,16 +52,16 @@ const App = () =>{
   const handleLogOut = () => {
     console.log("logging out")
     localStorage.removeItem('courseApplicationUserToken')
-    setUser({username: null, name: null, token: null})
+    dispatch(updateUser({username: null, name: null, token: null}))
     navigate('/')
   }
 
   return (
     <>
-      <NavBar user={user} logOut={handleLogOut}></NavBar>
+      <NavBar logOut={handleLogOut}></NavBar>
       <Routes>
         <Route path="/" element={<LogIn handleLogIn={handleLogIn}/>}/>
-        <Route path="/dashboard" element={<Dashboard user={user}/>}/>
+        <Route path="/dashboard" element={<Dashboard/>}/>
         <Route path="/calendar" element={<Calendar/>}/>
         <Route path="/messages" element={<Messages/>}/>
         <Route path="/CourseBrowser" element={<CourseBrowser courses={courses}/>}/>

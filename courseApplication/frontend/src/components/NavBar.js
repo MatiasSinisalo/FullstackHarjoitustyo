@@ -1,4 +1,7 @@
-const NavBar = ({user, logOut}) => {
+import { useSelector } from "react-redux"
+
+const NavBar = ({logOut}) => {
+    const user = useSelector((store) => {return store.user})
     if(user.username)
     {
         return (
