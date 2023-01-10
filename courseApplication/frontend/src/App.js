@@ -14,6 +14,8 @@ import {useNavigate} from 'react-router-dom'
 
 import { useApolloClient} from "@apollo/client";
 import NavBar from "./components/NavBar";
+import { useDispatch } from "react-redux";
+import { devTest } from "./reducers/userReducer";
 
 
 const App = () =>{
@@ -22,6 +24,10 @@ const App = () =>{
   const client = useApolloClient()
   const LogInAsUser = useUser(client)
   const [user, setUser] = useState({username: null, name: null, token: null})
+  const dispatch = useDispatch()
+
+  dispatch(devTest())
+
   const courses = [
     {
       id: 0,
