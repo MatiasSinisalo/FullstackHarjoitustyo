@@ -13,9 +13,9 @@ const failedTokenResult = {
     }
 }
 
-const successfullLogInResult = {
+const successfullMEQueryResult = {
     data:{
-        me: {username: "username", name: "name", token: "abc1234"}
+        me: {username: "username", name: "name"}
     }
 }
 
@@ -30,7 +30,7 @@ const mockClient = {
         }
     },
     query: (data) => {
-        return successfullLogInResult
+        return successfullMEQueryResult
     }
 
 }
@@ -62,7 +62,7 @@ describe('useUser hook tests', () => {
         const LogInAsUser = useUser(mockClient)
         const userData = await LogInAsUser("username", "password")
         console.log(userData)
-        expect(userData).toContain(successfullLogInResult)
+        expect(userData).toEqual({username: "username", name: "name", token: "abc1234"})
     })
     
     test('LogInAsUser returns null if if username and password are incorrect', async () => {
