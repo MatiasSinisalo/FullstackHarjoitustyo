@@ -2,6 +2,7 @@ const { UserInputError } = require('apollo-server-core')
 const User = require('./models/user')
 const Course = require('./models/course')
 const userService = require('./services/userService')
+const courseService = require('./services/courseService')
 
 const resolvers  = {
     Query: {
@@ -40,24 +41,9 @@ const resolvers  = {
             const name = args.name
             const teacherUsername = args.teacher
 
-            const teacherUser = await User.findOne({username:teacherUsername})
-            if(!teacherUser)
-            {
-                throw new UserInputError('no user with given username found!')
-            } 
+            const course = await courseService.createCourse(uniqueName, name, teacherUsername)
 
-            const teacherID = teacherUser.id
-            
-            const course = {
-                uniqueName: uniqueName,
-                name: name,
-                teacher: teacherID,
-                students: []
-            }
-            const courseModel = Course(course)
-            const savedCourse = await courseModel.save()
-
-            return {...course, teacher: teacherUser}
+            return course
         }
 
 
