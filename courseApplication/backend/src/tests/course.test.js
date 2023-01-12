@@ -63,5 +63,13 @@ describe('course tests', () => {
             expect(savedCourse.students).toEqual(correctReturnValue.students)
 
         })
+
+
+        test('createCourse query returns error if teacher user does not exist', async () => {
+            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "uniqueName", name: "common name", teacher: "does not exist"}})
+            expect(createdCourse.data.createCourse).toEqual(null)
+            expect(createdCourse.errors[0].message).toEqual('no user with given username found!')
+            
+        })
     })
 })
