@@ -1,5 +1,6 @@
 const { UserInputError } = require('apollo-server-core')
 const User = require('./models/user')
+const Course = require('./models/course')
 const userService = require('./services/userService')
 
 const resolvers  = {
@@ -15,6 +16,10 @@ const resolvers  = {
 
             const currentUserInformation = userService.getUser(context.userForToken)
             return currentUserInformation
+        },
+        allCourses: async (root, args, context) => {
+            const courses = await Course.find({})
+            return courses
         }
     },
     Mutation: {
