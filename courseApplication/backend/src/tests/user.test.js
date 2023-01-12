@@ -1,10 +1,8 @@
 
 //source for testing an application that uses graphQL:  https://www.apollographql.com/docs/apollo-server/testing/testing/
-const { ApolloServer, gql } = require('apollo-server')
+const {server, apolloServer} = require('../server')
+const testServer = apolloServer
 const request = require('supertest')
-const typeDefs = require('../typedefs')
-const resolvers = require('../resolvers')
-const config = require('../config')
 const context = require('../context')
 const User = require('../models/user')
 
@@ -16,22 +14,9 @@ const meQuery = 'query Me {  me{    name    username  }}'
 
 
 
-const testServer = new ApolloServer({
-    typeDefs,
-    resolvers,
-    context
-});
-
-let testServerUrl
-
-const mongoose = require ('mongoose')
-mongoose.set('strictQuery', false)
-
 
 beforeAll(async () => {
-   testServerUrl = await testServer.listen(4000)
-   await mongoose.connect(config.MONGODB_URI)
-  
+   await server.start()
    console.log(`test server ready`)
 })
 
@@ -141,10 +126,8 @@ describe('user tests', () => {
 })
 
 afterAll(async () => {
-
     //we use different database for tests, lets clear the database
     await User.deleteMany({})
-
-    mongoose.connection.close()
+    await server.stop()
 })
 
