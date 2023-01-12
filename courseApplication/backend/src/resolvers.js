@@ -18,7 +18,7 @@ const resolvers  = {
             return currentUserInformation
         },
         allCourses: async (root, args, context) => {
-            const courses = await Course.find({})
+            const courses = await Course.find({}).populate('teacher')
             return courses
         }
     },
