@@ -77,5 +77,15 @@ describe('course tests', () => {
             expect(createdCourse.errors[0].message).toEqual('no user with given username found!')
             
         })
+
+        test('createCourse query returns error if authentication is not done and doesnt save anything to database', async () => {
+            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "uniqueName", name: "common name", teacher: "does not exist"}})
+            expect(createdCourse.data.createCourse).toEqual(null)
+            expect(createdCourse.errors[0].message).toEqual('Unauthorized')
+
+            const savedCourses = await Course.find({}).populate('teacher')
+            expect(savedCourses.length).toBe(0)
+            
+        })
     })
 })
