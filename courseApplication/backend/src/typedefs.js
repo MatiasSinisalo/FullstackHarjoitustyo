@@ -6,16 +6,25 @@ const typeDefs = gql`
         name: String!
     }
 
-    
     type Token{
         value: String!
     }
 
-    type Query{
-        allUsers: [User!]!
-        me: User!
+    type Course{
+        uniqueName: String!
+        name: String!
+        teacher: User!
+        students: [User!]!
     }
 
+    type Query{
+        allUsers: [User!]!
+        allCourses: [Course!]!
+        getCourse(
+            uniqueName: String!
+        ):Course
+        me: User!
+    }
 
     type Mutation{
         createUser(
@@ -28,6 +37,12 @@ const typeDefs = gql`
             username: String!
             password: String!
         ):Token
+
+        createCourse(
+            uniqueName: String!
+            name: String!
+            teacher: String!
+        ):Course
     }
 
 `
