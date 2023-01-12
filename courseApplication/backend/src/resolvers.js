@@ -36,7 +36,11 @@ const resolvers  = {
             const token = userService.logIn(username, password)
             return {value: token}
         },
-        createCourse: async (root, args) => {
+        createCourse: async (root, args, context) => {
+            if(!context.userForToken){
+                throw new UserInputError("Unauthorized")
+            }
+
             const uniqueName = args.uniqueName
             const name = args.name
             const teacherUsername = args.teacher
