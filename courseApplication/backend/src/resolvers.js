@@ -34,7 +34,32 @@ const resolvers  = {
 
             const token = userService.logIn(username, password)
             return {value: token}
+        },
+        createCourse: async (root, args) => {
+            const uniqueName = args.uniqueName
+            const name = args.name
+            const teacherUsername = args.teacher
+
+            const teacherUser = await User.findOne({username:teacherUsername})
+            if(!teacherUser)
+            {
+                throw new UserInputError('no user with given username found!')
+            } 
+
+            const teacherID = teacherUser.id
+            
+            const course = {
+                uniqueName: uniqueName,
+                name: name,
+                teacher: teacherID,
+                students: []
+            }
+            const courseModel = Course(course)
+            const savedCourse = await courseModel.save()
+
+            return {...course, teacher: teacherUser}
         }
+
 
     }
 }
