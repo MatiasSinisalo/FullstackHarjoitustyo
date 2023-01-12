@@ -43,7 +43,7 @@ const resolvers  = {
 
             const uniqueName = args.uniqueName
             const name = args.name
-            const teacherUsername = args.teacher
+            const teacherUsername = context.userForToken.username
 
             const course = await courseService.createCourse(uniqueName, name, teacherUsername)
 
