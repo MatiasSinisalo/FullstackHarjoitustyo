@@ -5,15 +5,7 @@ const testServer = apolloServer
 const request = require('supertest')
 const context = require('../context')
 const User = require('../models/user')
-
-
-const userCreateQuery = 'mutation Mutation {  createUser(password: "12345", name: "name", username: "username") {    name    username  }}'
-const userLogInQuery = 'mutation LogIn($username: String!, $password: String!) {  logIn(username: $username, password: $password) {   value  }}'
-const allUsersQuery = 'query AllUsers {  allUsers {    name    username  }}'
-const meQuery = 'query Me {  me{    name    username  }}'
-
-
-
+const {userCreateQuery, userLogInQuery, allUsersQuery, meQuery} = require('./userTestQueries')
 
 beforeAll(async () => {
    await server.start()
