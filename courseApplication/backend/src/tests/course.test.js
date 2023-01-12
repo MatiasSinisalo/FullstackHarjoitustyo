@@ -1,8 +1,10 @@
 const {server, apolloServer} = require('../server')
+const request = require('supertest')
 const Course = require('../models/course')
 const User = require('../models/user')
-const { userCreateQuery } = require('./userTestQueries')
+const { userCreateQuery, userLogInQuery } = require('./userTestQueries')
 const { createCourse } = require('./courseTestQueries')
+const { query } = require('express')
 
 beforeAll(async () => {
     await server.start("test server ready")
@@ -18,12 +20,15 @@ afterAll(async () => {
 })
 
 beforeEach(async () => {
+    apolloServer.context = {}
     await Course.deleteMany({})
 })
 
 describe('course tests', () => {
     describe('course creation tests', () => {
         test('createCourse query returns correctly with correct parameters', async () => {
+            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+
             const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "uniqueName", name: "common name", teacher: "username"}})
             
             const correctReturnValue = {
@@ -39,6 +44,7 @@ describe('course tests', () => {
         })
 
         test('createCourse query saves course to database correctly with correct parameters', async () => {
+            apolloServer.context = {userForToken: {username: "username", name: "name"}}
             const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "uniqueName", name: "common name", teacher: "username"}})
             
             const correctReturnValue = {
@@ -64,8 +70,8 @@ describe('course tests', () => {
 
         })
 
-
         test('createCourse query returns error if teacher user does not exist', async () => {
+            apolloServer.context = {userForToken: {username: "does not exist", name: "name"}}
             const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "uniqueName", name: "common name", teacher: "does not exist"}})
             expect(createdCourse.data.createCourse).toEqual(null)
             expect(createdCourse.errors[0].message).toEqual('no user with given username found!')
