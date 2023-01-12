@@ -48,10 +48,11 @@ const App = () =>{
     }
   } 
 
-  const handleLogOut = () => {
+  const handleLogOut = async () => {
     console.log("logging out")
     localStorage.removeItem('courseApplicationUserToken')
     dispatch(updateUser({username: null, name: null, token: null}))
+    client.clearStore()
     navigate('/')
   }
 
