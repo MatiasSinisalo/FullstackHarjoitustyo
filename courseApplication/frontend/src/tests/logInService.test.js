@@ -57,6 +57,10 @@ describe('getToken tests', () => {
 
 
 describe('LogInAsUser tests', () => {
+    beforeEach(() => {
+        localStorage.removeItem('courseApplicationUserToken')
+    })
+
     test('LogInAsUser returns username, name, and token if username and password are correct', async () => {
        
         const userData = await LogInAsUser("username", "password", mockClient)
@@ -74,6 +78,27 @@ describe('LogInAsUser tests', () => {
         
         const userData = await LogInAsUser("username", "incorrect", mockClient)
         expect(userData).toBe(null)
+    })
+
+    test('LogInAsUser writes token to local storage as courseApplicationUserToken if credentials are correct', async () => {
+        
+        const userData = await LogInAsUser("username", "password", mockClient)
+        const token = localStorage.getItem('courseApplicationUserToken')
+        expect(token).toBe('abc1234')
+    })
+
+    test('LogInAsUser does not write token to local storage as courseApplicationUserToken if credentials are incorrect', async () => {
+        
+        const userData = await LogInAsUser("incorrect", "incorrect password", mockClient)
+        const token = localStorage.getItem('courseApplicationUserToken')
+        expect(token).toBe(null)
+    })
+
+    test('LogInAsUser does not write token to local storage as courseApplicationUserToken if password is incorrect', async () => {
+        
+        const userData = await LogInAsUser("username", "incorrect", mockClient)
+        const token = localStorage.getItem('courseApplicationUserToken')
+        expect(token).toBe(null)
     })
 })
 
