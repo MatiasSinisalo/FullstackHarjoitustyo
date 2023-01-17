@@ -23,13 +23,6 @@ const CourseBrowser = () =>{
     )
   }
   
-  const CreateCourse = () =>{
-     return(
-      <>
-      <p>Create course page</p>
-      </>
-  
-    )
-  }
+ 
 
-export {CourseBrowser, CreateCourse, Course}
+export {CourseBrowser, Course}

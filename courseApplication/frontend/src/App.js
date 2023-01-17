@@ -5,7 +5,8 @@ import {
 } from "react-router-dom"
 import { useEffect, useState } from "react";
 import Calendar from "./components/Calendar";
-import {CourseBrowser, CreateCourse, Course} from "./components/Course";
+import {CourseBrowser, Course} from "./components/Course";
+import CreateCourse from "./components/CreateCourse";
 import Dashboard from "./components/Dashboard";
 import Messages from "./components/Messages";
 import LogIn from "./components/LogIn";
