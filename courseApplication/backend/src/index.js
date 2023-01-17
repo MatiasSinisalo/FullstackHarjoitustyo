@@ -1,5 +1,5 @@
 
-const server = require('./server')
+const {server} = require('./server')
 
 const start = () => {
     server.start('')
