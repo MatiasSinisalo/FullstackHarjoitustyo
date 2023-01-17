@@ -11,7 +11,8 @@ const CreateCourse = () =>{
         const courseName = event.target.courseName.value
         console.log(courseUniqueName)
         console.log(courseName)
-        const createdCourse = await createCourse({variables: {uniqueName: courseUniqueName, name: courseName}})
+        //teacher field is not currently being used on the backend at all when creating a course
+        const createdCourse = await createCourse({variables: {uniqueName: courseUniqueName, name: courseName, teacher: ""}})
         console.log(createdCourse)
     }
     return(
