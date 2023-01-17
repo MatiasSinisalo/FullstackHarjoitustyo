@@ -1,9 +1,11 @@
 import { addCourse } from "../reducers/courseReducer"
-import { CREATE_COURSE } from "../queries/courseQueries";
 import { useMutation } from "@apollo/client";
-
+import { useDispatch } from "react-redux";
+import { createCourse } from "../services/courseService"
+import { useApolloClient } from "@apollo/client";
 const CreateCourse = () =>{
-    const [createCourse] = useMutation(CREATE_COURSE)
+    const dispatch = useDispatch()
+    const client = useApolloClient()
     const submitCreateCourseForm = async (event) => {
         event.preventDefault()
         console.log("creating a new course")
@@ -11,9 +13,12 @@ const CreateCourse = () =>{
         const courseName = event.target.courseName.value
         console.log(courseUniqueName)
         console.log(courseName)
-        //teacher field is not currently being used on the backend at all when creating a course
-        const createdCourse = await createCourse({variables: {uniqueName: courseUniqueName, name: courseName, teacher: ""}})
-        console.log(createdCourse)
+        
+        const createdCourse = await createCourse(courseUniqueName, courseName, "", client)
+        if(createdCourse)
+        {
+            dispatch(addCourse(createdCourse))
+        }
     }
     return(
      <>
