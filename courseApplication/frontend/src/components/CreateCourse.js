@@ -18,6 +18,7 @@ const CreateCourse = () =>{
         if(createdCourse)
         {
             dispatch(addCourse(createdCourse))
+            alert(`new course named ${createdCourse.name} created`)
         }
     }
     return(
