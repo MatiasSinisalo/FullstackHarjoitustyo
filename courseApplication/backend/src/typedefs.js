@@ -41,7 +41,7 @@ const typeDefs = gql`
         createCourse(
             uniqueName: String!
             name: String!
-            teacher: String!
+            teacher: String
         ):Course
     }
 
