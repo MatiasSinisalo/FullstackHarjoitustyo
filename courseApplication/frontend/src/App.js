@@ -18,16 +18,22 @@ import { useApolloClient, useQuery} from "@apollo/client";
 import NavBar from "./components/NavBar";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser, userLogIn } from "./reducers/userReducer";
-
+import { setCourses } from "./reducers/courseReducer";
+import { GET_ALL_COURSES } from "./queries/courseQueries";
 
 const App = () =>{
   
  
   const client = useApolloClient()
   const dispatch = useDispatch()
-  
-  
   const navigate = useNavigate()
+  
+  useEffect(() => {
+    console.log("getting courses")
+    client.query({query: GET_ALL_COURSES}).then((result) => 
+     dispatch(setCourses(result.data.allCourses))
+    )
+  }, [])
   
   const handleLogIn = async (username, password) => {
     const userInfo = await LogInAsUser(username, password, client)

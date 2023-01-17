@@ -15,3 +15,18 @@ export const CREATE_COURSE = gql`mutation Mutation($uniqueName: String!, $name: 
       uniqueName
     }
   }`
+
+export const GET_ALL_COURSES = gql`query AllCourses {
+    allCourses {
+      name
+      students {
+        name
+        username
+      }
+      teacher {
+        name
+        username
+      }
+      uniqueName
+    }
+  }`
