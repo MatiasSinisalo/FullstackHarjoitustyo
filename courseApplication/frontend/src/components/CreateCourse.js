@@ -1,10 +1,18 @@
-
-
+import { addCourse } from "../reducers/courseReducer"
+import { CREATE_COURSE } from "../queries/courseQueries";
+import { useMutation } from "@apollo/client";
 
 const CreateCourse = () =>{
-    const submitCreateCourseForm = (event) => {
+    const [createCourse] = useMutation(CREATE_COURSE)
+    const submitCreateCourseForm = async (event) => {
         event.preventDefault()
         console.log("creating a new course")
+        const courseUniqueName = event.target.courseUniqueName.value
+        const courseName = event.target.courseName.value
+        console.log(courseUniqueName)
+        console.log(courseName)
+        const createdCourse = await createCourse({variables: {uniqueName: courseUniqueName, name: courseName}})
+        console.log(createdCourse)
     }
     return(
      <>
