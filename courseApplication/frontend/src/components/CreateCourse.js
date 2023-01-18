@@ -11,9 +11,7 @@ const CreateCourse = () =>{
         console.log("creating a new course")
         const courseUniqueName = event.target.courseUniqueName.value
         const courseName = event.target.courseName.value
-        console.log(courseUniqueName)
-        console.log(courseName)
-        
+       
         const createdCourse = await createCourse(courseUniqueName, courseName, "", client)
         if(createdCourse)
         {

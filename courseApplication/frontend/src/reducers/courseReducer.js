@@ -8,7 +8,7 @@ const courseSlice = createSlice({
     initialState: courses,
     reducers: {
         addCourse(state, action) {
-            return courses.append(action.payload)
+            return courses.concat(action.payload)
         },
         setCourses(state, action){
             return action.payload
