@@ -11,7 +11,7 @@ import CourseBrowser from "./components/CourseBrowser";
 import Dashboard from "./components/Dashboard";
 import Messages from "./components/Messages";
 import LogIn from "./components/LogIn";
-import { LogInAsUser } from './services/logInService'
+import { getUserData, LogInAsUser } from './services/logInService'
 import {useNavigate} from 'react-router-dom'
 
 import { useApolloClient, useQuery} from "@apollo/client";
@@ -29,10 +29,20 @@ const App = () =>{
   const navigate = useNavigate()
   
   useEffect(() => {
-    console.log("getting courses")
-    client.query({query: GET_ALL_COURSES}).then((result) => 
-     dispatch(setCourses(result.data.allCourses))
-    )
+      async function prepApp(){ 
+        const token = localStorage.getItem('courseApplicationUserToken')
+        if(token)
+        {
+          const userdata = await getUserData(client)
+          dispatch(updateUser(userdata))
+        }
+
+        console.log("getting courses")
+        client.query({query: GET_ALL_COURSES}).then((result) => 
+        dispatch(setCourses(result.data.allCourses))
+        )
+    }
+    prepApp()
   }, [])
   
   const handleLogIn = async (username, password) => {
