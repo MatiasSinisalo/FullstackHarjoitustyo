@@ -43,6 +43,8 @@ const typeDefs = gql`
             name: String!
             teacher: String
         ):Course
+
+        reset:Boolean
     }
 
 `

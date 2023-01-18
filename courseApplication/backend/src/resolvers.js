@@ -3,6 +3,7 @@ const User = require('./models/user')
 const Course = require('./models/course')
 const userService = require('./services/userService')
 const courseService = require('./services/courseService')
+const config = require('./config')
 
 const resolvers  = {
     Query: {
@@ -48,6 +49,18 @@ const resolvers  = {
             const course = await courseService.createCourse(uniqueName, name, teacherUsername)
 
             return course
+        },
+        reset: async(root, args, context) => {
+            if(config.IS_TEST)
+            {
+                await Course.deleteMany({})
+                await User.deleteMany({})
+                return true
+            }
+            else
+            {
+                return false
+            }
         }
 
 
