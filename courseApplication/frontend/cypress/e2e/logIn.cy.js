@@ -59,10 +59,33 @@ describe('Log in tests', () => {
         submitButton.click()
         cy.wait(200)
         cy.contains('Hello username')
-        cy.contains('Log Out')
         cy.contains('dashboard page')
         cy.contains('Create new Course')
+
+        cy.contains('Log Out').click()
     })
+
+    
+    it('user can not log in with incorrect credentials', async function (){
+        cy.intercept({
+            method: 'POST',
+            url: 'http://localhost:4000'
+        }).as('serverRequest')
+
+        cy.visit('http://localhost:3000')
+        const usernameField = cy.get('input[name="username"]')
+        const passwordField = cy.get('input[name="password"]')
+        const submitButton = cy.get('input[type="submit"]')
+
+        usernameField.click().type('incorrect username')
+        cy.wait(200)
+        passwordField.click().type('incorrect password')
+        cy.wait(200)
+        submitButton.click()
+        cy.wait('@serverRequest').should('have.property', 'response.statusCode', 400)
+        cy.contains('please log in')
+    })
+    
 })
 
 after(async function () {
