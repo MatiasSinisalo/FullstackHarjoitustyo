@@ -17,9 +17,15 @@ const createCourse = async (uniqueName, name, teacherUsername) => {
         teacher: teacherID,
         students: []
     }
-    const courseModel = Course(course)
-    const savedCourse = await courseModel.save()
-    return  {...course, teacher: teacherUser}
+    try{
+        const courseModel = Course(course)
+        const savedCourse = await courseModel.save()
+        return  {...course, teacher: teacherUser}
+    }
+    catch(error)
+    {
+        throw new UserInputError("Course uniqueName must be unique")
+    }
 }
 
 module.exports = {createCourse}
