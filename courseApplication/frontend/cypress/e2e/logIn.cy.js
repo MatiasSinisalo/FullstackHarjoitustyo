@@ -35,10 +35,49 @@ before(function () {
     })
 })
 
+
+
+
 describe('Log in tests', () => {
     it('Log in form is found from main page', async function (){
         cy.visit('http://localhost:3000')
-        cy.contains('Log in page')
+        const usernameField = cy.get('input[name="username"]')
+        const passwordField = cy.get('input[name="password"]')
+        const submitButton = cy.get('input[type="submit"]')
+    })
+
+    it('user can log in with correct credentials', async function (){
+        cy.visit('http://localhost:3000')
+        const usernameField = cy.get('input[name="username"]')
+        const passwordField = cy.get('input[name="password"]')
+        const submitButton = cy.get('input[type="submit"]')
+
+        usernameField.click().type('username')
+        cy.wait(200)
+        passwordField.click().type('password1234')
+        cy.wait(200)
+        submitButton.click()
+        cy.wait(200)
+        cy.contains('Hello username')
+        cy.contains('Log Out')
+        cy.contains('dashboard page')
+        cy.contains('Create new Course')
     })
 })
 
+after(async function () {
+    localStorage.removeItem('courseApplicationUserToken')
+    await cy.request({
+        method: 'POST',
+        url: 'http://localhost:4000',
+        body: {
+            query:`
+            mutation Mutation {
+                reset
+            }`,
+            operationName: 'Mutation'
+        }
+    })
+
+   
+})
