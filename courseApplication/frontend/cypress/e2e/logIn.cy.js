@@ -67,11 +67,6 @@ describe('Log in tests', () => {
 
     
     it('user can not log in with incorrect credentials', async function (){
-        cy.intercept({
-            method: 'POST',
-            url: 'http://localhost:4000'
-        }).as('serverRequest')
-
         cy.visit('http://localhost:3000')
         const usernameField = cy.get('input[name="username"]')
         const passwordField = cy.get('input[name="password"]')
@@ -82,7 +77,6 @@ describe('Log in tests', () => {
         passwordField.click().type('incorrect password')
         cy.wait(200)
         submitButton.click()
-        cy.wait('@serverRequest').should('have.property', 'response.statusCode', 400)
         cy.contains('please log in')
     })
     

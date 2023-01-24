@@ -47,7 +47,7 @@ const App = () =>{
   
   const handleLogIn = async (username, password) => {
     const userInfo = await LogInAsUser(username, password, client)
-    console.log(userInfo)
+   // console.log(userInfo)
     if(userInfo)
     {
       dispatch(updateUser(userInfo))

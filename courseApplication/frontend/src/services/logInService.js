@@ -2,11 +2,18 @@ import {LOGIN, ME} from '../queries/userQueries'
 
  
 export const getToken = async (username, password, appClient) => {
-    const result = await appClient.mutate({mutation: LOGIN, variables: {username, password}})
-    if(result.data.logIn)
-    {
-        return result.data.logIn
+    try{
+        const result = await appClient.mutate({mutation: LOGIN, variables: {username, password}})
+        if(result.data.logIn)
+        {
+            return result.data.logIn
+        }
     }
+    catch{
+        //TODO: inform user that username and password are incorrect
+        console.log("incorrect password or username")
+    }
+    
     
     return undefined
 }
