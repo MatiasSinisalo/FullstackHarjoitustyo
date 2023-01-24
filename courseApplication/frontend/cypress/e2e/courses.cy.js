@@ -68,7 +68,7 @@ describe('Course creation tests', () => {
         cy.wait(100)
 
         cy.visit('http://localhost:3000/CourseBrowser')
-        cy.wait(100)
+        cy.wait(500)
         cy.contains("unique name of the course")
         cy.contains("courses name")
 
@@ -79,7 +79,7 @@ describe('Course creation tests', () => {
     it('user can not create a course with doublicate unque name', function (){
         
         
-            
+       
         cy.visit('http://localhost:3000')
         const usernameField = cy.get('input[name="username"]')
         const passwordField = cy.get('input[name="password"]')
@@ -95,16 +95,8 @@ describe('Course creation tests', () => {
         cy.contains('dashboard page')
         cy.contains('Create new Course').click()
         cy.wait(100)
-        
-        cy.intercept('POST', 'http://localhost:4000', {
-            body: {
-                data: {
-                    createdCourse: null
-                }
-            }
-        }
-        ).as('serverResponses')
 
+        
         const courseUniqueNameField = cy.get('input[name=courseUniqueName]')
         const courseNameField = cy.get('input[name=courseName]')
         const courseSubmitButton = cy.get('input[type="submit"]')
@@ -113,12 +105,14 @@ describe('Course creation tests', () => {
         cy.wait(100)
         courseNameField.type("courses name")
         cy.wait(100)
+        cy.intercept('POST', 'http://localhost:4000').as('serverResponse')
+        cy.wait(100)
         courseSubmitButton.click()
-        cy.wait('@serverResponses').then((response) => {
-            expect(response.data)
-            console.log(response.data)
+        cy.wait('@serverResponse').then((response) => {
+            const serverError = response.response.body.errors[0]
+            expect(serverError.message).to.equal("Course uniqueName must be unique")
+            console.log(response)
         })
-        
         //cy.visit('http://localhost:3000/CourseBrowser')
         //cy.wait(100)
         //cy.contains("unique name of the course")
