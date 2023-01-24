@@ -1,3 +1,5 @@
+
+
 import { CREATE_USER } from "../../src/queries/userQueries"
 
 before(function () {
@@ -70,6 +72,59 @@ describe('Course creation tests', () => {
         cy.contains("unique name of the course")
         cy.contains("courses name")
 
+        cy.contains("Log Out").click()
+    })
+
+
+    it('user can not create a course with doublicate unque name', function (){
+        
+        
+            
+        cy.visit('http://localhost:3000')
+        const usernameField = cy.get('input[name="username"]')
+        const passwordField = cy.get('input[name="password"]')
+        const submitButton = cy.get('input[type="submit"]')
+
+        usernameField.click().type('username')
+        cy.wait(100)
+        passwordField.click().type('password1234')
+        cy.wait(100)
+        submitButton.click()
+        cy.wait(100)
+        cy.contains('Hello username')
+        cy.contains('dashboard page')
+        cy.contains('Create new Course').click()
+        cy.wait(100)
+        
+        cy.intercept('POST', 'http://localhost:4000', {
+            body: {
+                data: {
+                    createdCourse: null
+                }
+            }
+        }
+        ).as('serverResponses')
+
+        const courseUniqueNameField = cy.get('input[name=courseUniqueName]')
+        const courseNameField = cy.get('input[name=courseName]')
+        const courseSubmitButton = cy.get('input[type="submit"]')
+        courseUniqueNameField.type("unique name of the course")
+        
+        cy.wait(100)
+        courseNameField.type("courses name")
+        cy.wait(100)
+        courseSubmitButton.click()
+        cy.wait('@serverResponses').then((response) => {
+            expect(response.data)
+            console.log(response.data)
+        })
+        
+        //cy.visit('http://localhost:3000/CourseBrowser')
+        //cy.wait(100)
+        //cy.contains("unique name of the course")
+        //cy.contains("courses name")
+
+       
     })
 })
 
