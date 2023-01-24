@@ -72,7 +72,7 @@ describe('Course creation tests', () => {
 
     })
 })
-/*
+
 after(async function () {
     localStorage.removeItem('courseApplicationUserToken')
     await cy.request({
@@ -89,4 +89,3 @@ after(async function () {
 
    
 })
-*/
