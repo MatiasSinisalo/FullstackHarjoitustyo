@@ -80,6 +80,29 @@ describe('Log in tests', () => {
         cy.contains('please log in')
     })
     
+
+    it('user log out logs user out of the app', async function (){
+        cy.visit('http://localhost:3000')
+        const usernameField = cy.get('input[name="username"]')
+        const passwordField = cy.get('input[name="password"]')
+        const submitButton = cy.get('input[type="submit"]')
+
+        usernameField.click().type('username')
+        cy.wait(200)
+        passwordField.click().type('password1234')
+        cy.wait(200)
+        submitButton.click()
+        cy.wait(200)
+        cy.contains('Hello username')
+        cy.contains('dashboard page')
+        cy.contains('Create new Course')
+
+        cy.contains('Log Out').click()
+        cy.contains('please log in')
+        const token = localStorage.getItem('courseApplicationUserToken')
+        expect(token).to.equal(null)
+    })
+
 })
 
 after(async function () {
