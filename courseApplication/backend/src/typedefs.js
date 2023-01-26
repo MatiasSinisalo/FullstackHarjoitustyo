@@ -44,6 +44,10 @@ const typeDefs = gql`
             teacher: String
         ):Course
 
+        addStudentToCourse(
+            username: String!
+        ):Course
+
         reset:Boolean
     }
 
