@@ -29,13 +29,28 @@ const createCourse = async (uniqueName, name, teacherUsername) => {
 }
 
 const addStudentToCourse = async (studentUsername, courseUniqueName) => {
+    
     const studentUser = await User.findOne({username: studentUsername})
     if(!studentUser)
     {
         throw new UserInputError("Given username not found")
     }
 
+    const course = await Course.findOne({uniqueName: courseUniqueName})
+    if(!course)
+    {
+        throw new UserInputError("Given course not found")
+    }
 
+    console.log(studentUser)
+    console.log(course)
+  
+    const newStudentList = course.students.concat(studentUser.id)
+    const updatedCourse = await Course.findOneAndUpdate(course.id, {students: newStudentList}).populate(['teacher', 'students'])
+    console.log(updatedCourse)
+    return updatedCourse
+    
+    
 }
 
 module.exports = {createCourse, addStudentToCourse}
