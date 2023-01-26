@@ -28,7 +28,7 @@ const createCourse = async (uniqueName, name, teacherUsername) => {
     }
 }
 
-const addStudentToCourse = async (studentUsername, courseUniqueName) => {
+const addStudentToCourse = async (studentUsername, courseUniqueName, userForToken) => {
     
     const studentUser = await User.findOne({username: studentUsername})
     if(!studentUser)
@@ -42,7 +42,12 @@ const addStudentToCourse = async (studentUsername, courseUniqueName) => {
         throw new UserInputError("Given course not found")
     }
 
-    
+    //only teacher can add any student or student can join by their own accord
+    if(userForToken.id !== course.teacher.toString() && studentUser.id.toString() !== userForToken.id)
+    {
+        throw new UserInputError("Unauthorized")
+    }
+
     if(course.students.find((studentId) => studentId.toString() === studentUser.id))
     {
         throw new UserInputError("Given user is already in the course")
@@ -68,7 +73,7 @@ removeStudentFromCourse = async (studentUsername, courseUniqueName) => {
         throw new UserInputError("Given course not found")
     }
 
-    
+
     if(!course.students.find((studentId) => studentId.toString() === studentUser.id))
     {
         throw new UserInputError("Given user is not in the course")
