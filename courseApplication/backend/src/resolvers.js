@@ -59,7 +59,7 @@ const resolvers  = {
 
             const courseWithNewStudents = await courseService.addStudentToCourse(studentUsername)
 
-
+            return courseWithNewStudents
         },
         reset: async(root, args, context) => {
             if(config.IS_TEST)
