@@ -42,12 +42,14 @@ const addStudentToCourse = async (studentUsername, courseUniqueName) => {
         throw new UserInputError("Given course not found")
     }
 
-    console.log(studentUser)
-    console.log(course)
-  
+    
+    if(course.students.find((studentId) => studentId.toString() === studentUser.id))
+    {
+        throw new UserInputError("Given user is already in the course")
+    }
+    
     const newStudentList = course.students.concat(studentUser.id)
     const updatedCourse = await Course.findOneAndUpdate(course.id, {students: newStudentList}).populate(['teacher', 'students'])
-    console.log(updatedCourse)
     return updatedCourse
     
     
