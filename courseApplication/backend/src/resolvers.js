@@ -61,6 +61,20 @@ const resolvers  = {
 
             return courseWithNewStudents
         },
+        removeStudentFromCourse: async(root, args, context) => {
+            if(!context.userForToken)
+            {
+                throw new UserInputError("Unauthorized")
+            }
+
+            
+            const studentUsername = args.username
+            const courseUniqueName = args.courseUniqueName
+            const updatedCourse = await courseService.removeStudentFromCourse(studentUsername, courseUniqueName)
+
+            return updatedCourse
+
+        },
         reset: async(root, args, context) => {
             if(config.IS_TEST)
             {

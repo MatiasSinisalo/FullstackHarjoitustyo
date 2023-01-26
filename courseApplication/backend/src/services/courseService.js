@@ -55,4 +55,28 @@ const addStudentToCourse = async (studentUsername, courseUniqueName) => {
     
 }
 
-module.exports = {createCourse, addStudentToCourse}
+removeStudentFromCourse = async (studentUsername, courseUniqueName) => {
+    const studentUser = await User.findOne({username: studentUsername})
+    if(!studentUser)
+    {
+        throw new UserInputError("Given username not found")
+    }
+
+    const course = await Course.findOne({uniqueName: courseUniqueName})
+    if(!course)
+    {
+        throw new UserInputError("Given course not found")
+    }
+
+    
+    if(!course.students.find((studentId) => studentId.toString() === studentUser.id))
+    {
+        throw new UserInputError("Given user is not in the course")
+    }
+    
+    const newStudentList = course.students.filter((studentId) => studentId.toString() !== studentUser.id)
+    const updatedCourse = await Course.findByIdAndUpdate(course.id, {students: newStudentList}, {new: true}).populate(['teacher', 'students'])
+    return updatedCourse
+}
+
+module.exports = {createCourse, addStudentToCourse, removeStudentFromCourse}
