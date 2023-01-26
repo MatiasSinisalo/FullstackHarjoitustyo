@@ -49,6 +49,11 @@ const typeDefs = gql`
             courseUniqueName: String!
         ):Course
 
+        removeStudentFromCourse(
+            username: String!
+            courseUniqueName: String!
+        ):Course
+
         reset:Boolean
     }
 
