@@ -50,6 +50,17 @@ const resolvers  = {
 
             return course
         },
+        addStudentToCourse: async (root, args, context) => {
+            if(!context.userForToken){
+                throw new UserInputError("Unauthorized")
+            }
+
+            const studentUsername = args.username
+
+            const courseWithNewStudents = await courseService.addStudentToCourse(studentUsername)
+
+
+        },
         reset: async(root, args, context) => {
             if(config.IS_TEST)
             {

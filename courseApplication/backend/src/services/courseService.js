@@ -28,4 +28,8 @@ const createCourse = async (uniqueName, name, teacherUsername) => {
     }
 }
 
-module.exports = {createCourse}
+const addStudentToCourse = async (studentUsername) => {
+
+}
+
+module.exports = {createCourse, addStudentToCourse}
