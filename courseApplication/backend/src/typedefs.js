@@ -46,6 +46,7 @@ const typeDefs = gql`
 
         addStudentToCourse(
             username: String!
+            courseUniqueName: String!
         ):Course
 
         reset:Boolean

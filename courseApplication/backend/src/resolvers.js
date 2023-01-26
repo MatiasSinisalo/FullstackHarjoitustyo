@@ -56,8 +56,8 @@ const resolvers  = {
             }
 
             const studentUsername = args.username
-
-            const courseWithNewStudents = await courseService.addStudentToCourse(studentUsername)
+            const courseUniqueName = args.courseUniqueName
+            const courseWithNewStudents = await courseService.addStudentToCourse(studentUsername, courseUniqueName)
 
             return courseWithNewStudents
         },

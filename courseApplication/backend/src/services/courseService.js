@@ -28,7 +28,13 @@ const createCourse = async (uniqueName, name, teacherUsername) => {
     }
 }
 
-const addStudentToCourse = async (studentUsername) => {
+const addStudentToCourse = async (studentUsername, courseUniqueName) => {
+    const studentUser = await User.findOne({username: studentUsername})
+    if(!studentUser)
+    {
+        throw new UserInputError("Given username not found")
+    }
+
 
 }
 
