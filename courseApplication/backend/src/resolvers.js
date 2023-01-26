@@ -70,7 +70,7 @@ const resolvers  = {
             
             const studentUsername = args.username
             const courseUniqueName = args.courseUniqueName
-            const updatedCourse = await courseService.removeStudentFromCourse(studentUsername, courseUniqueName)
+            const updatedCourse = await courseService.removeStudentFromCourse(studentUsername, courseUniqueName, context.userForToken)
 
             return updatedCourse
 

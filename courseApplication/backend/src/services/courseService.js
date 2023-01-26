@@ -60,7 +60,7 @@ const addStudentToCourse = async (studentUsername, courseUniqueName, userForToke
     
 }
 
-removeStudentFromCourse = async (studentUsername, courseUniqueName) => {
+removeStudentFromCourse = async (studentUsername, courseUniqueName, userForToken) => {
     const studentUser = await User.findOne({username: studentUsername})
     if(!studentUser)
     {
@@ -73,6 +73,11 @@ removeStudentFromCourse = async (studentUsername, courseUniqueName) => {
         throw new UserInputError("Given course not found")
     }
 
+    //only teacher can remove any student or student can leave by their own accord
+    if(userForToken.id !== course.teacher.toString() && studentUser.id.toString() !== userForToken.id)
+    {
+        throw new UserInputError("Unauthorized")
+    }
 
     if(!course.students.find((studentId) => studentId.toString() === studentUser.id))
     {
