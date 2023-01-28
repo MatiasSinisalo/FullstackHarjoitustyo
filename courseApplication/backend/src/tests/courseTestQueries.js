@@ -31,5 +31,20 @@ const addStudentToCourse = `mutation AddStudentToCourse($addStudentToCourseUsern
   }
 }`
 
+const removeStudentFromCourse = `mutation RemoveStudentFromCourse($username: String!, $courseUniqueName: String!) {
+  removeStudentFromCourse(username: $username, courseUniqueName: $courseUniqueName) {
+    name
+    students {
+      name
+      username
+    }
+    teacher {
+      name
+      username
+    }
+    uniqueName
+  }
+}`
+
 module.exports = {createCourse, addStudentToCourse}
 
