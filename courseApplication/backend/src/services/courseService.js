@@ -43,8 +43,6 @@ const addStudentToCourse = async (studentUsername, courseUniqueName, userForToke
     }
 
     //only teacher can add any student or student can join by their own accord
-    console.log(userForToken.username)
-    console.log(course.teacher.username)
     if(userForToken.username !== course.teacher.username && studentUser.username !== userForToken.username)
     {
         throw new UserInputError("Unauthorized")
@@ -69,14 +67,16 @@ removeStudentFromCourse = async (studentUsername, courseUniqueName, userForToken
         throw new UserInputError("Given username not found")
     }
 
-    const course = await Course.findOne({uniqueName: courseUniqueName})
+    const course = await Course.findOne({uniqueName: courseUniqueName}).populate("teacher")
     if(!course)
     {
         throw new UserInputError("Given course not found")
     }
 
     //only teacher can remove any student or student can leave by their own accord
-    if(userForToken.id !== course.teacher.toString() && studentUser.id.toString() !== userForToken.id)
+    console.log(userForToken.username)
+    console.log(course.teacher.username)
+    if(userForToken.username !== course.teacher.username && studentUser.username !== userForToken.username)
     {
         throw new UserInputError("Unauthorized")
     }
