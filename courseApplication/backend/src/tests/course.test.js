@@ -2,8 +2,8 @@ const {server, apolloServer} = require('../server')
 const request = require('supertest')
 const Course = require('../models/course')
 const User = require('../models/user')
-const { userCreateQuery, userLogInQuery } = require('./userTestQueries')
-const { createCourse } = require('./courseTestQueries')
+const { userCreateQuery, userLogInQuery, createSpesificUserQuery } = require('./userTestQueries')
+const { createCourse, addStudentToCourse } = require('./courseTestQueries')
 const { query } = require('express')
 
 beforeAll(async () => {
@@ -11,6 +11,7 @@ beforeAll(async () => {
     await Course.deleteMany({})
     await User.deleteMany({})
     await apolloServer.executeOperation({query: userCreateQuery, variables:{}})
+    await apolloServer.executeOperation({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "1234"}})
 })
 
 afterAll(async () => {
@@ -86,6 +87,19 @@ describe('course tests', () => {
             const savedCourses = await Course.find({}).populate('teacher')
             expect(savedCourses.length).toBe(0)
             
+        })
+    })
+
+
+
+    describe('Course add student tests', () => {
+        test('addStudentToCourse query made by the teacher of the course allows any user to be added', async () => {
+            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+            console.log(createdCourse)
+            const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "course owned by username"}})
+            console.log(courseWithAddedStudent)
+            expect(courseWithAddedStudent.data.addStudentToCourse.students).toEqual([{username: "students username", name: "students name"}])
         })
     })
 })
