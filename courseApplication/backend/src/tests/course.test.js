@@ -182,7 +182,7 @@ describe('course tests', () => {
         })
 
 
-        test('addStudentToCourse returns error Unauthorized and does not modifyi database if some user that is not teacher tries to add other user to the course', async () => {
+        test('addStudentToCourse doesnt allow user that is not a teacher to add other users as students but return Unauthorized and doesnt modfyi database', async () => {
             //create course as username
             apolloServer.context = {userForToken: {username: "username", name: "name"}}
             const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
