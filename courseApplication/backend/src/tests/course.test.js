@@ -180,6 +180,30 @@ describe('course tests', () => {
             expect(course.teacher.username).toBe("username")
             expect(course.teacher.name).toBe("name")
         })
+
+
+        test('addStudentToCourse returns error Unauthorized and does not modifyi database if some user that is not teacher tries to add other user to the course', async () => {
+            //create course as username
+            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+            
+            //add other student to course as a course student
+            apolloServer.context = {userForToken: {username: "students username", name: "students name"}}
+            const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "username", courseUniqueName: "course owned by username"}})
+            
+            expect(courseWithAddedStudent.errors[0].message).toEqual("Unauthorized")
+            expect(courseWithAddedStudent.data.addStudentToCourse).toEqual(null)
+
+            const allCourses = await Course.find({}).populate("teacher")
+            expect(allCourses.length).toBe(1)
+
+            const course = allCourses[0]
+            expect(course.uniqueName).toBe("course owned by username")
+            expect(course.name).toBe("common name")
+            expect(course.students.length).toBe(0)
+            expect(course.teacher.username).toBe("username")
+            expect(course.teacher.name).toBe("name")
+        })
     })
 
     
