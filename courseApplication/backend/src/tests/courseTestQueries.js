@@ -46,5 +46,5 @@ const removeStudentFromCourse = `mutation RemoveStudentFromCourse($username: Str
   }
 }`
 
-module.exports = {createCourse, addStudentToCourse}
+module.exports = {createCourse, addStudentToCourse, removeStudentFromCourse}
 
