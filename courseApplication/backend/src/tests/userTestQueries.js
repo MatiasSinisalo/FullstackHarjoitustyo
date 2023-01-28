@@ -3,8 +3,8 @@
 const userCreateQuery = 'mutation Mutation {  createUser(password: "12345", name: "name", username: "username") {    name    username  }}'
 
 //query to create a user with arguments
-const createSpesificUserQuery = `mutation CreateUser($createUserUsername2: String!, $name: String!, $createUserPassword2: String!) {
-    createUser(username: $createUserUsername2, name: $name, password: $createUserPassword2) {
+const createSpesificUserQuery = `mutation CreateUser($username: String!, $name: String!, $password: String!) {
+    createUser(username: $username, name: $name, password: $password) {
       name
       username
     }
