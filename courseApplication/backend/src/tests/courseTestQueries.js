@@ -15,5 +15,21 @@ const createCourse = `mutation Mutation($uniqueName: String!, $name: String!, $t
     }
   }`
 
-module.exports = {createCourse}
+
+const addStudentToCourse = `mutation AddStudentToCourse($addStudentToCourseUsername2: String!, $courseUniqueName: String!) {
+  addStudentToCourse(username: $addStudentToCourseUsername2, courseUniqueName: $courseUniqueName) {
+    name
+    students {
+      name
+      username
+    }
+    teacher {
+      name
+      username
+    }
+    uniqueName
+  }
+}`
+
+module.exports = {createCourse, addStudentToCourse}
 
