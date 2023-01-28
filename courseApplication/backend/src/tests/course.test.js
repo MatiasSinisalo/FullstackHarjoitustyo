@@ -304,7 +304,7 @@ describe('course tests', () => {
             expect(course.teacher.name).toBe("name")
         })
 
-        test('removeStudentFromCourse query returns Unauthorized if student tries to remove some other student from the course', async () => {
+        test('removeStudentFromCourse query returns Unauthorized and doesnt modifyi database if student tries to remove some other student from the course', async () => {
             apolloServer.context = {userForToken: {username: "username", name: "name"}}
             const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
             const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "username", courseUniqueName: "course owned by username"}})
@@ -324,7 +324,25 @@ describe('course tests', () => {
             expect(course.teacher.username).toBe("username")
             expect(course.teacher.name).toBe("name")
         })
-    })
-   
+
+        test('removeStudentFromCourse returns user not found if trying to remove student that does not exist', async () => {
+            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+            const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "username", courseUniqueName: "course owned by username"}})
+           
+            const courseAfterRemoval = await apolloServer.executeOperation({query: removeStudentFromCourse, variables: {username: "students username", courseUniqueName: "course owned by username"}})
+            expect(courseAfterRemoval.errors[0].message).toEqual("Given user is not in the course")
+            expect(courseAfterRemoval.data.removeStudentFromCourse).toEqual(null)
     
+            const allCourses = await Course.find({}).populate("teacher")
+            expect(allCourses.length).toBe(1)
+    
+            const course = allCourses[0]
+            expect(course.uniqueName).toBe("course owned by username")
+            expect(course.name).toBe("common name")
+            expect(course.students.length).toBe(1)
+            expect(course.teacher.username).toBe("username")
+            expect(course.teacher.name).toBe("name")
+        })
+    })
 })
