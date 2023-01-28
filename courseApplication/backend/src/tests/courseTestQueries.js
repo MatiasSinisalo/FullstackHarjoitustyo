@@ -16,8 +16,8 @@ const createCourse = `mutation Mutation($uniqueName: String!, $name: String!, $t
   }`
 
 
-const addStudentToCourse = `mutation AddStudentToCourse($addStudentToCourseUsername2: String!, $courseUniqueName: String!) {
-  addStudentToCourse(username: $addStudentToCourseUsername2, courseUniqueName: $courseUniqueName) {
+const addStudentToCourse = `mutation AddStudentToCourse($addStudentToCourseUsername: String!, $courseUniqueName: String!) {
+  addStudentToCourse(username: $addStudentToCourseUsername, courseUniqueName: $courseUniqueName) {
     name
     students {
       name
