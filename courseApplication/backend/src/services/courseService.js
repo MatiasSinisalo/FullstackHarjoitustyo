@@ -74,8 +74,6 @@ removeStudentFromCourse = async (studentUsername, courseUniqueName, userForToken
     }
 
     //only teacher can remove any student or student can leave by their own accord
-    console.log(userForToken.username)
-    console.log(course.teacher.username)
     if(userForToken.username !== course.teacher.username && studentUser.username !== userForToken.username)
     {
         throw new UserInputError("Unauthorized")
