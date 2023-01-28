@@ -126,7 +126,7 @@ describe('course tests', () => {
 
         })
 
-        test('addStudentToCourse query returns error given username not found if trying to add a student that does not exist, and does not modifyi students list', async () => {
+        test('addStudentToCourse query returns error given username not found if trying to add a student that does not exist, and does not modifyi database', async () => {
             apolloServer.context = {userForToken: {username: "username", name: "name"}}
             
             const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
