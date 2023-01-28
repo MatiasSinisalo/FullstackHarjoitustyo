@@ -3,7 +3,7 @@ const request = require('supertest')
 const Course = require('../models/course')
 const User = require('../models/user')
 const { userCreateQuery, userLogInQuery, createSpesificUserQuery } = require('./userTestQueries')
-const { createCourse, addStudentToCourse } = require('./courseTestQueries')
+const { createCourse, addStudentToCourse, removeStudentFromCourse } = require('./courseTestQueries')
 const { query } = require('express')
 
 beforeAll(async () => {
@@ -243,5 +243,37 @@ describe('course tests', () => {
         })
     })
 
+
+    describe('removeStudentFromCourse query tests', () => {
+        test('removeStudentFromCourse query allows teacher to remove any student from course', async () => {
+            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+            const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "course owned by username"}})
+           
+            const courseAfterRemoval = await apolloServer.executeOperation({query: removeStudentFromCourse, variables: {username: "students username", courseUniqueName: "course owned by username"}})
+            expect(courseAfterRemoval.data.removeStudentFromCourse).toEqual(
+                {
+                    uniqueName: "course owned by username", 
+                    name: "common name", 
+                    teacher: {
+                        username: "username",
+                        name: "name"
+                    },
+                    students: []
+                }
+            )
+
+            const allCourses = await Course.find({}).populate("teacher")
+            expect(allCourses.length).toBe(1)
+
+            const course = allCourses[0]
+            expect(course.uniqueName).toBe("course owned by username")
+            expect(course.name).toBe("common name")
+            expect(course.students.length).toBe(0)
+            expect(course.teacher.username).toBe("username")
+            expect(course.teacher.name).toBe("name")
+        })
+    })
+   
     
 })
