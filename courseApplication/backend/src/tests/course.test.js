@@ -161,6 +161,30 @@ describe('course tests', () => {
             
         })
 
+        test('addStudentToCourse query returns error if trying to add a student to a course that already exists in the course', async () => {
+            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            
+            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+            
+            const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "course owned by username"}})
+            const courseWithDoublicateAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "course owned by username"}})
+            
+            expect(courseWithDoublicateAddedStudent.errors[0].message).toEqual("Given user is already in the course")
+            expect(courseWithDoublicateAddedStudent.data.addStudentToCourse).toEqual(null)
+           
+            const allCourses = await Course.find({}).populate(['teacher', 'students'])
+            expect(allCourses.length).toBe(1)
+            const course = allCourses[0]
+            expect(course.uniqueName).toBe("course owned by username")
+            expect(course.name).toBe("common name")
+            expect(course.students.length).toBe(1)
+            expect(course.students[0].username).toBe("students username")
+            expect(course.students[0].name).toBe("students name")
+            expect(course.teacher.username).toBe("username")
+            expect(course.teacher.name).toBe("name")
+        })
+
+
 
         test('addStudentToCourse allows an user to add themselves to the course', async () => {
             //create course as username
