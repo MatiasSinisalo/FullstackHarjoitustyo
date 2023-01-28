@@ -148,6 +148,19 @@ describe('course tests', () => {
             expect(course.teacher.name).toBe("name")
         })
 
+        test('addStudentToCourse query returns error given username not found if trying to add a student to a course that does not exist and does not modifyi database', async () => {
+            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            
+            const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "this course does not exist"}})
+            
+            expect(courseWithAddedStudent.errors[0].message).toEqual("Given course not found")
+            expect(courseWithAddedStudent.data.addStudentToCourse).toEqual(null)
+
+            const allCourses = await Course.find({}).populate("teacher")
+            expect(allCourses.length).toBe(0)
+            
+        })
+
 
         test('addStudentToCourse allows an user to add themselves to the course', async () => {
             //create course as username
