@@ -96,7 +96,7 @@ describe('course tests', () => {
         test('addStudentToCourse query made by the teacher of the course allows any user to be added', async () => {
             apolloServer.context = {userForToken: {username: "username", name: "name"}}
             const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
-            console.log(createdCourse)
+            console.log(createdCourse.data.createCourse.teacher)
             const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "course owned by username"}})
             console.log(courseWithAddedStudent)
             expect(courseWithAddedStudent.data.addStudentToCourse.students).toEqual([{username: "students username", name: "students name"}])
