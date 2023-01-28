@@ -95,11 +95,33 @@ describe('course tests', () => {
     describe('Course add student tests', () => {
         test('addStudentToCourse query made by the teacher of the course allows any user to be added', async () => {
             apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            
             const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
-            console.log(createdCourse.data.createCourse.teacher)
             const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "course owned by username"}})
-            console.log(courseWithAddedStudent)
+            
             expect(courseWithAddedStudent.data.addStudentToCourse.students).toEqual([{username: "students username", name: "students name"}])
         })
+
+        test('addStudentToCourse query returns error given username not found if trying to add a student that does not exist, and does not modifyi students list', async () => {
+            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            
+            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+            const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "this user does not exist", courseUniqueName: "course owned by username"}})
+            
+            console.log(courseWithAddedStudent)
+            expect(courseWithAddedStudent.errors[0].message).toEqual("Given username not found")
+            expect(courseWithAddedStudent.data.addStudentToCourse).toEqual(null)
+
+            const allCourses = await Course.find({}).populate("teacher")
+            console.log(allCourses)
+            
+            //all courses length should be 1 since we reset the test database after each test
+            expect(allCourses.length).toBe(1)
+            
+            const course = allCourses[0]
+            expect(course.students.length).toBe(0)
+        })
     })
+
+    
 })
