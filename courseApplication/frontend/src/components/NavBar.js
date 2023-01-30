@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux"
-
+import { Link } from "react-router-dom"
+import "./navbar.css"
 const NavBar = ({logOut}) => {
     const user = useSelector((store) => {return store.user})
     if(user.username)
@@ -7,6 +8,10 @@ const NavBar = ({logOut}) => {
         return (
             <div>
                 <button onClick={logOut}>Log Out</button>
+                <Link className="navBarLink" to="/dashboard">dashboard</Link>
+                <Link className="navBarLink" to="/CourseBrowser">Courses</Link>
+
+
             </div>
         )
     }
