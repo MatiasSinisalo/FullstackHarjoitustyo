@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { addUserToCourse } from "../services/courseService";
 const courses = []
 
 
@@ -16,8 +17,9 @@ const courseSlice = createSlice({
     }
 })
 
-export const addStudentToCourse = (courseUniqueName, username) => {
+export const addStudentToCourse = (courseUniqueName, username, client) => {
     return async dispatch => {
+        const courseWithAddedStudent = await addUserToCourse(courseUniqueName, username, client)
         console.log(`join to course called with ${courseUniqueName}, ${username}`)
     }
 }

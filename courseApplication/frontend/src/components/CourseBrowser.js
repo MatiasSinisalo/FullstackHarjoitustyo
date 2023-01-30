@@ -6,7 +6,7 @@ const CourseBrowser = () =>{
       <>
       <p>Course Browser page</p>
 
-      {courses.map((course) => <CourseShowCase course={course}></CourseShowCase>)}
+      {courses.map((course) => <CourseShowCase key={course.uniqueName} course={course}></CourseShowCase>)}
       </>
   
     )
