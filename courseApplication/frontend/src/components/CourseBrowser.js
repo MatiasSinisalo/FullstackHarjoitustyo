@@ -1,11 +1,12 @@
 import { useSelector } from "react-redux"
+import CourseShowCase from "./CourseShowCase"
 const CourseBrowser = () =>{
     const courses = useSelector((store) => store.courses)
     return(
       <>
       <p>Course Browser page</p>
 
-      {courses.map((course) => <p key={course.uniqueName}>{course.uniqueName} {course.name}</p>)}
+      {courses.map((course) => <CourseShowCase course={course}></CourseShowCase>)}
       </>
   
     )
