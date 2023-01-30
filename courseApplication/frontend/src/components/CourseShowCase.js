@@ -1,8 +1,13 @@
+import { useDispatch, useSelector } from "react-redux"
+import { addStudentToCourse } from "../reducers/courseReducer"
 
 
 const CourseShowCase = ({course}) => {
+    const currentUser = useSelector((store) => store.user)
+    const dispatch = useDispatch()
     const joinToCourse = () => {
         console.log(`Joining course ${course.uniqueName}`)
+        dispatch(addStudentToCourse(course.uniqueName, currentUser.username))
     }
     
     return (

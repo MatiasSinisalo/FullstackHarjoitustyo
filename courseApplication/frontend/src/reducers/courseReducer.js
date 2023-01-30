@@ -16,5 +16,11 @@ const courseSlice = createSlice({
     }
 })
 
+export const addStudentToCourse = (courseUniqueName, username) => {
+    return async dispatch => {
+        console.log(`join to course called with ${courseUniqueName}, ${username}`)
+    }
+}
+
 export default courseSlice.reducer
 export const {addCourse, setCourses} = courseSlice.actions
