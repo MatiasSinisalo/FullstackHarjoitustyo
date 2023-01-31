@@ -22,7 +22,8 @@ export const addUserToCourse = async (uniqueName, username, apolloClient) => {
     console.log(courseWithAddedStudent)
     if(courseWithAddedStudent)
     {
-        return courseWithAddedStudent.data.addUserToCourse
+        console.log(courseWithAddedStudent.data.addStudentToCourse)
+        return courseWithAddedStudent.data.addStudentToCourse
     }
 }
 
