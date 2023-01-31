@@ -5,6 +5,7 @@ import { addStudentToCourse } from "../reducers/courseReducer"
 
 const CourseShowCase = ({course}) => {
     const currentUser = useSelector((store) => store.user)
+    const thisUserIsParticipating = course.students.find((student) => student.username === currentUser.username)
     const client = useApolloClient()
     const dispatch = useDispatch()
     const joinToCourse = () => {
@@ -12,12 +13,16 @@ const CourseShowCase = ({course}) => {
         dispatch(addStudentToCourse(course.uniqueName, currentUser.username, client))
     }
     
+
+    const leaveFromCourse = () => {
+        console.log("Leaving a course not implemented yet")
+    }
+
     return (
         <div>
             <h2>{course.uniqueName}</h2>
             <h3>{course.name}</h3>
-
-            <button onClick={joinToCourse}>Join</button>
+            {thisUserIsParticipating ?  <button onClick={leaveFromCourse}>Leave course</button> : <button onClick={joinToCourse}>Join</button>}
         </div>
         
     )
