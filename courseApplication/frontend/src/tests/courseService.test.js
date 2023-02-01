@@ -43,11 +43,6 @@ describe('courseService tests', () => {
             expect(courseWithAddedStudent.uniqueName).toEqual('courses unique name')
             expect(courseWithAddedStudent.students[0].name).toEqual('users name 4321')
             expect(courseWithAddedStudent.students[0].username).toEqual('users username')
-        })
-
-        
+        }) 
     })
-   
-
-
 })
