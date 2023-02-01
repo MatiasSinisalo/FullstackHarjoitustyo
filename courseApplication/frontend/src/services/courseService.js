@@ -3,7 +3,7 @@ import { ADD_STUDENT_TO_COURSE, CREATE_COURSE } from "../queries/courseQueries"
 export const createCourse = async (uniqueName, name, teacher, apolloClient) => {    
     try{
         const createdCourse = await apolloClient.mutate({mutation: CREATE_COURSE, variables: {uniqueName, name, teacher: ""}})
-        console.log(createdCourse)
+        
         if(createdCourse)
         {
             return createdCourse.data.createCourse
@@ -19,10 +19,10 @@ export const createCourse = async (uniqueName, name, teacher, apolloClient) => {
 
 export const addUserToCourse = async (uniqueName, username, apolloClient) => {
     const courseWithAddedStudent = await apolloClient.mutate({mutation: ADD_STUDENT_TO_COURSE, variables: {courseUniqueName: uniqueName, username: username}})
-    console.log(courseWithAddedStudent)
+   
     if(courseWithAddedStudent)
     {
-        console.log(courseWithAddedStudent.data.addStudentToCourse)
+        
         return courseWithAddedStudent.data.addStudentToCourse
     }
 }

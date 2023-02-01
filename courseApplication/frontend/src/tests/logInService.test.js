@@ -64,7 +64,7 @@ describe('LogInAsUser tests', () => {
     test('LogInAsUser returns username, name, and token if username and password are correct', async () => {
        
         const userData = await LogInAsUser("username", "password", mockClient)
-        console.log(userData)
+       
         expect(userData).toEqual({username: "username", name: "name", token: "abc1234"})
     })
     
