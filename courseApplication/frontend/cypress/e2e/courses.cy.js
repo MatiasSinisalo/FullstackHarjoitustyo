@@ -141,7 +141,32 @@ describe('Course creation tests', () => {
         leaveButton.click()
         cy.wait(500)
 
-        courseShowCase.contains("button","Join")
+        cy.contains("Log Out").click()
+    })
+
+    it('user can join and leave a course created by another user', function (){
+        logInAsUser("second username", "password1234")
+
+        createCourseAsUser("this course is created by user second username", "courses name")
+        cy.visit('http://localhost:3000/CourseBrowser')
+        cy.wait(500)
+        cy.contains("this course is created by user second username")
+        cy.contains("Log Out").click()
+
+        logInAsUser("username", "password1234")
+        cy.visit('http://localhost:3000/CourseBrowser')
+        cy.wait(500)
+        const courseShowCase = cy.contains("this course is created by user second username").parent()
+        const joinButton = courseShowCase.contains("button","Join")
+        joinButton.click()
+        cy.wait(100)
+
+        const leaveButton = courseShowCase.contains("button","Leave course")
+        leaveButton.click()
+        cy.wait(500)
+
+
+        cy.contains("Log Out").click()
 
     })
 
