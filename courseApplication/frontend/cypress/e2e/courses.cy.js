@@ -1,4 +1,4 @@
-
+import { createCourse } from "../../../backend/src/tests/courseTestQueries"
 
 import { CREATE_USER } from "../../src/queries/userQueries"
 
@@ -30,6 +30,24 @@ before(function () {
             }
             `,
             variables: {username: "username", name: "users name", password: "password1234"},
+            operationName: 'Mutation'
+        }
+    })
+
+
+    cy.request({
+        method: 'POST',
+        url: 'http://localhost:4000',
+        body: {
+            query:`
+            mutation Mutation($username: String!, $name: String!, $password: String!) {
+              createUser(username: $username, name: $name, password: $password) {
+                name
+                username
+              }
+            }
+            `,
+            variables: {username: "second username", name: "second users name", password: "password1234"},
             operationName: 'Mutation'
         }
     })
