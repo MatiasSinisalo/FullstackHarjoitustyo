@@ -57,23 +57,31 @@ before(function () {
 
 
 describe('Course creation tests', () => {
-    it('user can create a course', function (){
+
+    const logInAsUser = (username, password) => {
         cy.visit('http://localhost:3000')
         const usernameField = cy.get('input[name="username"]')
         const passwordField = cy.get('input[name="password"]')
         const submitButton = cy.get('input[type="submit"]')
 
-        usernameField.click().type('username')
+        usernameField.click().type(username)
         cy.wait(100)
-        passwordField.click().type('password1234')
+        passwordField.click().type(password)
         cy.wait(100)
         submitButton.click()
         cy.wait(100)
         cy.contains('Hello username')
         cy.contains('dashboard page')
-        cy.contains('Create new Course').click()
+       
         cy.wait(100)
+    }
 
+
+    it('user can create a course', function (){
+        logInAsUser("username", "password1234")
+
+
+        cy.contains('Create new Course').click()
         const courseUniqueNameField = cy.get('input[name=courseUniqueName]')
         const courseNameField = cy.get('input[name=courseName]')
         const courseSubmitButton = cy.get('input[type="submit"]')
@@ -95,26 +103,9 @@ describe('Course creation tests', () => {
 
 
     it('user can not create a course with doublicate unque name', function (){
-        
-        
-       
-        cy.visit('http://localhost:3000')
-        const usernameField = cy.get('input[name="username"]')
-        const passwordField = cy.get('input[name="password"]')
-        const submitButton = cy.get('input[type="submit"]')
+        logInAsUser("username", "password1234")
 
-        usernameField.click().type('username')
-        cy.wait(100)
-        passwordField.click().type('password1234')
-        cy.wait(100)
-        submitButton.click()
-        cy.wait(100)
-        cy.contains('Hello username')
-        cy.contains('dashboard page')
         cy.contains('Create new Course').click()
-        cy.wait(100)
-
-        
         const courseUniqueNameField = cy.get('input[name=courseUniqueName]')
         const courseNameField = cy.get('input[name=courseName]')
         const courseSubmitButton = cy.get('input[type="submit"]')
