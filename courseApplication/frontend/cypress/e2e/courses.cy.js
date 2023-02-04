@@ -70,7 +70,7 @@ describe('Course creation tests', () => {
         cy.wait(100)
         submitButton.click()
         cy.wait(100)
-        cy.contains('Hello username')
+        cy.contains(username)
         cy.contains('dashboard page')
        
         cy.wait(100)
