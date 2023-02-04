@@ -115,18 +115,12 @@ describe('Course creation tests', () => {
 
         cy.intercept('POST', 'http://localhost:4000').as('serverResponse')
         createCourseAsUser("unique name of the course", "courses name")
-        
+
         cy.wait('@serverResponse').then((response) => {
             const serverError = response.response.body.errors[0]
             expect(serverError.message).to.equal("Course uniqueName must be unique")
             console.log(response)
-        })
-        //cy.visit('http://localhost:3000/CourseBrowser')
-        //cy.wait(100)
-        //cy.contains("unique name of the course")
-        //cy.contains("courses name")
-
-       
+        })   
     })
 })
 
