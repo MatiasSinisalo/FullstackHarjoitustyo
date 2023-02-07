@@ -31,8 +31,10 @@ export const addStudentToCourse = (courseUniqueName, username, client) => {
     return async dispatch => {
         const courseWithAddedStudent = await addUserToCourse(courseUniqueName, username, client)
        
-        dispatch(updateCourse(courseWithAddedStudent))
-       
+        if(courseWithAddedStudent)
+        {
+            dispatch(updateCourse(courseWithAddedStudent))
+        }
     }
 }
 
