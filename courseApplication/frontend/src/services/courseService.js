@@ -29,12 +29,12 @@ export const addUserToCourse = async (uniqueName, username, apolloClient) => {
 
 
 export const removeUserFromCourse = async (uniqueName, username, apolloClient) => {
-    const courseWithAddedStudent = await apolloClient.mutate({mutation: REMOVE_STUDENT_FROM_COURSE, variables: {courseUniqueName: uniqueName, username: username}})
+    const updatedCourse = await apolloClient.mutate({mutation: REMOVE_STUDENT_FROM_COURSE, variables: {courseUniqueName: uniqueName, username: username}})
    
-    if(courseWithAddedStudent)
+    if(updatedCourse)
     {
         
-        return courseWithAddedStudent.data.addStudentToCourse
+        return updatedCourse.data.addStudentToCourse
     }
 }
 
