@@ -39,7 +39,10 @@ export const addStudentToCourse = (courseUniqueName, username, client) => {
 export const removeStudentFromCourse = (courseUniqueName, username, client) => {
     return async dispatch => {
         const updatedCourse = await removeUserFromCourse(courseUniqueName, username, client)
-        dispatch(updateCourse(updatedCourse))
+        if(updatedCourse)
+        {
+            dispatch(updateCourse(updatedCourse))
+        }
     }
 }
 
