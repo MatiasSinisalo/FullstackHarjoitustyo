@@ -138,8 +138,17 @@ describe('Course creation tests', () => {
         cy.wait(100)
 
         const leaveButton = courseShowCase.contains("button","Leave course")
+        cy.intercept('POST', 'http://localhost:4000').as('serverResponse')
         leaveButton.click()
-        cy.wait(500)
+        cy.wait('@serverResponse').then((response) => {
+            const receivedResponse = response.response.body.data.removeStudentFromCourse
+            expect(receivedResponse.uniqueName).to.equal("this course is created by user username")
+            expect(receivedResponse.students.find((student) => student.username === "username")).to.equal(undefined)
+            console.log(response)
+        })
+       
+       
+        courseShowCase.contains("button","Join")
 
         cy.contains("Log Out").click()
     })
@@ -162,12 +171,19 @@ describe('Course creation tests', () => {
         cy.wait(100)
 
         const leaveButton = courseShowCase.contains("button","Leave course")
+       
+        cy.intercept('POST', 'http://localhost:4000').as('serverResponse')
         leaveButton.click()
-        cy.wait(500)
+        cy.wait('@serverResponse').then((response) => {
+            const receivedResponse = response.response.body.data.removeStudentFromCourse
+            expect(receivedResponse.uniqueName).to.equal("this course is created by user second username")
+            expect(receivedResponse.students.find((student) => student.username === "username")).to.equal(undefined)
+            console.log(response)
+        })
 
+        courseShowCase.contains("button","Join")
 
         cy.contains("Log Out").click()
-
     })
 
 
