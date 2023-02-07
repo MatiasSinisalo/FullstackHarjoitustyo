@@ -34,7 +34,7 @@ export const removeUserFromCourse = async (uniqueName, username, apolloClient) =
     if(updatedCourse)
     {
         
-        return updatedCourse.data.addStudentToCourse
+        return updatedCourse.data.removeStudentFromCourse
     }
 }
 
