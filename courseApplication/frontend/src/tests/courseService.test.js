@@ -1,4 +1,4 @@
-import { createCourse, addUserToCourse } from '../services/courseService'
+import { createCourse, addUserToCourse, removeUserFromCourse } from '../services/courseService'
 import {createMockClient} from '@apollo/client/testing'
 
 
@@ -43,6 +43,23 @@ describe('courseService tests', () => {
             expect(courseWithAddedStudent.uniqueName).toEqual('courses unique name')
             expect(courseWithAddedStudent.students[0].name).toEqual('users name 4321')
             expect(courseWithAddedStudent.students[0].username).toEqual('users username')
+        }) 
+    })
+
+    describe('removeUserFromCourse function test', () => {
+        const mockClient = {
+            mutate : (data) => {
+                if(data.variables.courseUniqueName && data.variables.username)
+                {
+                    return {data: {removeStudentFromCourse: {uniqueName: data.variables.courseUniqueName, name: 'course name', students : [{username: data.variables.username, name: 'users name 4321'}], teacher: {username: "username", name: "users name"}}}}
+                }
+            },
+        }
+        test('removeUserFromCourse calls backend with correct data', async () => {
+            const courseWithAddedStudent = await removeUserFromCourse('courses unique name', 'students username to be removed', mockClient)
+            expect(courseWithAddedStudent.uniqueName).toEqual('courses unique name')
+            expect(courseWithAddedStudent.students[0].name).toEqual('users name 4321')
+            expect(courseWithAddedStudent.students[0].username).toEqual('students username to be removed')
         }) 
     })
 })
