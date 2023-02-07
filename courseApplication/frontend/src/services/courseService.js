@@ -18,33 +18,41 @@ export const createCourse = async (uniqueName, name, teacher, apolloClient) => {
 }
 
 export const addUserToCourse = async (uniqueName, username, apolloClient) => {
-    const courseWithAddedStudent = await apolloClient.mutate({mutation: ADD_STUDENT_TO_COURSE, variables: {courseUniqueName: uniqueName, username: username}})
-    .catch((err) => console.log(err))
-   
-    if(courseWithAddedStudent?.data?.addStudentToCourse)
-    {
+    try{
+        const courseWithAddedStudent = await apolloClient.mutate({mutation: ADD_STUDENT_TO_COURSE, variables: {courseUniqueName: uniqueName, username: username}})
         
-        return courseWithAddedStudent.data.addStudentToCourse
+    
+        if(courseWithAddedStudent?.data?.addStudentToCourse)
+        {
+            
+            return courseWithAddedStudent.data.addStudentToCourse
+        }
+        
     }
-    else
+    catch(err)
     {
+        console.log(err)
         return null
+        
     }
 }
 
 
 export const removeUserFromCourse = async (uniqueName, username, apolloClient) => {
-    const updatedCourse = await apolloClient.mutate({mutation: REMOVE_STUDENT_FROM_COURSE, variables: {courseUniqueName: uniqueName, username: username}})
-    .catch((err) => console.log(err))
+    try{
+        const updatedCourse = await apolloClient.mutate({mutation: REMOVE_STUDENT_FROM_COURSE, variables: {courseUniqueName: uniqueName, username: username}})
     
-    if(updatedCourse?.data?.removeStudentFromCourse)
-    {
-        
-        return updatedCourse.data.removeStudentFromCourse
+    
+        if(updatedCourse?.data?.removeStudentFromCourse)
+        {
+            return updatedCourse.data.removeStudentFromCourse
+        }
     }
-    else
+    catch(err)
     {
+        console.log(err)
         return null
     }
+   
 }
 
