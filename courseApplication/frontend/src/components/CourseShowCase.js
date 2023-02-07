@@ -15,7 +15,6 @@ const CourseShowCase = ({course}) => {
     
 
     const leaveFromCourse = () => {
-        console.log("Leaving a course not implemented yet")
         dispatch(removeStudentFromCourse(course.uniqueName, currentUser.username, client))
     }
 

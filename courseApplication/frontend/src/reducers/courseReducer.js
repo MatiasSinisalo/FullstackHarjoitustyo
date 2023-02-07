@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addUserToCourse } from "../services/courseService";
+import { addUserToCourse, removeUserFromCourse } from "../services/courseService";
 const courses = []
 
 
@@ -38,7 +38,8 @@ export const addStudentToCourse = (courseUniqueName, username, client) => {
 
 export const removeStudentFromCourse = (courseUniqueName, username, client) => {
     return async dispatch => {
-        console.log("async action called!")
+        const updatedCourse = await removeUserFromCourse(courseUniqueName, username, client)
+        dispatch(updateCourse(updatedCourse))
     }
 }
 
