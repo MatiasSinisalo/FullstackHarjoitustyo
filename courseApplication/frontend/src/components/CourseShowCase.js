@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client"
 import { useDispatch, useSelector } from "react-redux"
-import { addStudentToCourse } from "../reducers/courseReducer"
+import { addStudentToCourse, removeStudentFromCourse } from "../reducers/courseReducer"
 
 
 const CourseShowCase = ({course}) => {
@@ -16,6 +16,7 @@ const CourseShowCase = ({course}) => {
 
     const leaveFromCourse = () => {
         console.log("Leaving a course not implemented yet")
+        dispatch(removeStudentFromCourse(course.uniqueName, currentUser.username, client))
     }
 
     return (

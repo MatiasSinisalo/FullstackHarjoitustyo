@@ -36,4 +36,10 @@ export const addStudentToCourse = (courseUniqueName, username, client) => {
     }
 }
 
+export const removeStudentFromCourse = (courseUniqueName, username, client) => {
+    return async dispatch => {
+        console.log("async action called!")
+    }
+}
+
 export default courseSlice.reducer
