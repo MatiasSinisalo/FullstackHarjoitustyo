@@ -45,3 +45,18 @@ export const ADD_STUDENT_TO_COURSE = gql`mutation AddStudentToCourse($username: 
       uniqueName
     }
   }`
+
+export const REMOVE_STUDENT_FROM_COURSE = gql`mutation RemoveStudentFromCourse($username: String!, $courseUniqueName: String!) {
+  removeStudentFromCourse(username: $username, courseUniqueName: $courseUniqueName) {
+    name
+    students {
+      name
+      username
+    }
+    teacher {
+      name
+      username
+    }
+    uniqueName
+  }
+}`
