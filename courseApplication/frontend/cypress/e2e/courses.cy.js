@@ -134,8 +134,15 @@ describe('Course creation tests', () => {
         cy.wait(500)
         const courseShowCase = cy.contains("this course is created by user username").parent()
         const joinButton = courseShowCase.contains("button","Join")
+        
+        cy.intercept('POST', 'http://localhost:4000').as('serverResponse')
         joinButton.click()
-        cy.wait(100)
+        cy.wait('@serverResponse').then((response) => {
+            const receivedResponse = response.response.body.data.addStudentToCourse
+            expect(receivedResponse.uniqueName).to.equal("this course is created by user username")
+            expect(receivedResponse.students.find((student) => student.username === "username").username).to.equal("username")
+            console.log(response)
+        })
 
         const leaveButton = courseShowCase.contains("button","Leave course")
         cy.intercept('POST', 'http://localhost:4000').as('serverResponse')
@@ -167,11 +174,18 @@ describe('Course creation tests', () => {
         cy.wait(500)
         const courseShowCase = cy.contains("this course is created by user second username").parent()
         const joinButton = courseShowCase.contains("button","Join")
+       
+        cy.intercept('POST', 'http://localhost:4000').as('serverResponse')
         joinButton.click()
-        cy.wait(100)
+        cy.wait('@serverResponse').then((response) => {
+            const receivedResponse = response.response.body.data.addStudentToCourse
+            expect(receivedResponse.uniqueName).to.equal("this course is created by user second username")
+            expect(receivedResponse.students.find((student) => student.username === "username").username).to.equal("username")
+            console.log(response)
+        })
+       
 
         const leaveButton = courseShowCase.contains("button","Leave course")
-       
         cy.intercept('POST', 'http://localhost:4000').as('serverResponse')
         leaveButton.click()
         cy.wait('@serverResponse').then((response) => {
