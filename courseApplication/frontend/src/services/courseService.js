@@ -20,11 +20,9 @@ export const createCourse = async (uniqueName, name, teacher, apolloClient) => {
 export const addUserToCourse = async (uniqueName, username, apolloClient) => {
     try{
         const courseWithAddedStudent = await apolloClient.mutate({mutation: ADD_STUDENT_TO_COURSE, variables: {courseUniqueName: uniqueName, username: username}})
-        
-    
+       
         if(courseWithAddedStudent?.data?.addStudentToCourse)
         {
-            
             return courseWithAddedStudent.data.addStudentToCourse
         }
         

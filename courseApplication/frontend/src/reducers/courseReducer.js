@@ -18,7 +18,6 @@ const courseSlice = createSlice({
             const updatedCourse = action.payload
            
             const updatedCourseList = state.map((course) => course.uniqueName === updatedCourse.uniqueName ? updatedCourse : course)
-            
             return updatedCourseList
 
             
@@ -30,7 +29,6 @@ export const {addCourse, setCourses, updateCourse} = courseSlice.actions
 export const addStudentToCourse = (courseUniqueName, username, client) => {
     return async dispatch => {
         const courseWithAddedStudent = await addUserToCourse(courseUniqueName, username, client)
-       
         if(courseWithAddedStudent)
         {
             dispatch(updateCourse(courseWithAddedStudent))
