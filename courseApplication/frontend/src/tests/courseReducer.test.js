@@ -70,4 +70,40 @@ describe('course reducer tests', () => {
         })
        
     })
+
+    describe('courseReducer removeUserFromCourse action tests', () => {
+        const mockClient = {
+            mutate: function(data){
+                if(data.variables.courseUniqueName && data.variables.username == 'some username')
+                {
+                    return {data: {removeStudentFromCourse: {uniqueName: data.variables.courseUniqueName, name: exampleCourse.name, teacher: {username: "username", name: "users name"}, students: []}}}
+                }
+            }
+        }
+
+        const failingMockClient = {
+            mutate: function(data){
+                return {data: {removeStudentFromCourse: null}}
+            }
+        }
+ 
+        test('removeUserFromCourse removes student from the correct course from the store when removeStudentFromCourse function is successfull', async () => {
+            store.dispatch(setCourses([{...exampleCourse, students: [{username: 'some username'}]}, {...secondExampleCourse, students: [{username: 'some username'}]}]))
+            await store.dispatch(removeStudentFromCourse('this is a unique name', 'some username', mockClient))
+            const storeState = store.getState()
+            const courses =  storeState.courses
+            expect(courses[0].students.length).toEqual(0)
+            expect(courses[1].students.length).toEqual(1)
+        })
+
+        test('removeUserFromCourse does not change store state when removeStudentFromCourse function is not successfull', async () => {
+            store.dispatch(setCourses([{...exampleCourse, students: [{username: 'some username'}]}, {...secondExampleCourse, students: [{username: 'some username'}]}]))
+            await store.dispatch(removeStudentFromCourse('this is a unique name', 'some username', failingMockClient))
+            const storeState = store.getState()
+            const courses =  storeState.courses
+            expect(courses[0].students[0].username).toEqual('some username')
+            expect(courses[1].students[0].username).toEqual('some username')
+        })
+       
+    })
 })
