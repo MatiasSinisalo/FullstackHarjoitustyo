@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { useSelector } from "react-redux";
 import { addUserToCourse, removeUserFromCourse } from "../services/courseService";
 const courses = []
 
@@ -19,8 +20,6 @@ const courseSlice = createSlice({
            
             const updatedCourseList = state.map((course) => course.uniqueName === updatedCourse.uniqueName ? updatedCourse : course)
             return updatedCourseList
-
-            
         }
     }
 })
@@ -45,5 +44,20 @@ export const removeStudentFromCourse = (courseUniqueName, username, client) => {
         }
     }
 }
+
+const courseHasStudent = (course, studentsUsername) => {
+    const hasStudent = course.students.find((user) => user.username === studentsUsername)
+    return hasStudent
+}
+
+export const getCoursesWithUser = (username) => {
+    return dispatch => {
+        const allCourses = useSelector((store) => store.courses)
+        const coursesWithUserAsStudent = allCourses.filter((course) => courseHasStudent(course, username))
+        console.log(coursesWithUserAsStudent)
+        return coursesWithUserAsStudent
+    }
+}
+       
 
 export default courseSlice.reducer
