@@ -14,5 +14,5 @@ jobs:
         with:
           node-version: '18.x'
       - run: cd courseApplication/frontend/
-      - run: npm ci
-      - run: npm test -- --watchAll
+      - run: npm install
+      - run: npm run test -- --watchAll
