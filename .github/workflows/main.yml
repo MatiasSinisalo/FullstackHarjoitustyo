@@ -6,8 +6,9 @@ jobs:
   build:
      
     runs-on: ubuntu-latest
-    env:
-       working-directory: ./courseApplication/frontend
+    defaults:
+       run: 
+        working-directory: ./courseApplication/frontend
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js
