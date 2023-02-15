@@ -1,4 +1,4 @@
-name: Node.js CI
+name: CI
 
 on: [push]
 
@@ -13,8 +13,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-      - name: go to project
-        working-directory: ./courseApplication/frontend/
+      - run: | 
+         cd courseApplication/frontend
       - run: npm install
-      - run: npm test -- --watchAll
+      - run: npm run test -- --watchAll
 
