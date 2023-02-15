@@ -31,6 +31,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-      - run: ls
+      - name: Launch MongoDB container
+        uses: supercharge/mongodb-github-action@1.9.0
+        with:
+         mongodb-port: 8000
       - run: npm install 
-      - run: npm run test
+      - run: npm run test:local
