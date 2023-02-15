@@ -1,9 +1,9 @@
-name: CI
+name: Node.js CI
 
 on: [push]
 
 jobs:
-  buildAndTestFrontEnd:
+  build:
 
     runs-on: ubuntu-latest
 
@@ -13,6 +13,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-      - run: cd courseApplication/frontend/
+      - name: go to project
+        working-directory: ./courseApplication/frontend/
       - run: npm install
-      - run: npm run test -- --watchAll
+      - run: npm test -- --watchAll
+
