@@ -11,7 +11,7 @@ const getCurrentUrlForEnvironment = () => {
         case 'test':
             return process.env.MONGODB_URI_TEST
         case 'test:local':
-            return 'http://localhost:8000/'
+            return 'mongodb://localhost:8000'
     }
 }
 
