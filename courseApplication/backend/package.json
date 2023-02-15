@@ -7,6 +7,7 @@
     "start": "cross-env NODE_ENV=production node src/index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand --forceExit",
+    "test:local": "cross-env NODE_ENV=testLocal jest --verbose --runInBand --forceExit",
     "dev:E2E": "cross-env NODE_ENV=test node src/index.js"
   },
   "author": "",

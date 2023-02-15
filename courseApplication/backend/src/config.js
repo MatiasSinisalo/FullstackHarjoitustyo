@@ -4,7 +4,18 @@ const SECRET = process.env.SECRET
 
 const PORT = process.env.PORT
 
-const MONGODB_URI = process.env.NODE_ENV === 'test' ? process.env.MONGODB_URI_TEST : process.env.MONGODB_URI
+const getCurrentUrlForEnvironment = () => {
+    switch(process.env.NODE_ENV){
+        case 'development':
+            return process.env.MONGODB_URI
+        case 'test':
+            return process.env.MONGODB_URI_TEST
+        case 'test:local':
+            return 'http://localhost:8000/'
+    }
+}
+
+const MONGODB_URI = getCurrentUrlForEnvironment()
 
 const IS_TEST = process.env.NODE_ENV === 'test' ? true : false
 
