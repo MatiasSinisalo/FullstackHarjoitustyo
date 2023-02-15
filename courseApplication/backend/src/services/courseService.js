@@ -36,12 +36,13 @@ const addStudentToCourse = async (studentUsername, courseUniqueName, userForToke
         throw new UserInputError("Given username not found")
     }
 
+    /*
     const course = await Course.findOne({uniqueName: courseUniqueName}).populate("teacher")
     if(!course)
     {
         throw new UserInputError("Given course not found")
     }
-
+    */
     //only teacher can add any student or student can join by their own accord
     if(userForToken.username !== course.teacher.username && studentUser.username !== userForToken.username)
     {
