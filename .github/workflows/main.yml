@@ -16,8 +16,4 @@ jobs:
       - run: | 
          cd courseApplication/frontend
          npm install
-      - name: Run tests
-        uses: actions/setup-node@v3
-      - run: npm run test -- --watchAll=false
-        
-
+         npm run test -- --watchAll=false
