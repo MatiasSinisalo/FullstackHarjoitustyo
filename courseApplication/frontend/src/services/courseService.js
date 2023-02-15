@@ -6,7 +6,7 @@ export const createCourse = async (uniqueName, name, teacher, apolloClient) => {
         
         if(createdCourse)
         {
-            return createdCourse.data.createCourse
+            return null
         }
         else{
             return null
