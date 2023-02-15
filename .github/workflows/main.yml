@@ -35,5 +35,7 @@ jobs:
         uses: supercharge/mongodb-github-action@1.9.0
         with:
          mongodb-port: 8000
+         mongodb-username: localuser
+         mongodb-password: localpass
       - run: npm install 
       - run: npm run test:local
