@@ -67,6 +67,12 @@ const typeDefs = gql`
             courseUniqueName: String!
         ):Course
 
+        addTaskToCourse(
+            courseUniqueName: String!
+            description: String!
+            deadline: String!
+        ):Course
+
         reset:Boolean
     }
 
