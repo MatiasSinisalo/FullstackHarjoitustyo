@@ -75,6 +75,21 @@ const resolvers  = {
             return updatedCourse
 
         },
+        addTaskToCourse: async(root, args, context) => {
+            if(!context.userForToken)
+            {
+                throw new UserInputError("Unauthorized")
+            }
+
+            
+            const courseUniqueName = args.courseUniqueName
+            const description = args.description
+            const deadline = args.deadline
+            const updatedCourse = await courseService.addTaskToCourse(courseUniqueName, description, deadline, context.userForToken)
+
+            return updatedCourse
+
+        },
         reset: async(root, args, context) => {
             if(config.IS_TEST)
             {
