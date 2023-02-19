@@ -15,7 +15,8 @@ const createCourse = async (uniqueName, name, teacherUsername) => {
         uniqueName: uniqueName,
         name: name,
         teacher: teacherID,
-        students: []
+        students: [],
+        tasks: []
     }
     try{
         const courseModel = Course(course)
@@ -24,6 +25,7 @@ const createCourse = async (uniqueName, name, teacherUsername) => {
     }
     catch(error)
     {
+        console.log(error)
         throw new UserInputError("Course uniqueName must be unique")
     }
 }
