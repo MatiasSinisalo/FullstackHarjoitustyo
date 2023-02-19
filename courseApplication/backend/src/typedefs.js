@@ -10,11 +10,24 @@ const typeDefs = gql`
         value: String!
     }
 
+    type Submission{
+        fromUser: User!
+        content: String!
+        submitted: Boolean!
+    }
+
+    type Task{
+        description: String!
+        deadline: String!
+        submissions: [Submission!]!
+    }
+
     type Course{
         uniqueName: String!
         name: String!
         teacher: User!
         students: [User!]!
+        tasks: [Task!]!
     }
 
     type Query{
