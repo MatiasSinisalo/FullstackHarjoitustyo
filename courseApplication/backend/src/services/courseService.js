@@ -92,4 +92,30 @@ removeStudentFromCourse = async (studentUsername, courseUniqueName, userForToken
     return updatedCourse
 }
 
-module.exports = {createCourse, addStudentToCourse, removeStudentFromCourse}
+const addTaskToCourse = async (courseUniqueName, taskDescription, deadline) => {
+    const course = await Course.findOne({uniqueName: courseUniqueName}).populate("teacher")
+    if(!course)
+    {
+        throw new UserInputError("Given course not found")
+    }
+
+    //only teacher should be able to add a task to the course
+    if(userForToken.username !== course.teacher.username)
+    {
+        throw new UserInputError("Unauthorized")
+    }
+
+    const newTask = {
+        description: taskDescription,
+        deadline: new Date(deadline),
+        submissions: []
+    }
+
+    const updatedTaskList = {...course.tasks, newTask}
+    const updatedCourse = await Course.findByIdAndUpdate(course.id, {tasks: updatedTaskList}, {new: true}).populate(['tasks'])
+    return updatedCourse
+
+}
+
+
+module.exports = {createCourse, addStudentToCourse, addTaskToCourse, removeStudentFromCourse}
