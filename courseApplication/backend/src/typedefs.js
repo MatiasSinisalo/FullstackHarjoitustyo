@@ -18,7 +18,7 @@ const typeDefs = gql`
 
     type Task{
         description: String!
-        deadline: String!
+        deadline: String
         submissions: [Submission!]!
     }
 
