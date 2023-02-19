@@ -92,7 +92,7 @@ removeStudentFromCourse = async (studentUsername, courseUniqueName, userForToken
     return updatedCourse
 }
 
-const addTaskToCourse = async (courseUniqueName, taskDescription, deadline) => {
+const addTaskToCourse = async (courseUniqueName, taskDescription, deadline, userForToken) => {
     const course = await Course.findOne({uniqueName: courseUniqueName}).populate("teacher")
     if(!course)
     {
@@ -111,8 +111,8 @@ const addTaskToCourse = async (courseUniqueName, taskDescription, deadline) => {
         submissions: []
     }
 
-    const updatedTaskList = {...course.tasks, newTask}
-    const updatedCourse = await Course.findByIdAndUpdate(course.id, {tasks: updatedTaskList}, {new: true}).populate(['tasks'])
+    const updatedTaskList = course.tasks.concat(newTask)
+    const updatedCourse = await Course.findByIdAndUpdate(course.id, {tasks: updatedTaskList}, {new: true})
     return updatedCourse
 
 }
