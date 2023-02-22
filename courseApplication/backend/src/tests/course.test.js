@@ -434,9 +434,34 @@ describe('course tests', () => {
             }
             
             const response = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: task.courseUniqueName, description: task.description, deadline: task.deadline.toString()}});
-            console.log(response)
             expect(response.data.addTaskToCourse).toBe(null)
             expect(response.errors[0].message).toBe("Unauthorized")
+            
+            const CoursesInDataBase = await Course.find({})
+            expect(CoursesInDataBase.length).toBe(1)
+            
+            const course = CoursesInDataBase[0]
+
+            console.log(course)
+            expect(course.tasks).toEqual([])
+
+        })
+
+        test('addTaskToCourse returns Given course not found error if the course of the task does not exist', async () => {
+            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+
+            const task = {
+                courseUniqueName: "this course does not exist",
+                description:  "this is the description of the course that is about testing",
+                deadline: new Date("2030-06-25"),
+                submissions: []
+            }
+            
+            const response = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: task.courseUniqueName, description: task.description, deadline: task.deadline.toString()}});
+            console.log(response)
+            expect(response.data.addTaskToCourse).toBe(null)
+            expect(response.errors[0].message).toBe("Given course not found")
             
             const CoursesInDataBase = await Course.find({})
             expect(CoursesInDataBase.length).toBe(1)
