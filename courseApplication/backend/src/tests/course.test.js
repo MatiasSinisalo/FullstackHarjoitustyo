@@ -400,7 +400,7 @@ describe('course tests', () => {
             }
             
             const courseWithAddedTask = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: task.courseUniqueName, description: task.description, deadline: task.deadline.toString()}});
-            console.log(courseWithAddedTask.data.addTaskToCourse.tasks)
+         
             
             expect(courseWithAddedTask.data.addTaskToCourse.tasks.length).toEqual(1);
             expect(courseWithAddedTask.data.addTaskToCourse.tasks[0].description).toEqual(task.description);
@@ -418,6 +418,33 @@ describe('course tests', () => {
             expect(course.tasks[0].description).toEqual(task.description);
             expect(course.tasks[0].submissions.length).toEqual(0);
             expect(course.tasks[0].deadline).toEqual(task.deadline);
+
+        })
+
+        test('addTaskToCourse does not create a new task on the course if the user is not the teacher of the course', async () => {
+            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+
+            apolloServer.context = {userForToken: {username: "this user is not the teacher of the course", name: "name"}}
+            const task = {
+                courseUniqueName: "course owned by username",
+                description:  "this is the description of the course that is about testing",
+                deadline: new Date("2030-06-25"),
+                submissions: []
+            }
+            
+            const response = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: task.courseUniqueName, description: task.description, deadline: task.deadline.toString()}});
+            console.log(response)
+            expect(response.data.addTaskToCourse).toBe(null)
+            expect(response.errors[0].message).toBe("Unauthorized")
+            
+            const CoursesInDataBase = await Course.find({})
+            expect(CoursesInDataBase.length).toBe(1)
+            
+            const course = CoursesInDataBase[0]
+
+            console.log(course)
+            expect(course.tasks).toEqual([])
 
         })
     })
