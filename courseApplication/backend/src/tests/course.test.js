@@ -421,6 +421,60 @@ describe('course tests', () => {
 
         })
 
+        test('addTaskToCourse creates a new task on the course that already has tasks with correct parameters', async () => {
+            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+
+            const task = {
+                courseUniqueName: "course owned by username",
+                description:  "this is the description of the course that is about testing",
+                deadline: new Date("2030-06-25"),
+                submissions: []
+            }
+            
+           await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: task.courseUniqueName, description: task.description, deadline: task.deadline.toString()}});
+
+            const secondTask = {
+                courseUniqueName: "course owned by username",
+                description:  "this is the description of a task about debugging",
+                deadline: new Date("2060-12-01"),
+                submissions: []
+            }
+            const courseWithAddedTask = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: secondTask.courseUniqueName, description: secondTask.description, deadline: secondTask.deadline.toString()}});
+         
+            
+            expect(courseWithAddedTask.data.addTaskToCourse.tasks.length).toEqual(2);
+            expect(courseWithAddedTask.data.addTaskToCourse.tasks[0].description).toEqual(task.description);
+            expect(courseWithAddedTask.data.addTaskToCourse.tasks[0].submissions).toEqual([]);
+           
+            const dateReturned =  parseInt(courseWithAddedTask.data.addTaskToCourse.tasks[0].deadline)
+            expect(new Date(dateReturned)).toEqual(task.deadline);
+
+            expect(courseWithAddedTask.data.addTaskToCourse.tasks[1].description).toEqual(secondTask.description);
+            expect(courseWithAddedTask.data.addTaskToCourse.tasks[1].submissions).toEqual([]);
+            const secondDateReturned =  parseInt(courseWithAddedTask.data.addTaskToCourse.tasks[1].deadline)
+            expect(new Date(secondDateReturned)).toEqual(secondTask.deadline);
+
+
+
+            const CoursesInDataBase = await Course.find({})
+            expect(CoursesInDataBase.length).toBe(1)
+            
+            const course = CoursesInDataBase[0]
+            expect(course.tasks.length).toEqual(2);
+            expect(course.tasks[0].description).toEqual(task.description);
+            expect(course.tasks[0].submissions.length).toEqual(0);
+            expect(course.tasks[0].deadline).toEqual(task.deadline);
+
+
+            expect(course.tasks[1].description).toEqual(secondTask.description);
+            expect(course.tasks[1].submissions.length).toEqual(0);
+            expect(course.tasks[1].deadline).toEqual(secondTask.deadline);
+
+        
+
+        })
+      
         test('addTaskToCourse does not create a new task on the course if the user is not the teacher of the course', async () => {
             apolloServer.context = {userForToken: {username: "username", name: "name"}}
             const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
