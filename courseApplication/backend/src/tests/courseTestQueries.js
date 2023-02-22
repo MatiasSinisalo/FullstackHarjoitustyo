@@ -46,5 +46,24 @@ const removeStudentFromCourse = `mutation RemoveStudentFromCourse($username: Str
   }
 }`
 
-module.exports = {createCourse, addStudentToCourse, removeStudentFromCourse}
+const addTaskToCourse = `mutation Mutation($courseUniqueName: String!, $description: String!, $deadline: String!) {
+  addTaskToCourse(courseUniqueName: $courseUniqueName, description: $description, deadline: $deadline) {
+    name
+    tasks {
+      deadline
+      description
+      submissions {
+        content
+        fromUser {
+          name
+          username
+        }
+        submitted
+      }
+    }
+  }
+}
+`
+
+module.exports = {createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse}
 
