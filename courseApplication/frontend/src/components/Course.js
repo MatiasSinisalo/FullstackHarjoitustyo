@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux"
 import {
     useParams
 } from "react-router-dom"
@@ -5,11 +6,14 @@ import {
 
   
 const Course = ({courses}) =>{
-  const id = Number(useParams().id)
-  const course = courses.find(course => course.id === id)
+  const uniqueName = useParams().uniqueName
+  console.log(uniqueName)
+  
+  const course = useSelector((store) => store.courses.find((course) => course.uniqueName === uniqueName))
   return(
     <>
-    <h1>{course.name}</h1>
+    <h1>{course.uniqueName}</h1>
+    <h2>{course.name}</h2>
     <p>single course page</p>
     </>
 

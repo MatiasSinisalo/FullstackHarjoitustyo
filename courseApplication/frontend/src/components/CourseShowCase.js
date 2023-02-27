@@ -1,5 +1,6 @@
 import { useApolloClient } from "@apollo/client"
 import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
 import { addStudentToCourse, removeStudentFromCourse } from "../reducers/courseReducer"
 
 
@@ -8,6 +9,7 @@ const CourseShowCase = ({course}) => {
     const thisUserIsParticipating = course.students.find((student) => student.username === currentUser.username)
     const client = useApolloClient()
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const joinToCourse = () => {
         console.log(`Joining course ${course.uniqueName}`)
         dispatch(addStudentToCourse(course.uniqueName, currentUser.username, client))
@@ -18,10 +20,15 @@ const CourseShowCase = ({course}) => {
         dispatch(removeStudentFromCourse(course.uniqueName, currentUser.username, client))
     }
 
+    const seeCourse = () => {
+        navigate(`/course/${course.uniqueName}`)
+    }
+
     return (
         <div>
             <h2>{course.uniqueName}</h2>
             <h3>{course.name}</h3>
+            {thisUserIsParticipating? <button onClick={seeCourse}>See Course Page</button> : <></>}
             {thisUserIsParticipating ?  <button onClick={leaveFromCourse}>Leave course</button> : <button onClick={joinToCourse}>Join</button>}
         </div>
         
