@@ -17,7 +17,7 @@ const Course = () =>{
     <h1>{course.uniqueName}</h1>
     <h2>{course.name}</h2>
     <p>single course page</p>
-    {course.tasks.map((task) => <Task task={task} key={Math.random()}></Task>)}
+    {course.tasks.map((task) => <Task task={task} key={task.id}></Task>)}
     </>
 
   )
