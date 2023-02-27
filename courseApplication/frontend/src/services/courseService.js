@@ -1,4 +1,4 @@
-import { ADD_STUDENT_TO_COURSE, CREATE_COURSE, REMOVE_STUDENT_FROM_COURSE } from "../queries/courseQueries"
+import { ADD_STUDENT_TO_COURSE, CREATE_COURSE, GET_COURSE, REMOVE_STUDENT_FROM_COURSE } from "../queries/courseQueries"
 //teacher field is not currently being used on the backend at all when creating a course
 export const createCourse = async (uniqueName, name, teacher, apolloClient) => {    
     try{
@@ -15,6 +15,12 @@ export const createCourse = async (uniqueName, name, teacher, apolloClient) => {
     catch{
         console.log("Course Creation failed")
     }
+}
+
+
+export const getCourse = async (uniqueName) => {
+    const course = await apolloClient.query({query: GET_COURSE, variables: {uniqueName: uniqueName}})
+    return course.data.getCourse
 }
 
 export const addUserToCourse = async (uniqueName, username, apolloClient) => {
