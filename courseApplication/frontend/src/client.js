@@ -23,7 +23,7 @@ const tokenHeader = setContext((_, { headers }) => {
 
 const client = new ApolloClient({
     cache: new InMemoryCache(),
-    link: tokenHeader.concat(httpLink)
+    link: tokenHeader.concat(httpLink),
 })
 
 export default client

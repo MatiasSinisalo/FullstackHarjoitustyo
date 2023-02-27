@@ -18,7 +18,7 @@ export const createCourse = async (uniqueName, name, teacher, apolloClient) => {
 }
 
 
-export const getCourse = async (uniqueName) => {
+export const getCourse = async (uniqueName, apolloClient) => {
     const course = await apolloClient.query({query: GET_COURSE, variables: {uniqueName: uniqueName}})
     return course.data.getCourse
 }

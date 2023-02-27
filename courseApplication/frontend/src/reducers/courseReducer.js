@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
-import { addUserToCourse, removeUserFromCourse } from "../services/courseService";
+import { addUserToCourse, getCourse, removeUserFromCourse } from "../services/courseService";
 const courses = []
 
 
@@ -24,6 +24,27 @@ const courseSlice = createSlice({
     }
 })
 export const {addCourse, setCourses, updateCourse} = courseSlice.actions
+
+export const getCourseWithUniqueName = (uniqueName, client) => {
+    return async dispatch => {
+        const courseInLocalStore = useSelector((store) => store.courses.find((course) => course.uniqueName == uniqueName))
+        if(courseInLocalStore)
+        {
+            return courseInLocalStore
+        }
+
+        const courseInDatabase = await getCourse(uniqueName, client)
+        if(courseInDatabase)
+        {
+            dispatch(addCourse(courseInDatabase))
+            return courseInDatabase
+        }
+
+        return null
+    }
+}
+
+
 
 export const addStudentToCourse = (courseUniqueName, username, client) => {
     return async dispatch => {

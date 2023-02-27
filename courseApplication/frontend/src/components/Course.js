@@ -1,7 +1,10 @@
-import { useSelector } from "react-redux"
+import { useApolloClient } from "@apollo/client"
+import { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import {
     useParams
 } from "react-router-dom"
+import { getCourseWithUniqueName } from "../reducers/courseReducer"
 import Task from "./Task"
 
 
@@ -9,9 +12,19 @@ import Task from "./Task"
 
 
 const Course = () =>{
+  const dispatch = useDispatch()
+  const client = useApolloClient()
   const uniqueName = useParams().uniqueName  
-  const course = useSelector((store) => store.courses.find((course) => course.uniqueName === uniqueName))
+  
+  const [course, setCourse] = useState()
+
+  dispatch(getCourseWithUniqueName(uniqueName, client)).then((result) => setCourse(result))
+  
   console.log(course)
+  if(!course){
+    return (<></>)
+  }
+  
   return(
     <>
     <h1>{course.uniqueName}</h1>
@@ -21,6 +34,7 @@ const Course = () =>{
     </>
 
   )
+  
 }
   
  
