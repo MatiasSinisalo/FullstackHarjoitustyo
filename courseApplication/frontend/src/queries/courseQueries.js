@@ -28,6 +28,10 @@ export const GET_ALL_COURSES = gql`query AllCourses {
         username
       }
       uniqueName
+      tasks {
+        deadline
+        description
+      }
     }
   }`
 
