@@ -36,6 +36,27 @@ export const GET_ALL_COURSES = gql`query AllCourses {
     }
   }`
 
+export const GET_COURSE = gql`
+query GetCourse($uniqueName: String!) {
+  getCourse(uniqueName: $uniqueName) {
+    name
+    students {
+      name
+      username
+    }
+    tasks {
+      deadline
+      description
+      id
+    }
+    teacher {
+      name
+      username
+    }
+  }
+}
+`
+
 export const ADD_STUDENT_TO_COURSE = gql`mutation AddStudentToCourse($username: String!, $courseUniqueName: String!) {
     addStudentToCourse(username: $username, courseUniqueName: $courseUniqueName) {
       name
