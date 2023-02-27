@@ -20,8 +20,13 @@ const resolvers  = {
             return currentUserInformation
         },
         allCourses: async (root, args, context) => {
-            const courses = await Course.find({}).populate(['teacher', 'students', 'tasks'])
+            const courses = await Course.find({}).populate(['teacher', 'students'])
             return courses
+        },
+        getCourse: async (root, args, context) => {
+            const course = await Course.findOne({uniqueName: args.uniqueName}).populate(['teacher', 'students'])
+            console.log(course)
+            return course
         }
     },
     Mutation: {
