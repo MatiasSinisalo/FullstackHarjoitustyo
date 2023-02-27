@@ -29,6 +29,7 @@ export const GET_ALL_COURSES = gql`query AllCourses {
       }
       uniqueName
       tasks {
+        id
         deadline
         description
       }
