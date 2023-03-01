@@ -1,4 +1,4 @@
-import { addCourse, setCourses, updateCourse, addStudentToCourse, removeStudentFromCourse } from "../reducers/courseReducer"
+import { addCourse, setCourses, updateCourse, addStudentToCourse, removeStudentFromCourse, courseHasStudent } from "../reducers/courseReducer"
 import store from '../store'
 
 
@@ -105,5 +105,22 @@ describe('course reducer tests', () => {
             expect(courses[1].students[0].username).toEqual('some username')
         })
        
+    })
+
+    describe('courseHasStudent helper function tests', () => {
+        test('courseHasStudent returns userdata stored in the course if the course has the student', () => {
+            const testCourse = {...exampleCourse, students: [{username: 'some username', name: "users name"}]}
+            store.dispatch(setCourses([testCourse]))
+            const result = courseHasStudent(testCourse, "some username")
+            expect(result).toEqual({username: "some username", name: "users name"})
+        })
+
+        test('courseHasStudent returns undefined if the course does not have the student', () => {
+            const testCourse = {...exampleCourse, students: [{username: 'some username that is not the same', name: "users name"}]}
+            store.dispatch(setCourses([testCourse]))
+            const result = courseHasStudent(testCourse, "some username")
+            expect(result).toEqual(undefined)
+        })
+
     })
 })

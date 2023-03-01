@@ -66,7 +66,7 @@ export const removeStudentFromCourse = (courseUniqueName, username, client) => {
     }
 }
 
-const courseHasStudent = (course, studentsUsername) => {
+export const courseHasStudent = (course, studentsUsername) => {
     const hasStudent = course.students.find((user) => user.username === studentsUsername)
     return hasStudent
 }
