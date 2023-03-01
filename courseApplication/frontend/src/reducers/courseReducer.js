@@ -20,10 +20,14 @@ const courseSlice = createSlice({
            
             const updatedCourseList = state.map((course) => course.uniqueName === updatedCourse.uniqueName ? updatedCourse : course)
             return updatedCourseList
+        },
+        getCourses(state, action){
+            return state
         }
+       
     }
 })
-export const {addCourse, setCourses, updateCourse} = courseSlice.actions
+export const {addCourse, setCourses, updateCourse, getCourses} = courseSlice.actions
 
 export const getCourseWithUniqueName = (uniqueName, client) => {
     return async dispatch => {
@@ -71,9 +75,11 @@ export const courseHasStudent = (course, studentsUsername) => {
     return hasStudent
 }
 
-export const getCoursesWithUser = (username) => {
-    return dispatch => {
-        const allCourses = useSelector((store) => store.courses)
+//https://redux.js.org/usage/writing-logic-thunks
+export const getCoursesWithUser = (username, store) => {
+    return function (dispatch, getState){
+        const allCourses = getState().courses
+        console.log(allCourses)
         const coursesWithUserAsStudent = allCourses.filter((course) => courseHasStudent(course, username))
         console.log(coursesWithUserAsStudent)
         return coursesWithUserAsStudent
