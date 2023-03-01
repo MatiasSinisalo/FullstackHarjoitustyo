@@ -98,4 +98,22 @@ const createCourseAsUser = (courseUniqueName, courseName) => {
     cy.wait(100)
 }
 
-export {prepareTests, logInAsUser, createCourseAsUser, endTests}
+const joinCourseAsUser= (courseUniqueName, usernameToJoinTheCourse) => {
+    cy.visit('http://localhost:3000/CourseBrowser')
+    cy.wait(500)
+    const courseShowCase = cy.contains(courseUniqueName).parent()
+    const joinButton = courseShowCase.contains("button","Join")
+   
+    cy.intercept('POST', 'http://localhost:4000').as('serverResponse')
+    joinButton.click()
+    cy.wait('@serverResponse').then((response) => {
+        const receivedResponse = response.response.body.data.addStudentToCourse
+        expect(receivedResponse.uniqueName).to.equal(courseUniqueName)
+        expect(receivedResponse.students.find((student) => student.username === usernameToJoinTheCourse).username).to.equal(usernameToJoinTheCourse)
+        console.log(response)
+    })
+} 
+
+
+
+export {prepareTests, logInAsUser, createCourseAsUser,joinCourseAsUser, endTests}
