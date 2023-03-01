@@ -17,8 +17,9 @@ const Course = () =>{
   const uniqueName = useParams().uniqueName  
   
   const [course, setCourse] = useState()
-
   dispatch(getCourseWithUniqueName(uniqueName, client)).then((result) => setCourse(result))
+ 
+  
   
   console.log(course)
   if(!course){
@@ -30,7 +31,7 @@ const Course = () =>{
     <h1>{course.uniqueName}</h1>
     <h2>{course.name}</h2>
     <p>single course page</p>
-    {course.tasks.map((task) => <Task task={task} key={task.id}></Task>)}
+    {course.tasks.length > 0 ? course.tasks.map((task) => <Task task={task} key={task.id}></Task>) : <></>}
     </>
 
   )

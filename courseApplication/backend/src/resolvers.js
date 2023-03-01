@@ -25,7 +25,6 @@ const resolvers  = {
         },
         getCourse: async (root, args, context) => {
             const course = await Course.findOne({uniqueName: args.uniqueName}).populate(['teacher', 'students'])
-            console.log(course)
             return course
         }
     },

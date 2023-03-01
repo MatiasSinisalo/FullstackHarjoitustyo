@@ -68,6 +68,11 @@ export const ADD_STUDENT_TO_COURSE = gql`mutation AddStudentToCourse($username: 
         name
         username
       }
+      tasks{
+        deadline
+        description
+        id
+      }
       uniqueName
     }
   }`
