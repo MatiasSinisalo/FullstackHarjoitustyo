@@ -137,9 +137,9 @@ describe('course reducer tests', () => {
     })
 
     describe('getCourseWithUniqueName action tests', () => {
-        test('getCourseWithUniqueName returns correct course from local store', () => {
+        test('getCourseWithUniqueName returns correct course from local store', async () => {
             store.dispatch(setCourses([exampleCourse, secondExampleCourse]))
-            const course = store.dispatch(getCourseWithUniqueName("this is a unique name", null))
+            const course = await store.dispatch(getCourseWithUniqueName("this is a unique name", null))
             expect(course).toEqual(exampleCourse)
             
         })

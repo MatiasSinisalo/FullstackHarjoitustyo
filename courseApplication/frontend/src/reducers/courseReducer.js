@@ -26,8 +26,8 @@ const courseSlice = createSlice({
 export const {addCourse, setCourses, updateCourse} = courseSlice.actions
 
 export const getCourseWithUniqueName = (uniqueName, client) => {
-    return async dispatch => {
-        const courseInLocalStore = useSelector((store) => store.courses.find((course) => course.uniqueName == uniqueName))
+    return async function (dispatch, getState){
+        const courseInLocalStore = getState().courses.find((course) => course.uniqueName == uniqueName)
         if(courseInLocalStore)
         {
             return courseInLocalStore
