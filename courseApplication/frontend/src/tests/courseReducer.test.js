@@ -175,7 +175,7 @@ describe('course reducer tests', () => {
             getCourse.mockResolvedValue(exampleCourse)
             const course = await store.dispatch(getCourseWithUniqueName("this is a unique name", null))
             expect(course).toEqual(exampleCourse)
-            expect(store.getState().courses).toEqual([exampleCourse, secondExampleCourse])
+            expect(store.getState().courses).toEqual([secondExampleCourse, exampleCourse])
             
         })
 

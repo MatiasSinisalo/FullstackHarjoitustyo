@@ -10,7 +10,7 @@ const courseSlice = createSlice({
     initialState: courses,
     reducers: {
         addCourse(state, action) {
-            return courses.concat(action.payload)
+            return state.concat(action.payload)
         },
         setCourses(state, action){
             return action.payload
