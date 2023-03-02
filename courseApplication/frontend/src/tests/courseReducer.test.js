@@ -1,7 +1,18 @@
 import { addCourse, setCourses, updateCourse, addStudentToCourse, removeStudentFromCourse, courseHasStudent, getCoursesWithUser, getCourseWithUniqueName } from "../reducers/courseReducer"
 import store from '../store'
+import { getCourse } from "../services/courseService"
 
+//mocking partials:
+//https://jestjs.io/docs/mock-functions 
+jest.mock('../services/courseService', () => {
+    const moduleNormal = jest.requireActual('../services/courseService')
 
+    return{
+        __esModule: true,
+        ...moduleNormal,
+        getCourse: jest.fn()
+    }
+})
 
 const exampleCourse = {uniqueName: "this is a unique name", name: "courses name", teacher: {username: "username", name: "users name"}, students: []}
 const secondExampleCourse = {uniqueName: "this is a second unique name", name: "second courses name", teacher: {username: "second username", name: "second users name"}, students: []}
@@ -141,6 +152,32 @@ describe('course reducer tests', () => {
             store.dispatch(setCourses([exampleCourse, secondExampleCourse]))
             const course = await store.dispatch(getCourseWithUniqueName("this is a unique name", null))
             expect(course).toEqual(exampleCourse)
+            
+        })
+
+        test('getCourseWithUniqueName calls getCourse from courseService if the course is not in the local store and returns correct values if getCourse returns a course', async () => {
+            store.dispatch(setCourses([secondExampleCourse]))
+            getCourse.mockResolvedValue(exampleCourse)
+            const course = await store.dispatch(getCourseWithUniqueName("this is a unique name", null))
+            expect(course).toEqual(exampleCourse)
+            
+        })
+
+        test('getCourseWithUniqueName calls getCourse from courseService if the course is not in the local store and updates store correctly if getCourse returns a course', async () => {
+            store.dispatch(setCourses([secondExampleCourse]))
+            getCourse.mockResolvedValue(exampleCourse)
+            const course = await store.dispatch(getCourseWithUniqueName("this is a unique name", null))
+            expect(course).toEqual(exampleCourse)
+            console.log(store.getState().courses)
+            expect(store.getState().courses).toEqual([exampleCourse, secondExampleCourse])
+            
+        })
+
+        test('getCourseWithUniqueName calls getCourse from courseService if the course is not in the local store and returns null if getCourse returns null', async () => {
+            store.dispatch(setCourses([secondExampleCourse]))
+            getCourse.mockResolvedValue(null)
+            const course = await store.dispatch(getCourseWithUniqueName("this is a unique name", null))
+            expect(course).toEqual(null)
             
         })
     })
