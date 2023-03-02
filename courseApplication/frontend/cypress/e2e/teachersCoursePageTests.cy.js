@@ -5,40 +5,45 @@ beforeEach(function () {
     prepareTests()
  })
 
- describe('course page tests', () => {
-    it('user can visit the course page that the user participates in from the course browser', () => {
-        logInAsUser("username", "password1234")
-        createCourseAsUser("this course is created by user username", "courses name")
-        cy.contains("Log Out").click()
-        logInAsUser("second username", "password1234")
-        joinCourseAsUser("this course is created by user username", "second username");
-        cy.contains("See Course Page").click()
-        cy.contains("this course is created by user username")
-        cy.contains("courses name")
-        cy.contains("single course page")
-    })
 
-    it('user can visit the course page that the user participates in from the dashboard', () => {
+describe('teacher page tests', () => {
+    it('user can visit the teachers course page from the course browser if the user created is the teacher of the course', () => {
         logInAsUser("username", "password1234")
         createCourseAsUser("this course is created by user username", "courses name")
-        cy.contains("Log Out").click()
-        logInAsUser("second username", "password1234")
-        joinCourseAsUser("this course is created by user username", "second username");
-        
-        cy.contains("dashboard").click()
+     
+        cy.contains("Courses").click()
+        cy.wait(100)
+
         cy.contains("this course is created by user username")
         cy.contains("courses name")
         
-        cy.contains("See Course Page").click()
+        cy.contains("See Teachers Course Page").click()
+        cy.wait(100)
 
         cy.contains("this course is created by user username")
         cy.contains("courses name")
         cy.contains("single course page")
     })
 
-    
+    it('user can visit the teachers course page from the course browser if the user created is the teacher of the course', () => {
+        logInAsUser("username", "password1234")
+        createCourseAsUser("this course is created by user username", "courses name")
+     
+        cy.contains("Dashboard").click()
+        cy.wait(100)
+
+        cy.contains("this course is created by user username")
+        cy.contains("courses name")
+        
+        cy.contains("See Teachers Course Page").click()
+        cy.wait(100)
+
+        cy.contains("this course is created by user username")
+        cy.contains("courses name")
+        cy.contains("single course page")
+    })
  })
 
-after(function (){
+ after(function (){
     endTests()
 })
