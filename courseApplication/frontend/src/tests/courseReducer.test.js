@@ -1,4 +1,4 @@
-import { addCourse, setCourses, updateCourse, addStudentToCourse, removeStudentFromCourse, courseHasStudent, getCoursesWithUser } from "../reducers/courseReducer"
+import { addCourse, setCourses, updateCourse, addStudentToCourse, removeStudentFromCourse, courseHasStudent, getCoursesWithUser, getCourseWithUniqueName } from "../reducers/courseReducer"
 import store from '../store'
 
 
@@ -136,4 +136,12 @@ describe('course reducer tests', () => {
         })
     })
 
+    describe('getCourseWithUniqueName action tests', () => {
+        test('getCourseWithUniqueName returns correct course from local store', () => {
+            store.dispatch(setCourses([exampleCourse, secondExampleCourse]))
+            const course = store.dispatch(getCourseWithUniqueName("this is a unique name", null))
+            expect(course).toEqual(exampleCourse)
+            
+        })
+    })
 })
