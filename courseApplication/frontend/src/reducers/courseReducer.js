@@ -10,8 +10,6 @@ const courseSlice = createSlice({
     initialState: courses,
     reducers: {
         addCourse(state, action) {
-            console.log(action.payload)
-            console.log(state.concat(action.payload))
             return state.concat(action.payload)
         },
         setCourses(state, action){
@@ -35,7 +33,9 @@ export const createNewCourse = (courseUniqueName, courseName, client) => {
         {
             dispatch(addCourse(createdCourse))
             alert(`new course named ${createdCourse.name} created`)
+            return true
         }
+        return false
     }
 }
 
@@ -90,9 +90,7 @@ export const courseHasStudent = (course, studentsUsername) => {
 export const getCoursesWithUser = (username) => {
     return function (dispatch, getState){
         const allCourses = getState().courses
-        console.log(allCourses)
         const coursesWithUserAsStudent = allCourses.filter((course) => courseHasStudent(course, username))
-        console.log(coursesWithUserAsStudent)
         return coursesWithUserAsStudent
     }
 }

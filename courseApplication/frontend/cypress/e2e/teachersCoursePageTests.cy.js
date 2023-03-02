@@ -30,14 +30,11 @@ describe('teacher page tests', () => {
         createCourseAsUser("this course is created by user username", "courses name")
      
         cy.contains("dashboard").click()
-        cy.wait(500)
-
+        
         cy.contains("this course is created by user username")
         cy.contains("courses name")
         
         cy.contains("See Teachers Course Page").click()
-        cy.wait(100)
-
         cy.contains("this course is created by user username")
         cy.contains("courses name")
         cy.contains("this is the teachers course page")

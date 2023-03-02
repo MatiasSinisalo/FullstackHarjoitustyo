@@ -31,8 +31,6 @@ const Dashboard = () =>{
          {
           coursesWhereUserTeaches != undefined ? coursesWhereUserTeaches.map((course) => <CourseShowCase key={course.uniqueName} course={course}></CourseShowCase>) : <></>
          }
-      
-
       </>
   
     )
