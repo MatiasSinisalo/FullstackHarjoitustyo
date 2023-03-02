@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
-import { addUserToCourse, getCourse, removeUserFromCourse } from "../services/courseService";
+import { addUserToCourse, getCourse, removeUserFromCourse, createCourse } from "../services/courseService";
 const courses = []
 
 
@@ -10,6 +10,8 @@ const courseSlice = createSlice({
     initialState: courses,
     reducers: {
         addCourse(state, action) {
+            console.log(action.payload)
+            console.log(state.concat(action.payload))
             return state.concat(action.payload)
         },
         setCourses(state, action){
@@ -24,6 +26,19 @@ const courseSlice = createSlice({
     }
 })
 export const {addCourse, setCourses, updateCourse} = courseSlice.actions
+
+
+export const createNewCourse = (courseUniqueName, courseName, client) => {
+    return async function (dispatch, getState){
+        const createdCourse = await createCourse(courseUniqueName, courseName, "", client)
+        if(createdCourse)
+        {
+            dispatch(addCourse(createdCourse))
+            alert(`new course named ${createdCourse.name} created`)
+        }
+    }
+}
+
 
 export const getCourseWithUniqueName = (uniqueName, client) => {
     return async function (dispatch, getState){

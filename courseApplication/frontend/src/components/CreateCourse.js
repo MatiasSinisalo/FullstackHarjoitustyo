@@ -1,4 +1,4 @@
-import { addCourse } from "../reducers/courseReducer"
+import { createNewCourse } from "../reducers/courseReducer"
 import { useMutation } from "@apollo/client";
 import { useDispatch } from "react-redux";
 import { createCourse } from "../services/courseService"
@@ -11,13 +11,8 @@ const CreateCourse = () =>{
         console.log("creating a new course")
         const courseUniqueName = event.target.courseUniqueName.value
         const courseName = event.target.courseName.value
-       
-        const createdCourse = await createCourse(courseUniqueName, courseName, "", client)
-        if(createdCourse)
-        {
-            dispatch(addCourse(createdCourse))
-            alert(`new course named ${createdCourse.name} created`)
-        }
+        await dispatch(createNewCourse(courseUniqueName, courseName, client))
+     
     }
     return(
      <>
