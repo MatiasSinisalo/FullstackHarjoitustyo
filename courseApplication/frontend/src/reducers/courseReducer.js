@@ -20,14 +20,10 @@ const courseSlice = createSlice({
            
             const updatedCourseList = state.map((course) => course.uniqueName === updatedCourse.uniqueName ? updatedCourse : course)
             return updatedCourseList
-        },
-        getCourses(state, action){
-            return state
         }
-       
     }
 })
-export const {addCourse, setCourses, updateCourse, getCourses} = courseSlice.actions
+export const {addCourse, setCourses, updateCourse} = courseSlice.actions
 
 export const getCourseWithUniqueName = (uniqueName, client) => {
     return async dispatch => {
