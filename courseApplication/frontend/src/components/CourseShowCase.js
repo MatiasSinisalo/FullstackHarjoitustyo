@@ -7,6 +7,7 @@ import { addStudentToCourse, removeStudentFromCourse } from "../reducers/courseR
 const CourseShowCase = ({course}) => {
     const currentUser = useSelector((store) => store.user)
     const thisUserIsParticipating = course.students.find((student) => student.username === currentUser.username)
+    const thisUserIsTeaching = course.teacher.username == currentUser.username
     const client = useApolloClient()
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -24,12 +25,25 @@ const CourseShowCase = ({course}) => {
         navigate(`/course/${course.uniqueName}`)
     }
 
+    const seeCourseAsTeacher = () => {
+        navigate(`/course/${course.uniqueName}/teacher`)
+    }
+
     return (
         <div>
             <h2>{course.uniqueName}</h2>
             <h3>{course.name}</h3>
-            {thisUserIsParticipating? <button onClick={seeCourse}>See Course Page</button> : <></>}
-            {thisUserIsParticipating ?  <button onClick={leaveFromCourse}>Leave course</button> : <button onClick={joinToCourse}>Join</button>}
+            {thisUserIsTeaching ? 
+            
+            <>
+                <button onClick={seeCourseAsTeacher}>See Teachers Course Page</button>
+            </>
+            :
+                <>
+                    {thisUserIsParticipating? <button onClick={seeCourse}>See Course Page</button> : <></>}
+                    {thisUserIsParticipating ?  <button onClick={leaveFromCourse}>Leave course</button> : <button onClick={joinToCourse}>Join</button>}
+                </>
+            }
         </div>
         
     )

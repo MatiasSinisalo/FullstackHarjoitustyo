@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateUser, userLogIn } from "./reducers/userReducer";
 import { setCourses } from "./reducers/courseReducer";
 import { GET_ALL_COURSES } from "./queries/courseQueries";
+import TeachersCourse from "./components/TeachersCourse";
 
 const App = () =>{
   
@@ -74,6 +75,7 @@ const App = () =>{
         <Route path="/CourseBrowser" element={<CourseBrowser/>}/>
         <Route path="/CreateCourse" element={<CreateCourse/>}/>
         <Route path="/course/:uniqueName" element={<Course/>}/>
+        <Route path="/course/:uniqueName/teacher" element={<TeachersCourse/>}/>
       </Routes>
       </>
   );
