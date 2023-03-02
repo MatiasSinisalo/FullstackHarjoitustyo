@@ -72,7 +72,7 @@ export const courseHasStudent = (course, studentsUsername) => {
 }
 
 //https://redux.js.org/usage/writing-logic-thunks
-export const getCoursesWithUser = (username, store) => {
+export const getCoursesWithUser = (username) => {
     return function (dispatch, getState){
         const allCourses = getState().courses
         console.log(allCourses)
@@ -81,6 +81,13 @@ export const getCoursesWithUser = (username, store) => {
         return coursesWithUserAsStudent
     }
 }
-       
+
+export const getCoursesWithTeacher = (username) => {
+    return function (dispatch, getState){
+        const allCourses = getState().courses
+        const coursesWithUserAsStudent = allCourses.filter((course) => course.teacher.username === username)
+        return coursesWithUserAsStudent
+    }
+}
 
 export default courseSlice.reducer
