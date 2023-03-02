@@ -134,8 +134,6 @@ describe('course reducer tests', () => {
             const result = store.dispatch(getCoursesWithUser("some username", store))
             expect(result).toEqual([testCourse, testCourse2])
         })
-
-      
-
     })
+
 })

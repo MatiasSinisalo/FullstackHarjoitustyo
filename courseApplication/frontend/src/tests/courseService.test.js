@@ -1,4 +1,4 @@
-import { createCourse, addUserToCourse, removeUserFromCourse } from '../services/courseService'
+import { createCourse, addUserToCourse, removeUserFromCourse, getCourse } from '../services/courseService'
 import {createMockClient} from '@apollo/client/testing'
 
 
@@ -61,5 +61,49 @@ describe('courseService tests', () => {
             expect(courseWithAddedStudent.students[0].name).toEqual('users name 4321')
             expect(courseWithAddedStudent.students[0].username).toEqual('students username to be removed')
         }) 
+    })
+
+    describe('getCourse tests', ()=> {
+        const exampleCourse = {
+            uniqueName: "this is an example course", 
+            name: "name of the course", 
+            students: [], 
+            tasks: [], 
+            teacher: {username: "teachers username", name: "teachers name"}
+        }
+        const mockClientWithCorrectCourse = {
+            query: (data) => {
+                if(data.variables.uniqueName === "this is an example course")
+                {
+                    return {data: {getCourse: exampleCourse}}
+                }
+                else{
+                    return undefined
+                }
+            }
+        }
+
+        const mockClientWithoutCorrectCourse = {
+            query: (data) => {
+                if(data.variables.uniqueName === "this is an example course")
+                {
+                    return {data: {getCourse: null}}
+                }
+                else{
+                    return undefined
+                }
+            }
+        }
+
+        test('getCourse calls backend correctly and returns correct info', async () => {
+            const result = await getCourse("this is an example course", mockClientWithCorrectCourse)
+            expect(result).toEqual(exampleCourse)
+        })
+
+        
+        test('getCourse returns null if backend does not have the correct course', async () => {
+            const result = await getCourse("this is an example course", mockClientWithoutCorrectCourse)
+            expect(result).toEqual(null)
+        })
     })
 })
