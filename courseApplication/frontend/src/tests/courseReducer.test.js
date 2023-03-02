@@ -30,6 +30,13 @@ describe('course reducer tests', () => {
         expect(storeData.courses).toEqual([exampleCourse])
     })
 
+    test('addCourse reducer adds a new course to redux store correctly when there are already courses', () =>{
+        store.dispatch(setCourses([secondExampleCourse]))
+        store.dispatch(addCourse(exampleCourse))
+        const storeData = store.getState()
+        expect(storeData.courses).toEqual([secondExampleCourse, exampleCourse])
+    })
+
     test('setCourses reducer sets courses to the given list', () =>{
         store.dispatch(setCourses([exampleCourse, secondExampleCourse]))
         const storeData = store.getState()
@@ -168,7 +175,6 @@ describe('course reducer tests', () => {
             getCourse.mockResolvedValue(exampleCourse)
             const course = await store.dispatch(getCourseWithUniqueName("this is a unique name", null))
             expect(course).toEqual(exampleCourse)
-            console.log(store.getState().courses)
             expect(store.getState().courses).toEqual([exampleCourse, secondExampleCourse])
             
         })
