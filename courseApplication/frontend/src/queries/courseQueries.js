@@ -12,6 +12,11 @@ export const CREATE_COURSE = gql`mutation Mutation($uniqueName: String!, $name: 
         name
         username
       }
+      tasks{
+        id
+        deadline
+        description
+      }
       uniqueName
     }
   }`
