@@ -18,7 +18,7 @@ const server = {
         await this.mongoose.connect(config.MONGODB_URI)
         console.log("connected to database")
 
-        const {url} = await this.apolloServer.listen()
+        const {url} = await this.apolloServer.listen(config.PORT)
         console.log(`${readyMsg}`)
         console.log(`server is at ${url}`)
         

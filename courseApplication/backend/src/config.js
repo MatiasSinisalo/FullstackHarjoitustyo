@@ -3,7 +3,7 @@ require('dotenv').config()
 //this secret is also ONLY for local testing
 const SECRET = process.env.NODE_ENV === 'test:local' ? "This secret is only for local testing" : process.env.SECRET
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 4000
 
 const getCurrentUrlForEnvironment = () => {
     switch(process.env.NODE_ENV){
