@@ -11,7 +11,7 @@ import { RetryLink } from "@apollo/client/link/retry";
 const backEndURI = process.env.NODE_ENV === "production" ? `https://studastudy-backend.onrender.com` : 'http://localhost:4000'
 
 const httpLink = new HttpLink({
-    uri: `https://studastudy-backend.onrender.com` || 'http://localhost:4000',
+    uri: backEndURI,
 })
 
 const tokenHeader = setContext((_, { headers }) => {
