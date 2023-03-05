@@ -7,6 +7,8 @@ const PORT = process.env.PORT || 4000
 
 const getCurrentUrlForEnvironment = () => {
     switch(process.env.NODE_ENV){
+        case 'production':
+            return process.env.MONGODB_URI
         case 'development':
             return process.env.MONGODB_URI
         case 'test':
