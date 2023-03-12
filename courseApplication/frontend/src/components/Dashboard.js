@@ -15,11 +15,17 @@ const Dashboard = () =>{
   const coursesWhereUserTeaches = allCourses.filter((course) => course.teacher.username === user.username)
 
   useEffect(() => {
-    if(!allCoursesQuery.loading)
+    if(!allCoursesQuery.loading && allCourses.length === 0)
     {
+      console.log("set courses due to allCoursesQuery")
       dispatch(setCourses(allCoursesQuery.data.allCourses))
     }
   }, [allCoursesQuery])
+
+  useEffect(() => {
+    console.log(allCourses)
+  }, [allCourses])
+
 
     return(
       <>
