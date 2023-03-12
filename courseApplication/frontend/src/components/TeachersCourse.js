@@ -15,7 +15,7 @@ const TeachersCourse = () =>{
   const client = useApolloClient()
   const uniqueName = useParams().uniqueName  
   const course = useSelector(store=>store.courses.find((course) => course.uniqueName === uniqueName))
-
+  dispatch(getCourseWithUniqueName(uniqueName, client))
   const createTaskOnThisCourse = async (event) => {
       event.preventDefault()    
       const description = event.target.taskDescription.value

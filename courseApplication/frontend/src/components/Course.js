@@ -16,7 +16,7 @@ const Course = () =>{
   const client = useApolloClient()
   const uniqueName = useParams().uniqueName  
   const course = useSelector(state => state.courses.find(course => course.uniqueName == uniqueName))
-  
+  dispatch(getCourseWithUniqueName(uniqueName, client))
   console.log(course)
   if(!course){
     return (<></>)
