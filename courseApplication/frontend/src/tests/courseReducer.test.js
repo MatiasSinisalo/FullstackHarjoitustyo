@@ -1,4 +1,4 @@
-import { addCourse, setCourses, updateCourse, addStudentToCourse, removeStudentFromCourse, courseHasStudent, getCoursesWithUser, getCourseWithUniqueName } from "../reducers/courseReducer"
+import { addCourse, setCourses, updateCourse, addStudentToCourse, removeStudentFromCourse, courseHasStudent, getCoursesWithUser, getCourseWithUniqueName, setTasks } from "../reducers/courseReducer"
 import store from '../store'
 import { getCourse } from "../services/courseService"
 
@@ -14,8 +14,21 @@ jest.mock('../services/courseService', () => {
     }
 })
 
-const exampleCourse = {uniqueName: "this is a unique name", name: "courses name", teacher: {username: "username", name: "users name"}, students: []}
-const secondExampleCourse = {uniqueName: "this is a second unique name", name: "second courses name", teacher: {username: "second username", name: "second users name"}, students: []}
+
+
+const exampleCourse = {
+    uniqueName: "this is a unique name", 
+    name: "courses name", 
+    teacher: {username: "username", name: "users name"}, 
+    students: [], 
+    tasks: []}
+const secondExampleCourse = {
+    uniqueName: "this is a second unique name", 
+    name: "second courses name", 
+    teacher: {username: "second username", 
+    name: "second users name"}, 
+    students: [], 
+    tasks: []}
 
 beforeEach(() => {
     store.dispatch(setCourses([]))
@@ -185,6 +198,26 @@ describe('course reducer tests', () => {
             const course = await store.dispatch(getCourseWithUniqueName("this is a unique name", null))
             expect(course).toEqual(null)
             
+        })
+    })
+
+    describe('setTasks reducer tests', () => {
+        test('setTasks sets the tasks of a course correctly', () => {
+            store.dispatch(setCourses([exampleCourse, secondExampleCourse]))
+            const exampleTask = {description: "this is a description of a course", deadline: Date.now()}
+            store.dispatch(setTasks({uniqueName: exampleCourse.uniqueName, tasks: [exampleTask]}))
+            const courses = store.getState().courses
+            expect(courses[0]).toEqual({...exampleCourse, tasks: [exampleTask]})
+            expect(courses[1]).toEqual(secondExampleCourse)
+        })
+        test('setTasks overrides the tasks of a course if the course already has tasks', () => {
+            const exampleTask = {description: "this is a description of a course", deadline: Date.now()}
+            store.dispatch(setCourses([{...exampleCourse, tasks: [exampleTask]}, secondExampleCourse]))
+            const overrideTask = {description: "this is a description of a course that will override the tasklist", deadline: Date.now()}
+            store.dispatch(setTasks({uniqueName: exampleCourse.uniqueName, tasks: [overrideTask]}))
+            const courses = store.getState().courses
+            expect(courses[0]).toEqual({...exampleCourse, tasks: [overrideTask]})
+            expect(courses[1]).toEqual(secondExampleCourse)
         })
     })
 })

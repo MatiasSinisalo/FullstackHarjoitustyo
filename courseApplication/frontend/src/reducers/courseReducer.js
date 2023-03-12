@@ -24,13 +24,8 @@ const courseSlice = createSlice({
         setTasks(state, action){
             const uniqueName = action.payload.uniqueName
             const newTasks = action.payload.tasks
-            console.log("saving to state: ")
-            console.log(uniqueName)
-            console.log(newTasks)
             const courseToUpdate = state.find((course) => course.uniqueName === uniqueName)
-            console.log(courseToUpdate)
             const updatedCourse = {...courseToUpdate, tasks: newTasks}
-            console.log(updatedCourse)
             const updatedCourseList = state.map((course) => course.uniqueName === uniqueName ? updatedCourse : course)
             return updatedCourseList
         }
