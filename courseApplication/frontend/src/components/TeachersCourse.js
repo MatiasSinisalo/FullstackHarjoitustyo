@@ -10,7 +10,6 @@ import Task from "./Task"
 
 
 
-
 const TeachersCourse = () =>{
   const dispatch = useDispatch()
   const client = useApolloClient()
@@ -19,7 +18,13 @@ const TeachersCourse = () =>{
   const [course, setCourse] = useState()
   dispatch(getCourseWithUniqueName(uniqueName, client)).then((result) => setCourse(result))
  
-  
+  const createTaskOnThisCourse = (event) => {
+    event.preventDefault()    
+      const description = event.target.taskDescription.value
+      const deadline = event.target.taskDeadLine.value
+      console.log(description)
+      console.log(deadline)
+  }
   
   console.log(course)
   if(!course){
@@ -31,6 +36,20 @@ const TeachersCourse = () =>{
     <h1>{course.uniqueName}</h1>
     <h2>{course.name}</h2>
     <p>this is the teachers course page</p>
+
+    <h2>create a new task on the course</h2>
+    <form onSubmit={createTaskOnThisCourse}>
+      <p>description</p>
+      <input type="text" name="taskDescription"></input>
+      <br></br>
+      <p>deadline</p>
+      <input type="date" name="taskDeadLine"></input>
+      <br></br>
+      <p></p>
+      <input type="submit" value="create task"></input>
+    </form>
+
+    <h2>tasks of the course: </h2>
     {course.tasks.length > 0 ? course.tasks.map((task) => <Task task={task} key={task.id}></Task>) : <></>}
     </>
 
