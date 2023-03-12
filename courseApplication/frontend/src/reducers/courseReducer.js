@@ -118,7 +118,6 @@ export const createNewTaskOnCourse = (uniqueName, description, deadline, client)
         {
             dispatch(setTasks({uniqueName: uniqueName, tasks:updatedTaskList}))
             const courses = getState().courses
-            console.log(courses)
             return true
         }
     }

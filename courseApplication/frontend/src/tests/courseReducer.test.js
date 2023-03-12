@@ -1,6 +1,6 @@
-import { addCourse, setCourses, updateCourse, addStudentToCourse, removeStudentFromCourse, courseHasStudent, getCoursesWithUser, getCourseWithUniqueName, setTasks } from "../reducers/courseReducer"
+import { addCourse, setCourses, updateCourse, addStudentToCourse, removeStudentFromCourse, courseHasStudent, getCoursesWithUser, getCourseWithUniqueName, setTasks, createNewTaskOnCourse } from "../reducers/courseReducer"
 import store from '../store'
-import { getCourse } from "../services/courseService"
+import { getCourse, addTaskToCourse } from "../services/courseService"
 
 //mocking partials:
 //https://jestjs.io/docs/mock-functions 
@@ -10,7 +10,8 @@ jest.mock('../services/courseService', () => {
     return{
         __esModule: true,
         ...moduleNormal,
-        getCourse: jest.fn()
+        getCourse: jest.fn(),
+        addTaskToCourse: jest.fn()
     }
 })
 
@@ -217,6 +218,50 @@ describe('course reducer tests', () => {
             store.dispatch(setTasks({uniqueName: exampleCourse.uniqueName, tasks: [overrideTask]}))
             const courses = store.getState().courses
             expect(courses[0]).toEqual({...exampleCourse, tasks: [overrideTask]})
+            expect(courses[1]).toEqual(secondExampleCourse)
+        })
+    })
+
+    describe('createNewTaskOnCourse action tests', () => {
+       
+        test('createNewTaskOnCourse creates a new task correctly when course has 0 existing tasks', async () => {
+            store.dispatch(setCourses([exampleCourse, secondExampleCourse]))
+            const exampleTask = {description: "this is a description of a task", deadline: Date.now()}
+            addTaskToCourse.mockImplementation(() => {return [exampleTask]})
+            const mockClient = jest.fn()
+            await store.dispatch(createNewTaskOnCourse(exampleCourse.uniqueName, exampleTask.description, exampleTask.deadline, mockClient))
+            const courses = store.getState().courses
+            console.log(courses[0])
+            expect(courses[0]).toEqual({...exampleCourse, tasks: [exampleTask]})
+            expect(courses[1]).toEqual(secondExampleCourse)
+        })
+        test('createNewTaskOnCourse creates a new task correctly when course has existing tasks', async () => {
+            const exampleTask = {description: "this is a description of a task", deadline: Date.now()}
+            store.dispatch(setCourses([{...exampleCourse, tasks: [exampleTask]}, secondExampleCourse]))
+            const secondTask = {description: "this is a description of a second task", deadline: Date.now()}
+            
+            addTaskToCourse.mockImplementation(() => {return [exampleTask, secondTask]})
+            const mockClient = jest.fn()
+            
+            await store.dispatch(createNewTaskOnCourse(exampleCourse.uniqueName, secondTask.description, secondTask.deadline, mockClient))
+            const courses = store.getState().courses
+            console.log(courses[0])
+            expect(courses[0]).toEqual({...exampleCourse, tasks: [exampleTask, secondTask]})
+            expect(courses[1]).toEqual(secondExampleCourse)
+        })
+
+        test('createNewTaskOnCourse doesnt modifyi store state if addTaskToCourse returns null', async () => {
+            const exampleTask = {description: "this is a description of a task", deadline: Date.now()}
+            store.dispatch(setCourses([{...exampleCourse, tasks: [exampleTask]}, secondExampleCourse]))
+            const secondTask = {description: "this is a description of a second task", deadline: Date.now()}
+            
+            addTaskToCourse.mockImplementation(() => {return null})
+            const mockClient = jest.fn()
+            
+            await store.dispatch(createNewTaskOnCourse(exampleCourse.uniqueName, secondTask.description, secondTask.deadline, mockClient))
+            const courses = store.getState().courses
+            console.log(courses[0])
+            expect(courses[0]).toEqual({...exampleCourse, tasks: [exampleTask]})
             expect(courses[1]).toEqual(secondExampleCourse)
         })
     })
