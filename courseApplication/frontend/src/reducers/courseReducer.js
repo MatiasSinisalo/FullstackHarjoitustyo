@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
-import { addUserToCourse, getCourse, removeUserFromCourse, createCourse } from "../services/courseService";
+import { addUserToCourse, getCourse, removeUserFromCourse, createCourse, addTaskToCourse } from "../services/courseService";
 const courses = []
 
 
@@ -20,10 +20,23 @@ const courseSlice = createSlice({
            
             const updatedCourseList = state.map((course) => course.uniqueName === updatedCourse.uniqueName ? updatedCourse : course)
             return updatedCourseList
+        },
+        setTasks(state, action){
+            const uniqueName = action.payload.uniqueName
+            const newTasks = action.payload.tasks
+            console.log("saving to state: ")
+            console.log(uniqueName)
+            console.log(newTasks)
+            const courseToUpdate = state.find((course) => course.uniqueName === uniqueName)
+            console.log(courseToUpdate)
+            const updatedCourse = {...courseToUpdate, tasks: newTasks}
+            console.log(updatedCourse)
+            const updatedCourseList = state.map((course) => course.uniqueName === uniqueName ? updatedCourse : course)
+            return updatedCourseList
         }
     }
 })
-export const {addCourse, setCourses, updateCourse} = courseSlice.actions
+export const {addCourse, setCourses, updateCourse, setTasks} = courseSlice.actions
 
 
 export const createNewCourse = (courseUniqueName, courseName, client) => {
@@ -100,6 +113,19 @@ export const getCoursesWithTeacher = (username) => {
         const allCourses = getState().courses
         const coursesWithUserAsStudent = allCourses.filter((course) => course.teacher.username === username)
         return coursesWithUserAsStudent
+    }
+}
+
+export const createNewTaskOnCourse = (uniqueName, description, deadline, client) => {
+    return async function (dispatch, getState){
+        const updatedTaskList = await addTaskToCourse(uniqueName, description, deadline, client)
+        if(updatedTaskList)
+        {
+            dispatch(setTasks({uniqueName: uniqueName, tasks:updatedTaskList}))
+            const courses = getState().courses
+            console.log(courses)
+            return true
+        }
     }
 }
 

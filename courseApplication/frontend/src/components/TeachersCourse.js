@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import {
     useParams
 } from "react-router-dom"
-import { getCourseWithUniqueName } from "../reducers/courseReducer"
+import { getCourseWithUniqueName, createNewTaskOnCourse } from "../reducers/courseReducer"
 import Task from "./Task"
 
 
@@ -14,16 +14,16 @@ const TeachersCourse = () =>{
   const dispatch = useDispatch()
   const client = useApolloClient()
   const uniqueName = useParams().uniqueName  
-  
-  const [course, setCourse] = useState()
-  dispatch(getCourseWithUniqueName(uniqueName, client)).then((result) => setCourse(result))
- 
-  const createTaskOnThisCourse = (event) => {
-    event.preventDefault()    
+  const course = useSelector(store=>store.courses.find((course) => course.uniqueName === uniqueName))
+
+  const createTaskOnThisCourse = async (event) => {
+      event.preventDefault()    
       const description = event.target.taskDescription.value
       const deadline = event.target.taskDeadLine.value
       console.log(description)
       console.log(deadline)
+      console.log(course)
+      await dispatch(createNewTaskOnCourse(course.uniqueName, description, deadline, client))
   }
   
   console.log(course)
