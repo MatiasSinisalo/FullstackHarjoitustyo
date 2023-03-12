@@ -4,28 +4,23 @@ import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import CourseShowCase from "../components/CourseShowCase"
 import { GET_ALL_COURSES } from "../queries/courseQueries"
-import { getCoursesWithTeacher, getCoursesWithUser, setCourses } from '../reducers/courseReducer'
+import { setCourses, courseHasStudent } from '../reducers/courseReducer'
 const Dashboard = () =>{
   const user = useSelector((store) => {return store.user})
   const dispatch = useDispatch()
   
-  const allCourses = useQuery(GET_ALL_COURSES)
-  const [usersCourses, setUsersCourses] = useState()
-  const [coursesWhereUserTeaches, setCoursesWhereUserTeaches] = useState()
+  const allCoursesQuery = useQuery(GET_ALL_COURSES)
+  const allCourses = useSelector((store) => store.courses)
+  const usersCourses = allCourses.filter((course) => courseHasStudent(course, user.username))
+  const coursesWhereUserTeaches = allCourses.filter((course) => course.teacher.username === user.username)
 
   useEffect(() => {
-    if(!allCourses.loading)
+    if(!allCoursesQuery.loading)
     {
-      dispatch(setCourses(allCourses.data.allCourses))
-      setUsersCourses(dispatch(getCoursesWithUser(user.username)))
-      setCoursesWhereUserTeaches(dispatch(getCoursesWithTeacher(user.username)))
-      
+      dispatch(setCourses(allCoursesQuery.data.allCourses))
     }
-  }, [allCourses])
-  
+  }, [allCoursesQuery])
 
-  
-  
     return(
       <>
       <h1>Hello {user.username}</h1>
