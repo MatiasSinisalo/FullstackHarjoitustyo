@@ -37,11 +37,6 @@ const App = () =>{
           const userdata = await getUserData(client)
           dispatch(updateUser(userdata))
         }
-
-        console.log("getting courses")
-        client.query({query: GET_ALL_COURSES}).then((result) => 
-        dispatch(setCourses(result.data.allCourses))
-        )
     }
     prepApp()
   }, [])

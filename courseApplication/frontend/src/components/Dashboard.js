@@ -1,13 +1,22 @@
+import { useQuery } from "@apollo/client"
+import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import CourseShowCase from "../components/CourseShowCase"
-import { getCoursesWithTeacher, getCoursesWithUser } from '../reducers/courseReducer'
+import { GET_ALL_COURSES } from "../queries/courseQueries"
+import { getCoursesWithTeacher, getCoursesWithUser, setCourses } from '../reducers/courseReducer'
 const Dashboard = () =>{
   const user = useSelector((store) => {return store.user})
   const dispatch = useDispatch()
+  const allCourses = useQuery(GET_ALL_COURSES)
+  useEffect(() => {
+    if(!allCourses.loading)
+    {
+      dispatch(setCourses(allCourses.data.allCourses))
+    }
+  }, [allCourses])
   const usersCourses = dispatch(getCoursesWithUser(user.username))
   const coursesWhereUserTeaches = dispatch(getCoursesWithTeacher(user.username))
-  console.log(usersCourses)
     return(
       <>
       <h1>Hello {user.username}</h1>
