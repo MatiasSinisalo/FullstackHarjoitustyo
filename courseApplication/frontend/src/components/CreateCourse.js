@@ -6,6 +6,7 @@ import { useApolloClient } from "@apollo/client";
 const CreateCourse = () =>{
     const dispatch = useDispatch()
     const client = useApolloClient()
+    
     const submitCreateCourseForm = async (event) => {
         event.preventDefault()
         console.log("creating a new course")

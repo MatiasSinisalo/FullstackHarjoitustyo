@@ -50,7 +50,6 @@ export const createNewCourse = (courseUniqueName, courseName, client) => {
         const createdCourse = await courseService.createCourse(courseUniqueName, courseName, "", client)
         if(createdCourse)
         {
-            dispatch(addCourse(createdCourse))
             alert(`new course named ${createdCourse.name} created`)
             return true
         }
