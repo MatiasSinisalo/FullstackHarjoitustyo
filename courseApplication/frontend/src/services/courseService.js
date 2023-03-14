@@ -74,11 +74,6 @@ try{
     console.log(uniqueName)
     const result = await apolloClient.mutate({mutation: ADD_TASK_TO_COURSE, variables: {courseUniqueName: uniqueName, description: description, deadline: deadline}})
     if(result.data?.addTaskToCourse){
-        apolloClient.cache.updateQuery({query: GET_COURSE}, (data) => ({
-            getCourse: {...getCourse, tasks: result.data.addTaskToCourse.tasks}
-        }))
-
-
         return result?.data?.addTaskToCourse.tasks
     }
     else{
