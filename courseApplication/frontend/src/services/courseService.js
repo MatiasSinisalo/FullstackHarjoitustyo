@@ -13,7 +13,6 @@ export const createCourse = async (uniqueName, name, teacher, apolloClient) => {
         apolloClient.cache.updateQuery({query: GET_ALL_COURSES}, (data) => ({
             allCourses: data.allCourses.concat(createdCourse.data.createCourse)
         }))
-        
         if(createdCourse)
         {
             return createdCourse.data.createCourse

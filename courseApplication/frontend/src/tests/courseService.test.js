@@ -1,27 +1,29 @@
 import { createCourse, addUserToCourse, removeUserFromCourse, getCourse } from '../services/courseService'
-import {createMockClient} from '@apollo/client/testing'
+
+const mockClient = jest.mock
+mockClient.cache = jest.mock()
+mockClient.cache.updateQuery = jest.fn()
 
 
 
 describe('courseService tests', () => {
-    const mockClient = {
-        mutate : (data) => {
-            if(data.variables.uniqueName && data.variables.name)
-            {
-                return {data: {createCourse: {uniqueName: data.variables.uniqueName, name: data.variables.name, teacher: {username: "username", name: "users name"}}}}
-            }
-        },
-    }
     describe('createCourse function tests', () => {
-        test('createCourse function returns correctly with correct parameters', async () => {
+        const data = {
+            createCourse: {uniqueName: 'unique name', name: 'name'}
+        }
+       
+        test('createCourse function calls backend correctly and returns correct parameters', async () => {
+            mockClient.mutate = jest.fn(() => {return {data}})
             const createdCourse = await createCourse('unique name', 'name', '', mockClient)
-            expect(createdCourse.uniqueName).toEqual('unique name')
+            expect(mockClient.mutate.mock.calls).toHaveLength(1);
+            
+            const variables = mockClient.mutate.mock.calls[0][0].variables
+            expect(variables.uniqueName).toEqual('unique name');
+            expect(variables.name).toEqual('name')
+            
+            expect(createdCourse.uniqueName).toEqual('unique name');
             expect(createdCourse.name).toEqual('name')
-    
-    
-            const secondCreatedCourse = await createCourse('another unique name', 'second name', '', mockClient)
-            expect(secondCreatedCourse.uniqueName).toEqual('another unique name')
-            expect(secondCreatedCourse.name).toEqual('second name')
+
         })
         test('createCourse function returns correctly with incorrect parameters', async () => {
             const createdCourse = await createCourse('', '', '', mockClient)
@@ -30,36 +32,40 @@ describe('courseService tests', () => {
     })
 
     describe('addUserToCourse function test', () => {
-        const mockClient = {
-            mutate : (data) => {
-                if(data.variables.courseUniqueName && data.variables.username)
-                {
-                    return {data: {addStudentToCourse: {uniqueName: data.variables.courseUniqueName, name: 'course name', students : [{username: data.variables.username, name: 'users name 4321'}], teacher: {username: "username", name: "users name"}}}}
-                }
-            },
+        const data = {
+            addStudentToCourse: {uniqueName: 'courses unique name', students: [{username: 'users username', name: 'users name 4321'}]}
         }
-        test('addUserToCourse calls backend with correct data', async () => {
-            const courseWithAddedStudent = await addUserToCourse('courses unique name', 'users username', mockClient)
-            expect(courseWithAddedStudent.uniqueName).toEqual('courses unique name')
-            expect(courseWithAddedStudent.students[0].name).toEqual('users name 4321')
-            expect(courseWithAddedStudent.students[0].username).toEqual('users username')
+        test('addUserToCourse calls backend with correct data and returns correctly', async () => {
+            mockClient.mutate = jest.fn(() => {return {data}})
+            const correctCourse = data.addStudentToCourse
+            const courseWithAddedStudent = await addUserToCourse(correctCourse.uniqueName, correctCourse.students[0].username, mockClient)
+           
+            const variables = mockClient.mutate.mock.calls[0][0].variables
+            expect(variables.courseUniqueName).toEqual(correctCourse.uniqueName)
+            expect(variables.username).toEqual(correctCourse.students[0].username)
+
+            expect(courseWithAddedStudent.uniqueName).toEqual(correctCourse.uniqueName)
+            expect(courseWithAddedStudent.students[0].name).toEqual(correctCourse.students[0].name)
+            expect(courseWithAddedStudent.students[0].username).toEqual(correctCourse.students[0].username)
         }) 
     })
 
     describe('removeUserFromCourse function test', () => {
-        const mockClient = {
-            mutate : (data) => {
-                if(data.variables.courseUniqueName && data.variables.username)
-                {
-                    return {data: {removeStudentFromCourse: {uniqueName: data.variables.courseUniqueName, name: 'course name', students : [{username: data.variables.username, name: 'users name 4321'}], teacher: {username: "username", name: "users name"}}}}
-                }
-            },
+        const data = {
+            removeStudentFromCourse: {uniqueName: 'courses unique name', students: [{username: 'users username', name: 'users name 4321'}]}
         }
         test('removeUserFromCourse calls backend with correct data', async () => {
-            const courseWithAddedStudent = await removeUserFromCourse('courses unique name', 'students username to be removed', mockClient)
-            expect(courseWithAddedStudent.uniqueName).toEqual('courses unique name')
-            expect(courseWithAddedStudent.students[0].name).toEqual('users name 4321')
-            expect(courseWithAddedStudent.students[0].username).toEqual('students username to be removed')
+            mockClient.mutate = jest.fn(() => {return {data}})
+            const correctCourse = data.removeStudentFromCourse
+            const courseWithAddedStudent = await removeUserFromCourse(correctCourse.uniqueName, correctCourse.students[0].username, mockClient)
+           
+            const variables = mockClient.mutate.mock.calls[0][0].variables
+            expect(variables.courseUniqueName).toEqual(correctCourse.uniqueName)
+            expect(variables.username).toEqual(correctCourse.students[0].username)
+           
+            expect(courseWithAddedStudent.uniqueName).toEqual(correctCourse.uniqueName)
+            expect(courseWithAddedStudent.students[0].name).toEqual(correctCourse.students[0].name)
+            expect(courseWithAddedStudent.students[0].username).toEqual(correctCourse.students[0].username)
         }) 
     })
 
@@ -71,38 +77,24 @@ describe('courseService tests', () => {
             tasks: [], 
             teacher: {username: "teachers username", name: "teachers name"}
         }
-        const mockClientWithCorrectCourse = {
-            query: (data) => {
-                if(data.variables.uniqueName === "this is an example course")
-                {
-                    return {data: {getCourse: exampleCourse}}
-                }
-                else{
-                    return undefined
-                }
-            }
+        
+        const data = {
+            getCourse: exampleCourse
         }
-
-        const mockClientWithoutCorrectCourse = {
-            query: (data) => {
-                if(data.variables.uniqueName === "this is an example course")
-                {
-                    return {data: {getCourse: null}}
-                }
-                else{
-                    return undefined
-                }
-            }
-        }
-
+        
         test('getCourse calls backend correctly and returns correct info', async () => {
-            const result = await getCourse("this is an example course", mockClientWithCorrectCourse)
+            mockClient.query = jest.fn(() => {return {data}})
+            const result = await getCourse(exampleCourse.uniqueName, mockClient)
+            
+            const variables = mockClient.query.mock.calls[0][0].variables
+            expect(variables.uniqueName).toEqual(exampleCourse.uniqueName)
+
             expect(result).toEqual(exampleCourse)
         })
-
-        
+ 
         test('getCourse returns null if backend does not have the correct course', async () => {
-            const result = await getCourse("this is an example course", mockClientWithoutCorrectCourse)
+            mockClient.query = jest.fn(() => {return {data: {getCourse: null}}})
+            const result = await getCourse("this is an example course", mockClient)
             expect(result).toEqual(null)
         })
     })
