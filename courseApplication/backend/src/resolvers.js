@@ -51,7 +51,6 @@ const resolvers  = {
             const teacherUsername = context.userForToken.username
 
             const course = await courseService.createCourse(uniqueName, name, teacherUsername)
-
             return course
         },
         addStudentToCourse: async (root, args, context) => {

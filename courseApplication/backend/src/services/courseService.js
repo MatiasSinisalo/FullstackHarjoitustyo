@@ -19,9 +19,10 @@ const createCourse = async (uniqueName, name, teacherUsername) => {
         tasks: []
     }
     try{
-        const courseModel = Course(course)
+        const courseModel = new Course(course)
         const savedCourse = await courseModel.save()
-        return  {...course, teacher: teacherUser}
+        const returnCourse = {...savedCourse._doc, teacher: {username: teacherUser.username, name: teacherUser.name}, id: savedCourse._id.toString()}
+        return  returnCourse
     }
     catch(error)
     {

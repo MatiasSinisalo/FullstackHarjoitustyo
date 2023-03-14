@@ -3,6 +3,8 @@ import { gql } from "@apollo/client";
 
 export const CREATE_COURSE = gql`mutation Mutation($uniqueName: String!, $name: String!, $teacher: String!) {
     createCourse(uniqueName: $uniqueName, name: $name, teacher: $teacher) {
+      id
+      uniqueName
       name
       students {
         name
@@ -17,12 +19,13 @@ export const CREATE_COURSE = gql`mutation Mutation($uniqueName: String!, $name: 
         deadline
         description
       }
-      uniqueName
     }
   }`
 
 export const GET_ALL_COURSES = gql`query AllCourses {
     allCourses {
+      id
+      uniqueName
       name
       students {
         name
@@ -32,7 +35,7 @@ export const GET_ALL_COURSES = gql`query AllCourses {
         name
         username
       }
-      uniqueName
+     
       tasks {
         id
         deadline
@@ -44,6 +47,7 @@ export const GET_ALL_COURSES = gql`query AllCourses {
 export const GET_COURSE = gql`
 query GetCourse($uniqueName: String!) {
   getCourse(uniqueName: $uniqueName) {
+    id
     uniqueName
     name
     students {
@@ -65,6 +69,8 @@ query GetCourse($uniqueName: String!) {
 
 export const ADD_STUDENT_TO_COURSE = gql`mutation AddStudentToCourse($username: String!, $courseUniqueName: String!) {
     addStudentToCourse(username: $username, courseUniqueName: $courseUniqueName) {
+      id
+      uniqueName
       name
       students {
         name
@@ -79,12 +85,14 @@ export const ADD_STUDENT_TO_COURSE = gql`mutation AddStudentToCourse($username: 
         description
         id
       }
-      uniqueName
+      
     }
   }`
 
 export const REMOVE_STUDENT_FROM_COURSE = gql`mutation RemoveStudentFromCourse($username: String!, $courseUniqueName: String!) {
   removeStudentFromCourse(username: $username, courseUniqueName: $courseUniqueName) {
+    id
+    uniqueName
     name
     students {
       name
@@ -94,13 +102,14 @@ export const REMOVE_STUDENT_FROM_COURSE = gql`mutation RemoveStudentFromCourse($
       name
       username
     }
-    uniqueName
   }
 }`
 
 export const ADD_TASK_TO_COURSE = gql`
 mutation AddTaskToCourse($courseUniqueName: String!, $description: String!, $deadline: String!) {
   addTaskToCourse(courseUniqueName: $courseUniqueName, description: $description, deadline: $deadline) {
+    id
+    uniqueName
     tasks {
       deadline
       description
@@ -114,7 +123,6 @@ mutation AddTaskToCourse($courseUniqueName: String!, $description: String!, $dea
         submitted
       }
     }
-    uniqueName
   }
 }
 `
