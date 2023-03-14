@@ -37,9 +37,7 @@ export const getCourse = async (uniqueName, apolloClient) => {
 export const addUserToCourse = async (uniqueName, username, apolloClient) => {
     try{
         const courseWithAddedStudent = await apolloClient.mutate({mutation: ADD_STUDENT_TO_COURSE, variables: {courseUniqueName: uniqueName, username: username}})
-        apolloClient.cache.updateQuery({query: GET_ALL_COURSES}, (data) => ({
-            allCourses: data.allCourses.map((course) => course.uniqueName == courseWithAddedStudent.data.addStudentToCourse.uniqueName ? courseWithAddedStudent.data.addStudentToCourse : course )
-        }))
+       
         if(courseWithAddedStudent?.data?.addStudentToCourse)
         {
             return courseWithAddedStudent.data.addStudentToCourse
@@ -58,10 +56,6 @@ export const addUserToCourse = async (uniqueName, username, apolloClient) => {
 export const removeUserFromCourse = async (uniqueName, username, apolloClient) => {
     try{
         const updatedCourse = await apolloClient.mutate({mutation: REMOVE_STUDENT_FROM_COURSE, variables: {courseUniqueName: uniqueName, username: username}})
-        apolloClient.cache.updateQuery({query: GET_ALL_COURSES}, (data) => ({
-            allCourses: data.allCourses.map((course) => course.uniqueName == updatedCourse.data.removeStudentFromCourse.uniqueName ? updatedCourse.data.removeStudentFromCourse : course )
-        }))
-    
         if(updatedCourse?.data?.removeStudentFromCourse)
         {
             return updatedCourse.data.removeStudentFromCourse
