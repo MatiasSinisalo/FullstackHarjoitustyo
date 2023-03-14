@@ -37,10 +37,6 @@ export const {addCourse, setCourses, updateCourse, setTasks} = courseSlice.actio
 export const getAllCourses = (client) => {
     return async function (dispatch, getState){
         const courses = await courseService.getAllCourses(client)
-        if(courses)
-        {
-            dispatch(setCourses(courses))
-        }
     }
 }
 
@@ -60,20 +56,7 @@ export const createNewCourse = (courseUniqueName, courseName, client) => {
 
 export const getCourseWithUniqueName = (uniqueName, client) => {
     return async function (dispatch, getState){
-        const courseInLocalStore = getState().courses.find((course) => course.uniqueName == uniqueName)
-        if(courseInLocalStore)
-        {
-            return courseInLocalStore
-        }
-
         const courseInDatabase = await courseService.getCourse(uniqueName, client)
-        if(courseInDatabase)
-        {
-            dispatch(addCourse(courseInDatabase))
-            return courseInDatabase
-        }
-
-        return null
     }
 }
 
@@ -82,20 +65,12 @@ export const getCourseWithUniqueName = (uniqueName, client) => {
 export const addStudentToCourse = (courseUniqueName, username, client) => {
     return async dispatch => {
         const courseWithAddedStudent = await courseService.addUserToCourse(courseUniqueName, username, client)
-        if(courseWithAddedStudent)
-        {
-            dispatch(updateCourse(courseWithAddedStudent))
-        }
     }
 }
 
 export const removeStudentFromCourse = (courseUniqueName, username, client) => {
     return async dispatch => {
         const updatedCourse = await courseService.removeUserFromCourse(courseUniqueName, username, client)
-        if(updatedCourse)
-        {
-            dispatch(updateCourse(updatedCourse))
-        }
     }
 }
 
@@ -105,7 +80,7 @@ export const courseHasStudent = (course, studentsUsername) => {
 }
 
 //https://redux.js.org/usage/writing-logic-thunks
-export const getCoursesWithUser = (username) => {
+ const getCoursesWithUser = (username) => {
     return function (dispatch, getState){
         const allCourses = getState().courses
         const coursesWithUserAsStudent = allCourses.filter((course) => courseHasStudent(course, username))
@@ -113,7 +88,7 @@ export const getCoursesWithUser = (username) => {
     }
 }
 
-export const getCoursesWithTeacher = (username) => {
+ const getCoursesWithTeacher = (username) => {
     return function (dispatch, getState){
         const allCourses = getState().courses
         const coursesWithUserAsStudent = allCourses.filter((course) => course.teacher.username === username)
