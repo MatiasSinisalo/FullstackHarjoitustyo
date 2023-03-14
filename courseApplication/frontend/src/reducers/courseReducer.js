@@ -126,8 +126,6 @@ export const createNewTaskOnCourse = (uniqueName, description, deadline, client)
         const updatedTaskList = await courseService.addTaskToCourse(uniqueName, description, deadline, client)
         if(updatedTaskList)
         {
-            dispatch(setTasks({uniqueName: uniqueName, tasks:updatedTaskList}))
-            const courses = getState().courses
             return true
         }
     }
