@@ -21,6 +21,7 @@ import { updateUser, userLogIn } from "./reducers/userReducer";
 import { setCourses } from "./reducers/courseReducer";
 import { GET_ALL_COURSES } from "./queries/courseQueries";
 import TeachersCourse from "./components/TeachersCourse";
+import CreateAccount from "./components/CreateAccount";
 
 const App = () =>{
   
@@ -64,6 +65,7 @@ const App = () =>{
       <NavBar logOut={handleLogOut}></NavBar>
       <Routes>
         <Route path="/" element={<LogIn handleLogIn={handleLogIn}/>}/>
+        <Route path="/createAccount" element={<CreateAccount></CreateAccount>}/>
         <Route path="/dashboard" element={<Dashboard/>}/>
         <Route path="/calendar" element={<Calendar/>}/>
         <Route path="/messages" element={<Messages/>}/>

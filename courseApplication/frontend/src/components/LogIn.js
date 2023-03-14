@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom"
+
 const LogIn = ({handleLogIn}) =>{
     const submitLogInForm = async (event) => {
       event.preventDefault()
@@ -19,7 +21,7 @@ const LogIn = ({handleLogIn}) =>{
         <br></br>
         <input type = "submit" value="LogIn"></input>
       </form>
-
+      <p>dont have an account? create one <Link to="/createAccount">here</Link></p>
 
     </>
     )
