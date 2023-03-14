@@ -7,8 +7,13 @@ import { useEffect } from "react"
 const CourseBrowser = () =>{
     const dispatch = useDispatch()
     const client = useApolloClient()
-    dispatch(getAllCourses(client))
-    const courses = useSelector((store) => store.courses)
+    
+    const allCoursesQuery = useQuery(GET_ALL_COURSES)
+    if(allCoursesQuery.loading)
+    {
+      return (<p>loading...</p>)
+    }
+    const courses = allCoursesQuery.data.allCourses
    
     
     return(

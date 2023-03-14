@@ -5,13 +5,19 @@ import { Link } from "react-router-dom"
 import CourseShowCase from "../components/CourseShowCase"
 import { GET_ALL_COURSES } from "../queries/courseQueries"
 import { setCourses, courseHasStudent, getAllCourses } from '../reducers/courseReducer'
+import courseService from "../services/courseService"
 const Dashboard = () =>{
   const user = useSelector((store) => {return store.user})
   const dispatch = useDispatch()
   const client = useApolloClient()
   
-  dispatch(getAllCourses(client))
-  const allCourses = useSelector((store) => store.courses)
+  const allCoursesQuery = useQuery(GET_ALL_COURSES)
+  if(allCoursesQuery.loading)
+  {
+    return (<p>loading...</p>)
+  }
+
+  const allCourses = allCoursesQuery.data.allCourses
   const usersCourses = allCourses.filter((course) => courseHasStudent(course, user.username))
   const coursesWhereUserTeaches = allCourses.filter((course) => course.teacher.username === user.username)
     return(
