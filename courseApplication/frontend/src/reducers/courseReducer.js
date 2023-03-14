@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
-import { addUserToCourse, getCourse, removeUserFromCourse, createCourse, addTaskToCourse } from "../services/courseService";
+import courseService from "../services/courseService";
 const courses = []
 
 
@@ -34,9 +34,20 @@ const courseSlice = createSlice({
 export const {addCourse, setCourses, updateCourse, setTasks} = courseSlice.actions
 
 
+export const getAllCourses = (client) => {
+    return async function (dispatch, getState){
+        const courses = await courseService.getAllCourses(client)
+        if(courses)
+        {
+            dispatch(setCourses(courses))
+        }
+    }
+}
+
+
 export const createNewCourse = (courseUniqueName, courseName, client) => {
     return async function (dispatch, getState){
-        const createdCourse = await createCourse(courseUniqueName, courseName, "", client)
+        const createdCourse = await courseService.createCourse(courseUniqueName, courseName, "", client)
         if(createdCourse)
         {
             dispatch(addCourse(createdCourse))
@@ -56,7 +67,7 @@ export const getCourseWithUniqueName = (uniqueName, client) => {
             return courseInLocalStore
         }
 
-        const courseInDatabase = await getCourse(uniqueName, client)
+        const courseInDatabase = await courseService.getCourse(uniqueName, client)
         if(courseInDatabase)
         {
             dispatch(addCourse(courseInDatabase))
@@ -71,7 +82,7 @@ export const getCourseWithUniqueName = (uniqueName, client) => {
 
 export const addStudentToCourse = (courseUniqueName, username, client) => {
     return async dispatch => {
-        const courseWithAddedStudent = await addUserToCourse(courseUniqueName, username, client)
+        const courseWithAddedStudent = await courseService.addUserToCourse(courseUniqueName, username, client)
         if(courseWithAddedStudent)
         {
             dispatch(updateCourse(courseWithAddedStudent))
@@ -81,7 +92,7 @@ export const addStudentToCourse = (courseUniqueName, username, client) => {
 
 export const removeStudentFromCourse = (courseUniqueName, username, client) => {
     return async dispatch => {
-        const updatedCourse = await removeUserFromCourse(courseUniqueName, username, client)
+        const updatedCourse = await courseService.removeUserFromCourse(courseUniqueName, username, client)
         if(updatedCourse)
         {
             dispatch(updateCourse(updatedCourse))
@@ -113,7 +124,7 @@ export const getCoursesWithTeacher = (username) => {
 
 export const createNewTaskOnCourse = (uniqueName, description, deadline, client) => {
     return async function (dispatch, getState){
-        const updatedTaskList = await addTaskToCourse(uniqueName, description, deadline, client)
+        const updatedTaskList = await courseService.addTaskToCourse(uniqueName, description, deadline, client)
         if(updatedTaskList)
         {
             dispatch(setTasks({uniqueName: uniqueName, tasks:updatedTaskList}))

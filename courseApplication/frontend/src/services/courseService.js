@@ -1,5 +1,12 @@
-import { ADD_STUDENT_TO_COURSE, ADD_TASK_TO_COURSE, CREATE_COURSE, GET_COURSE, REMOVE_STUDENT_FROM_COURSE } from "../queries/courseQueries"
+import { ADD_STUDENT_TO_COURSE, ADD_TASK_TO_COURSE, CREATE_COURSE, GET_ALL_COURSES, GET_COURSE, REMOVE_STUDENT_FROM_COURSE } from "../queries/courseQueries"
 //teacher field is not currently being used on the backend at all when creating a course
+
+export const getAllCourses = async (apolloClient) => {
+    const allCourses = await apolloClient.query({query: GET_ALL_COURSES})
+    return allCourses.data.allCourses
+}
+
+
 export const createCourse = async (uniqueName, name, teacher, apolloClient) => {    
     try{
         const createdCourse = await apolloClient.mutate({mutation: CREATE_COURSE, variables: {uniqueName, name, teacher: ""}})
@@ -78,3 +85,5 @@ catch(err)
     return null
 }
 }
+
+export default {getAllCourses, createCourse, getCourse, addUserToCourse, removeUserFromCourse, addTaskToCourse}
