@@ -539,8 +539,11 @@ describe('course tests', () => {
                 deadline: new Date("2030-06-25"),
                 submissions: []
             }
+            await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "username", courseUniqueName: "course owned by username"}})
+       
+             
+
             const createdTask = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: course.uniqueName, description: task.description, deadline: task.deadline.toString()}});
-            console.log(createdTask)
             const taskID = createdTask.data.addTaskToCourse.tasks[0].id
             console.log(taskID)
             const submission = {

@@ -125,6 +125,7 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
     {
         throw new UserInputError("Given course not found")
     }
+    console.log(course)
     console.log("course found")
     console.log(course.tasks)
     console.log(taskID)
@@ -136,19 +137,21 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
         throw new UserInputError("Given task not found")
     }
     console.log("task found")
-    const userInCourse = course.students.find({username: userForToken.username})
+    console.log(course.students)
+    const userInCourse = course.students.find((user) => user.username === userForToken.username)
     if(!userInCourse)
     {
         throw new UserInputError("Given user is not participating in the course!")
     }
+    console.log("user found")
     const newSubmission = {
         id: new mongoose.Types.ObjectId(),
         content: content,
         submitted: submitted
     }
-    const newSubmissionList = course.tasks.submissions.concat(newSubmission)
+    const newSubmissionList = taskInCourse.submissions.concat(newSubmission)
     const updatedCourse = await Course.findByIdAndUpdate(course.id, {tasks: {submissions: newSubmissionList}})
-    return updatedCourse.tasks.submissions.find({id: newSubmission.id})
+    return newSubmission
     
 
 }
