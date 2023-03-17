@@ -8,7 +8,7 @@ const courseQueryResolvers = {
         return courses
     },
     getCourse: async (root, args, context) => {
-        const course = await Course.findOne({uniqueName: args.uniqueName}).populate(['teacher', 'students'])
+        const course = await Course.findOne({uniqueName: args.uniqueName}).populate(['teacher', 'students', 'tasks'])
         return course
     }
 }

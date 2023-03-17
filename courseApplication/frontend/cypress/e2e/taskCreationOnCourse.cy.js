@@ -41,7 +41,7 @@ describe('task creation on course tests', () => {
         taskCreateButton.click()
         cy.wait('@serverResponse').then((communication) => {
             const responseData = communication.response.body.data.addTaskToCourse
-            const createdTask = responseData.tasks[0]
+            const createdTask = responseData
             expect(createdTask.description).to.equal(newTask.description)
             const savedDeadline =new Date(parseInt(createdTask.deadline)).toISOString().split('T')[0]
             expect(savedDeadline).to.equal(deadlineString)

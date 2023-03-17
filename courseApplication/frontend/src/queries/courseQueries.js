@@ -109,20 +109,17 @@ export const ADD_TASK_TO_COURSE = gql`
 mutation AddTaskToCourse($courseUniqueName: String!, $description: String!, $deadline: String!) {
   addTaskToCourse(courseUniqueName: $courseUniqueName, description: $description, deadline: $deadline) {
     id
-    uniqueName
-    tasks {
-      deadline
-      description
-      id
-      submissions {
-        content
-        fromUser {
-          name
-          username
-        }
-        submitted
+    deadline
+    description
+    submissions {
+      content
+      fromUser {
+        name
+        username
       }
+      submitted
     }
   }
 }
+
 `

@@ -72,8 +72,9 @@ export const addTaskToCourse = async (uniqueName, description, deadline, apolloC
 try{
     console.log(uniqueName)
     const result = await apolloClient.mutate({mutation: ADD_TASK_TO_COURSE, variables: {courseUniqueName: uniqueName, description: description, deadline: deadline}})
+   
     if(result.data?.addTaskToCourse){
-        return result?.data?.addTaskToCourse.tasks
+        return result?.data?.addTaskToCourse
     }
     else{
         return null
