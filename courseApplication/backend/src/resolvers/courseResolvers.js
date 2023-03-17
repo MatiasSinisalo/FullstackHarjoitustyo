@@ -75,9 +75,9 @@ const courseMutationResolvers = {
         const content = args.content
         const submitted = args.submitted
         const taskID = args.taskId
-        console.log("creating course")
+        
         const createdSubmission = await courseService.addSubmissionToCourseTask(courseUniqueName, taskID, content, submitted, context.userForToken)
-        console.log(createdSubmission)
+        
         return createdSubmission
     }
 }

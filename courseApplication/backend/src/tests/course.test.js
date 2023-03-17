@@ -559,7 +559,12 @@ describe('course tests', () => {
                 submitted: submission.submitted,
             }});
             console.log(response)
-            expect(response.data.addSubmissionToCourseTask).toEqual(submission)
+            const createdSubmission = response.data.addSubmissionToCourseTask
+            expect(createdSubmission.content).toEqual(submission.content)
+            expect(createdSubmission.submitted).toEqual(submission.submitted)
+            expect(createdSubmission.fromUser.username).toEqual("username")
+            expect(createdSubmission.fromUser.name).toEqual("name")
+
 
         })
        

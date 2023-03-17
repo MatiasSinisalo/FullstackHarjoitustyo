@@ -2,6 +2,7 @@ const { UserInputError } = require('apollo-server-core')
 const User = require('../models/user')
 const Course = require('../models/course')
 const { default: mongoose } = require('mongoose')
+const user = require('../models/user')
 
 const createCourse = async (uniqueName, name, teacherUsername) => {
     const teacherUser = await User.findOne({username:teacherUsername})
@@ -125,33 +126,35 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
     {
         throw new UserInputError("Given course not found")
     }
-    console.log(course)
-    console.log("course found")
-    console.log(course.tasks)
-    console.log(taskID)
-    console.log(course.tasks[0].id.toString())
+   
     const taskInCourse = course.tasks.find((task) => task._id.toString() === taskID)
-    console.log(taskInCourse)
+    
     if(!taskInCourse)
     {
         throw new UserInputError("Given task not found")
     }
-    console.log("task found")
-    console.log(course.students)
+   
     const userInCourse = course.students.find((user) => user.username === userForToken.username)
     if(!userInCourse)
     {
         throw new UserInputError("Given user is not participating in the course!")
     }
-    console.log("user found")
+   
     const newSubmission = {
         id: new mongoose.Types.ObjectId(),
+        fromUser: userInCourse.id,
         content: content,
         submitted: submitted
     }
     const newSubmissionList = taskInCourse.submissions.concat(newSubmission)
-    const updatedCourse = await Course.findByIdAndUpdate(course.id, {tasks: {submissions: newSubmissionList}})
-    return newSubmission
+    const updatedCourse = await Course.findByIdAndUpdate(course.id, {tasks: {submissions: newSubmissionList}}, {new: true})
+    return {...newSubmission, 
+            fromUser: {
+            id:userInCourse.id,
+            username: userInCourse.username,
+            name: userInCourse.name
+        }
+    }
     
 
 }
