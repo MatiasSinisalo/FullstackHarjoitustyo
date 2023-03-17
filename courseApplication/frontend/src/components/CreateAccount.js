@@ -1,5 +1,6 @@
 import { useApolloClient } from "@apollo/client";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import {createNewUser} from "../reducers/userReducer"
 
 const CreateAccount = () => {
@@ -19,6 +20,7 @@ const CreateAccount = () => {
 
     return  (
         <>
+            <Link to="/">Back to Log In page</Link>
             <h1>Create a new account</h1>
             <form onSubmit={createNewAccount}>
                 <p>username</p>
