@@ -4,7 +4,7 @@ const Course = require('../models/course')
 
 const courseQueryResolvers = {
     allCourses: async (root, args, context) => {
-        const courses = await Course.find({}).populate(['teacher', 'students'])
+        const courses = await Course.find({}).populate(['teacher', 'students', 'tasks'])
         return courses
     },
     getCourse: async (root, args, context) => {
@@ -57,13 +57,13 @@ const courseMutationResolvers = {
             throw new UserInputError("Unauthorized")
         }
 
-        
+      
         const courseUniqueName = args.courseUniqueName
         const description = args.description
         const deadline = args.deadline
-        const updatedCourse = await courseService.addTaskToCourse(courseUniqueName, description, deadline, context.userForToken)
+        const newTask = await courseService.addTaskToCourse(courseUniqueName, description, deadline, context.userForToken)
 
-        return updatedCourse
+        return newTask
 
     },
     addSubmissionToCourseTask: async(root, args, context) => {

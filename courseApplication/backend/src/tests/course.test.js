@@ -39,7 +39,8 @@ describe('course tests', () => {
                     username: 'username',
                     name: 'name'
                 },
-                students: []
+                students: [],
+                tasks: []
             }
             expect(createdCourse.data.createCourse).toEqual(correctReturnValue)
         })
@@ -401,16 +402,14 @@ describe('course tests', () => {
             
             const courseWithAddedTask = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: task.courseUniqueName, description: task.description, deadline: task.deadline.toString()}});
          
-            
-            expect(courseWithAddedTask.data.addTaskToCourse.tasks.length).toEqual(1);
-            expect(courseWithAddedTask.data.addTaskToCourse.tasks[0].description).toEqual(task.description);
-            expect(courseWithAddedTask.data.addTaskToCourse.tasks[0].submissions).toEqual([]);
+            expect(courseWithAddedTask.data.addTaskToCourse.description).toEqual(task.description);
+            expect(courseWithAddedTask.data.addTaskToCourse.submissions).toEqual([]);
 
-            const dateReturned =  parseInt(courseWithAddedTask.data.addTaskToCourse.tasks[0].deadline)
+            const dateReturned =  parseInt(courseWithAddedTask.data.addTaskToCourse.deadline)
            
             expect(new Date(dateReturned)).toEqual(task.deadline);
 
-            const CoursesInDataBase = await Course.find({})
+            const CoursesInDataBase = await Course.find({}).populate('tasks')
             expect(CoursesInDataBase.length).toBe(1)
             const course = CoursesInDataBase[0]
 
@@ -427,7 +426,7 @@ describe('course tests', () => {
 
             const task = {
                 courseUniqueName: "course owned by username",
-                description:  "this is the description of the course that is about testing",
+                description:  "this is the description of the task that is about testing",
                 deadline: new Date("2030-06-25"),
                 submissions: []
             }
@@ -441,23 +440,23 @@ describe('course tests', () => {
                 submissions: []
             }
             const courseWithAddedTask = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: secondTask.courseUniqueName, description: secondTask.description, deadline: secondTask.deadline.toString()}});
-         
+            console.log(courseWithAddedTask)
             
-            expect(courseWithAddedTask.data.addTaskToCourse.tasks.length).toEqual(2);
-            expect(courseWithAddedTask.data.addTaskToCourse.tasks[0].description).toEqual(task.description);
-            expect(courseWithAddedTask.data.addTaskToCourse.tasks[0].submissions).toEqual([]);
+           // expect(courseWithAddedTask.data.addTaskToCourse.tasks.length).toEqual(2);
+            expect(courseWithAddedTask.data.addTaskToCourse.description).toEqual(secondTask.description);
+            expect(courseWithAddedTask.data.addTaskToCourse.submissions).toEqual([]);
            
-            const dateReturned =  parseInt(courseWithAddedTask.data.addTaskToCourse.tasks[0].deadline)
-            expect(new Date(dateReturned)).toEqual(task.deadline);
+            const dateReturned =  parseInt(courseWithAddedTask.data.addTaskToCourse.deadline)
+            expect(new Date(dateReturned)).toEqual(secondTask.deadline);
 
-            expect(courseWithAddedTask.data.addTaskToCourse.tasks[1].description).toEqual(secondTask.description);
-            expect(courseWithAddedTask.data.addTaskToCourse.tasks[1].submissions).toEqual([]);
-            const secondDateReturned =  parseInt(courseWithAddedTask.data.addTaskToCourse.tasks[1].deadline)
+            expect(courseWithAddedTask.data.addTaskToCourse.description).toEqual(secondTask.description);
+            expect(courseWithAddedTask.data.addTaskToCourse.submissions).toEqual([]);
+            const secondDateReturned =  parseInt(courseWithAddedTask.data.addTaskToCourse.deadline)
             expect(new Date(secondDateReturned)).toEqual(secondTask.deadline);
 
 
 
-            const CoursesInDataBase = await Course.find({})
+            const CoursesInDataBase = await Course.find({}).populate('tasks')
             expect(CoursesInDataBase.length).toBe(1)
             
             const course = CoursesInDataBase[0]
@@ -491,7 +490,7 @@ describe('course tests', () => {
             expect(response.data.addTaskToCourse).toBe(null)
             expect(response.errors[0].message).toBe("Unauthorized")
             
-            const CoursesInDataBase = await Course.find({})
+            const CoursesInDataBase = await Course.find({}).populate('tasks')
             expect(CoursesInDataBase.length).toBe(1)
             
             const course = CoursesInDataBase[0]
@@ -517,7 +516,7 @@ describe('course tests', () => {
             expect(response.data.addTaskToCourse).toBe(null)
             expect(response.errors[0].message).toBe("Given course not found")
             
-            const CoursesInDataBase = await Course.find({})
+            const CoursesInDataBase = await Course.find({}).populate('tasks')
             expect(CoursesInDataBase.length).toBe(1)
             
             const course = CoursesInDataBase[0]
@@ -531,26 +530,27 @@ describe('course tests', () => {
     describe('addSubmissionToCourseTask tests', () => {
         test('user can create a submission to a task', async () => {
             apolloServer.context = {userForToken: {username: "username", name: "name"}}
-            const course = {uniqueName: "course owned by username", name: "common name", teacher: "username"}
+            const course = {uniqueName: "course owned by username", name: "common name", teacher: "username", tasks: []}
             const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: course})
             console.log(createdCourse)
             const task = {
-                description:  "this is the description of the course that is about testing",
+                description:  "this is the description of a task that is about testing",
                 deadline: new Date("2030-06-25"),
                 submissions: []
             }
-            await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "username", courseUniqueName: "course owned by username"}})
-       
+            const joinedCourse = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "username", courseUniqueName: "course owned by username"}})
+            console.log(joinedCourse)
              
 
             const createdTask = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: course.uniqueName, description: task.description, deadline: task.deadline.toString()}});
-            const taskID = createdTask.data.addTaskToCourse.tasks[0].id
-            console.log(taskID)
+            const taskID = createdTask.data.addTaskToCourse.id
+
             const submission = {
                 content : "this is the answer to a task",
                 submitted: true,
                 taskId: taskID
             }
+            
             const response = await apolloServer.executeOperation({query: addSubmissionToCourseTask, 
                 variables: {
                 courseUniqueName: course.uniqueName, 
@@ -558,18 +558,23 @@ describe('course tests', () => {
                 content: submission.content, 
                 submitted: submission.submitted,
             }});
+            
             console.log(response)
-            const courseInDB = await Course.findOne({courseUniqueName: course.uniqueName}) 
-           
-            console.log(courseInDB)
-            expect(courseInDB.tasks[0].description).toEqual(task.description)
-            expect(courseInDB.tasks[0].deadline).toEqual(task.deadline)
-
+            
             const createdSubmission = response.data.addSubmissionToCourseTask
             expect(createdSubmission.content).toEqual(submission.content)
             expect(createdSubmission.submitted).toEqual(submission.submitted)
             expect(createdSubmission.fromUser.username).toEqual("username")
             expect(createdSubmission.fromUser.name).toEqual("name")
+            
+            
+            const courseInDB = await Course.findOne({courseUniqueName: course.uniqueName}).populate('tasks')
+            console.log(courseInDB)
+            expect(courseInDB.tasks[0].description).toEqual(task.description)
+            expect(courseInDB.tasks[0].deadline).toEqual(task.deadline)
+
+            
+          
 
 
         })

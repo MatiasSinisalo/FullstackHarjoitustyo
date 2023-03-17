@@ -2,7 +2,7 @@ const { UserInputError } = require('apollo-server-core')
 const User = require('../models/user')
 const Course = require('../models/course')
 const { default: mongoose } = require('mongoose')
-const user = require('../models/user')
+const Task = require('../models/task')
 
 const createCourse = async (uniqueName, name, teacherUsername) => {
     const teacherUser = await User.findOne({username:teacherUsername})
@@ -114,26 +114,30 @@ const addTaskToCourse = async (courseUniqueName, taskDescription, deadline, user
         submissions: []
     }
 
-    const updatedTaskList = course.tasks.concat(newTask)
-    const updatedCourse = await Course.findByIdAndUpdate(course.id, {tasks: updatedTaskList}, {new: true})
-    return updatedCourse
+    const taskObj = new Task(newTask)
+    const savedTask = await taskObj.save()
+    console.log(savedTask)
+    console.log(course)
+    const updatedTaskList = course.tasks.concat(savedTask.id)
+    const updatedCourse = await Course.findByIdAndUpdate(course.id, {tasks: updatedTaskList}, {new: true}).populate('tasks')
+    console.log(updatedCourse)
+    return savedTask
 
 }
 
 const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, submitted, userForToken) => {
-    const course = await Course.findOne({uniqueName: courseUniqueName}).populate("students")
+    const course = await Course.findOne({uniqueName: courseUniqueName}).populate(["students", "tasks"])
     if(!course)
     {
         throw new UserInputError("Given course not found")
     }
    
     const taskInCourse = course.tasks.find((task) => task._id.toString() === taskID)
-    
     if(!taskInCourse)
     {
         throw new UserInputError("Given task not found")
     }
-   
+    console.log(course.students)
     const userInCourse = course.students.find((user) => user.username === userForToken.username)
     if(!userInCourse)
     {
@@ -146,19 +150,10 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
         content: content,
         submitted: submitted
     }
-    const newSubmissionList = taskInCourse.submissions.concat(newSubmission)
-    const updatedTask = {...taskInCourse, submissions: newSubmissionList}
-    const updatedTaskList = course.tasks.map((task) => task.id == updatedTask.id ? updatedTask : task)
-    const updatedCourse = await Course.findByIdAndUpdate(course.id, {tasks: updatedTaskList}, {new: true})
-    return {...newSubmission, 
-            fromUser: {
-            id:userInCourse.id,
-            username: userInCourse.username,
-            name: userInCourse.name
-        }
-    }
-    
 
+    const newSubmissionList = taskInCourse.submissions.concat(newSubmission)
+    const updatedTask = await Task.findByIdAndUpdate(taskInCourse.id, {submissions: newSubmissionList}, {new: true})
+    return {...newSubmission, fromUser: {username: userInCourse.username, name: userInCourse.name, id: userInCourse.id}}
 }
 
 module.exports = {createCourse, addStudentToCourse, addTaskToCourse, removeStudentFromCourse, addSubmissionToCourseTask}

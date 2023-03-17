@@ -54,7 +54,7 @@ type Mutation{
         courseUniqueName: String!
         description: String!
         deadline: String!
-    ):Course
+    ):Task
 
     addSubmissionToCourseTask(
         courseUniqueName: String!
