@@ -2,9 +2,9 @@
 
 
 const Task = ({task}) => {
-    const deadline = new Date(parseInt(task.deadline)).toString()
+    const deadline = new Date(parseInt(task.deadline)).toISOString().split('T')[0]
     return (
-        <div>
+        <div className={`task:${task.id}`}>
             <p>{task.description}</p>
             <p>deadline: {deadline}</p>
             <button>submit solution</button>
