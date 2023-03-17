@@ -74,8 +74,10 @@ const logInAsUser = (username, password) => {
     cy.wait(100)
     passwordField.click().type(password)
     cy.wait(100)
+    
     submitButton.click()
-    cy.wait(100)
+
+    cy.wait(300)
     cy.contains(username)
     cy.contains('dashboard page')
    
@@ -93,10 +95,37 @@ const createCourseAsUser = (courseUniqueName, courseName) => {
 
     courseNameField.type(courseName)
     cy.wait(100)
-    
+
     courseSubmitButton.click()
-    cy.wait(100)
 }
+
+const createTaskOnCourseAsUser = (courseUniqueName, description, deadline) => {
+    cy.contains("dashboard").click()
+    cy.wait(100)
+
+    const course = cy.contains(courseUniqueName).parent()
+    course.contains("See Teachers Course Page").click()
+    cy.wait(100)
+
+    const taskDescriptionField = cy.get('[name="taskDescription"]')
+    const taskDeadlineField = cy.get('[name="taskDeadLine"]')
+    const taskCreateButton = cy.get('[value="create task"]')
+
+    const today = new Date(Date.now())
+    const tomorrow = new Date()
+    tomorrow.setDate(today.getDate() + 1)
+    const newTask = {
+        description: description,
+        deadline: deadline
+    }
+    const deadlineString = newTask.deadline.toISOString().split('T')[0]
+    taskDescriptionField.type(newTask.description)
+    taskDeadlineField.type(deadlineString)
+    
+    taskCreateButton.click()
+    cy.wait(300)
+}
+
 
 const joinCourseAsUser= (courseUniqueName, usernameToJoinTheCourse) => {
     cy.visit('http://localhost:3000/CourseBrowser')
@@ -114,6 +143,12 @@ const joinCourseAsUser= (courseUniqueName, usernameToJoinTheCourse) => {
     })
 } 
 
+const visitCoursePageAsStudentFromDashboard = (courseUniqueName) => {
+    cy.contains("dashboard").click()
+    cy.wait(100)
+    const course = cy.contains(courseUniqueName).parent()
+    course.contains("See Course Page").click()
+    cy.wait(100)
+}
 
-
-export {prepareTests, logInAsUser, createCourseAsUser,joinCourseAsUser, endTests}
+export {prepareTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser,joinCourseAsUser, endTests, visitCoursePageAsStudentFromDashboard}
