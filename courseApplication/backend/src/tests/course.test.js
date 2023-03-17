@@ -563,6 +563,7 @@ describe('course tests', () => {
            
             console.log(courseInDB)
             expect(courseInDB.tasks[0].description).toEqual(task.description)
+            expect(courseInDB.tasks[0].deadline).toEqual(task.deadline)
 
             const createdSubmission = response.data.addSubmissionToCourseTask
             expect(createdSubmission.content).toEqual(submission.content)

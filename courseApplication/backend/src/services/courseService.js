@@ -147,7 +147,9 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
         submitted: submitted
     }
     const newSubmissionList = taskInCourse.submissions.concat(newSubmission)
-    const updatedCourse = await Course.findByIdAndUpdate(course.id, {tasks: {submissions: newSubmissionList}}, {new: true})
+    const updatedTask = {...taskInCourse, submissions: newSubmissionList}
+    const updatedTaskList = course.tasks.map((task) => task.id == updatedTask.id ? updatedTask : task)
+    const updatedCourse = await Course.findByIdAndUpdate(course.id, {tasks: updatedTaskList}, {new: true})
     return {...newSubmission, 
             fromUser: {
             id:userInCourse.id,
