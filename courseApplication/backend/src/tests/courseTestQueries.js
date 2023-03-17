@@ -50,6 +50,7 @@ const addTaskToCourse = `mutation Mutation($courseUniqueName: String!, $descript
   addTaskToCourse(courseUniqueName: $courseUniqueName, description: $description, deadline: $deadline) {
     name
     tasks {
+      id
       deadline
       description
       submissions {
@@ -65,5 +66,20 @@ const addTaskToCourse = `mutation Mutation($courseUniqueName: String!, $descript
 }
 `
 
-module.exports = {createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse}
+const addSubmissionToCourseTask = `
+mutation Mutation($courseUniqueName: String!, $taskId: String!, $content: String!, $submitted: Boolean!) {
+  addSubmissionToCourseTask(courseUniqueName: $courseUniqueName, taskId: $taskId, content: $content, submitted: $submitted) {
+    content
+    fromUser {
+      id
+      name
+      username
+    }
+    id
+    submitted
+  }
+}
+`
+
+module.exports = {createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask}
 

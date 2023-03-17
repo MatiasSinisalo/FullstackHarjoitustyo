@@ -1,6 +1,7 @@
 const { UserInputError } = require('apollo-server-core')
 const User = require('../models/user')
 const Course = require('../models/course')
+const { default: mongoose } = require('mongoose')
 
 const createCourse = async (uniqueName, name, teacherUsername) => {
     const teacherUser = await User.findOne({username:teacherUsername})
@@ -118,5 +119,38 @@ const addTaskToCourse = async (courseUniqueName, taskDescription, deadline, user
 
 }
 
+const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, submitted, userForToken) => {
+    const course = await Course.findOne({uniqueName: courseUniqueName}).populate("students")
+    if(!course)
+    {
+        throw new UserInputError("Given course not found")
+    }
+    console.log("course found")
+    console.log(course.tasks)
+    console.log(taskID)
+    console.log(course.tasks[0].id.toString())
+    const taskInCourse = course.tasks.find((task) => task._id.toString() === taskID)
+    console.log(taskInCourse)
+    if(!taskInCourse)
+    {
+        throw new UserInputError("Given task not found")
+    }
+    console.log("task found")
+    const userInCourse = course.students.find({username: userForToken.username})
+    if(!userInCourse)
+    {
+        throw new UserInputError("Given user is not participating in the course!")
+    }
+    const newSubmission = {
+        id: new mongoose.Types.ObjectId(),
+        content: content,
+        submitted: submitted
+    }
+    const newSubmissionList = course.tasks.submissions.concat(newSubmission)
+    const updatedCourse = await Course.findByIdAndUpdate(course.id, {tasks: {submissions: newSubmissionList}})
+    return updatedCourse.tasks.submissions.find({id: newSubmission.id})
+    
 
-module.exports = {createCourse, addStudentToCourse, addTaskToCourse, removeStudentFromCourse}
+}
+
+module.exports = {createCourse, addStudentToCourse, addTaskToCourse, removeStudentFromCourse, addSubmissionToCourseTask}

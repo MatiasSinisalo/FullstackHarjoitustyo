@@ -3,7 +3,7 @@ const request = require('supertest')
 const Course = require('../models/course')
 const User = require('../models/user')
 const { userCreateQuery, userLogInQuery, createSpesificUserQuery } = require('./userTestQueries')
-const { createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse } = require('./courseTestQueries')
+const { createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask } = require('./courseTestQueries')
 const { query } = require('express')
 
 beforeAll(async () => {
@@ -526,5 +526,39 @@ describe('course tests', () => {
             expect(course.tasks).toEqual([])
 
         })
+    })
+
+    describe('addSubmissionToCourseTask tests', () => {
+        test('user can create a submission to a task', async () => {
+            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            const course = {uniqueName: "course owned by username", name: "common name", teacher: "username"}
+            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: course})
+            console.log(createdCourse)
+            const task = {
+                description:  "this is the description of the course that is about testing",
+                deadline: new Date("2030-06-25"),
+                submissions: []
+            }
+            const createdTask = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: course.uniqueName, description: task.description, deadline: task.deadline.toString()}});
+            console.log(createdTask)
+            const taskID = createdTask.data.addTaskToCourse.tasks[0].id
+            console.log(taskID)
+            const submission = {
+                content : "this is the answer to a task",
+                submitted: true,
+                taskId: taskID
+            }
+            const response = await apolloServer.executeOperation({query: addSubmissionToCourseTask, 
+                variables: {
+                courseUniqueName: course.uniqueName, 
+                taskId: submission.taskId,
+                content: submission.content, 
+                submitted: submission.submitted,
+            }});
+            console.log(response)
+            expect(response.data.addSubmissionToCourseTask).toEqual(submission)
+
+        })
+       
     })
 })

@@ -66,6 +66,20 @@ const courseMutationResolvers = {
         return updatedCourse
 
     },
+    addSubmissionToCourseTask: async(root, args, context) => {
+        if(!context.userForToken)
+        {
+            throw new UserInputError("Unauthorized")
+        }
+        const courseUniqueName = args.courseUniqueName
+        const content = args.content
+        const submitted = args.submitted
+        const taskID = args.taskId
+        console.log("creating course")
+        const createdSubmission = await courseService.addSubmissionToCourseTask(courseUniqueName, taskID, content, submitted, context.userForToken)
+        console.log(createdSubmission)
+        return createdSubmission
+    }
 }
 
 module.exports = {courseQueryResolvers, courseMutationResolvers}
