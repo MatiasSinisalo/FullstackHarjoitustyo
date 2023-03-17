@@ -59,7 +59,7 @@ type Mutation{
     addSubmissionToCourseTask(
         courseUniqueName: String!
         content: String!
-        submitted: Bool!
+        submitted: Boolean!
     ):Submission
 }
 `
