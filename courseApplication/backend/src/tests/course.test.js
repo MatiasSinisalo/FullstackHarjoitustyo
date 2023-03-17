@@ -559,6 +559,11 @@ describe('course tests', () => {
                 submitted: submission.submitted,
             }});
             console.log(response)
+            const courseInDB = await Course.findOne({courseUniqueName: course.uniqueName}) 
+           
+            console.log(courseInDB)
+            expect(courseInDB.tasks[0].description).toEqual(task.description)
+
             const createdSubmission = response.data.addSubmissionToCourseTask
             expect(createdSubmission.content).toEqual(submission.content)
             expect(createdSubmission.submitted).toEqual(submission.submitted)
