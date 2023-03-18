@@ -101,8 +101,18 @@ catch(err)
 }
 
 
-export const addSubmissionToCourseTask = async (courseUniqueName, taskId,content, submitted, client) => {
+export const addSubmissionToCourseTask = async (courseUniqueName, taskId, content, submitted, client) => {
     const result = await client.mutate({mutation: ADD_SUBMISSION_TO_COURSE, variables: {courseUniqueName, taskId, content, submitted}})
+    const newSubmission = result.data.addSubmissionToCourseTask
+    client.cache.modify({
+            id: `Task:${taskId}`,
+            fields: {
+                submissions(cachedSubmissions){
+                    console.log(cachedSubmissions)
+                    return cachedSubmissions.concat(newSubmission)
+                }
+            }
+    })
     return result.data.addSubmissionToCourseTask
 }
 

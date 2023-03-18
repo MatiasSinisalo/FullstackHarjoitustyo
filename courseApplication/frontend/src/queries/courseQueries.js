@@ -58,6 +58,10 @@ query GetCourse($uniqueName: String!) {
       deadline
       description
       id
+      submissions{
+        id
+        content
+      }
     }
     teacher {
       name

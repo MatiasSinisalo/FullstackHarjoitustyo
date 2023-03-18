@@ -1,5 +1,5 @@
 import SubmitSolutionView from "./SubmitSolutionView"
-
+import AnswersView from "./AnswersView"
 
 
 const Task = ({course, task}) => {
@@ -9,6 +9,7 @@ const Task = ({course, task}) => {
             <p>{task.description}</p>
             <p>deadline: {deadline}</p>
             <SubmitSolutionView course={course} task={task}></SubmitSolutionView>
+            <AnswersView task={task}></AnswersView>
         </div>
     )
 }
