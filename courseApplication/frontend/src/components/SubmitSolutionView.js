@@ -1,11 +1,15 @@
+import { useApolloClient } from "@apollo/client"
+import courseService from "../services/courseService"
 
 
 
-const SubmitSolutionView = ({task}) => {
-
-    const submitSolution = (event) => {
+const SubmitSolutionView = ({course, task}) => {
+    const apolloClient = useApolloClient()
+    const submitSolution = async (event) => {
         event.preventDefault()
+        const content = event.target.content.value
         console.log("creating a submission to task!")
+        await courseService.addSubmissionToCourseTask(course.uniqueName, task.id, content, true, apolloClient)
     }
     return (
         <div>

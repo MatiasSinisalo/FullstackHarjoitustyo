@@ -123,3 +123,18 @@ mutation AddTaskToCourse($courseUniqueName: String!, $description: String!, $dea
 }
 
 `
+
+export const ADD_SUBMISSION_TO_COURSE = gql`
+mutation Mutation($courseUniqueName: String!, $taskId: String!, $content: String!, $submitted: Boolean!) {
+  addSubmissionToCourseTask(courseUniqueName: $courseUniqueName, taskId: $taskId, content: $content, submitted: $submitted) {
+    content
+    fromUser {
+      id
+      name
+      username
+    }
+    id
+    submitted
+  }
+}
+`
