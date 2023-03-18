@@ -56,14 +56,15 @@ const addTaskToCourse = `mutation Mutation($courseUniqueName: String!, $descript
     id
     submissions {
       content
+      id
+      submitted
       fromUser {
         id
         name
         username
       }
-      id
-      submitted
     }
+    
   }
 }
 `

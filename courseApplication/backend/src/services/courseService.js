@@ -28,7 +28,7 @@ const createCourse = async (uniqueName, name, teacherUsername) => {
     }
     catch(error)
     {
-        console.log(error)
+      
         throw new UserInputError("Course uniqueName must be unique")
     }
 }
@@ -61,7 +61,7 @@ const addStudentToCourse = async (studentUsername, courseUniqueName, userForToke
     
     const newStudentList = course.students.concat(studentUser.id)
     const updatedCourse = await Course.findByIdAndUpdate(course.id, {students: newStudentList}, {new: true}).populate(['teacher', 'students', 'tasks'])
-    console.log(updatedCourse)
+  
     return updatedCourse
     
     
@@ -139,6 +139,7 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
     }
 
     const userInCourse = course.teacher.username === userForToken.username ? userForToken : course.students.find((user) => user.username === userForToken.username)
+    
     if(!userInCourse)
     {
         throw new UserInputError("Given user is not participating in the course!")

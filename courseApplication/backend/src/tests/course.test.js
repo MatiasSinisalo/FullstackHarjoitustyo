@@ -5,6 +5,7 @@ const User = require('../models/user')
 const { userCreateQuery, userLogInQuery, createSpesificUserQuery } = require('./userTestQueries')
 const { createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask } = require('./courseTestQueries')
 const { query } = require('express')
+const { default: mongoose } = require('mongoose')
 
 beforeAll(async () => {
     await server.start("test server ready")
@@ -440,7 +441,7 @@ describe('course tests', () => {
                 submissions: []
             }
             const courseWithAddedTask = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: secondTask.courseUniqueName, description: secondTask.description, deadline: secondTask.deadline.toString()}});
-            console.log(courseWithAddedTask)
+            
             
            // expect(courseWithAddedTask.data.addTaskToCourse.tasks.length).toEqual(2);
             expect(courseWithAddedTask.data.addTaskToCourse.description).toEqual(secondTask.description);
@@ -495,7 +496,7 @@ describe('course tests', () => {
             
             const course = CoursesInDataBase[0]
 
-            console.log(course)
+          
             expect(course.tasks).toEqual([])
 
         })
@@ -512,7 +513,7 @@ describe('course tests', () => {
             }
             
             const response = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: task.courseUniqueName, description: task.description, deadline: task.deadline.toString()}});
-            console.log(response)
+         
             expect(response.data.addTaskToCourse).toBe(null)
             expect(response.errors[0].message).toBe("Given course not found")
             
@@ -521,7 +522,7 @@ describe('course tests', () => {
             
             const course = CoursesInDataBase[0]
 
-            console.log(course)
+          
             expect(course.tasks).toEqual([])
 
         })
@@ -529,19 +530,17 @@ describe('course tests', () => {
 
     describe('addSubmissionToCourseTask tests', () => {
         test('user can create a submission to a task', async () => {
-            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            const userQuery = await User.find({username: "username"})
+            const userid = mongoose.Types.ObjectId(userQuery._id).toString()
+            apolloServer.context = {userForToken: {username: "username", name:"name", id: userid}}
             const course = {uniqueName: "course owned by username", name: "common name", teacher: "username", tasks: []}
             const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: course})
-            console.log(createdCourse)
             const task = {
                 description:  "this is the description of a task that is about testing",
                 deadline: new Date("2030-06-25"),
                 submissions: []
             }
-            const joinedCourse = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "username", courseUniqueName: "course owned by username"}})
-            console.log(joinedCourse)
-             
-
+           
             const createdTask = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: course.uniqueName, description: task.description, deadline: task.deadline.toString()}});
             const taskID = createdTask.data.addTaskToCourse.id
 
@@ -559,7 +558,7 @@ describe('course tests', () => {
                 submitted: submission.submitted,
             }});
             
-            console.log(response)
+          
             
             const createdSubmission = response.data.addSubmissionToCourseTask
             expect(createdSubmission.content).toEqual(submission.content)
@@ -569,14 +568,8 @@ describe('course tests', () => {
             
             
             const courseInDB = await Course.findOne({courseUniqueName: course.uniqueName}).populate('tasks')
-            console.log(courseInDB)
             expect(courseInDB.tasks[0].description).toEqual(task.description)
             expect(courseInDB.tasks[0].deadline).toEqual(task.deadline)
-
-            
-          
-
-
         })
        
     })
