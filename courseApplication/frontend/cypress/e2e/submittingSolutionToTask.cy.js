@@ -80,14 +80,11 @@ describe('submitting a solution to a task test', () => {
             deadline: tomorrow
         }
         createTaskOnCourseAsUser(course.uniqueName, task.description, task.deadline)
-
-       
-
-       
         
         const submissionContentField = cy.get('[name="content"]')
         const submissionSubmitButton = cy.get('[value="submit solution"]')
-        submissionContentField.type("this is a second solution to a task")
+        const submissionContent = "this is a second solution to a task"
+        submissionContentField.type(submissionContent)
         
         cy.intercept('POST', 'http://localhost:4000', (request) => {
             if(request.body.query.includes('addSubmissionToCourseTask'))
@@ -99,11 +96,11 @@ describe('submitting a solution to a task test', () => {
         cy.wait('@submitSolution').then((communication) => {
             const submission = communication.response.body.data.addSubmissionToCourseTask
             console.log(communication)
-            expect(submission.content).to.equal("this is a solution to a task")
+            expect(submission.content).to.equal(submissionContent)
             expect(submission.submitted).to.equal(true)
         })
        
-        cy.get('p').contains("this is a solution to a task")
+        cy.get('p').contains(submissionContent)
 
         
     })

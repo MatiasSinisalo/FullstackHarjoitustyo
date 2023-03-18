@@ -126,7 +126,7 @@ const addTaskToCourse = async (courseUniqueName, taskDescription, deadline, user
 }
 
 const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, submitted, userForToken) => {
-    const course = await Course.findOne({uniqueName: courseUniqueName}).populate(["students", "tasks"])
+    const course = await Course.findOne({uniqueName: courseUniqueName}).populate(["students", "tasks", "teacher"])
     if(!course)
     {
         throw new UserInputError("Given course not found")
@@ -137,8 +137,8 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
     {
         throw new UserInputError("Given task not found")
     }
-    console.log(course.students)
-    const userInCourse = course.students.find((user) => user.username === userForToken.username)
+
+    const userInCourse = course.teacher.username === userForToken.username ? userForToken : course.students.find((user) => user.username === userForToken.username)
     if(!userInCourse)
     {
         throw new UserInputError("Given user is not participating in the course!")
