@@ -57,7 +57,7 @@ const TeachersCourse = () =>{
     </form>
 
     <h2>tasks of the course: </h2>
-    {course.tasks.length > 0 ? course.tasks.map((task) => <Task task={task} key={task.id}></Task>) : <></>}
+    {course.tasks.length > 0 ? course.tasks.map((task) => <Task course = {course} task={task} key={task.id}></Task>) : <></>}
     </>
 
   )

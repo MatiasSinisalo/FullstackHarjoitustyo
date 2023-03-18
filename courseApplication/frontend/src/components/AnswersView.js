@@ -1,3 +1,4 @@
+import Submission from "./Submission"
 
 
 
@@ -6,7 +7,7 @@ const AnswersView = ({task}) => {
         <>
         <p>this is where solutions are shown</p>
         {
-            task.submissions.map((submission) => <p key={submission.id}>{submission.content}</p>)
+            task.submissions.map((submission) => <Submission key={submission.id} submission={submission}></Submission>)
         }
         </>
     )
