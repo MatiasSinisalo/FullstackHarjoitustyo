@@ -1,3 +1,4 @@
+import SubmitSolutionView from "./SubmitSolutionView"
 
 
 
@@ -7,7 +8,7 @@ const Task = ({task}) => {
         <div className={`task:${task.id}`}>
             <p>{task.description}</p>
             <p>deadline: {deadline}</p>
-            <button>submit solution</button>
+            <SubmitSolutionView task={task}></SubmitSolutionView>
         </div>
     )
 }
