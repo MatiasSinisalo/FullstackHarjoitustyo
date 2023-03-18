@@ -117,11 +117,10 @@ const addTaskToCourse = async (courseUniqueName, taskDescription, deadline, user
 
     const taskObj = new Task(newTask)
     const savedTask = await taskObj.save()
-    console.log(savedTask)
-    console.log(course)
+  
     const updatedTaskList = course.tasks.concat(savedTask.id)
-    const updatedCourse = await Course.findByIdAndUpdate(course.id, {tasks: updatedTaskList}, {new: true}).populate('tasks')
-    console.log(updatedCourse)
+    const updatedCourse = await Course.findByIdAndUpdate(course.id, {tasks: updatedTaskList}, {new: true})
+   
     return savedTask
 
 }

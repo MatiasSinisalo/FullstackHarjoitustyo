@@ -28,7 +28,6 @@
     "eject": "react-scripts eject",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run -- --browser chrome"
-    
   },
   "eslintConfig": {
     "extends": [

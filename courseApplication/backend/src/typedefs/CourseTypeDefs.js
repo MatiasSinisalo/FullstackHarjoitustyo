@@ -1,15 +1,15 @@
 const { gql } = require("apollo-server");
 const CourseTypeDefs = gql`
 type Task{
-    id: String!
+    id: ID!
     description: String!
-    deadline: String
+    deadline: String!
     submissions: [Submission!]!
 }
 
 
 type Submission{
-    id: String!
+    id: ID!
     fromUser: User!
     content: String!
     submitted: Boolean!
@@ -18,7 +18,7 @@ type Submission{
 
 
 type Course{
-    id: String!
+    id: ID!
     uniqueName: String!
     name: String!
     teacher: User!
