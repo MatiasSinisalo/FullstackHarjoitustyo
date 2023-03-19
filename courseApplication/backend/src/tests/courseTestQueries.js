@@ -84,5 +84,41 @@ mutation Mutation($courseUniqueName: String!, $taskId: String!, $content: String
 }
 `
 
-module.exports = {createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask}
+const getAllCourses = `
+query AllCourses {
+  allCourses {
+    id
+    name
+    students {
+      name
+      id
+      username
+    }
+    teacher {
+      name
+      username
+      id
+    }
+    tasks {
+      deadline
+      description
+      id
+      submissions {
+        content
+        fromUser {
+          id
+          name
+          username
+        }
+        submitted
+        id
+      }
+    }
+    uniqueName
+  }
+}
+`
+
+
+module.exports = {createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses}
 
