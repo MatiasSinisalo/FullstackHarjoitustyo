@@ -4,6 +4,7 @@ const Course = require('./models/course')
 const config = require('./config')
 const userResolvers = require('./resolvers/userResolvers')
 const courseResolvers = require('./resolvers/courseResolvers')
+const Task = require('./models/task')
 
 const resolvers  = {
     Query: {
@@ -18,6 +19,7 @@ const resolvers  = {
             {
                 await Course.deleteMany({})
                 await User.deleteMany({})
+                await Task.deleteMany({})
                 return true
             }
             else
