@@ -4,6 +4,26 @@ const Course = require('../models/course')
 const { default: mongoose } = require('mongoose')
 const Task = require('../models/task')
 
+const getAllCourses = async (userForToken) => {
+    const courses = await Course.find({}).populate("teacher").populate("students", null, {id: userForToken.id})
+    return courses
+}
+
+const getCourse = async(courseUniqueName, userForToken) => {
+    const course = await Course.findOne({uniqueName: courseUniqueName}).populate(["teacher", "tasks"])
+    if(course.teacher.username === userForToken.username)
+    {
+        const courseToReturn = await course.populate("students")
+        return courseToReturn
+    }
+    else
+    {
+        const courseToReturn = await course.populate("students", null, {username: userForToken.username})
+        return courseToReturn
+    }
+
+}
+
 const createCourse = async (uniqueName, name, teacherUsername) => {
     const teacherUser = await User.findOne({username:teacherUsername})
     if(!teacherUser)
@@ -67,7 +87,7 @@ const addStudentToCourse = async (studentUsername, courseUniqueName, userForToke
     
 }
 
-removeStudentFromCourse = async (studentUsername, courseUniqueName, userForToken) => {
+const removeStudentFromCourse = async (studentUsername, courseUniqueName, userForToken) => {
     const studentUser = await User.findOne({username: studentUsername})
     if(!studentUser)
     {
@@ -157,4 +177,4 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
     return {...newSubmission, fromUser: {username: userInCourse.username, name: userInCourse.name, id: userInCourse.id}}
 }
 
-module.exports = {createCourse, addStudentToCourse, addTaskToCourse, removeStudentFromCourse, addSubmissionToCourseTask}
+module.exports = {createCourse, addStudentToCourse, addTaskToCourse, removeStudentFromCourse, addSubmissionToCourseTask, getAllCourses, getCourse}
