@@ -55,12 +55,13 @@ query GetCourse($uniqueName: String!) {
       username
     }
     tasks {
+      id
       deadline
       description
-      id
       submissions{
         id
         content
+        submitted
       }
     }
     teacher {
@@ -131,14 +132,14 @@ mutation AddTaskToCourse($courseUniqueName: String!, $description: String!, $dea
 export const ADD_SUBMISSION_TO_COURSE = gql`
 mutation Mutation($courseUniqueName: String!, $taskId: String!, $content: String!, $submitted: Boolean!) {
   addSubmissionToCourseTask(courseUniqueName: $courseUniqueName, taskId: $taskId, content: $content, submitted: $submitted) {
+    id
+    submitted
     content
     fromUser {
       id
       name
       username
     }
-    id
-    submitted
   }
 }
 `
