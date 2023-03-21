@@ -647,7 +647,6 @@ describe('course tests', () => {
             }});
             
             const courseRemoveQuery = await apolloServer.executeOperation({query: removeCourse, variables: {uniqueName: courseToBeRemoved.uniqueName}})
-            console.log(courseRemoveQuery)
             expect(courseRemoveQuery.data.removeCourse).toBe(true)
 
             const coursesInDB = await Course.find({})
@@ -657,7 +656,6 @@ describe('course tests', () => {
             expect(coursesInDB[0].teacher).toBeDefined() 
 
             const tasksInDB = await Task.find({})
-            console.log(tasksInDB)
             expect(tasksInDB.length).toBe(0)
         })
 
