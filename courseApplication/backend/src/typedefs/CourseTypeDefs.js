@@ -40,6 +40,10 @@ type Mutation{
         teacher: String
     ):Course
 
+    removeCourse(
+        uniqueName: String!
+    ):Boolean
+
     addStudentToCourse(
         username: String!
         courseUniqueName: String!

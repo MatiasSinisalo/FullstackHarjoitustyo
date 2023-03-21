@@ -1,8 +1,5 @@
 const mongoose = require('mongoose')
-
-
-
-
+const { taskSchema } = require('./task')
 
 const courseSchema = new mongoose.Schema({
     uniqueName: {
@@ -25,12 +22,7 @@ const courseSchema = new mongoose.Schema({
             ref: 'courseApplicationUser'
         }]
     },
-    tasks: {
-        type: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'courseApplicationTask'
-        }]
-    }
+    tasks: [taskSchema]
 })
 
 module.exports = mongoose.model('courseApplicationCourse', courseSchema)

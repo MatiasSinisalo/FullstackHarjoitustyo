@@ -19,7 +19,6 @@ const resolvers  = {
             {
                 await Course.deleteMany({})
                 await User.deleteMany({})
-                await Task.deleteMany({})
                 return true
             }
             else

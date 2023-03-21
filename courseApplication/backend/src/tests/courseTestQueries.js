@@ -18,6 +18,12 @@ const createCourse = `mutation Mutation($uniqueName: String!, $name: String!, $t
     }
   }`
 
+const removeCourse = `
+mutation Mutation($uniqueName: String!) {
+  removeCourse(uniqueName: $uniqueName)
+}
+`
+
 
 const addStudentToCourse = `mutation AddStudentToCourse($addStudentToCourseUsername: String!, $courseUniqueName: String!) {
   addStudentToCourse(username: $addStudentToCourseUsername, courseUniqueName: $courseUniqueName) {
@@ -120,5 +126,5 @@ query AllCourses {
 `
 
 
-module.exports = {createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses}
+module.exports = {createCourse, removeCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses}
 

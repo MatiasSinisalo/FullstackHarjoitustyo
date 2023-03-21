@@ -2,7 +2,7 @@ const { UserInputError } = require('apollo-server-core')
 const User = require('../models/user')
 const Course = require('../models/course')
 const { default: mongoose } = require('mongoose')
-const Task = require('../models/task')
+const { Task } = require('../models/task')
 
 const getAllCourses = async (userForToken) => {
     const courses = await Course.find({}).populate(["teacher", "tasks"]).populate("students", null, {username: userForToken.username})
@@ -50,6 +50,27 @@ const createCourse = async (uniqueName, name, teacherUsername) => {
     {
       
         throw new UserInputError("Course uniqueName must be unique")
+    }
+}
+
+const removeCourse = async(courseUniqueName, userForToken)=>{
+    const courseToRemove = await Course.findOne({uniqueName: courseUniqueName}).populate("teacher")
+    
+    if(!courseToRemove)
+    {
+        throw new UserInputError("No given course found!")
+    }
+
+    if(courseToRemove.teacher.username !== userForToken.username){
+        throw new UserInputError("Unauthorized")
+    }
+    try{
+        const removedCourse = await Course.findByIdAndDelete(courseToRemove.id)
+        return true
+    }
+    catch(error)
+    {
+        return false
     }
 }
 
@@ -130,19 +151,17 @@ const addTaskToCourse = async (courseUniqueName, taskDescription, deadline, user
     }
 
     const newTask = {
+        id: mongoose.Types.ObjectId(),
         description: taskDescription,
         deadline: new Date(deadline),
         submissions: []
     }
 
     const taskObj = new Task(newTask)
-    const savedTask = await taskObj.save()
-  
-    const updatedTaskList = course.tasks.concat(savedTask.id)
-    const updatedCourse = await Course.findByIdAndUpdate(course.id, {tasks: updatedTaskList}, {new: true})
+    const updatedCourse = course.tasks.push(taskObj)
+    await course.save()
    
-    return savedTask
-
+    return taskObj
 }
 
 const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, submitted, userForToken) => {
@@ -177,4 +196,4 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
     return {...newSubmission, fromUser: {username: userInCourse.username, name: userInCourse.name, id: userInCourse.id}}
 }
 
-module.exports = {createCourse, addStudentToCourse, addTaskToCourse, removeStudentFromCourse, addSubmissionToCourseTask, getAllCourses, getCourse}
+module.exports = {createCourse, removeCourse, addStudentToCourse, addTaskToCourse, removeStudentFromCourse, addSubmissionToCourseTask, getAllCourses, getCourse}

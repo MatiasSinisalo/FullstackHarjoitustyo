@@ -34,6 +34,15 @@ const courseMutationResolvers = {
         const course = await courseService.createCourse(uniqueName, name, teacherUsername)
         return course
     },
+    removeCourse: async(root, args, context)=>{
+        if(!context.userForToken)
+        {
+            throw new UserInputError("Unauthorized")
+        }
+        const uniqueName = args.uniqueName
+        const removalSuccess = await courseService.removeCourse(uniqueName, context.userForToken)
+        return removalSuccess
+    }, 
     addStudentToCourse: async (root, args, context) => {
         if(!context.userForToken){
             throw new UserInputError("Unauthorized")
