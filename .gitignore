@@ -9,3 +9,7 @@ build/
 
 #coverage reports
 coverage/
+
+#cypress videos and images
+courseApplication/frontend/cypress/videos/
+courseApplication/frontend/cypress/screenshots/

@@ -39,14 +39,14 @@ before(function () {
 
 
 describe('Log in tests', () => {
-    it('Log in form is found from main page', async function (){
+    it('Log in form is found from main page', function (){
         cy.visit('http://localhost:3000')
         const usernameField = cy.get('input[name="username"]')
         const passwordField = cy.get('input[name="password"]')
         const submitButton = cy.get('input[type="submit"]')
     })
 
-    it('user can log in with correct credentials', async function (){
+    it('user can log in with correct credentials', function (){
         cy.visit('http://localhost:3000')
         const usernameField = cy.get('input[name="username"]')
         const passwordField = cy.get('input[name="password"]')
@@ -66,7 +66,7 @@ describe('Log in tests', () => {
     })
 
     
-    it('user can not log in with incorrect credentials', async function (){
+    it('user can not log in with incorrect credentials', function (){
         cy.visit('http://localhost:3000')
         const usernameField = cy.get('input[name="username"]')
         const passwordField = cy.get('input[name="password"]')
@@ -81,7 +81,7 @@ describe('Log in tests', () => {
     })
     
 
-    it('user log out logs user out of the app', async function (){
+    it('user log out logs user out of the app', function (){
         cy.visit('http://localhost:3000')
         const usernameField = cy.get('input[name="username"]')
         const passwordField = cy.get('input[name="password"]')
@@ -105,9 +105,9 @@ describe('Log in tests', () => {
 
 })
 
-after(async function () {
+after(function () {
     localStorage.removeItem('courseApplicationUserToken')
-    await cy.request({
+    cy.request({
         method: 'POST',
         url: 'http://localhost:4000',
         body: {

@@ -1,4 +1,5 @@
-import { createCourse, addUserToCourse, removeUserFromCourse, getCourse } from '../services/courseService'
+import { ADD_SUBMISSION_TO_COURSE, ADD_TASK_TO_COURSE, REMOVE_COURSE } from '../queries/courseQueries'
+import courseService, { createCourse, addUserToCourse, removeUserFromCourse, getCourse, addTaskToCourse, addSubmissionToCourseTask } from '../services/courseService'
 
 const mockClient = jest.mock
 mockClient.cache = jest.mock()
@@ -30,7 +31,36 @@ describe('courseService tests', () => {
             expect(createdCourse).toEqual(null)
         })
     })
+    describe('removeCourse function Tests', () => {
+        const course = {
+            id: "abc1234",
+            uniqueName: "courses unique name",
+            name: "courses name",
+        }
+        test('removeCourse calls backend with correct data', async () => {
+            mockClient.mutate = jest.fn(() => {return {data: {removeCourse: true}}})
+            mockClient.cache.identify = jest.fn(() => {return `Course:${course.id}`})
+            mockClient.cache.evict = jest.fn()
+            
+            const courseRemoved = await courseService.removeCourse(course, mockClient)
+            
+            expect(mockClient.mutate.mock.calls[0][0].variables).toEqual({uniqueName: course.uniqueName})
+            expect(mockClient.mutate.mock.calls[0][0].mutation).toEqual(REMOVE_COURSE)
+        })
 
+        test('removeCourse calls cache clear functions correctly', async () => {
+            mockClient.mutate = jest.fn(() => {return {data: {removeCourse: true}}})
+            mockClient.cache.identify = jest.fn(() => {return `Course:${course.id}`})
+            mockClient.cache.evict = jest.fn(() => {return true})
+            mockClient.cache.gc = jest.fn(() => {return true})
+
+            const courseRemoved = await courseService.removeCourse(course, mockClient)
+           
+            expect( mockClient.cache.identify.mock.calls[0][0]).toEqual(course)
+            expect( mockClient.cache.evict.mock.calls[0][0]).toEqual(`Course:${course.id}`)
+            expect( mockClient.cache.gc).toHaveBeenCalled()
+        })
+    })
     describe('addUserToCourse function test', () => {
         const data = {
             addStudentToCourse: {uniqueName: 'courses unique name', students: [{username: 'users username', name: 'users name 4321'}]}
@@ -96,6 +126,70 @@ describe('courseService tests', () => {
             mockClient.query = jest.fn(() => {return {data: {getCourse: null}}})
             const result = await getCourse("this is an example course", mockClient)
             expect(result).toEqual(null)
+        })
+    })
+
+    describe('addTaskToCourse Tests', () => {
+        test('addTaskToCourse calls backend with correct data and returns correctly', async () => {
+            const task = {
+                description: "description of a task",
+                deadline: new Date(Date.now() + 1),
+                submissions: [],
+            }
+            
+            mockClient.mutate = jest.fn(() => {return {data: {addTaskToCourse: task}}})
+            mockClient.readQuery = jest.fn(() => {return {getCourse: {uniqueName: "test"}}})
+            mockClient.cache.modify = jest.fn((x) => {return x})
+            mockClient.cache.identify = jest.fn()
+            
+            const result = await addTaskToCourse("course", task.description, task.deadline, mockClient)
+            expect(result).toEqual(task)
+            
+            const mutation = mockClient.mutate.mock.calls[0][0].mutation
+            expect(mutation).toEqual(ADD_TASK_TO_COURSE)
+
+            const variables = mockClient.mutate.mock.calls[0][0].variables
+            expect(variables).toEqual({courseUniqueName: "course", description: task.description, deadline: task.deadline})
+
+            const cacheUpdateArgs = mockClient.cache.modify.mock.calls[0][0]
+            expect(mockClient.cache.modify).toHaveBeenCalled()
+
+        })
+    })
+
+    describe('addSubmissionToCourseTask Tests', () => {
+        test('addSubmissionToCourseTask calls backend with correct data and returns correctly', async () => {
+            const task = {
+                id: "abc1234"
+            }
+            
+            const submission = {
+                content: "content of a answer",
+                submitted: true,
+                fromUser: {
+                    username: "username",
+                    name: "name",
+                    id: "1234abc"
+                }
+            }
+            
+            mockClient.mutate = jest.fn(() => {return {data: {addSubmissionToCourseTask: submission}}})
+            mockClient.readQuery = jest.fn(() => {return {getCourse: {uniqueName: "test"}}})
+            mockClient.cache.modify = jest.fn((x) => {return x})
+            mockClient.cache.identify = jest.fn()
+            
+            const result = await addSubmissionToCourseTask("course", task.id, submission.content, submission.submitted, mockClient)
+            expect(result).toEqual(submission)
+            
+            const mutation = mockClient.mutate.mock.calls[0][0].mutation
+            expect(mutation).toEqual(ADD_SUBMISSION_TO_COURSE)
+
+            const variables = mockClient.mutate.mock.calls[0][0].variables
+            expect(variables).toEqual({courseUniqueName: "course", taskId: task.id, content: submission.content, submitted: submission.submitted})
+
+            const cacheUpdateArgs = mockClient.cache.modify.mock.calls[0][0]
+            expect(mockClient.cache.modify).toHaveBeenCalled()
+
         })
     })
 })

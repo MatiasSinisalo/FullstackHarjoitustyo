@@ -1,6 +1,28 @@
 const { UserInputError } = require('apollo-server-core')
 const User = require('../models/user')
 const Course = require('../models/course')
+const { default: mongoose } = require('mongoose')
+const { Task } = require('../models/task')
+
+const getAllCourses = async (userForToken) => {
+    const courses = await Course.find({}).populate(["teacher", "tasks"]).populate("students", null, {username: userForToken.username})
+    return courses
+}
+
+const getCourse = async(courseUniqueName, userForToken) => {
+    const course = await Course.findOne({uniqueName: courseUniqueName}).populate(["teacher", "tasks"])
+    if(course.teacher.username === userForToken.username)
+    {
+        const courseToReturn = await course.populate("students")
+        return courseToReturn
+    }
+    else
+    {
+        const courseToReturn = await course.populate("students", null, {username: userForToken.username})
+        return courseToReturn
+    }
+
+}
 
 const createCourse = async (uniqueName, name, teacherUsername) => {
     const teacherUser = await User.findOne({username:teacherUsername})
@@ -26,8 +48,29 @@ const createCourse = async (uniqueName, name, teacherUsername) => {
     }
     catch(error)
     {
-        console.log(error)
+      
         throw new UserInputError("Course uniqueName must be unique")
+    }
+}
+
+const removeCourse = async(courseUniqueName, userForToken)=>{
+    const courseToRemove = await Course.findOne({uniqueName: courseUniqueName}).populate("teacher")
+    
+    if(!courseToRemove)
+    {
+        throw new UserInputError("No given course found!")
+    }
+
+    if(courseToRemove.teacher.username !== userForToken.username){
+        throw new UserInputError("Unauthorized")
+    }
+    try{
+        const removedCourse = await Course.findByIdAndDelete(courseToRemove.id)
+        return true
+    }
+    catch(error)
+    {
+        return false
     }
 }
 
@@ -58,13 +101,14 @@ const addStudentToCourse = async (studentUsername, courseUniqueName, userForToke
     }
     
     const newStudentList = course.students.concat(studentUser.id)
-    const updatedCourse = await Course.findByIdAndUpdate(course.id, {students: newStudentList}, {new: true}).populate(['teacher', 'students'])
+    const updatedCourse = await Course.findByIdAndUpdate(course.id, {students: newStudentList}, {new: true}).populate(['teacher', 'students', 'tasks'])
+  
     return updatedCourse
     
     
 }
 
-removeStudentFromCourse = async (studentUsername, courseUniqueName, userForToken) => {
+const removeStudentFromCourse = async (studentUsername, courseUniqueName, userForToken) => {
     const studentUser = await User.findOne({username: studentUsername})
     if(!studentUser)
     {
@@ -107,16 +151,49 @@ const addTaskToCourse = async (courseUniqueName, taskDescription, deadline, user
     }
 
     const newTask = {
+        id: mongoose.Types.ObjectId(),
         description: taskDescription,
         deadline: new Date(deadline),
         submissions: []
     }
 
-    const updatedTaskList = course.tasks.concat(newTask)
-    const updatedCourse = await Course.findByIdAndUpdate(course.id, {tasks: updatedTaskList}, {new: true})
-    return updatedCourse
-
+    const taskObj = new Task(newTask)
+    const updatedCourse = course.tasks.push(taskObj)
+    await course.save()
+   
+    return taskObj
 }
 
+const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, submitted, userForToken) => {
+    const course = await Course.findOne({uniqueName: courseUniqueName}).populate(["students", "tasks", "teacher"])
+    if(!course)
+    {
+        throw new UserInputError("Given course not found")
+    }
+   
+    const taskInCourse = course.tasks.find((task) => task._id.toString() === taskID)
+    if(!taskInCourse)
+    {
+        throw new UserInputError("Given task not found")
+    }
 
-module.exports = {createCourse, addStudentToCourse, addTaskToCourse, removeStudentFromCourse}
+    const userInCourse = course.teacher.username === userForToken.username ? userForToken : course.students.find((user) => user.username === userForToken.username)
+    
+    if(!userInCourse)
+    {
+        throw new UserInputError("Given user is not participating in the course!")
+    }
+   
+    const newSubmission = {
+        id: new mongoose.Types.ObjectId(),
+        fromUser: userInCourse.id,
+        content: content,
+        submitted: submitted
+    }
+
+    const newSubmissionList = taskInCourse.submissions.concat(newSubmission)
+    const updatedTask = await Task.findByIdAndUpdate(taskInCourse.id, {submissions: newSubmissionList}, {new: true})
+    return {...newSubmission, fromUser: {username: userInCourse.username, name: userInCourse.name, id: userInCourse.id}}
+}
+
+module.exports = {createCourse, removeCourse, addStudentToCourse, addTaskToCourse, removeStudentFromCourse, addSubmissionToCourseTask, getAllCourses, getCourse}

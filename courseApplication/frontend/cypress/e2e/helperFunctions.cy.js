@@ -71,17 +71,17 @@ const logInAsUser = (username, password) => {
     const submitButton = cy.get('input[type="submit"]')
 
     usernameField.click().type(username)
-    cy.wait(100)
+    
     passwordField.click().type(password)
-    cy.wait(100)
+  
     
     submitButton.click()
 
-    cy.wait(300)
+    
     cy.contains(username)
     cy.contains('dashboard page')
    
-    cy.wait(100)
+    
 }
 
 const createCourseAsUser = (courseUniqueName, courseName) => {
@@ -91,21 +91,21 @@ const createCourseAsUser = (courseUniqueName, courseName) => {
     const courseSubmitButton = cy.get('input[type="submit"]')
    
     courseUniqueNameField.type(courseUniqueName)
-    cy.wait(100)
+   
 
     courseNameField.type(courseName)
-    cy.wait(100)
+   
 
     courseSubmitButton.click()
 }
 
 const createTaskOnCourseAsUser = (courseUniqueName, description, deadline) => {
     cy.contains("dashboard").click()
-    cy.wait(100)
+   
 
     const course = cy.contains(courseUniqueName).parent()
     course.contains("See Teachers Course Page").click()
-    cy.wait(100)
+  
 
     const taskDescriptionField = cy.get('[name="taskDescription"]')
     const taskDeadlineField = cy.get('[name="taskDeadLine"]')
@@ -123,13 +123,13 @@ const createTaskOnCourseAsUser = (courseUniqueName, description, deadline) => {
     taskDeadlineField.type(deadlineString)
     
     taskCreateButton.click()
-    cy.wait(300)
+   
 }
 
 
 const joinCourseAsUser= (courseUniqueName, usernameToJoinTheCourse) => {
     cy.visit('http://localhost:3000/CourseBrowser')
-    cy.wait(500)
+    
     const courseShowCase = cy.contains(courseUniqueName).parent()
     const joinButton = courseShowCase.contains("button","Join")
    
@@ -145,10 +145,10 @@ const joinCourseAsUser= (courseUniqueName, usernameToJoinTheCourse) => {
 
 const visitCoursePageAsStudentFromDashboard = (courseUniqueName) => {
     cy.contains("dashboard").click()
-    cy.wait(100)
+    
     const course = cy.contains(courseUniqueName).parent()
     course.contains("See Course Page").click()
-    cy.wait(100)
+    
 }
 
 export {prepareTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser,joinCourseAsUser, endTests, visitCoursePageAsStudentFromDashboard}

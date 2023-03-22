@@ -22,6 +22,13 @@ export const CREATE_COURSE = gql`mutation Mutation($uniqueName: String!, $name: 
     }
   }`
 
+
+export const REMOVE_COURSE  = gql`
+mutation Mutation($uniqueName: String!) {
+  removeCourse(uniqueName: $uniqueName)
+}
+`
+
 export const GET_ALL_COURSES = gql`query AllCourses {
     allCourses {
       id
@@ -55,9 +62,14 @@ query GetCourse($uniqueName: String!) {
       username
     }
     tasks {
+      id
       deadline
       description
-      id
+      submissions{
+        id
+        content
+        submitted
+      }
     }
     teacher {
       name
@@ -109,19 +121,31 @@ export const ADD_TASK_TO_COURSE = gql`
 mutation AddTaskToCourse($courseUniqueName: String!, $description: String!, $deadline: String!) {
   addTaskToCourse(courseUniqueName: $courseUniqueName, description: $description, deadline: $deadline) {
     id
-    uniqueName
-    tasks {
-      deadline
-      description
-      id
-      submissions {
-        content
-        fromUser {
-          name
-          username
-        }
-        submitted
+    deadline
+    description
+    submissions {
+      content
+      fromUser {
+        name
+        username
       }
+      submitted
+    }
+  }
+}
+
+`
+
+export const ADD_SUBMISSION_TO_COURSE = gql`
+mutation Mutation($courseUniqueName: String!, $taskId: String!, $content: String!, $submitted: Boolean!) {
+  addSubmissionToCourseTask(courseUniqueName: $courseUniqueName, taskId: $taskId, content: $content, submitted: $submitted) {
+    id
+    submitted
+    content
+    fromUser {
+      id
+      name
+      username
     }
   }
 }

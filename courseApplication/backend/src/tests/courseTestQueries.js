@@ -11,9 +11,18 @@ const createCourse = `mutation Mutation($uniqueName: String!, $name: String!, $t
         name
         username
       }
+      tasks{
+        description
+      }
       uniqueName
     }
   }`
+
+const removeCourse = `
+mutation Mutation($uniqueName: String!) {
+  removeCourse(uniqueName: $uniqueName)
+}
+`
 
 
 const addStudentToCourse = `mutation AddStudentToCourse($addStudentToCourseUsername: String!, $courseUniqueName: String!) {
@@ -48,22 +57,74 @@ const removeStudentFromCourse = `mutation RemoveStudentFromCourse($username: Str
 
 const addTaskToCourse = `mutation Mutation($courseUniqueName: String!, $description: String!, $deadline: String!) {
   addTaskToCourse(courseUniqueName: $courseUniqueName, description: $description, deadline: $deadline) {
-    name
-    tasks {
-      deadline
-      description
-      submissions {
-        content
-        fromUser {
-          name
-          username
-        }
-        submitted
+    deadline
+    description
+    id
+    submissions {
+      content
+      id
+      submitted
+      fromUser {
+        id
+        name
+        username
       }
     }
+    
   }
 }
 `
 
-module.exports = {createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse}
+const addSubmissionToCourseTask = `
+mutation Mutation($courseUniqueName: String!, $taskId: String!, $content: String!, $submitted: Boolean!) {
+  addSubmissionToCourseTask(courseUniqueName: $courseUniqueName, taskId: $taskId, content: $content, submitted: $submitted) {
+    content
+    fromUser {
+      id
+      name
+      username
+    }
+    id
+    submitted
+  }
+}
+`
+
+const getAllCourses = `
+query AllCourses {
+  allCourses {
+    id
+    name
+    students {
+      name
+      id
+      username
+    }
+    teacher {
+      name
+      username
+      id
+    }
+    tasks {
+      deadline
+      description
+      id
+      submissions {
+        content
+        fromUser {
+          id
+          name
+          username
+        }
+        submitted
+        id
+      }
+    }
+    uniqueName
+  }
+}
+`
+
+
+module.exports = {createCourse, removeCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses}
 

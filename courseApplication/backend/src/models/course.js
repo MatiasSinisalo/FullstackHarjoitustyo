@@ -1,30 +1,5 @@
 const mongoose = require('mongoose')
-
-const submission = {
-    fromUser: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'courseApplicationUser',
-    },
-    content: {
-        type: String
-    },
-    submitted:{
-        type: Boolean
-    }
-}
-
-const task = {
-    description: {
-        type: String
-    },
-    deadline: {
-        type: Date
-    },
-    submissions: {
-        type: [submission]
-    }
-}
-
+const { taskSchema } = require('./task')
 
 const courseSchema = new mongoose.Schema({
     uniqueName: {
@@ -47,9 +22,7 @@ const courseSchema = new mongoose.Schema({
             ref: 'courseApplicationUser'
         }]
     },
-    tasks: {
-        type: [task]
-    }
+    tasks: [taskSchema]
 })
 
 module.exports = mongoose.model('courseApplicationCourse', courseSchema)
