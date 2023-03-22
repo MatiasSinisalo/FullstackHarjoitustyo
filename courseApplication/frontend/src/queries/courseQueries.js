@@ -22,6 +22,13 @@ export const CREATE_COURSE = gql`mutation Mutation($uniqueName: String!, $name: 
     }
   }`
 
+
+export const REMOVE_COURSE  = gql`
+mutation Mutation($uniqueName: String!) {
+  removeCourse(uniqueName: $uniqueName)
+}
+`
+
 export const GET_ALL_COURSES = gql`query AllCourses {
     allCourses {
       id

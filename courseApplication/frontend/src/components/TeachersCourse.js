@@ -2,6 +2,7 @@ import { useApolloClient, useQuery } from "@apollo/client"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {
+  useNavigate,
     useParams
 } from "react-router-dom"
 import { GET_COURSE } from "../queries/courseQueries"
@@ -14,6 +15,7 @@ import Task from "./Task"
 const TeachersCourse = () =>{
   const dispatch = useDispatch()
   const client = useApolloClient()
+  const navigate = useNavigate()
   const uniqueName = useParams().uniqueName
 
   const courseQuery = useQuery(GET_COURSE, {variables: {uniqueName}})
@@ -33,8 +35,16 @@ const TeachersCourse = () =>{
       await courseService.addTaskToCourse(uniqueName, description, deadline, client)
   }
   
-  const removeThisCourse = async()=>{
-    console.log("removing course")
+  const removeThisCourse = async() =>{
+    const prompt = window.prompt(`type ${course.uniqueName} to confirm removal`)
+    if(prompt === course.uniqueName)
+    {
+      console.log("removing course")
+      const removed = await courseService.removeCourse(course.uniqueName, client)
+      if(removed){
+        navigate('/dashboard')
+      }
+    }
   }
 
 
