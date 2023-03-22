@@ -55,7 +55,7 @@ const TeachersCourse = () =>{
   
   return(
     <>
-    <h1>{course.uniqueName} <button onClick={removeThisCourse}>remove</button></h1>
+    <h1>{course.uniqueName} <button className="removeCourseButton" onClick={removeThisCourse}>remove</button></h1>
     <h2>{course.name}</h2>
     <p>this is the teachers course page</p>
     
