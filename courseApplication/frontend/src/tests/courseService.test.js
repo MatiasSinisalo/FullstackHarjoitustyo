@@ -1,5 +1,5 @@
-import { ADD_SUBMISSION_TO_COURSE, ADD_TASK_TO_COURSE } from '../queries/courseQueries'
-import { createCourse, addUserToCourse, removeUserFromCourse, getCourse, addTaskToCourse, addSubmissionToCourseTask } from '../services/courseService'
+import { ADD_SUBMISSION_TO_COURSE, ADD_TASK_TO_COURSE, REMOVE_COURSE } from '../queries/courseQueries'
+import courseService, { createCourse, addUserToCourse, removeUserFromCourse, getCourse, addTaskToCourse, addSubmissionToCourseTask } from '../services/courseService'
 
 const mockClient = jest.mock
 mockClient.cache = jest.mock()
@@ -31,7 +31,36 @@ describe('courseService tests', () => {
             expect(createdCourse).toEqual(null)
         })
     })
+    describe('removeCourse function Tests', () => {
+        const course = {
+            id: "abc1234",
+            uniqueName: "courses unique name",
+            name: "courses name",
+        }
+        test('removeCourse calls backend with correct data', async () => {
+            mockClient.mutate = jest.fn(() => {return {data: {removeCourse: true}}})
+            mockClient.cache.identify = jest.fn(() => {return `Course:${course.id}`})
+            mockClient.cache.evict = jest.fn()
+            
+            const courseRemoved = await courseService.removeCourse(course, mockClient)
+            
+            expect(mockClient.mutate.mock.calls[0][0].variables).toEqual({uniqueName: course.uniqueName})
+            expect(mockClient.mutate.mock.calls[0][0].mutation).toEqual(REMOVE_COURSE)
+        })
 
+        test('removeCourse calls cache clear functions correctly', async () => {
+            mockClient.mutate = jest.fn(() => {return {data: {removeCourse: true}}})
+            mockClient.cache.identify = jest.fn(() => {return `Course:${course.id}`})
+            mockClient.cache.evict = jest.fn(() => {return true})
+            mockClient.cache.gc = jest.fn(() => {return true})
+
+            const courseRemoved = await courseService.removeCourse(course, mockClient)
+           
+            expect( mockClient.cache.identify.mock.calls[0][0]).toEqual(course)
+            expect( mockClient.cache.evict.mock.calls[0][0]).toEqual(`Course:${course.id}`)
+            expect( mockClient.cache.gc).toHaveBeenCalled()
+        })
+    })
     describe('addUserToCourse function test', () => {
         const data = {
             addStudentToCourse: {uniqueName: 'courses unique name', students: [{username: 'users username', name: 'users name 4321'}]}
