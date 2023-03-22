@@ -51,7 +51,7 @@ const TeachersCourse = () =>{
       console.log("removing course")
       const removed = await courseService.removeCourse(course, client)
       if(removed){
-      //  navigate('/dashboard')
+        navigate('/dashboard')
       }
     }
   }
