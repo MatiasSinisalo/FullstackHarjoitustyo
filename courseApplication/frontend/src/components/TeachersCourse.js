@@ -5,7 +5,7 @@ import {
     useParams
 } from "react-router-dom"
 import { GET_COURSE } from "../queries/courseQueries"
-import { getCourseWithUniqueName, createNewTaskOnCourse } from "../reducers/courseReducer"
+import courseService from "../services/courseService"
 import Task from "./Task"
 
 
@@ -30,9 +30,14 @@ const TeachersCourse = () =>{
       console.log(description)
       console.log(deadline)
       console.log(course)
-      await dispatch(createNewTaskOnCourse(course.uniqueName, description, deadline, client))
+      await courseService.addTaskToCourse(uniqueName, description, deadline, client)
   }
   
+  const removeThisCourse = async()=>{
+    console.log("removing course")
+  }
+
+
   console.log(course)
   if(!course){
     return (<></>)
@@ -40,11 +45,12 @@ const TeachersCourse = () =>{
   
   return(
     <>
-    <h1>{course.uniqueName}</h1>
+    <h1>{course.uniqueName} <button onClick={removeThisCourse}>remove</button></h1>
     <h2>{course.name}</h2>
     <p>this is the teachers course page</p>
-
-    <h2>create a new task on the course</h2>
+    
+    
+    <h3>create a new task on the course</h3>
     <form onSubmit={createTaskOnThisCourse}>
       <p>description</p>
       <input type="text" name="taskDescription"></input>
