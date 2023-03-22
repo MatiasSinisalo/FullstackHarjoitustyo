@@ -27,9 +27,15 @@ export const createCourse = async (uniqueName, name, teacher, apolloClient) => {
     }
 }
 
-export const removeCourse = async(uniqueName, apolloClient)=>{
+export const removeCourse = async(course, apolloClient)=>{
     try{
-      const removed = await apolloClient.mutate({mutation: REMOVE_COURSE, variables: {uniqueName}})
+      const removed = await apolloClient.mutate({mutation: REMOVE_COURSE, variables: {uniqueName: course.uniqueName}})
+
+      if(removed.data.removeCourse){
+           const removeCourseID = apolloClient.cache.identify(course)
+           apolloClient.cache.evict(removeCourseID)
+           apolloClient.cache.gc()
+      }
       return removed.data.removeCourse
     }
     catch(err){
@@ -47,7 +53,7 @@ export const getCourse = async (uniqueName, apolloClient) => {
 export const addUserToCourse = async (uniqueName, username, apolloClient) => {
     try{
         const courseWithAddedStudent = await apolloClient.mutate({mutation: ADD_STUDENT_TO_COURSE, variables: {courseUniqueName: uniqueName, username: username}})
-       
+        
         if(courseWithAddedStudent?.data?.addStudentToCourse)
         {
             return courseWithAddedStudent.data.addStudentToCourse

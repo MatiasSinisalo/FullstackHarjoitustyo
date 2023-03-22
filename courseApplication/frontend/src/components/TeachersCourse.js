@@ -40,7 +40,7 @@ const TeachersCourse = () =>{
     if(prompt === course.uniqueName)
     {
       console.log("removing course")
-      const removed = await courseService.removeCourse(course.uniqueName, client)
+      const removed = await courseService.removeCourse(course, client)
       if(removed){
         navigate('/dashboard')
       }
