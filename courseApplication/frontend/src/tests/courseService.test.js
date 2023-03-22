@@ -57,7 +57,7 @@ describe('courseService tests', () => {
             const courseRemoved = await courseService.removeCourse(course, mockClient)
            
             expect( mockClient.cache.identify.mock.calls[0][0]).toEqual(course)
-            expect( mockClient.cache.evict.mock.calls[0][0]).toEqual(`Course:${course.id}`)
+            expect( mockClient.cache.evict.mock.calls[0][0]).toEqual({id: `Course:${course.id}`})
             expect( mockClient.cache.gc).toHaveBeenCalled()
         })
     })

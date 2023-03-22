@@ -2,6 +2,7 @@ import { useApolloClient, useQuery } from "@apollo/client"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {
+  Link,
   useNavigate,
     useParams
 } from "react-router-dom"
@@ -23,7 +24,15 @@ const TeachersCourse = () =>{
   {
     return(<p>loading...</p>)
   }
-  const course = courseQuery.data.getCourse
+  
+  const course = courseQuery.data?.getCourse
+  if(!course)
+  {
+    return(<>
+    <h1>Whoops</h1>
+    <Link to='/dashboard'>it seems like this course doesnt exist, click here to go back to dashboard</Link>
+    </>)
+  }
 
   const createTaskOnThisCourse = async (event) => {
       event.preventDefault()    
