@@ -158,7 +158,7 @@ const addTaskToCourse = async (courseUniqueName, taskDescription, deadline, user
     }
 
     const taskObj = new Task(newTask)
-    const updatedCourse = course.tasks.push(taskObj)
+    course.tasks.push(taskObj)
     await course.save()
    
     return taskObj
@@ -191,8 +191,8 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
         submitted: submitted
     }
 
-    const newSubmissionList = taskInCourse.submissions.concat(newSubmission)
-    const updatedTask = await Task.findByIdAndUpdate(taskInCourse.id, {submissions: newSubmissionList}, {new: true})
+    taskInCourse.submissions.push(newSubmission)
+    await course.save()
     return {...newSubmission, fromUser: {username: userInCourse.username, name: userInCourse.name, id: userInCourse.id}}
 }
 
