@@ -746,6 +746,11 @@ describe('course tests', () => {
             const courseInDB = await Course.findOne({courseUniqueName: course.uniqueName}).populate('tasks')
             expect(courseInDB.tasks[0].description).toEqual(task.description)
             expect(courseInDB.tasks[0].deadline).toEqual(task.deadline)
+            
+            expect(courseInDB.tasks[0].submissions.length).toBe(1)
+            expect(courseInDB.tasks[0].submissions[0].content).toEqual(submission.content)
+            expect(courseInDB.tasks[0].submissions[0].submitted).toEqual(submission.submitted)
+            expect(courseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(userid)
         })
        
     })
