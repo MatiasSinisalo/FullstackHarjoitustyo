@@ -5,12 +5,12 @@ const { default: mongoose } = require('mongoose')
 const { Task, Submission } = require('../models/task')
 
 const getAllCourses = async (userForToken) => {
-    const courses = await Course.find({}).populate(["teacher"]).populate("students", null, {username: userForToken.username})
+    const courses = await Course.find({}, {tasks: 0}).populate(["teacher"]).populate("students", null, {username: userForToken.username})
     return courses
 }
 
 const getCourse = async(courseUniqueName, userForToken) => {
-    const course = await Course.findOne({uniqueName: courseUniqueName}).populate(["teacher", "tasks"])
+    const course = await Course.findOne({uniqueName: courseUniqueName}).populate(["teacher"])
     if(course.teacher.username === userForToken.username)
     {
         const courseToReturn = await course.populate("students")
@@ -19,6 +19,9 @@ const getCourse = async(courseUniqueName, userForToken) => {
     else
     {
         const courseToReturn = await course.populate("students", null, {username: userForToken.username})
+        courseToReturn.tasks = courseToReturn.tasks.map((task) => {
+            return {...task, submissions: task.submissions.filter((submission) => submission.fromUser == userForToken.id)}
+        })
         return courseToReturn
     }
 
