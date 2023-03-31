@@ -5,7 +5,7 @@ const { default: mongoose } = require('mongoose')
 const { Task } = require('../models/task')
 
 const getAllCourses = async (userForToken) => {
-    const courses = await Course.find({}).populate(["teacher", "tasks"]).populate("students", null, {username: userForToken.username})
+    const courses = await Course.find({}).populate(["teacher"]).populate("students", null, {username: userForToken.username})
     return courses
 }
 
