@@ -2,7 +2,7 @@ const { UserInputError } = require('apollo-server-core')
 const User = require('../models/user')
 const Course = require('../models/course')
 const { default: mongoose } = require('mongoose')
-const { Task } = require('../models/task')
+const { Task, Submission } = require('../models/task')
 
 const getAllCourses = async (userForToken) => {
     const courses = await Course.find({}).populate(["teacher"]).populate("students", null, {username: userForToken.username})
@@ -190,8 +190,8 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
         content: content,
         submitted: submitted
     }
-
-    taskInCourse.submissions.push(newSubmission)
+    const submissionObj = Submission(newSubmission)
+    taskInCourse.submissions.push(submissionObj)
     await course.save()
     return {...newSubmission, fromUser: {username: userInCourse.username, name: userInCourse.name, id: userInCourse.id}}
 }
