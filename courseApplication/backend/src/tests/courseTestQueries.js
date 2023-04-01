@@ -139,14 +139,14 @@ const getCourse = `query GetCourse($uniqueName: String!) {
       description
       id
       submissions {
-        content
+        id
+        content        
+        submitted
         fromUser {
           id
           name
           username
         }
-        id
-        submitted
       }
     }
     teacher {

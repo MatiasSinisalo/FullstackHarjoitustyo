@@ -13,7 +13,7 @@ const getCourse = async(courseUniqueName, userForToken) => {
     const course = await Course.findOne({uniqueName: courseUniqueName}).populate(["teacher"])
     if(course.teacher.username === userForToken.username)
     {
-        const courseToReturn = await course.populate("students")
+        const courseToReturn = await course.populate(["students", "tasks.submissions.fromUser"])
         return courseToReturn
     }
     else
