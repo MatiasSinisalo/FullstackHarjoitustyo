@@ -18,10 +18,12 @@ const getCourse = async(courseUniqueName, userForToken) => {
     }
     else
     {
-        const courseToReturn = await course.populate("students", null, {username: userForToken.username})
-        courseToReturn.tasks = courseToReturn.tasks.map((task) => {
+        const courseFiltered = await course.populate("students", null, {username: userForToken.username})
+        courseFiltered.tasks = courseFiltered.tasks.map((task) => {
             return {...task, submissions: task.submissions.filter((submission) => submission.fromUser == userForToken.id)}
         })
+        
+        const courseToReturn = await courseFiltered.populate("tasks.submissions.fromUser")
         return courseToReturn
     }
 

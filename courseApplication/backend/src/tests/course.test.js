@@ -163,19 +163,74 @@ describe('course tests', () => {
                     content: secondSubmission.content, 
                     submitted: secondSubmission.submitted,
                 }});
-                console.log(answer)
+           
 
                 apolloServer.context = {userForToken: {username: "username", name: "name",  id: user._id.toString()}}
 
+                const courseInfoQuery =  await apolloServer.executeOperation({query: getCourse, variables: {uniqueName: "courses name"}})
+              
+                const course = courseInfoQuery.data.getCourse
+              
+                expect(course).toBeDefined()
+                expect(course.tasks.length).toBe(1)
+                expect(course.tasks[0].submissions.length).toBe(2)
+                expect(course.tasks[0].submissions[0].fromUser.id).toEqual(user.id)
+                expect(course.tasks[0].submissions[1].fromUser.id).toEqual(secondUser.id)
+
+            })
+
+            test('getCourseReturns course data but with only the submissions made by the student if queried by a student', async () => {
+                const user = await User.findOne({username: "username"})
+                apolloServer.context = {userForToken: {username: "username", name: "name", id: user._id.toString()}}
+                const courseData = {
+                    uniqueName: "courses name", 
+                    name: "common name", 
+                    teacher: "username"
+                }
+                await apolloServer.executeOperation({query: createCourse, variables: {...courseData}})
+                const createdTask = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: "courses name", description: "this is a description for a task", deadline: new Date(Date.now()).toString()}})
+                const taskID = createdTask.data.addTaskToCourse.id
+                
+                const submission = {
+                    content : "this is the answer to a task",
+                    submitted: true,
+                    taskId: taskID
+                }
+                await apolloServer.executeOperation({query: addSubmissionToCourseTask, 
+                    variables: {
+                    courseUniqueName: courseData.uniqueName, 
+                    taskId: submission.taskId,
+                    content: submission.content, 
+                    submitted: submission.submitted,
+                }});
+
+                const secondUser = await User.findOne({username: "students username"})
+                apolloServer.context = {userForToken: {username: "students username", name: "students name", id: secondUser._id.toString()}}
+                await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: courseData.uniqueName}})
+           
+                const secondSubmission = {
+                    content : "this is the answer to a task",
+                    submitted: true,
+                    taskId: taskID
+                }
+                const answer = await apolloServer.executeOperation({query: addSubmissionToCourseTask, 
+                    variables: {
+                    courseUniqueName: courseData.uniqueName, 
+                    taskId: secondSubmission.taskId,
+                    content: secondSubmission.content, 
+                    submitted: secondSubmission.submitted,
+                }});
+             
+                
                 const courseInfoQuery =  await apolloServer.executeOperation({query: getCourse, variables: {uniqueName: "courses name"}})
                 console.log(courseInfoQuery)
                 const course = courseInfoQuery.data.getCourse
                 console.log(course)
                 expect(course).toBeDefined()
                 expect(course.tasks.length).toBe(1)
-                expect(course.tasks[0].submissions.length).toBe(2)
-                expect(course.tasks[0].submissions[0].fromUser.id).toEqual(user.id)
-                expect(course.tasks[0].submissions[1].fromUser.id).toEqual(secondUser.id)
+                expect(course.tasks[0].submissions.length).toBe(1)
+                expect(course.tasks[0].submissions[0].fromUser.id).toEqual(secondUser.id)
+              
 
             })
         })
