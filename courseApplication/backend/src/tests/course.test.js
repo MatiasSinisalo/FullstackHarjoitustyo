@@ -49,6 +49,7 @@ describe('course tests', () => {
                 expect(courses[0].uniqueName).toEqual(courseData.uniqueName)
                 expect(courses[0].name).toEqual(courseData.name)
                 expect(courses[0].teacher).toEqual({username: courseInDB.teacher.username, name:courseInDB.teacher.name, id: user._id.toString()})
+
             })
             test('getAllCourses returns Unauthorized if user is not logged in', async () => {
                 const courseData = {
@@ -100,6 +101,25 @@ describe('course tests', () => {
                 //second check secondCourse, there should not be any student info since the studentuser is not a student on that course
                 const returnedCourseDataWithOutStudent = courses.find((course) => course.uniqueName === "courses name where the user is not a student")
                 expect(returnedCourseDataWithOutStudent.students.length).toBe(0)
+            })
+            test('getAllCourses returns null task list', async () => {
+                const user = await User.findOne({username: "username"})
+                apolloServer.context = {userForToken: {username: "username", name: "name", id: user._id.toString()}}
+                const courseData = {
+                    uniqueName: "courses name", 
+                    name: "common name", 
+                    teacher: "username"
+                }
+              
+                await apolloServer.executeOperation({query: createCourse, variables: {...courseData}})
+                const createdTask = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: "courses name", description: "this is a description for a task", deadline: new Date(Date.now()).toString()}})
+                console.log(createdTask)
+                expect(createdTask.data.addTaskToCourse).toBeDefined()
+
+                const coursesQuery = await apolloServer.executeOperation({query: getAllCourses})
+                const courses = coursesQuery.data.allCourses
+                const course = courses[0]
+                expect(course.tasks).toBe(null)
             })
         })
     })
