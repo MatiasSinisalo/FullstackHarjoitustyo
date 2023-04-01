@@ -4,7 +4,7 @@ const Course = require('../models/course')
 const User = require('../models/user')
 const {Task} = require('../models/task')
 const { userCreateQuery, userLogInQuery, createSpesificUserQuery } = require('./userTestQueries')
-const { createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses, removeCourse } = require('./courseTestQueries')
+const { createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses, removeCourse, getCourse } = require('./courseTestQueries')
 const { query } = require('express')
 const mongoose = require('mongoose')
 const course = require('../models/course')
@@ -49,6 +49,7 @@ describe('course tests', () => {
                 expect(courses[0].uniqueName).toEqual(courseData.uniqueName)
                 expect(courses[0].name).toEqual(courseData.name)
                 expect(courses[0].teacher).toEqual({username: courseInDB.teacher.username, name:courseInDB.teacher.name, id: user._id.toString()})
+
             })
             test('getAllCourses returns Unauthorized if user is not logged in', async () => {
                 const courseData = {
@@ -100,6 +101,137 @@ describe('course tests', () => {
                 //second check secondCourse, there should not be any student info since the studentuser is not a student on that course
                 const returnedCourseDataWithOutStudent = courses.find((course) => course.uniqueName === "courses name where the user is not a student")
                 expect(returnedCourseDataWithOutStudent.students.length).toBe(0)
+            })
+            test('getAllCourses returns null task list', async () => {
+                const user = await User.findOne({username: "username"})
+                apolloServer.context = {userForToken: {username: "username", name: "name", id: user._id.toString()}}
+                const courseData = {
+                    uniqueName: "courses name", 
+                    name: "common name", 
+                    teacher: "username"
+                }
+              
+                await apolloServer.executeOperation({query: createCourse, variables: {...courseData}})
+                const createdTask = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: "courses name", description: "this is a description for a task", deadline: new Date(Date.now()).toString()}})
+                expect(createdTask.data.addTaskToCourse).toBeDefined()
+
+                const coursesQuery = await apolloServer.executeOperation({query: getAllCourses})
+                const courses = coursesQuery.data.allCourses
+                const course = courses[0]
+                expect(course.tasks).toBe(null)
+            })
+        })
+        describe('getCourse query tests', () => {
+            test('getCourseReturns all course data if queried by the teacher of the course', async () => {
+                const user = await User.findOne({username: "username"})
+                apolloServer.context = {userForToken: {username: "username", name: "name", id: user._id.toString()}}
+                const courseData = {
+                    uniqueName: "courses name", 
+                    name: "common name", 
+                    teacher: "username"
+                }
+                await apolloServer.executeOperation({query: createCourse, variables: {...courseData}})
+                const createdTask = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: "courses name", description: "this is a description for a task", deadline: new Date(Date.now()).toString()}})
+                const taskID = createdTask.data.addTaskToCourse.id
+                
+                const submission = {
+                    content : "this is the answer to a task",
+                    submitted: true,
+                    taskId: taskID
+                }
+                await apolloServer.executeOperation({query: addSubmissionToCourseTask, 
+                    variables: {
+                    courseUniqueName: courseData.uniqueName, 
+                    taskId: submission.taskId,
+                    content: submission.content, 
+                    submitted: submission.submitted,
+                }});
+
+                const secondUser = await User.findOne({username: "students username"})
+                apolloServer.context = {userForToken: {username: "students username", name: "students name", id: secondUser._id.toString()}}
+                await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: courseData.uniqueName}})
+           
+                const secondSubmission = {
+                    content : "this is the answer to a task",
+                    submitted: true,
+                    taskId: taskID
+                }
+                const answer = await apolloServer.executeOperation({query: addSubmissionToCourseTask, 
+                    variables: {
+                    courseUniqueName: courseData.uniqueName, 
+                    taskId: secondSubmission.taskId,
+                    content: secondSubmission.content, 
+                    submitted: secondSubmission.submitted,
+                }});
+           
+
+                apolloServer.context = {userForToken: {username: "username", name: "name",  id: user._id.toString()}}
+
+                const courseInfoQuery =  await apolloServer.executeOperation({query: getCourse, variables: {uniqueName: "courses name"}})
+              
+                const course = courseInfoQuery.data.getCourse
+              
+                expect(course).toBeDefined()
+                expect(course.tasks.length).toBe(1)
+                expect(course.tasks[0].submissions.length).toBe(2)
+                expect(course.tasks[0].submissions[0].fromUser.id).toEqual(user.id)
+                expect(course.tasks[0].submissions[1].fromUser.id).toEqual(secondUser.id)
+
+            })
+
+            test('getCourseReturns course data but with only the submissions made by the student if queried by a student', async () => {
+                const user = await User.findOne({username: "username"})
+                apolloServer.context = {userForToken: {username: "username", name: "name", id: user._id.toString()}}
+                const courseData = {
+                    uniqueName: "courses name", 
+                    name: "common name", 
+                    teacher: "username"
+                }
+                await apolloServer.executeOperation({query: createCourse, variables: {...courseData}})
+                const createdTask = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: "courses name", description: "this is a description for a task", deadline: new Date(Date.now()).toString()}})
+                const taskID = createdTask.data.addTaskToCourse.id
+                
+                const submission = {
+                    content : "this is the answer to a task",
+                    submitted: true,
+                    taskId: taskID
+                }
+                await apolloServer.executeOperation({query: addSubmissionToCourseTask, 
+                    variables: {
+                    courseUniqueName: courseData.uniqueName, 
+                    taskId: submission.taskId,
+                    content: submission.content, 
+                    submitted: submission.submitted,
+                }});
+
+                const secondUser = await User.findOne({username: "students username"})
+                apolloServer.context = {userForToken: {username: "students username", name: "students name", id: secondUser._id.toString()}}
+                await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: courseData.uniqueName}})
+           
+                const secondSubmission = {
+                    content : "this is the answer to a task",
+                    submitted: true,
+                    taskId: taskID
+                }
+                const answer = await apolloServer.executeOperation({query: addSubmissionToCourseTask, 
+                    variables: {
+                    courseUniqueName: courseData.uniqueName, 
+                    taskId: secondSubmission.taskId,
+                    content: secondSubmission.content, 
+                    submitted: secondSubmission.submitted,
+                }});
+             
+                
+                const courseInfoQuery =  await apolloServer.executeOperation({query: getCourse, variables: {uniqueName: "courses name"}})
+                console.log(courseInfoQuery)
+                const course = courseInfoQuery.data.getCourse
+                console.log(course)
+                expect(course).toBeDefined()
+                expect(course.tasks.length).toBe(1)
+                expect(course.tasks[0].submissions.length).toBe(1)
+                expect(course.tasks[0].submissions[0].fromUser.id).toEqual(secondUser.id)
+              
+
             })
         })
     })

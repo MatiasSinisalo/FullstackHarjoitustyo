@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const submission = {
+const submissionSchema = new mongoose.Schema({
     fromUser: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'courseApplicationUser',
@@ -10,7 +10,7 @@ const submission = {
     submitted:{
         type: Boolean
     }
-}
+})
 
 const taskSchema = new mongoose.Schema({
     description: {
@@ -20,9 +20,9 @@ const taskSchema = new mongoose.Schema({
         type: Date
     },
     submissions: {
-        type: [submission]
+        type: [submissionSchema]
     }
 })
 
 
-module.exports = {Task: mongoose.model('courseApplicationTask', taskSchema), taskSchema}
+module.exports = {Task: mongoose.model('courseApplicationTask', taskSchema), taskSchema, Submission: mongoose.model('taskSubmission', submissionSchema)}

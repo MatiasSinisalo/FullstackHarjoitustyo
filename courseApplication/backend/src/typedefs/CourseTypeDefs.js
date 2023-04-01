@@ -23,7 +23,7 @@ type Course{
     name: String!
     teacher: User!
     students: [User!]!
-    tasks: [Task!]!
+    tasks: [Task!]
 }
 
 type Query{

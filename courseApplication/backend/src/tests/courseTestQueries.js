@@ -125,6 +125,41 @@ query AllCourses {
 }
 `
 
+const getCourse = `query GetCourse($uniqueName: String!) {
+  getCourse(uniqueName: $uniqueName) {
+    id
+    name
+    students {
+      id
+      name
+      username
+    }
+    tasks {
+      deadline
+      description
+      id
+      submissions {
+        id
+        content        
+        submitted
+        fromUser {
+          id
+          name
+          username
+        }
+      }
+    }
+    teacher {
+      id
+      name
+      username
+    }
+    uniqueName
+  }
+}
+`
 
-module.exports = {createCourse, removeCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses}
+
+
+module.exports = {createCourse, removeCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses, getCourse}
 

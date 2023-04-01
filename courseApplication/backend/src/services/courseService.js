@@ -2,23 +2,28 @@ const { UserInputError } = require('apollo-server-core')
 const User = require('../models/user')
 const Course = require('../models/course')
 const { default: mongoose } = require('mongoose')
-const { Task } = require('../models/task')
+const { Task, Submission } = require('../models/task')
 
 const getAllCourses = async (userForToken) => {
-    const courses = await Course.find({}).populate(["teacher", "tasks"]).populate("students", null, {username: userForToken.username})
+    const courses = await Course.find({}, {tasks: 0}).populate(["teacher"]).populate("students", null, {username: userForToken.username})
     return courses
 }
 
 const getCourse = async(courseUniqueName, userForToken) => {
-    const course = await Course.findOne({uniqueName: courseUniqueName}).populate(["teacher", "tasks"])
+    const course = await Course.findOne({uniqueName: courseUniqueName}).populate(["teacher"])
     if(course.teacher.username === userForToken.username)
     {
-        const courseToReturn = await course.populate("students")
+        const courseToReturn = await course.populate(["students", "tasks.submissions.fromUser"])
         return courseToReturn
     }
     else
     {
-        const courseToReturn = await course.populate("students", null, {username: userForToken.username})
+        const courseFiltered = await course.populate("students", null, {username: userForToken.username})
+        courseFiltered.tasks = courseFiltered.tasks.map((task) => {
+            return {...task, submissions: task.submissions.filter((submission) => submission.fromUser == userForToken.id)}
+        })
+        
+        const courseToReturn = await courseFiltered.populate("tasks.submissions.fromUser")
         return courseToReturn
     }
 
@@ -190,8 +195,8 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
         content: content,
         submitted: submitted
     }
-
-    taskInCourse.submissions.push(newSubmission)
+    const submissionObj = Submission(newSubmission)
+    taskInCourse.submissions.push(submissionObj)
     await course.save()
     return {...newSubmission, fromUser: {username: userInCourse.username, name: userInCourse.name, id: userInCourse.id}}
 }
