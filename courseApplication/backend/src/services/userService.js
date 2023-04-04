@@ -17,12 +17,16 @@ const createNewUser = async (username, name, password) => {
         name: newUser.name,
         passwordHash: hashedPassword
     }
-
-    const userObj = User(userToSave)
-    await userObj.save()
-
-    delete(newUser.password)
-    return newUser
+    try{
+        const userObj = User(userToSave)
+        await userObj.save()
+        delete(newUser.password)
+        return newUser
+    }
+    catch(error){
+        throw new UserInputError("Given username already exists")
+    }
+  
 }
 
 const getUser = async (userId) => {

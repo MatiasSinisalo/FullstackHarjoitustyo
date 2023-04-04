@@ -12,13 +12,13 @@ const CreateAccount = () => {
         const username = event.target.username.value
         const name = event.target.name.value
         const password = event.target.password.value
-        const user = await dispatch(createNewUser(username, name, password, client))
-        if(user.data)
+        const userQuery = await dispatch(createNewUser(username, name, password, client))
+        if(userQuery.username)
         {
-            dispatch(Notify(`successfully created user ${user.data}`, "successNotification", 5))
+            dispatch(Notify(`successfully created user ${userQuery.username}`, "successNotification", 5))
         } 
         else{
-            dispatch(Notify(`${user.error}`, "errorNotification", 5))
+            dispatch(Notify(`${userQuery.message}`, "errorNotification", 5))
         }
     }
 
