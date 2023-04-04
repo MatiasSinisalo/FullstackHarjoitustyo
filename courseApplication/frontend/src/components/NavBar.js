@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
-import "./navbar.css"
+import "./styles/navbar.css"
 const NavBar = ({logOut}) => {
     const user = useSelector((store) => {return store.user})
     if(user.username)
