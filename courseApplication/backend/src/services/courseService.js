@@ -189,7 +189,6 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
     }
    
     const userHasAlreadySubmitted = taskInCourse.submissions.find((submission) => submission.fromUser.toString() === userForToken.id)
-    console.log(taskInCourse)
     if(userHasAlreadySubmitted){
         throw new UserInputError("Given user is has already answered the question")
     }
