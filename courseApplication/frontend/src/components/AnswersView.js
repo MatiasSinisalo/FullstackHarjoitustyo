@@ -1,15 +1,15 @@
 import Submission from "./Submission"
-
+import "./styles/course.css"
 
 
 const AnswersView = ({task}) => {
     return (
-        <>
-        <p>this is where solutions are shown</p>
+        <div className="submissionsListing box">
+        <p>answers: </p>
         {
             task.submissions.map((submission) => <Submission key={submission.id} submission={submission}></Submission>)
         }
-        </>
+        </div>
     )
 }
 

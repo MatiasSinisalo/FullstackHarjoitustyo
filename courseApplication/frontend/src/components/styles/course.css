@@ -5,6 +5,17 @@
     padding: 10px;
 }
 
+.submissionsListing{
+   
+}
+
 .taskListing{
-    
+    background-color: lightblue;
+}
+
+.task{
+    background-color: white;
+    margin: 2%;
+    margin-left: 0px;
+    padding: 2%;
 }
