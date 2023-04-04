@@ -39,11 +39,11 @@ export const getUserData = async (apolloClient) => {
 export const createUser = async (username, name , password, apolloClient) => {
     try{
         const newUserInfo = await apolloClient.mutate({mutation: CREATE_USER, variables: {username: username, name: name, password: password}})
-        return newUserInfo.data?.createUser
+        return {data: newUserInfo.data?.createUser, error: null}
     }
     catch(err)
     {
         console.log(err)
-        return null
+        return {data: null, error: err}
     }
 }

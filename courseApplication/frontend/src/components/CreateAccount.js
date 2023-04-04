@@ -2,6 +2,7 @@ import { useApolloClient } from "@apollo/client";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import {createNewUser} from "../reducers/userReducer"
+import { Notify } from "../reducers/notificationReducer";
 
 const CreateAccount = () => {
     const dispatch = useDispatch()
@@ -12,10 +13,13 @@ const CreateAccount = () => {
         const name = event.target.name.value
         const password = event.target.password.value
         const user = await dispatch(createNewUser(username, name, password, client))
-        if(user)
+        if(user.data)
         {
-            window.alert(`created user ${user.username}`)
+            dispatch(Notify(`successfully created user ${user.data}`, "successNotification", 5))
         } 
+        else{
+            dispatch(Notify(`${user.error}`, "errorNotification", 5))
+        }
     }
 
     return  (
