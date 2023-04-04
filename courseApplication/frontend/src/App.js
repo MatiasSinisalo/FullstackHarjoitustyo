@@ -53,6 +53,9 @@ const App = () =>{
       navigate('/dashboard')
       dispatch(Notify("Logged In Successfully", "successNotification", 5))
     }
+    else{
+      dispatch(Notify("password or username are incorrect", "errorNotification", 5))
+    }
   } 
 
   const handleLogOut = async () => {
