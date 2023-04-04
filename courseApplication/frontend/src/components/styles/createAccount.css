@@ -1,23 +1,17 @@
 
 
-.loginSection{
+.accountCreationSection{
+    padding: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    width: auto;
-    border: #057afc;
+    border-color: lightblue;
     border-width: 1px;
     border-style: solid;
-    height: auto;
 }
 
-.loginForm{
-    align-items: center;
+
+.accountCreationForm{
     display: flex;
     flex-direction: column;
-}
-
-.createUserPromt{
-
 }
