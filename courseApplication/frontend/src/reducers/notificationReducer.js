@@ -20,7 +20,6 @@ export const Notify = (message, style, visibleSeconds) => {
         const currentNotification = state.notification
         if(currentNotification.timeoutID)
         {
-            console.log("cleared timeout")
             clearTimeout(currentNotification.timeoutID)
         }
 
