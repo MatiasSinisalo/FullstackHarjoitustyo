@@ -9,8 +9,29 @@ import {
 import { GET_COURSE } from "../queries/courseQueries"
 import courseService from "../services/courseService"
 import Task from "./Task"
+import { Notify } from "../reducers/notificationReducer"
+import TaskListings from "./TaskListings"
+import "./styles/course.css"
 
 
+
+const TaskCreationForm = ({createTaskOnThisCourse}) => {
+  return (
+    <div className="blueBox">
+      <h3>create a new task on the course</h3>
+      <form onSubmit={createTaskOnThisCourse}>
+        <p>description</p>
+        <input type="text" name="taskDescription"></input>
+        <br></br>
+        <p>deadline</p>
+        <input type="date" name="taskDeadLine"></input>
+        <br></br>
+        <p></p>
+        <input type="submit" value="create task"></input>
+      </form>
+    </div>
+  )
+}
 
 
 const TeachersCourse = () =>{
@@ -41,7 +62,13 @@ const TeachersCourse = () =>{
       console.log(description)
       console.log(deadline)
       console.log(course)
-      await courseService.addTaskToCourse(uniqueName, description, deadline, client)
+      const addedTask = await courseService.addTaskToCourse(uniqueName, description, deadline, client)
+      if(addedTask.description){
+        dispatch(Notify(`successfully created task`, "successNotification", 5))
+      }
+      else{
+        dispatch(Notify(`${addedTask.message}`, "errorNotification", 5))
+      }
   }
   
   const removeThisCourse = async() =>{
@@ -63,27 +90,18 @@ const TeachersCourse = () =>{
   }
   
   return(
-    <>
-    <h1>{course.uniqueName} <button className="removeCourseButton" onClick={removeThisCourse}>remove</button></h1>
-    <h2>{course.name}</h2>
-    <p>this is the teachers course page</p>
+    <div className="course">
+    <h1>this is the teachers course page</h1>
+    <h2>{course.uniqueName} <button className="removeCourseButton" onClick={removeThisCourse}>remove</button></h2>
+    <h3>{course.name}</h3>
+   
     
     
-    <h3>create a new task on the course</h3>
-    <form onSubmit={createTaskOnThisCourse}>
-      <p>description</p>
-      <input type="text" name="taskDescription"></input>
-      <br></br>
-      <p>deadline</p>
-      <input type="date" name="taskDeadLine"></input>
-      <br></br>
-      <p></p>
-      <input type="submit" value="create task"></input>
-    </form>
+    <TaskCreationForm createTaskOnThisCourse={createTaskOnThisCourse}></TaskCreationForm>
 
-    <h2>tasks of the course: </h2>
-    {course.tasks.length > 0 ? course.tasks.map((task) => <Task course = {course} task={task} key={task.id}></Task>) : <></>}
-    </>
+    <TaskListings course={course}></TaskListings>
+    
+    </div>
 
   )
   

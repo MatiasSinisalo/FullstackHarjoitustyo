@@ -2,7 +2,7 @@ import { useApolloClient } from "@apollo/client"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { addStudentToCourse, removeStudentFromCourse } from "../reducers/courseReducer"
-
+import './styles/course.css'
 
 const CourseShowCase = ({course}) => {
     const currentUser = useSelector((store) => store.user)
@@ -30,7 +30,7 @@ const CourseShowCase = ({course}) => {
     }
 
     return (
-        <div>
+        <div className={`course:${course.uniqueName} courseShowCase`}>
             <h2>{course.uniqueName}</h2>
             <h3>{course.name}</h3>
             {thisUserIsTeaching ? 

@@ -1,0 +1,14 @@
+
+
+.accountCreationSection{
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.accountCreationForm{
+    display: flex;
+    flex-direction: column;
+}

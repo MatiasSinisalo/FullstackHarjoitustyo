@@ -27,8 +27,9 @@ describe('courseService tests', () => {
 
         })
         test('createCourse function returns correctly with incorrect parameters', async () => {
+            mockClient.mutate = jest.fn(() => {throw new Error("this is some kind of an error")})
             const createdCourse = await createCourse('', '', '', mockClient)
-            expect(createdCourse).toEqual(null)
+            expect(createdCourse.message).toEqual("this is some kind of an error")
         })
     })
     describe('removeCourse function Tests', () => {

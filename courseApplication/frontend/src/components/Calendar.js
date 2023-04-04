@@ -1,5 +1,5 @@
 import { eachDayOfInterval, eachMonthOfInterval, getDaysInMonth, getWeeksInMonth  } from 'date-fns'
-import "./month.css"
+import "./styles/month.css"
 const Day = ({day}) => {
     const weekDay = day.getDay()
     const date = day.getDate()

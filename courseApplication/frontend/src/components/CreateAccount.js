@@ -2,6 +2,9 @@ import { useApolloClient } from "@apollo/client";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import {createNewUser} from "../reducers/userReducer"
+import { Notify } from "../reducers/notificationReducer";
+import './styles/createAccount.css'
+
 
 const CreateAccount = () => {
     const dispatch = useDispatch()
@@ -11,31 +14,33 @@ const CreateAccount = () => {
         const username = event.target.username.value
         const name = event.target.name.value
         const password = event.target.password.value
-        const user = await dispatch(createNewUser(username, name, password, client))
-        if(user)
+        const userQuery = await dispatch(createNewUser(username, name, password, client))
+        if(userQuery.username)
         {
-            window.alert(`created user ${user.username}`)
+            dispatch(Notify(`successfully created user ${userQuery.username}`, "successNotification", 5))
         } 
+        else{
+            dispatch(Notify(`${userQuery.message}`, "errorNotification", 5))
+        }
     }
 
     return  (
-        <>
+        <div className="accountCreationSection blueBox">
             <Link to="/">Back to Log In page</Link>
             <h1>Create a new account</h1>
-            <form onSubmit={createNewAccount}>
-                <p>username</p>
-                <input type="text" name="username"></input>
+            <form  className="accountCreationForm" onSubmit={createNewAccount}>
+               
+                <input placeholder="username" type="text" name="username"></input>
                 <br></br>
-                <p>name</p>
-                <input type="text" name="name"></input>
+              
+                <input placeholder="name" type="text" name="name"></input>
                 <br></br>
-                <p>password</p>
-                <input type="password" name="password"></input>
+               
+                <input placeholder="password" type="password" name="password"></input>
                 <br></br>
-                <p></p>
                 <input type="submit" value="create new account"></input>
             </form>
-        </>
+        </div>
     )
 }
 

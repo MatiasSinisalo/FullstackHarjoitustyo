@@ -11,19 +11,17 @@ export const createCourse = async (uniqueName, name, teacher, apolloClient) => {
     try{
         const createdCourse = await apolloClient.mutate({mutation: CREATE_COURSE, variables: {uniqueName, name, teacher: ""}})
         apolloClient.cache.updateQuery({query: GET_ALL_COURSES}, (data) => ({
-            allCourses: data.allCourses.concat(createdCourse.data.createCourse)
+            allCourses:  data?.allCourses ? data.allCourses.concat(createdCourse.data.createCourse) : [createdCourse.data.createCourse]
         }))
-        if(createdCourse)
+        if(createdCourse.data?.createCourse)
         {
             return createdCourse.data.createCourse
-        }
-        else{
-            return null
         }
     }
     catch(err){
         console.log(err)
         console.log("Course Creation failed")
+        return err
     }
 }
 
@@ -120,17 +118,25 @@ catch(err)
 
 
 export const addSubmissionToCourseTask = async (courseUniqueName, taskId, content, submitted, client) => {
+    try{
     const result = await client.mutate({mutation: ADD_SUBMISSION_TO_COURSE, variables: {courseUniqueName, taskId, content, submitted}})
     const newSubmission = result.data.addSubmissionToCourseTask
-    client.cache.modify({
-            id: `Task:${taskId}`,
-            fields: {
-                submissions(cachedSubmissions){
-                    return cachedSubmissions.concat(newSubmission)
+    if(newSubmission)
+    {
+        client.cache.modify({
+                id: `Task:${taskId}`,
+                fields: {
+                    submissions(cachedSubmissions){
+                        return cachedSubmissions.concat(newSubmission)
+                    }
                 }
-            }
-    })
-    return result.data.addSubmissionToCourseTask
+        })
+        return newSubmission
+    }
+    }
+    catch(err){
+        return err
+    }
 }
 
 export default {getAllCourses, createCourse, removeCourse, getCourse, addUserToCourse, removeUserFromCourse, addTaskToCourse, addSubmissionToCourseTask}

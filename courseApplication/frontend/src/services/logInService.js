@@ -44,6 +44,6 @@ export const createUser = async (username, name , password, apolloClient) => {
     catch(err)
     {
         console.log(err)
-        return null
+        return err
     }
 }

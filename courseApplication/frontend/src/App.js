@@ -22,6 +22,9 @@ import { setCourses } from "./reducers/courseReducer";
 import { GET_ALL_COURSES } from "./queries/courseQueries";
 import TeachersCourse from "./components/TeachersCourse";
 import CreateAccount from "./components/CreateAccount";
+import Notification from "./components/Notification";
+import { Notify } from "./reducers/notificationReducer";
+import "./components/styles/app.css"
 
 const App = () =>{
   
@@ -29,7 +32,6 @@ const App = () =>{
   const client = useApolloClient()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  
   useEffect(() => {
       async function prepApp(){ 
         const token = localStorage.getItem('courseApplicationUserToken')
@@ -49,6 +51,10 @@ const App = () =>{
     {
       dispatch(updateUser(userInfo))
       navigate('/dashboard')
+      dispatch(Notify("Logged In Successfully", "successNotification", 5))
+    }
+    else{
+      dispatch(Notify("password or username are incorrect", "errorNotification", 5))
     }
   } 
 
@@ -58,11 +64,13 @@ const App = () =>{
     dispatch(updateUser({username: null, name: null, token: null}))
     client.clearStore()
     navigate('/')
+    dispatch(Notify("Logged Out Successfully", "successNotification", 5))
   }
-
+ 
   return (
-    <>
+    <div id="appContent">
       <NavBar logOut={handleLogOut}></NavBar>
+      <Notification></Notification>
       <Routes>
         <Route path="/" element={<LogIn handleLogIn={handleLogIn}/>}/>
         <Route path="/createAccount" element={<CreateAccount></CreateAccount>}/>
@@ -74,7 +82,7 @@ const App = () =>{
         <Route path="/course/:uniqueName" element={<Course/>}/>
         <Route path="/course/:uniqueName/teacher" element={<TeachersCourse/>}/>
       </Routes>
-      </>
+    </div>
   );
 }
 

@@ -103,7 +103,7 @@ const createTaskOnCourseAsUser = (courseUniqueName, description, deadline) => {
     cy.contains("dashboard").click()
    
 
-    const course = cy.contains(courseUniqueName).parent()
+    const course = cy.get('div[class*="course:"]').contains(`${courseUniqueName}`).parent()
     course.contains("See Teachers Course Page").click()
   
 
@@ -130,7 +130,7 @@ const createTaskOnCourseAsUser = (courseUniqueName, description, deadline) => {
 const joinCourseAsUser= (courseUniqueName, usernameToJoinTheCourse) => {
     cy.visit('http://localhost:3000/CourseBrowser')
     
-    const courseShowCase = cy.contains(courseUniqueName).parent()
+    const courseShowCase = cy.get('div[class*="course:"]').contains(`${courseUniqueName}`).parent()
     const joinButton = courseShowCase.contains("button","Join")
    
     cy.intercept('POST', 'http://localhost:4000').as('serverResponse')

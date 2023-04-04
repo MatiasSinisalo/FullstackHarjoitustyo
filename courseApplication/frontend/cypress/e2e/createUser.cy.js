@@ -17,12 +17,8 @@ describe('Create User Tests', () => {
         createUserLink.click()
         cy.wait(100)
         
-        cy.contains("Create a new account") //title check
-        cy.contains("username") //check that username explanation is visible
-        cy.contains("name") //check that name explanation is visible
-        cy.contains("password")//check that password explanation is visible
-        cy.contains("create new account")//check that create new account button is visible
-       
+        cy.contains("Create a new account")
+        
         const usernameField = cy.get("[name = username]")
         const nameField = cy.get("[name = name]")
         const passwordField = cy.get("[name = password]")

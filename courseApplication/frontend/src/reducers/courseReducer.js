@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import courseService from "../services/courseService";
+import { Notify } from "./notificationReducer";
 const courses = []
 
 
@@ -43,13 +44,18 @@ export const getAllCourses = (client) => {
 
 export const createNewCourse = (courseUniqueName, courseName, client) => {
     return async function (dispatch, getState){
-        const createdCourse = await courseService.createCourse(courseUniqueName, courseName, "", client)
-        if(createdCourse)
+        const createdCourseQuery = await courseService.createCourse(courseUniqueName, courseName, "", client)
+        if(createdCourseQuery.uniqueName)
         {
-            alert(`new course named ${createdCourse.name} created`)
+            console.log(createdCourseQuery)
+            dispatch(Notify(`successfully created course ${createdCourseQuery.uniqueName}`, "successNotification", 5))
             return true
         }
-        return false
+        else{
+            dispatch(Notify(`${createdCourseQuery.message}`, "errorNotification", 5))
+            return false
+        }
+      
     }
 }
 

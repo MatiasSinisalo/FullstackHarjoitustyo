@@ -8,7 +8,8 @@ import {
 import { GET_COURSE } from "../queries/courseQueries"
 import { getCourseWithUniqueName } from "../reducers/courseReducer"
 import Task from "./Task"
-
+import TaskListings from "./TaskListings"
+import "./styles/course.css"
 
 
 
@@ -34,12 +35,12 @@ const Course = () =>{
   console.log(course)
   
   return(
-    <>
+    <div className="course">
     <h1>{course.uniqueName}</h1>
     <h2>{course.name}</h2>
     <p>single course page</p>
-    {course.tasks.length > 0 ? course.tasks.map((task) => <Task course={course} task={task} key={task.id}></Task>) : <></>}
-    </>
+    <TaskListings course={course}></TaskListings>
+    </div>
 
   )
   
