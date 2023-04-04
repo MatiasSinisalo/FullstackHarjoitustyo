@@ -4,8 +4,8 @@ import { useSelector } from "react-redux"
 
 
 const Notification = () => {
-    const notification = useSelector((state) => state.notification)
-
+    const notification = useSelector((state) => {return state.notification})
+    console.log(notification)
     return(
         <>
             <p className={notification.style}>{notification.message}</p>

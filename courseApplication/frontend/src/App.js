@@ -23,6 +23,7 @@ import { GET_ALL_COURSES } from "./queries/courseQueries";
 import TeachersCourse from "./components/TeachersCourse";
 import CreateAccount from "./components/CreateAccount";
 import Notification from "./components/Notification";
+import { Notify } from "./reducers/notificationReducer";
 
 
 const App = () =>{
@@ -31,7 +32,6 @@ const App = () =>{
   const client = useApolloClient()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  
   useEffect(() => {
       async function prepApp(){ 
         const token = localStorage.getItem('courseApplicationUserToken')
@@ -61,7 +61,7 @@ const App = () =>{
     client.clearStore()
     navigate('/')
   }
-
+  dispatch(Notify("welcome to the app", "successNotification", 5))
   return (
     <>
       <NavBar logOut={handleLogOut}></NavBar>
