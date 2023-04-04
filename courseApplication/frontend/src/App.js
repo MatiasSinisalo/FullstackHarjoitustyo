@@ -62,6 +62,15 @@ const App = () =>{
     navigate('/')
   }
   dispatch(Notify("welcome to the app", "successNotification", 5))
+  dispatch(Notify("welcome to the app2", "successNotification", 5))
+  dispatch(Notify("welcome to the app3", "successNotification", 5))
+  dispatch(Notify("welcome to the app4", "successNotification", 5))
+  dispatch(Notify("welcome to the app5", "successNotification", 5))
+  dispatch(Notify("welcome to the app6", "successNotification", 5))
+  dispatch(Notify("welcome to the app7", "successNotification", 5))
+  dispatch(Notify("welcome to the app8", "successNotification", 5))
+  dispatch(Notify("welcome to the app9", "successNotification", 5))
+  dispatch(Notify("welcome to the app10", "successNotification", 5))
   return (
     <>
       <NavBar logOut={handleLogOut}></NavBar>

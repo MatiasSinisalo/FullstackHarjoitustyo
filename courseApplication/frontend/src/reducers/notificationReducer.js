@@ -16,6 +16,14 @@ const notificationSlice = createSlice({
 
 export const Notify = (message, style, visibleSeconds) => {
     return function (dispatch, getState){
+        const state = getState()
+        const currentNotification = state.notification
+        if(currentNotification.timeoutID)
+        {
+            console.log("cleared timeout")
+            clearTimeout(currentNotification.timeoutID)
+        }
+
         const timeoutID = setTimeout(() => {            
             dispatch(setNotification({message: "", style: "", timeoutID: null}))
         }, visibleSeconds * 1000)
