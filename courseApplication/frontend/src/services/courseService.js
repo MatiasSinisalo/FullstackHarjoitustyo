@@ -11,7 +11,7 @@ export const createCourse = async (uniqueName, name, teacher, apolloClient) => {
     try{
         const createdCourse = await apolloClient.mutate({mutation: CREATE_COURSE, variables: {uniqueName, name, teacher: ""}})
         apolloClient.cache.updateQuery({query: GET_ALL_COURSES}, (data) => ({
-            allCourses: data.allCourses.concat(createdCourse.data.createCourse)
+            allCourses:  data?.allCourses ? data.allCourses.concat(createdCourse.data.createCourse) : [createdCourse.data.createCourse]
         }))
         if(createdCourse.data.createCourse)
         {
