@@ -1,0 +1,14 @@
+.dashBoard{
+
+}
+
+.dashBoardCourses{
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+
+    border: #057afc;
+    border-width: 1px;
+    border-style: solid;
+    padding: 10px;
+}
+
