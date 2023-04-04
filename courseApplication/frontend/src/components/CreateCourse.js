@@ -16,19 +16,20 @@ const CreateCourse = () =>{
      
     }
     return(
-     <>
-     <p>Create course page</p>
+    <>
+    <h1>Create course page</h1>
+    <div class="blueBox">
+   
      <form onSubmit={submitCreateCourseForm}>
-        <p>Course unique name</p>
-        <input type="text" name="courseUniqueName"></input>
+      
+        <input placeholder="Course unique name" type="text" name="courseUniqueName"></input>
         <br></br>
-        <p>Course name</p>
-        <input type="text" name="courseName"></input>
+        <input  placeholder="Course name" type="text" name="courseName"></input>
         <br></br>
         <input type="submit" value="submit"></input>
      </form>
+     </div>
      </>
- 
    )
  }
 
