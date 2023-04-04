@@ -118,17 +118,25 @@ catch(err)
 
 
 export const addSubmissionToCourseTask = async (courseUniqueName, taskId, content, submitted, client) => {
+    try{
     const result = await client.mutate({mutation: ADD_SUBMISSION_TO_COURSE, variables: {courseUniqueName, taskId, content, submitted}})
     const newSubmission = result.data.addSubmissionToCourseTask
-    client.cache.modify({
-            id: `Task:${taskId}`,
-            fields: {
-                submissions(cachedSubmissions){
-                    return cachedSubmissions.concat(newSubmission)
+    if(newSubmission)
+    {
+        client.cache.modify({
+                id: `Task:${taskId}`,
+                fields: {
+                    submissions(cachedSubmissions){
+                        return cachedSubmissions.concat(newSubmission)
+                    }
                 }
-            }
-    })
-    return result.data.addSubmissionToCourseTask
+        })
+        return newSubmission
+    }
+    }
+    catch(err){
+        return err
+    }
 }
 
 export default {getAllCourses, createCourse, removeCourse, getCourse, addUserToCourse, removeUserFromCourse, addTaskToCourse, addSubmissionToCourseTask}

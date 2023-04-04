@@ -9,6 +9,7 @@ import {
 import { GET_COURSE } from "../queries/courseQueries"
 import courseService from "../services/courseService"
 import Task from "./Task"
+import { Notify } from "../reducers/notificationReducer"
 
 
 
@@ -41,7 +42,13 @@ const TeachersCourse = () =>{
       console.log(description)
       console.log(deadline)
       console.log(course)
-      await courseService.addTaskToCourse(uniqueName, description, deadline, client)
+      const addedTask = await courseService.addTaskToCourse(uniqueName, description, deadline, client)
+      if(addedTask.description){
+        dispatch(Notify(`successfully created task`, "successNotification", 5))
+      }
+      else{
+        dispatch(Notify(`${addedTask.message}`, "errorNotification", 5))
+      }
   }
   
   const removeThisCourse = async() =>{
