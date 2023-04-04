@@ -10,7 +10,7 @@ const LogIn = ({handleLogIn}) =>{
 
 
     return(
-    <div className="loginSection">
+    <div className="loginSection blueBox">
       <p>Log in page</p>
   
 

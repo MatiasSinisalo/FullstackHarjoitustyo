@@ -26,7 +26,7 @@ const Dashboard = () =>{
     
 
       <Link to="/CreateCourse">Create new Course</Link>
-      <div className="dashBoardCourses">
+      <div className="dashBoardCourses blueBox">
         <h2>
           Your courses
         </h2>

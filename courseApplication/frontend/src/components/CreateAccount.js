@@ -25,7 +25,7 @@ const CreateAccount = () => {
     }
 
     return  (
-        <div className="accountCreationSection">
+        <div className="accountCreationSection blueBox">
             <Link to="/">Back to Log In page</Link>
             <h1>Create a new account</h1>
             <form  className="accountCreationForm" onSubmit={createNewAccount}>
