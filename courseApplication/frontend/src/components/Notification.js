@@ -1,12 +1,15 @@
+import { useState } from "react"
 import "./styles/notification.css"
+import { useSelector } from "react-redux"
 
 
 const Notification = () => {
+    const notification = useSelector((state) => state.notification)
+
     return(
-        <p>
-            <p className="successNotification">this is a success notification</p>
-            <p className="errorNotification">this is a error notification</p>
-        </p>
+        <>
+            <p className={notification.style}>{notification.message}</p>
+        </>
     )
 }
 
