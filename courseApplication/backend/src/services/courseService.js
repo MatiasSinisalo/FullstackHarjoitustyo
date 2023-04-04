@@ -183,12 +183,17 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
     }
 
     const userInCourse = course.teacher.username === userForToken.username ? userForToken : course.students.find((user) => user.username === userForToken.username)
-    
     if(!userInCourse)
     {
-        throw new UserInputError("Given user is not participating in the course!")
+        throw new UserInputError("Given user is not participating in the course")
     }
    
+    const userHasAlreadySubmitted = taskInCourse.submissions.find((submission) => submission.fromUser.toString() === userForToken.id)
+    console.log(taskInCourse)
+    if(userHasAlreadySubmitted){
+        throw new UserInputError("Given user is has already answered the question")
+    }
+
     const newSubmission = {
         id: new mongoose.Types.ObjectId(),
         fromUser: userInCourse.id,
