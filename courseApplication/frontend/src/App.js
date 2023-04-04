@@ -24,7 +24,7 @@ import TeachersCourse from "./components/TeachersCourse";
 import CreateAccount from "./components/CreateAccount";
 import Notification from "./components/Notification";
 import { Notify } from "./reducers/notificationReducer";
-
+import "./components/styles/app.css"
 
 const App = () =>{
   
@@ -68,7 +68,7 @@ const App = () =>{
   }
  
   return (
-    <>
+    <div id="appContent">
       <NavBar logOut={handleLogOut}></NavBar>
       <Notification></Notification>
       <Routes>
@@ -82,7 +82,7 @@ const App = () =>{
         <Route path="/course/:uniqueName" element={<Course/>}/>
         <Route path="/course/:uniqueName/teacher" element={<TeachersCourse/>}/>
       </Routes>
-      </>
+    </div>
   );
 }
 
