@@ -47,7 +47,7 @@ describe('task creation on course tests', () => {
             expect(savedDeadline).to.equal(deadlineString)
 
             const createdTaskId = createdTask.id
-            const taskComponent =`[class="task:${createdTaskId}"]`
+            const taskComponent =`[class*="task:${createdTaskId}"]`
             cy.get(taskComponent).contains(newTask.description)
             cy.get(taskComponent).contains(`deadline: ${deadlineString}`)
             cy.get(taskComponent).contains(`submit solution`)
