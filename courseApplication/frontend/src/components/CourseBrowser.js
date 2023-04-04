@@ -18,9 +18,10 @@ const CourseBrowser = () =>{
     
     return(
       <>
-      <p>Course Browser page</p>
-
+      <h1>Course Browser page</h1>
+      <div className="blueBox">
       {courses.map((course) => <CourseShowCase key={course.uniqueName} course={course}></CourseShowCase>)}
+      </div>
       </>
   
     )
