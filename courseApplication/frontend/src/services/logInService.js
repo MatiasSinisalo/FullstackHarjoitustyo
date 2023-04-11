@@ -1,35 +1,18 @@
 import {CREATE_USER, LOGIN, ME} from '../queries/userQueries'
 
- 
-export const getToken = async (username, password, appClient) => {
+ export const LogInAsUser = async (username, password, apolloClient) => {
     try{
-        const result = await appClient.mutate({mutation: LOGIN, variables: {username, password}})
-        if(result.data.logIn)
-        {
-            return result.data.logIn
-        }
-    }
-    catch(err){
-        //TODO: inform user that username and password are incorrect
-        console.log("incorrect password or username")
-        return {error: err}
-    }
-    
-    
-    return undefined
-}
-
-
-export const LogInAsUser = async (username, password, apolloClient) => {
-    const token = await getToken(username, password, apolloClient)
-    if(token)
-    {
+        const loginQuery = await apolloClient.mutate({mutation: LOGIN, variables: {username, password}})
+        
+        const token = loginQuery.data.logIn
         localStorage.setItem('courseApplicationUserToken', token.value)
-
         const userData = await getUserData(apolloClient)
         return {...userData, token: token.value}
     }
-    return null
+    catch(err)
+    {
+        return {error: err}
+    }
 }
 
 export const getUserData = async (apolloClient) => {

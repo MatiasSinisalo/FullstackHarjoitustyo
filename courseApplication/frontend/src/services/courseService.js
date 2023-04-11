@@ -19,8 +19,6 @@ export const createCourse = async (uniqueName, name, teacher, apolloClient) => {
         }
     }
     catch(err){
-        console.log(err)
-        console.log("Course Creation failed")
         return {error: err}
     }
 }
@@ -31,15 +29,12 @@ export const removeCourse = async(course, apolloClient)=>{
 
       if(removed.data.removeCourse){
            const removeCourseID = apolloClient.cache.identify(course)
-           console.log(removeCourseID)
            apolloClient.cache.evict({id: removeCourseID})
            apolloClient.cache.gc()
       }
       return removed.data.removeCourse
     }
     catch(err){
-        console.log(err)
-        console.log("Course removal failed")
         return {error: err}
     }
 }

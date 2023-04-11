@@ -46,8 +46,8 @@ const App = () =>{
   
   const handleLogIn = async (username, password) => {
     const userInfo = await LogInAsUser(username, password, client)
-   // console.log(userInfo)
-    if(userInfo)
+    console.log(userInfo)
+    if(!userInfo.error)
     {
       dispatch(updateUser(userInfo))
       navigate('/dashboard')

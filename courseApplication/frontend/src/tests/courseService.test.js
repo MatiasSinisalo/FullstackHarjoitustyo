@@ -1,7 +1,7 @@
 import { ADD_SUBMISSION_TO_COURSE, ADD_TASK_TO_COURSE, REMOVE_COURSE, REMOVE_TASK_FROM_COURSE } from '../queries/courseQueries'
 import courseService, { createCourse, addUserToCourse, removeUserFromCourse, getCourse, addTaskToCourse, addSubmissionToCourseTask, removeTaskFromCourse } from '../services/courseService'
 
-const mockClient = jest.mock
+const mockClient = jest.mock()
 mockClient.cache = jest.mock()
 mockClient.cache.updateQuery = jest.fn()
 
