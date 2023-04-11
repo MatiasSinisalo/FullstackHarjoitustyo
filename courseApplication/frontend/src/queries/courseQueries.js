@@ -150,3 +150,9 @@ mutation Mutation($courseUniqueName: String!, $taskId: String!, $content: String
   }
 }
 `
+
+export const REMOVE_TASK_FROM_COURSE = gql`
+mutation RemoveTaskFromCourse($courseUniqueName: String!, $taskId: String!) {
+  removeTaskFromCourse(courseUniqueName: $courseUniqueName, taskId: $taskId)
+}
+`
