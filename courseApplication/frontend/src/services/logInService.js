@@ -9,9 +9,10 @@ export const getToken = async (username, password, appClient) => {
             return result.data.logIn
         }
     }
-    catch{
+    catch(err){
         //TODO: inform user that username and password are incorrect
         console.log("incorrect password or username")
+        return {error: err}
     }
     
     
@@ -44,6 +45,6 @@ export const createUser = async (username, name , password, apolloClient) => {
     catch(err)
     {
         console.log(err)
-        return err
+        return {error: err}
     }
 }

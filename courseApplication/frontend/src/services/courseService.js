@@ -21,7 +21,7 @@ export const createCourse = async (uniqueName, name, teacher, apolloClient) => {
     catch(err){
         console.log(err)
         console.log("Course Creation failed")
-        return err
+        return {error: err}
     }
 }
 
@@ -40,6 +40,7 @@ export const removeCourse = async(course, apolloClient)=>{
     catch(err){
         console.log(err)
         console.log("Course removal failed")
+        return {error: err}
     }
 }
 
@@ -62,7 +63,7 @@ export const addUserToCourse = async (uniqueName, username, apolloClient) => {
     catch(err)
     {
         console.log(err)
-        return null
+        return {error: err}
         
     }
 }
@@ -79,7 +80,7 @@ export const removeUserFromCourse = async (uniqueName, username, apolloClient) =
     catch(err)
     {
         console.log(err)
-        return null
+        return {error: err}
     }
    
 }
@@ -112,7 +113,7 @@ try{
 catch(err)
 {
     console.log(err)
-    return null
+    return {error: err}
 }
 }
 
@@ -135,7 +136,7 @@ export const addSubmissionToCourseTask = async (courseUniqueName, taskId, conten
     }
     }
     catch(err){
-        return err
+        return {error: err}
     }
 }
 
@@ -145,12 +146,12 @@ export const removeTaskFromCourse = async (courseUniqueName, taskId, client) => 
         if(result.data.removeTaskFromCourse){
             client.cache.evict({id: `Task:${taskId}`})
             client.cache.gc()
-
+            return true
         }
     }
     catch(err)
     {
-        return err
+        return {error: err}
     }
 }
 
