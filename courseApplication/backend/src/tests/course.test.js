@@ -4,7 +4,7 @@ const Course = require('../models/course')
 const User = require('../models/user')
 const {Task} = require('../models/task')
 const { userCreateQuery, userLogInQuery, createSpesificUserQuery } = require('./userTestQueries')
-const { createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses, removeCourse, getCourse, removeTaskFromCourse } = require('./courseTestQueries')
+const { createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses, removeCourse, getCourse, removeTaskFromCourse, removeSubmissionFromCourseTask } = require('./courseTestQueries')
 const { query } = require('express')
 const mongoose = require('mongoose')
 const course = require('../models/course')
@@ -1090,6 +1090,48 @@ describe('course tests', () => {
             expect(courseInDB.tasks[0].submissions[0].content).toEqual(submission.content)
             expect(courseInDB.tasks[0].submissions[0].submitted).toEqual(submission.submitted)
             expect(courseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(userid)
+        })
+    })
+
+    describe('removeSubmissionFromCourseTask tests', () => {
+        test('removeSubmissionFromCourseTask modifies database state correctly when a task has one submission', async () => {
+            const userQuery = await User.findOne({username: "username"})
+            apolloServer.context = {userForToken: userQuery}
+            const course = {uniqueName: "course owned by username", name: "common name", teacher: "username", tasks: []}
+            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: course})
+            expect(createdCourse.data.createCourse).toBeDefined()
+
+            const task = {
+                description:  "this is the description of a task that is about testing",
+                deadline: new Date("2030-06-25"),
+                submissions: []
+            }
+            const createdTask = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: course.uniqueName, description: task.description, deadline: task.deadline.toString()}});
+            const taskID = createdTask.data.addTaskToCourse.id
+
+            const submission = {
+                content : "this is the answer to a task and should be removed",
+                submitted: true,
+                taskId: taskID
+            }
+            const submissionCreateQuery = await apolloServer.executeOperation({query: addSubmissionToCourseTask, 
+                variables: {
+                courseUniqueName: course.uniqueName, 
+                taskId: submission.taskId,
+                content: submission.content, 
+                submitted: submission.submitted,
+            }});
+            const submissionID = submissionCreateQuery.data.addSubmissionToCourseTask.id
+            console.log(submissionID)
+            const removedQuery = await apolloServer.executeOperation({query: removeSubmissionFromCourseTask, variables: {courseUniqueName: course.uniqueName, taskId: taskID,  submissionId: submissionID}})
+            console.log(removedQuery)
+            expect(removedQuery.data.removeSubmissionFromCourseTask).toBe(true)
+
+            const courseInDB = Course.findOne({uniqueName: course.uniqueName})
+            const taskInDB = courseInDB.tasks[0]
+            expect(taskInDB.submissions.length).toBe(0)
+            
+
         })
     })
 })

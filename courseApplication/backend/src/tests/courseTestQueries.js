@@ -164,6 +164,14 @@ mutation RemoveTaskFromCourse($courseUniqueName: String!, $taskId: String!) {
 }
 `
 
+const removeSubmissionFromCourseTask = `
+mutation RemoveSubmissionFromCourseTask($courseUniqueName: String!, $taskId: String!, $submissionId: String!) {
+  removeSubmissionFromCourseTask(courseUniqueName: $courseUniqueName, taskId: $taskId, submissionId: $submissionId)
+}
+`
 
-module.exports = {createCourse, removeCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses, getCourse, removeTaskFromCourse}
+
+
+
+module.exports = {createCourse, removeCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses, getCourse, removeTaskFromCourse, removeSubmissionFromCourseTask}
 

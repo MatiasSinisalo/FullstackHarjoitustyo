@@ -226,5 +226,40 @@ const removeTaskFromCourse = async (courseUniqueName, taskId, userForToken) =>{
     return true
 }
 
+const removeSubmissionFromCourseTask = async (courseUniqueName, taskId, submissionId, userForToken) => {
+    const course = await Course.findOne({uniqueName: courseUniqueName})
+    if(!course){
+        throw new UserInputError("Given course not found")
+    }
 
-module.exports = {createCourse, removeCourse, addStudentToCourse, addTaskToCourse, removeStudentFromCourse, addSubmissionToCourseTask, getAllCourses, getCourse, removeTaskFromCourse}
+    const task = course.tasks.find((task) => task.id === taskId)
+    if(!task){
+        throw new UserInputError("Given task not found")
+    }
+    console.log(task)
+    const submission = task.submissions.find((submission) => submission.id === submissionId)
+    if(!submission){
+        throw new UserInputError("Given submission not found")
+    }
+
+    if(submission.fromUser.toString() !== userForToken.id && course.teacher.toString() !== userForToken.id)
+    {
+        throw new UserInputError("Unauthorized")
+    }
+
+    task.submissions = task.submissions.filter((submission) => submission.id !== submissionId)
+    await course.save()
+    return true
+}
+
+
+module.exports = {  createCourse, 
+                    removeCourse, 
+                    addStudentToCourse,
+                    addTaskToCourse, 
+                    removeStudentFromCourse, 
+                    addSubmissionToCourseTask, 
+                    getAllCourses, 
+                    getCourse, 
+                    removeTaskFromCourse, 
+                    removeSubmissionFromCourseTask}
