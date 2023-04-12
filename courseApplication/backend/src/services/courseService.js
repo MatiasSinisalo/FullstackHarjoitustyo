@@ -194,15 +194,16 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
     }
 
     const newSubmission = {
-        id: new mongoose.Types.ObjectId(),
         fromUser: userInCourse.id,
         content: content,
         submitted: submitted
     }
-    const submissionObj = Submission(newSubmission)
+    const submissionObj = new Submission(newSubmission)
+    console.log(submissionObj)
     taskInCourse.submissions.push(submissionObj)
     await course.save()
-    return {...newSubmission, fromUser: {username: userInCourse.username, name: userInCourse.name, id: userInCourse.id}}
+    await submissionObj.populate("fromUser")
+    return submissionObj
 }
 
 const removeTaskFromCourse = async (courseUniqueName, taskId, userForToken) =>{
