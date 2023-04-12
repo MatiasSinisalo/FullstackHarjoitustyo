@@ -1,7 +1,7 @@
-import { ADD_SUBMISSION_TO_COURSE, ADD_TASK_TO_COURSE, REMOVE_COURSE } from '../queries/courseQueries'
-import courseService, { createCourse, addUserToCourse, removeUserFromCourse, getCourse, addTaskToCourse, addSubmissionToCourseTask } from '../services/courseService'
+import { ADD_SUBMISSION_TO_COURSE, ADD_TASK_TO_COURSE, REMOVE_COURSE, REMOVE_TASK_FROM_COURSE } from '../queries/courseQueries'
+import courseService, { createCourse, addUserToCourse, removeUserFromCourse, getCourse, addTaskToCourse, addSubmissionToCourseTask, removeTaskFromCourse } from '../services/courseService'
 
-const mockClient = jest.mock
+const mockClient = jest.mock()
 mockClient.cache = jest.mock()
 mockClient.cache.updateQuery = jest.fn()
 
@@ -29,7 +29,7 @@ describe('courseService tests', () => {
         test('createCourse function returns correctly with incorrect parameters', async () => {
             mockClient.mutate = jest.fn(() => {throw new Error("this is some kind of an error")})
             const createdCourse = await createCourse('', '', '', mockClient)
-            expect(createdCourse.message).toEqual("this is some kind of an error")
+            expect(createdCourse.error.message).toEqual("this is some kind of an error")
         })
     })
     describe('removeCourse function Tests', () => {
@@ -192,5 +192,37 @@ describe('courseService tests', () => {
             expect(mockClient.cache.modify).toHaveBeenCalled()
 
         })
+    })
+
+    describe('removeTaskFromCourseTests', () => {
+        test('removeTaskFromCourse calls backend with correct data', async () => {
+            mockClient.mutate = jest.fn(() => {return {data: {removeTaskFromCourse: true}}})
+            mockClient.cache.gc = jest.fn()
+            mockClient.cache.evict = jest.fn((x) => {return x})
+            mockClient.cache.identify = jest.fn()
+
+            const result = await removeTaskFromCourse("coursename", "abc1234", mockClient)
+            expect(result).toBe(true)
+            
+            const mutation = mockClient.mutate.mock.calls[0][0].mutation
+            expect(mutation).toEqual(REMOVE_TASK_FROM_COURSE)
+
+            const variables = mockClient.mutate.mock.calls[0][0].variables
+            expect(variables).toEqual({courseUniqueName: "coursename", taskId: "abc1234"})
+
+            const cacheClearVariables = mockClient.cache.evict.mock.calls[0][0]
+            expect(cacheClearVariables).toEqual({id: "Task:abc1234"})
+
+            expect(mockClient.cache.gc).toHaveBeenCalled()
+
+        })
+
+        test('removeTaskFromCourse returns error correctly', async () => {
+            mockClient.mutate = jest.fn(() => {throw new Error("this is some kind of error")})
+            const result = await removeTaskFromCourse("coursename", "abc1234", mockClient)
+            expect(result.error.message).toEqual("this is some kind of error")
+        })
+
+
     })
 })

@@ -59,6 +59,12 @@ type Mutation{
         description: String!
         deadline: String!
     ):Task
+    
+    removeTaskFromCourse(
+        courseUniqueName: String!
+        taskId: String!
+    ):Boolean
+
 
     addSubmissionToCourseTask(
         courseUniqueName: String!

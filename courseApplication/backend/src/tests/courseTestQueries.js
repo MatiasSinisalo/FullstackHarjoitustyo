@@ -158,8 +158,12 @@ const getCourse = `query GetCourse($uniqueName: String!) {
   }
 }
 `
+const removeTaskFromCourse = `
+mutation RemoveTaskFromCourse($courseUniqueName: String!, $taskId: String!) {
+  removeTaskFromCourse(courseUniqueName: $courseUniqueName, taskId: $taskId)
+}
+`
 
 
-
-module.exports = {createCourse, removeCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses, getCourse}
+module.exports = {createCourse, removeCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses, getCourse, removeTaskFromCourse}
 

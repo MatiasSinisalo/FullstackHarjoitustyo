@@ -12,11 +12,11 @@ const SubmitSolutionView = ({course, task}) => {
         const content = event.target.content.value
         console.log("creating a submission to task!")
         const createdSolutionQuery = await courseService.addSubmissionToCourseTask(course.uniqueName, task.id, content, true, apolloClient)
-        if(createdSolutionQuery.id){
+        if(!createdSolutionQuery.error){
             dispatch(Notify(`successfully answered to task`, "successNotification", 5))
         }
         else{
-            dispatch(Notify(`${createdSolutionQuery.message}`, "errorNotification", 5))
+            dispatch(Notify(`${createdSolutionQuery.error.message}`, "errorNotification", 5))
         }
     }
     return (

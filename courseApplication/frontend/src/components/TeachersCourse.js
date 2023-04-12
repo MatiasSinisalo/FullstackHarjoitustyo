@@ -63,11 +63,11 @@ const TeachersCourse = () =>{
       console.log(deadline)
       console.log(course)
       const addedTask = await courseService.addTaskToCourse(uniqueName, description, deadline, client)
-      if(addedTask.description){
+      if(!addedTask.error){
         dispatch(Notify(`successfully created task`, "successNotification", 5))
       }
       else{
-        dispatch(Notify(`${addedTask.message}`, "errorNotification", 5))
+        dispatch(Notify(`${addedTask.error.message}`, "errorNotification", 5))
       }
   }
   
@@ -77,7 +77,8 @@ const TeachersCourse = () =>{
     {
       console.log("removing course")
       const removed = await courseService.removeCourse(course, client)
-      if(removed){
+      if(!removed.error){
+        dispatch(Notify(`successfully removed course`, "successNotification", 5))
         navigate('/dashboard')
       }
     }

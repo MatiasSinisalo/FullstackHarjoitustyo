@@ -1,104 +1,43 @@
-import { LogInAsUser, getToken } from "../services/logInService"
+import { LogInAsUser } from "../services/logInService"
 import client from "../client"
-
-const successfullTokenResult = {
-    data: {
-        logIn: {value: "abc1234"}
-    }
-}
-
-const failedTokenResult = {
-    data: {
-        logIn: null
-    }
-}
-
-const successfullMEQueryResult = {
-    data:{
-        me: {username: "username", name: "name"}
-    }
-}
-
-const mockClient = {
-    mutate : (data) => {
-        if(data.variables.username == "username" & data.variables.password == "password"){
-            return successfullTokenResult
-        }
-        else
-        {
-            return failedTokenResult
-        }
-    },
-    query: (data) => {
-        return successfullMEQueryResult
-    }
-
-}
-
-describe('getToken tests', () => {
-    test('getToken returns token returned if username and password are correct', async () => {
-       
-        const token = await getToken("username", "password", mockClient)
-        expect(token.value).toBe('abc1234')
-    })
-    
-    test('getToken returns null if if username and password are incorrect', async () => {
-       
-        const token = await getToken("incorrect", "incorrect password", mockClient)
-        expect(token).toBeUndefined()
-    })
-
-    test('getToken returns null if if password is incorrect', async () => {
-        const token = await getToken("username", "incorrect password", mockClient)
-        expect(token).toBeUndefined()
-    })
-})
+import { LOGIN, ME } from "../queries/userQueries"
 
 
+const mockClient = jest.mock()
+mockClient.cache = jest.mock()
+mockClient.cache.updateQuery = jest.fn()
 
 describe('LogInAsUser tests', () => {
     beforeEach(() => {
         localStorage.removeItem('courseApplicationUserToken')
     })
 
-    test('LogInAsUser returns username, name, and token if username and password are correct', async () => {
+    test('logIn function makes loginQuery mutation and ME query to backend correctly', async () => {
+        mockClient.mutate = jest.fn(() => {return {data: {logIn: {value: "abc1234"}}}})
+        mockClient.query = jest.fn(() => {return {data: {me: {username: "username", name: "name"}}}})
+        const result = await LogInAsUser("username", "password", mockClient)
+
+        expect(result.username).toEqual("username")
+
+        const mutationQuery = mockClient.mutate.mock.calls[0][0].mutation
+        expect(mutationQuery).toEqual(LOGIN)
+        const variables = mockClient.mutate.mock.calls[0][0].variables
+        expect(variables).toEqual({username: "username", password: "password"})
+
+        const meQuery = mockClient.query.mock.calls[0][0].query
+        expect(meQuery).toEqual(ME)
        
-        const userData = await LogInAsUser("username", "password", mockClient)
+
+    })
+
+    test('logIn returns error correctly', async () => {
+        mockClient.mutate = jest.fn(() => {throw new Error("this is some kind of an error")})
+        mockClient.query = jest.fn(() => {return {data: {me: {username: "username", name: "name"}}}})
+        const result = await LogInAsUser("username", "password", mockClient)
+        expect(result.error.message).toEqual("this is some kind of an error")
+        
        
-        expect(userData).toEqual({username: "username", name: "name", token: "abc1234"})
-    })
-    
-    test('LogInAsUser returns null if if username and password are incorrect', async () => {
-       
-        const userData = await LogInAsUser("incorrect", "incorrect password", mockClient)
-        expect(userData).toBe(null)
-    })
 
-    test('LogInAsUser returns null if if password is incorrect', async () => {
-        
-        const userData = await LogInAsUser("username", "incorrect", mockClient)
-        expect(userData).toBe(null)
-    })
-
-    test('LogInAsUser writes token to local storage as courseApplicationUserToken if credentials are correct', async () => {
-        
-        const userData = await LogInAsUser("username", "password", mockClient)
-        const token = localStorage.getItem('courseApplicationUserToken')
-        expect(token).toBe('abc1234')
-    })
-
-    test('LogInAsUser does not write token to local storage as courseApplicationUserToken if credentials are incorrect', async () => {
-        
-        const userData = await LogInAsUser("incorrect", "incorrect password", mockClient)
-        const token = localStorage.getItem('courseApplicationUserToken')
-        expect(token).toBe(null)
-    })
-
-    test('LogInAsUser does not write token to local storage as courseApplicationUserToken if password is incorrect', async () => {
-        
-        const userData = await LogInAsUser("username", "incorrect", mockClient)
-        const token = localStorage.getItem('courseApplicationUserToken')
-        expect(token).toBe(null)
     })
 })
 

@@ -1,4 +1,4 @@
-import { ADD_STUDENT_TO_COURSE, ADD_SUBMISSION_TO_COURSE, ADD_TASK_TO_COURSE, CREATE_COURSE, GET_ALL_COURSES, GET_COURSE, REMOVE_COURSE, REMOVE_STUDENT_FROM_COURSE } from "../queries/courseQueries"
+import { ADD_STUDENT_TO_COURSE, ADD_SUBMISSION_TO_COURSE, ADD_TASK_TO_COURSE, CREATE_COURSE, GET_ALL_COURSES, GET_COURSE, REMOVE_COURSE, REMOVE_STUDENT_FROM_COURSE, REMOVE_TASK_FROM_COURSE } from "../queries/courseQueries"
 //teacher field is not currently being used on the backend at all when creating a course
 
 export const getAllCourses = async (apolloClient) => {
@@ -19,9 +19,7 @@ export const createCourse = async (uniqueName, name, teacher, apolloClient) => {
         }
     }
     catch(err){
-        console.log(err)
-        console.log("Course Creation failed")
-        return err
+        return {error: err}
     }
 }
 
@@ -31,15 +29,13 @@ export const removeCourse = async(course, apolloClient)=>{
 
       if(removed.data.removeCourse){
            const removeCourseID = apolloClient.cache.identify(course)
-           console.log(removeCourseID)
            apolloClient.cache.evict({id: removeCourseID})
            apolloClient.cache.gc()
       }
       return removed.data.removeCourse
     }
     catch(err){
-        console.log(err)
-        console.log("Course removal failed")
+        return {error: err}
     }
 }
 
@@ -62,7 +58,7 @@ export const addUserToCourse = async (uniqueName, username, apolloClient) => {
     catch(err)
     {
         console.log(err)
-        return null
+        return {error: err}
         
     }
 }
@@ -79,7 +75,7 @@ export const removeUserFromCourse = async (uniqueName, username, apolloClient) =
     catch(err)
     {
         console.log(err)
-        return null
+        return {error: err}
     }
    
 }
@@ -112,7 +108,7 @@ try{
 catch(err)
 {
     console.log(err)
-    return null
+    return {error: err}
 }
 }
 
@@ -135,8 +131,24 @@ export const addSubmissionToCourseTask = async (courseUniqueName, taskId, conten
     }
     }
     catch(err){
-        return err
+        return {error: err}
     }
 }
 
-export default {getAllCourses, createCourse, removeCourse, getCourse, addUserToCourse, removeUserFromCourse, addTaskToCourse, addSubmissionToCourseTask}
+export const removeTaskFromCourse = async (courseUniqueName, taskId, client) => {
+    try{
+        const result = await client.mutate({mutation: REMOVE_TASK_FROM_COURSE, variables: {courseUniqueName, taskId}})
+        if(result.data.removeTaskFromCourse){
+            client.cache.evict({id: `Task:${taskId}`})
+            client.cache.gc()
+            return true
+        }
+    }
+    catch(err)
+    {
+        return {error: err}
+    }
+}
+
+
+export default {getAllCourses, createCourse, removeCourse, getCourse, addUserToCourse, removeUserFromCourse, addTaskToCourse, addSubmissionToCourseTask, removeTaskFromCourse}

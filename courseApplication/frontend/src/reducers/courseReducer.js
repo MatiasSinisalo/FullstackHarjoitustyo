@@ -45,14 +45,14 @@ export const getAllCourses = (client) => {
 export const createNewCourse = (courseUniqueName, courseName, client) => {
     return async function (dispatch, getState){
         const createdCourseQuery = await courseService.createCourse(courseUniqueName, courseName, "", client)
-        if(createdCourseQuery.uniqueName)
+        if(!createdCourseQuery.error)
         {
             console.log(createdCourseQuery)
             dispatch(Notify(`successfully created course ${createdCourseQuery.uniqueName}`, "successNotification", 5))
             return true
         }
         else{
-            dispatch(Notify(`${createdCourseQuery.message}`, "errorNotification", 5))
+            dispatch(Notify(`${createdCourseQuery.error.message}`, "errorNotification", 5))
             return false
         }
       
