@@ -1122,15 +1122,13 @@ describe('course tests', () => {
                 submitted: submission.submitted,
             }});
             const submissionID = submissionCreateQuery.data.addSubmissionToCourseTask.id
-            console.log(submissionID)
+           
             const removedQuery = await apolloServer.executeOperation({query: removeSubmissionFromCourseTask, variables: {courseUniqueName: course.uniqueName, taskId: taskID,  submissionId: submissionID}})
-            console.log(removedQuery)
             expect(removedQuery.data.removeSubmissionFromCourseTask).toBe(true)
-
-            const courseInDB = Course.findOne({uniqueName: course.uniqueName})
+            const courseInDB = await Course.findOne({uniqueName: course.uniqueName})
             const taskInDB = courseInDB.tasks[0]
             expect(taskInDB.submissions.length).toBe(0)
-            
+
 
         })
     })
