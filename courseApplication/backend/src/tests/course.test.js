@@ -1131,5 +1131,64 @@ describe('course tests', () => {
 
 
         })
+        test('removeSubmissionFromCourseTask modifies database state correctly when a task has 2 submissions', async () => {
+            const userQuery = await User.findOne({username: "username"})
+            apolloServer.context = {userForToken: userQuery}
+            const course = {uniqueName: "course owned by username", name: "common name", teacher: "username", tasks: []}
+            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: course})
+            expect(createdCourse.data.createCourse).toBeDefined()
+
+            const task = {
+                description:  "this is the description of a task that is about testing",
+                deadline: new Date("2030-06-25"),
+                submissions: []
+            }
+            const createdTask = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: course.uniqueName, description: task.description, deadline: task.deadline.toString()}});
+           
+            const taskID = createdTask.data.addTaskToCourse.id
+           
+            const otherUserQuery = await User.findOne({username: "students username"})
+            apolloServer.context = {userForToken: otherUserQuery}
+            await apolloServer.executeOperation({query: addStudentToCourse, variables: {courseUniqueName: "course owned by username", addStudentToCourseUsername: "students username"}})
+           
+            const submissionToNotBeRemoved = {
+                content : "this is the answer to a task and should not be removed",
+                submitted: true,
+                taskId: taskID
+            }
+            await apolloServer.executeOperation({query: addSubmissionToCourseTask, 
+                variables: {
+                courseUniqueName: course.uniqueName, 
+                taskId: submissionToNotBeRemoved.taskId,
+                content: submissionToNotBeRemoved.content, 
+                submitted: submissionToNotBeRemoved.submitted,
+            }});
+        
+            apolloServer.context = {userForToken: userQuery}
+
+            const submission = {
+                content : "this is the answer to a task and should be removed",
+                submitted: true,
+                taskId: taskID
+            }
+            const submissionCreateQuery = await apolloServer.executeOperation({query: addSubmissionToCourseTask, 
+                variables: {
+                courseUniqueName: course.uniqueName, 
+                taskId: submission.taskId,
+                content: submission.content, 
+                submitted: submission.submitted,
+            }});
+            const submissionID = submissionCreateQuery.data.addSubmissionToCourseTask.id
+           
+            const removedQuery = await apolloServer.executeOperation({query: removeSubmissionFromCourseTask, variables: {courseUniqueName: course.uniqueName, taskId: taskID,  submissionId: submissionID}})
+            expect(removedQuery.data.removeSubmissionFromCourseTask).toBe(true)
+            const courseInDB = await Course.findOne({uniqueName: course.uniqueName})
+            const taskInDB = courseInDB.tasks[0]
+            expect(taskInDB.submissions.length).toBe(1)
+            console.log(taskInDB)
+            expect(taskInDB.submissions[0].fromUser.toString()).toEqual(otherUserQuery.id)
+            expect(taskInDB.submissions[0].content).toEqual("this is the answer to a task and should not be removed")
+
+        })
     })
 })

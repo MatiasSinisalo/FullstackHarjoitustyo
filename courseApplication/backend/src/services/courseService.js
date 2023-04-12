@@ -199,7 +199,6 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
         submitted: submitted
     }
     const submissionObj = new Submission(newSubmission)
-    console.log(submissionObj)
     taskInCourse.submissions.push(submissionObj)
     await course.save()
     await submissionObj.populate("fromUser")
@@ -237,7 +236,7 @@ const removeSubmissionFromCourseTask = async (courseUniqueName, taskId, submissi
     if(!task){
         throw new UserInputError("Given task not found")
     }
-    console.log(task)
+    
     const submission = task.submissions.find((submission) => submission.id === submissionId)
     if(!submission){
         throw new UserInputError("Given submission not found")
