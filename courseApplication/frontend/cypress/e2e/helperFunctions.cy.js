@@ -151,4 +151,11 @@ const visitCoursePageAsStudentFromDashboard = (courseUniqueName) => {
     
 }
 
-export {prepareTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser,joinCourseAsUser, endTests, visitCoursePageAsStudentFromDashboard}
+const createSubmissionToATask = (taskDescription, content) => {
+    cy.contains(taskDescription).parent().as('taskComponent')
+    const submissionContentField = cy.get('@taskComponent').get('[name="content"]')
+    const submissionSubmitButton = cy.get('@taskComponent').get('[value="submit solution"]')
+    submissionContentField.type(content)
+    submissionSubmitButton.click()
+}
+export {prepareTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser,joinCourseAsUser, endTests, visitCoursePageAsStudentFromDashboard, createSubmissionToATask}

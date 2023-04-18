@@ -108,6 +108,17 @@ const courseMutationResolvers = {
         const createdSubmission = await courseService.addSubmissionToCourseTask(courseUniqueName, taskID, content, submitted, context.userForToken)
         
         return createdSubmission
+    },
+    removeSubmissionFromCourseTask: async(root, args, context) =>{
+        if(!context.userForToken)
+        {
+            throw new UserInputError("Unauthorized")
+        }
+        const courseUniqueName = args.courseUniqueName
+        const taskId = args.taskId
+        const submissionId = args.submissionId
+        const submissionRemoved = await courseService.removeSubmissionFromCourseTask(courseUniqueName, taskId, submissionId, context.userForToken)
+        return submissionRemoved
     }
 }
 

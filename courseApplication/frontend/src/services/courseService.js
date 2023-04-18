@@ -1,4 +1,4 @@
-import { ADD_STUDENT_TO_COURSE, ADD_SUBMISSION_TO_COURSE, ADD_TASK_TO_COURSE, CREATE_COURSE, GET_ALL_COURSES, GET_COURSE, REMOVE_COURSE, REMOVE_STUDENT_FROM_COURSE, REMOVE_TASK_FROM_COURSE } from "../queries/courseQueries"
+import { ADD_STUDENT_TO_COURSE, ADD_SUBMISSION_TO_COURSE, ADD_TASK_TO_COURSE, CREATE_COURSE, GET_ALL_COURSES, GET_COURSE, REMOVE_COURSE, REMOVE_STUDENT_FROM_COURSE, REMOVE_SUBMISSION_FROM_COURSE_TASK, REMOVE_TASK_FROM_COURSE } from "../queries/courseQueries"
 //teacher field is not currently being used on the backend at all when creating a course
 
 export const getAllCourses = async (apolloClient) => {
@@ -28,8 +28,7 @@ export const removeCourse = async(course, apolloClient)=>{
       const removed = await apolloClient.mutate({mutation: REMOVE_COURSE, variables: {uniqueName: course.uniqueName}})
 
       if(removed.data.removeCourse){
-           const removeCourseID = apolloClient.cache.identify(course)
-           apolloClient.cache.evict({id: removeCourseID})
+           apolloClient.cache.evict({id: `Course:${course.id}`})
            apolloClient.cache.gc()
       }
       return removed.data.removeCourse
@@ -123,7 +122,7 @@ export const addSubmissionToCourseTask = async (courseUniqueName, taskId, conten
                 id: `Task:${taskId}`,
                 fields: {
                     submissions(cachedSubmissions){
-                        return cachedSubmissions.concat(newSubmission)
+                        return cachedSubmissions.concat({__ref: `Submission:${newSubmission.id}`})
                     }
                 }
         })
@@ -150,5 +149,31 @@ export const removeTaskFromCourse = async (courseUniqueName, taskId, client) => 
     }
 }
 
+export const removeSubmissionFromCourseTask = async (courseUniqueName, taskId, submissionId, client) => {
+    try{
+        const result = await client.mutate({mutation: REMOVE_SUBMISSION_FROM_COURSE_TASK, variables: {courseUniqueName, taskId, submissionId}})
+        if(result.data.removeSubmissionFromCourseTask)
+        {
+            client.cache.evict({id: `Submission:${submissionId}`})
+            client.cache.gc()
+            return result.data.removeSubmissionFromCourseTask
+        }
+    }
+    catch(err)
+    {
+        return {error: err}
+    }
+} 
 
-export default {getAllCourses, createCourse, removeCourse, getCourse, addUserToCourse, removeUserFromCourse, addTaskToCourse, addSubmissionToCourseTask, removeTaskFromCourse}
+
+export default {getAllCourses, 
+    createCourse, 
+    removeCourse, 
+    getCourse, 
+    addUserToCourse, 
+    removeUserFromCourse, 
+    addTaskToCourse, 
+    addSubmissionToCourseTask, 
+    removeTaskFromCourse,
+    removeSubmissionFromCourseTask
+}

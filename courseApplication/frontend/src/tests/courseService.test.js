@@ -1,5 +1,5 @@
-import { ADD_SUBMISSION_TO_COURSE, ADD_TASK_TO_COURSE, REMOVE_COURSE, REMOVE_TASK_FROM_COURSE } from '../queries/courseQueries'
-import courseService, { createCourse, addUserToCourse, removeUserFromCourse, getCourse, addTaskToCourse, addSubmissionToCourseTask, removeTaskFromCourse } from '../services/courseService'
+import { ADD_SUBMISSION_TO_COURSE, ADD_TASK_TO_COURSE, REMOVE_COURSE, REMOVE_SUBMISSION_FROM_COURSE_TASK, REMOVE_TASK_FROM_COURSE } from '../queries/courseQueries'
+import courseService, { createCourse, addUserToCourse, removeUserFromCourse, getCourse, addTaskToCourse, addSubmissionToCourseTask, removeTaskFromCourse, removeSubmissionFromCourseTask } from '../services/courseService'
 
 const mockClient = jest.mock()
 mockClient.cache = jest.mock()
@@ -51,13 +51,12 @@ describe('courseService tests', () => {
 
         test('removeCourse calls cache clear functions correctly', async () => {
             mockClient.mutate = jest.fn(() => {return {data: {removeCourse: true}}})
-            mockClient.cache.identify = jest.fn(() => {return `Course:${course.id}`})
             mockClient.cache.evict = jest.fn(() => {return true})
             mockClient.cache.gc = jest.fn(() => {return true})
 
             const courseRemoved = await courseService.removeCourse(course, mockClient)
            
-            expect( mockClient.cache.identify.mock.calls[0][0]).toEqual(course)
+          
             expect( mockClient.cache.evict.mock.calls[0][0]).toEqual({id: `Course:${course.id}`})
             expect( mockClient.cache.gc).toHaveBeenCalled()
         })
@@ -224,5 +223,29 @@ describe('courseService tests', () => {
         })
 
 
+    })
+
+    describe('removeSubmissionFromCourseTask tests', () => {
+        test('removeSubmissionFromCourseTask calls backend correctly', async () => {
+            mockClient.mutate = jest.fn(() => {return {data: {removeSubmissionFromCourseTask: true}}})
+            mockClient.cache.gc = jest.fn()
+            mockClient.cache.evict = jest.fn((x) => {return x})
+
+            const result = await removeSubmissionFromCourseTask("courses unique name", "abc1234", "abc4321", mockClient)
+            expect(result).toBe(true)
+
+            const query = mockClient.mutate.mock.calls[0][0].mutation
+            expect(query).toEqual(REMOVE_SUBMISSION_FROM_COURSE_TASK)
+
+            const variables = mockClient.mutate.mock.calls[0][0].variables
+            expect(variables).toEqual({courseUniqueName: "courses unique name", taskId: "abc1234", submissionId: "abc4321"})
+
+
+        })
+        test('removeSubmissionFromCourseTask returns error correctly', async () => {
+            mockClient.mutate = jest.fn(() => {throw new Error("this is some kind of error")})
+            const result = await removeSubmissionFromCourseTask("courses unique name", "abc1234", "abc4321", mockClient)
+            expect(result.error.message).toEqual("this is some kind of error")
+        })
     })
 })

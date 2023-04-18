@@ -24,7 +24,7 @@ const Task = ({course, task}) => {
             <p>deadline: {deadline}</p>
             {user.username === course.teacher.username ? <button onClick={removeTask}>remove task</button> : <></>}
             <SubmitSolutionView course={course} task={task}></SubmitSolutionView>
-            <AnswersView task={task}></AnswersView>
+            <AnswersView course={course} task={task}></AnswersView>
         
         </div>
     )
