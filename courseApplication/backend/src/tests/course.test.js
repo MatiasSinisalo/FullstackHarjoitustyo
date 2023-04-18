@@ -1210,6 +1210,24 @@ describe('course tests', () => {
             expect(courseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(submission.fromUser.id)
         })
 
+        test('removeSubmissionFromCourseTask teacher can remove students submission', async () => {
+            await helpers.logIn("username", apolloServer)
+            const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+            const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
+             
+            await helpers.logIn("students username", apolloServer)
+            await apolloServer.executeOperation({query: addStudentToCourse, variables: {courseUniqueName: "course unique name", addStudentToCourseUsername: "students username"}})
+            const submission = await helpers.createSubmission(course, task.id, "this is an answer", true, apolloServer);
+          
+            await helpers.logIn("username", apolloServer)
+            const removedQuery = await apolloServer.executeOperation({query: removeSubmissionFromCourseTask, 
+                variables: {courseUniqueName: course.uniqueName, taskId: task.id,  submissionId: submission.id}})
+            expect(removedQuery.data.removeSubmissionFromCourseTask).toEqual(true)
+            
+            const courseInDB = await Course.findOne({uniqueName: "course unique name"})
+            expect(courseInDB.tasks[0].submissions.length).toBe(0)
+        })
+
 
     })
 })
