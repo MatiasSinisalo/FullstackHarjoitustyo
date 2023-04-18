@@ -29,7 +29,7 @@ export const removeCourse = async(course, apolloClient)=>{
 
       if(removed.data.removeCourse){
            const removeCourseID = apolloClient.cache.identify(course)
-           apolloClient.cache.evict({id: removeCourseID})
+           apolloClient.cache.evict({id: `Course:${course.id}`})
            apolloClient.cache.gc()
       }
       return removed.data.removeCourse

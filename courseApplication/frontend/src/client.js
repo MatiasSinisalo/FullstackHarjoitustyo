@@ -28,17 +28,7 @@ const tokenHeader = setContext((_, { headers }) => {
 
 //define policy to filter out any dangling references to removed task objects in cache: 
 //https://www.apollographql.com/docs/react/caching/garbage-collection/
-const memoryCache = new InMemoryCache({typePolicies: {
-   Course:{
-        fields: {
-            tasks:{
-                read(tasks){
-                    return tasks == null ? [] : tasks.filter((task) => task != null)
-                }
-            },
-        },
-   },
-}})
+const memoryCache = new InMemoryCache()
 
 
 const client = new ApolloClient({
