@@ -1268,6 +1268,11 @@ describe('course tests', () => {
             expect(courseInDB.tasks[0].submissions.length).toBe(1)
             expect(courseInDB.tasks[0].submissions[0].content).toEqual(submission.content)
             expect(courseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(submission.fromUser.id)
+
+            const secondCourseInDB = await Course.findOne({uniqueName: "second course"})
+            expect(secondCourseInDB.tasks[0].submissions.length).toBe(1)
+            expect(secondCourseInDB.tasks[0].submissions[0].content).toEqual(differentSubmission.content)
+            expect(secondCourseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(differentSubmission.fromUser.id)
         })
 
         test('removeSubmissionFromCourseTask returns submission not found if submission does not exist', async () => {
@@ -1291,6 +1296,11 @@ describe('course tests', () => {
             expect(courseInDB.tasks[0].submissions.length).toBe(1)
             expect(courseInDB.tasks[0].submissions[0].content).toEqual(submission.content)
             expect(courseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(submission.fromUser.id)
+
+            const secondCourseInDB = await Course.findOne({uniqueName: "second course"})
+            expect(secondCourseInDB.tasks[0].submissions.length).toBe(1)
+            expect(secondCourseInDB.tasks[0].submissions[0].content).toEqual(differentSubmission.content)
+            expect(secondCourseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(differentSubmission.fromUser.id)
         })
 
 
