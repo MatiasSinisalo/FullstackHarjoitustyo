@@ -51,13 +51,12 @@ describe('courseService tests', () => {
 
         test('removeCourse calls cache clear functions correctly', async () => {
             mockClient.mutate = jest.fn(() => {return {data: {removeCourse: true}}})
-            mockClient.cache.identify = jest.fn(() => {return `Course:${course.id}`})
             mockClient.cache.evict = jest.fn(() => {return true})
             mockClient.cache.gc = jest.fn(() => {return true})
 
             const courseRemoved = await courseService.removeCourse(course, mockClient)
            
-            expect( mockClient.cache.identify.mock.calls[0][0]).toEqual(course)
+          
             expect( mockClient.cache.evict.mock.calls[0][0]).toEqual({id: `Course:${course.id}`})
             expect( mockClient.cache.gc).toHaveBeenCalled()
         })
