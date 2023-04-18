@@ -28,7 +28,6 @@ export const removeCourse = async(course, apolloClient)=>{
       const removed = await apolloClient.mutate({mutation: REMOVE_COURSE, variables: {uniqueName: course.uniqueName}})
 
       if(removed.data.removeCourse){
-           const removeCourseID = apolloClient.cache.identify(course)
            apolloClient.cache.evict({id: `Course:${course.id}`})
            apolloClient.cache.gc()
       }
