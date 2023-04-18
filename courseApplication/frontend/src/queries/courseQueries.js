@@ -42,12 +42,6 @@ export const GET_ALL_COURSES = gql`query AllCourses {
         name
         username
       }
-     
-      tasks {
-        id
-        deadline
-        description
-      }
     }
   }`
 
