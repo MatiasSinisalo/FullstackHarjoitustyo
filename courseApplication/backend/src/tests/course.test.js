@@ -8,6 +8,7 @@ const { createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCour
 const { query } = require('express')
 const mongoose = require('mongoose')
 const course = require('../models/course')
+const helpers = require('./testHelpers')
 
 beforeAll(async () => {
     await server.start("test server ready")
@@ -1190,5 +1191,25 @@ describe('course tests', () => {
             expect(taskInDB.submissions[0].content).toEqual("this is the answer to a task and should not be removed")
 
         })
+
+        test('removeSubmissionFromCourseTask student can not remove other students submission', async () => {
+            await helpers.logIn("username", apolloServer)
+            const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+            const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
+            const submission = await helpers.createSubmission(course, task.id, "this is an answer", true, apolloServer);
+            
+            await helpers.logIn("students username", apolloServer)
+            const removedQuery = await apolloServer.executeOperation({query: removeSubmissionFromCourseTask, 
+                variables: {courseUniqueName: course.uniqueName, taskId: task.id,  submissionId: submission.id}})
+            expect(removedQuery.errors[0].message).toEqual("Unauthorized")
+            expect(removedQuery.data.removeSubmissionFromCourseTask).toEqual(null)
+            
+            const courseInDB = await Course.findOne({uniqueName: "course unique name"})
+            expect(courseInDB.tasks[0].submissions.length).toBe(1)
+            expect(courseInDB.tasks[0].submissions[0].content).toEqual(submission.content)
+            expect(courseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(submission.fromUser.id)
+        })
+
+
     })
 })
