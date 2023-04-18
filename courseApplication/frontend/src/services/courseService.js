@@ -153,7 +153,12 @@ export const removeTaskFromCourse = async (courseUniqueName, taskId, client) => 
 export const removeSubmissionFromCourseTask = async (courseUniqueName, taskId, submissionId, client) => {
     try{
         const result = await client.mutate({mutation: REMOVE_SUBMISSION_FROM_COURSE_TASK, variables: {courseUniqueName, taskId, submissionId}})
-        return result.data.removeSubmissionFromCourseTask
+        if(result.data.removeSubmissionFromCourseTask)
+        {
+            client.cache.evict({id: `Submission:${submissionId}`})
+            client.cache.gc()
+            return result.data.removeSubmissionFromCourseTask
+        }
     }
     catch(err)
     {
