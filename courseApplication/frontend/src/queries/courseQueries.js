@@ -156,3 +156,9 @@ mutation RemoveTaskFromCourse($courseUniqueName: String!, $taskId: String!) {
   removeTaskFromCourse(courseUniqueName: $courseUniqueName, taskId: $taskId)
 }
 `
+
+export const REMOVE_SUBMISSION_FROM_COURSE_TASK = gql`
+mutation RemoveSubmissionFromCourseTask($courseUniqueName: String!, $taskId: String!, $submissionId: String!) {
+  removeSubmissionFromCourseTask(courseUniqueName: $courseUniqueName, taskId: $taskId, submissionId: $submissionId)
+}
+`
