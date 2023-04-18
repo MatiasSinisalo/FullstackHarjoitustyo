@@ -3,7 +3,6 @@ const testQueries = require('./courseTestQueries')
 
 const logIn = async (username, apolloServer) => {
     const userQuery = await User.findOne({username: username})
-    console.log(userQuery)
     apolloServer.context = {userForToken: userQuery}
     return userQuery
 }
@@ -37,7 +36,7 @@ const createSubmission = async (course, taskId, content, submitted, apolloServer
         content: submissionToNotBeRemoved.content, 
         submitted: submissionToNotBeRemoved.submitted,
     }});
-    console.log(submission)
+   
     return submission.data.addSubmissionToCourseTask
 }
 module.exports = {logIn, createCourse, createTask, createSubmission}
