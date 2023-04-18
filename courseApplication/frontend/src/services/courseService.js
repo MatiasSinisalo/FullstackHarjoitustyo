@@ -123,7 +123,7 @@ export const addSubmissionToCourseTask = async (courseUniqueName, taskId, conten
                 id: `Task:${taskId}`,
                 fields: {
                     submissions(cachedSubmissions){
-                        return cachedSubmissions.concat(newSubmission)
+                        return cachedSubmissions.concat({__ref: `Submission:${newSubmission.id}`})
                     }
                 }
         })
