@@ -6,7 +6,6 @@ import notificationReducer from "./reducers/notificationReducer";
 const store = configureStore({
     reducer: {
         user: userReducer,
-        courses: courseReducer,
         notification: notificationReducer
     }
 })

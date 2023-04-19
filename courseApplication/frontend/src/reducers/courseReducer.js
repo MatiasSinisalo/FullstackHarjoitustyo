@@ -2,20 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import courseService from "../services/courseService";
 import { Notify } from "./notificationReducer";
-const courses = []
-
-
-
-const courseSlice = createSlice({
-    name: 'courses',
-    initialState: courses,
-    reducers: {
-        addCourse(state, action) {
-            return state.concat(action.payload)
-        }
-    }
-})
-export const {addCourse} = courseSlice.actions
 
 
 export const getAllCourses = (client) => {
@@ -95,4 +81,3 @@ export const createNewTaskOnCourse = (uniqueName, description, deadline, client)
     }
 }
 
-export default courseSlice.reducer
