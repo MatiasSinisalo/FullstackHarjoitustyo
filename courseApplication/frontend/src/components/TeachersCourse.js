@@ -12,6 +12,7 @@ import Task from "./Task"
 import { Notify } from "../reducers/notificationReducer"
 import TaskListings from "./TaskListings"
 import "./styles/course.css"
+import { createNewTaskOnCourse } from "../reducers/courseReducer"
 
 
 
@@ -59,16 +60,8 @@ const TeachersCourse = () =>{
       event.preventDefault()    
       const description = event.target.taskDescription.value
       const deadline = event.target.taskDeadLine.value
-      console.log(description)
-      console.log(deadline)
-      console.log(course)
-      const addedTask = await courseService.addTaskToCourse(uniqueName, description, deadline, client)
-      if(!addedTask.error){
-        dispatch(Notify(`successfully created task`, "successNotification", 5))
-      }
-      else{
-        dispatch(Notify(`${addedTask.error.message}`, "errorNotification", 5))
-      }
+     
+      await dispatch(createNewTaskOnCourse(uniqueName, description, deadline, client))
   }
   
   const removeThisCourse = async() =>{

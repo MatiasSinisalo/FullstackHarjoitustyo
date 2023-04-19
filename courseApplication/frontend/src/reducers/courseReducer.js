@@ -54,15 +54,17 @@ export const courseHasStudent = (course, studentsUsername) => {
     return hasStudent
 }
 
-
-
 export const createNewTaskOnCourse = (uniqueName, description, deadline, client) => {
-    return async function (dispatch, getState){
-        const updatedTaskList = await courseService.addTaskToCourse(uniqueName, description, deadline, client)
-        if(updatedTaskList)
-        {
-            return true
-        }
+    return async function (dispatch){
+      const addedTask = await courseService.addTaskToCourse(uniqueName, description, deadline, client)
+      if(!addedTask.error){
+        dispatch(Notify(`successfully created task`, "successNotification", 5))
+        return true
+      }
+      else{
+        dispatch(Notify(`${addedTask.error.message}`, "errorNotification", 5))
+        return false
+      }
     }
 }
 
