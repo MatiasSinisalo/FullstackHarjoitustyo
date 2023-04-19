@@ -2,6 +2,7 @@ import { useApolloClient } from "@apollo/client"
 import courseService from "../services/courseService"
 import { useDispatch } from "react-redux"
 import { Notify } from "../reducers/notificationReducer"
+import { addSubmissionToTask } from "../reducers/courseReducer"
 
 
 const SubmitSolutionView = ({course, task}) => {
@@ -10,14 +11,7 @@ const SubmitSolutionView = ({course, task}) => {
     const submitSolution = async (event) => {
         event.preventDefault()
         const content = event.target.content.value
-        console.log("creating a submission to task!")
-        const createdSolutionQuery = await courseService.addSubmissionToCourseTask(course.uniqueName, task.id, content, true, apolloClient)
-        if(!createdSolutionQuery.error){
-            dispatch(Notify(`successfully answered to task`, "successNotification", 5))
-        }
-        else{
-            dispatch(Notify(`${createdSolutionQuery.error.message}`, "errorNotification", 5))
-        }
+        await dispatch(addSubmissionToTask(course, task, content, apolloClient))
     }
     return (
         <div>
