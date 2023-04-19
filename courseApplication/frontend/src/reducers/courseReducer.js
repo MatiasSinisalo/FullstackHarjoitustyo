@@ -28,15 +28,6 @@ export const createNewCourse = (courseUniqueName, courseName, client) => {
     }
 }
 
-
-export const getCourseWithUniqueName = (uniqueName, client) => {
-    return async function (dispatch, getState){
-        const courseInDatabase = await courseService.getCourse(uniqueName, client)
-    }
-}
-
-
-
 export const addStudentToCourse = (courseUniqueName, username, client) => {
     return async dispatch => {
         const courseWithAddedStudent = await courseService.addUserToCourse(courseUniqueName, username, client)
