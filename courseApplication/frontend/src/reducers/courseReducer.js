@@ -12,13 +12,10 @@ const courseSlice = createSlice({
     reducers: {
         addCourse(state, action) {
             return state.concat(action.payload)
-        },
-        setCourses(state, action){
-            return action.payload
         }
     }
 })
-export const {addCourse, setCourses} = courseSlice.actions
+export const {addCourse} = courseSlice.actions
 
 
 export const getAllCourses = (client) => {
