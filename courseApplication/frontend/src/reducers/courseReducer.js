@@ -54,14 +54,7 @@ export const courseHasStudent = (course, studentsUsername) => {
     return hasStudent
 }
 
-//https://redux.js.org/usage/writing-logic-thunks
- const getCoursesWithUser = (username) => {
-    return function (dispatch, getState){
-        const allCourses = getState().courses
-        const coursesWithUserAsStudent = allCourses.filter((course) => courseHasStudent(course, username))
-        return coursesWithUserAsStudent
-    }
-}
+
 
 export const createNewTaskOnCourse = (uniqueName, description, deadline, client) => {
     return async function (dispatch, getState){
