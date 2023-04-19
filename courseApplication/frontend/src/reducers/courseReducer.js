@@ -21,18 +21,10 @@ const courseSlice = createSlice({
            
             const updatedCourseList = state.map((course) => course.uniqueName === updatedCourse.uniqueName ? updatedCourse : course)
             return updatedCourseList
-        },
-        setTasks(state, action){
-            const uniqueName = action.payload.uniqueName
-            const newTasks = action.payload.tasks
-            const courseToUpdate = state.find((course) => course.uniqueName === uniqueName)
-            const updatedCourse = {...courseToUpdate, tasks: newTasks}
-            const updatedCourseList = state.map((course) => course.uniqueName === uniqueName ? updatedCourse : course)
-            return updatedCourseList
         }
     }
 })
-export const {addCourse, setCourses, updateCourse, setTasks} = courseSlice.actions
+export const {addCourse, setCourses, updateCourse} = courseSlice.actions
 
 
 export const getAllCourses = (client) => {
