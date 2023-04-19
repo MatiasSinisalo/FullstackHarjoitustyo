@@ -2,23 +2,14 @@ import { useApolloClient } from "@apollo/client"
 import courseService from "../services/courseService"
 import { useDispatch } from "react-redux"
 import { Notify } from "../reducers/notificationReducer"
+import { removeSubmissionFromTask } from "../reducers/courseReducer"
 
 
 const Submission = ({course, task, submission}) => {
     const client = useApolloClient()
     const dispatch = useDispatch()
     const removeSubmission = async () => {
-        console.log("removed submission")
-
-        const removed = await courseService.removeSubmissionFromCourseTask(course.uniqueName, task.id, submission.id, client)
-        if(!removed.error){
-            dispatch(Notify("successfully removed submission", "successNotification", 3))
-        }
-        else{
-            dispatch(Notify(removed.error.message, "errorNotification", 3))
-        }
-        console.log(removed)
-
+        await dispatch(removeSubmissionFromTask(course, task, submission, client))
     }
     return(
         <div className={`submission:${submission.id}`}>

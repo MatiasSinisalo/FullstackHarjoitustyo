@@ -37,6 +37,20 @@ export const courseHasStudent = (course, studentsUsername) => {
     return hasStudent
 }
 
+export const removeSubmissionFromTask = (course, task, submission, client) => {
+    return async function(dispatch){
+        const removed = await courseService.removeSubmissionFromCourseTask(course.uniqueName, task.id, submission.id, client)
+        if(!removed.error){
+            dispatch(Notify("successfully removed submission", "successNotification", 3))
+            return true
+        }
+        else{
+            dispatch(Notify(removed.error.message, "errorNotification", 3))
+            return false
+        }
+    }
+}
+
 export const createNewTaskOnCourse = (uniqueName, description, deadline, client) => {
     return async function (dispatch){
       const addedTask = await courseService.addTaskToCourse(uniqueName, description, deadline, client)
