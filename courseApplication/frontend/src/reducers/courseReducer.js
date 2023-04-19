@@ -3,14 +3,6 @@ import { useSelector } from "react-redux";
 import courseService from "../services/courseService";
 import { Notify } from "./notificationReducer";
 
-
-export const getAllCourses = (client) => {
-    return async function (dispatch, getState){
-        const courses = await courseService.getAllCourses(client)
-    }
-}
-
-
 export const createNewCourse = (courseUniqueName, courseName, client) => {
     return async function (dispatch, getState){
         const createdCourseQuery = await courseService.createCourse(courseUniqueName, courseName, "", client)
