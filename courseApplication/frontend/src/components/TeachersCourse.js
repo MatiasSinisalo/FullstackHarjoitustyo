@@ -12,7 +12,7 @@ import Task from "./Task"
 import { Notify } from "../reducers/notificationReducer"
 import TaskListings from "./TaskListings"
 import "./styles/course.css"
-import { createNewTaskOnCourse } from "../reducers/courseReducer"
+import { createNewTaskOnCourse, removeCourse } from "../reducers/courseReducer"
 
 
 
@@ -65,16 +65,7 @@ const TeachersCourse = () =>{
   }
   
   const removeThisCourse = async() =>{
-    const prompt = window.prompt(`type ${course.uniqueName} to confirm removal`)
-    if(prompt === course.uniqueName)
-    {
-      console.log("removing course")
-      const removed = await courseService.removeCourse(course, client)
-      if(!removed.error){
-        dispatch(Notify(`successfully removed course`, "successNotification", 5))
-        navigate('/dashboard')
-      }
-    }
+    await dispatch(removeCourse(course, client, navigate))
   }
 
 

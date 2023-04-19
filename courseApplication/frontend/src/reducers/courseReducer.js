@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import courseService from "../services/courseService";
 import { Notify } from "./notificationReducer";
+import { useNavigate } from "react-router-dom";
 
 export const createNewCourse = (courseUniqueName, courseName, client) => {
     return async function (dispatch, getState){
@@ -91,5 +92,27 @@ export const removeTaskFromCourse = (course, task, client) => {
             dispatch(Notify(removed.error.message, "errorNotification", 3))
             return false
         }
+    }
+}
+
+export const removeCourse = (course, client, navigate) => {
+    return async function(dispatch)
+    {
+        const prompt = window.prompt(`type ${course.uniqueName} to confirm removal`)
+        if(prompt === course.uniqueName)
+        {
+            console.log("removing course")
+            const removed = await courseService.removeCourse(course, client)
+            if(!removed.error){
+                dispatch(Notify(`successfully removed course`, "successNotification", 5))
+                navigate('/dashboard')
+                return true
+            }
+            else{
+                dispatch(Notify(removed.error.message, "errorNotification", 5))
+                return false
+            }
+        }
+        return false
     }
 }
