@@ -63,14 +63,6 @@ export const courseHasStudent = (course, studentsUsername) => {
     }
 }
 
- const getCoursesWithTeacher = (username) => {
-    return function (dispatch, getState){
-        const allCourses = getState().courses
-        const coursesWithUserAsStudent = allCourses.filter((course) => course.teacher.username === username)
-        return coursesWithUserAsStudent
-    }
-}
-
 export const createNewTaskOnCourse = (uniqueName, description, deadline, client) => {
     return async function (dispatch, getState){
         const updatedTaskList = await courseService.addTaskToCourse(uniqueName, description, deadline, client)
