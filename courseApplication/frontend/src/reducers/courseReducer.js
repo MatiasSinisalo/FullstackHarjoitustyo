@@ -78,3 +78,18 @@ export const addSubmissionToTask = (course, task, content, client) => {
         }
     }
 }
+
+export const removeTaskFromCourse = (course, task, client) => {
+    return async function(dispatch){
+        const removed = await courseService.removeTaskFromCourse(course.uniqueName, task.id, client);
+        if(!removed.error)
+        {
+            dispatch(Notify("successfully removed task", "successNotification", 3))
+            return true
+        }
+        else{
+            dispatch(Notify(removed.error.message, "errorNotification", 3))
+            return false
+        }
+    }
+}
