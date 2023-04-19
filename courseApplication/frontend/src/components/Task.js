@@ -4,13 +4,23 @@ import './styles/course.css'
 import { useApolloClient, useQuery } from "@apollo/client"
 import {ME} from '../queries/userQueries'
 import courseService from "../services/courseService"
+import { useDispatch } from "react-redux"
+import { Notify } from "../reducers/notificationReducer"
 const Task = ({course, task}) => {
     const client = useApolloClient()
+    const dispatch = useDispatch()
     const userQuery = useQuery(ME)
     const deadline = new Date(parseInt(task.deadline)).toISOString().split('T')[0]
     const removeTask = async () => {
         console.log("removing task")
-        await courseService.removeTaskFromCourse(course.uniqueName, task.id, client);
+        const removed = await courseService.removeTaskFromCourse(course.uniqueName, task.id, client);
+        if(!removed.error)
+        {
+            dispatch(Notify("successfully removed task", "successNotification", 3))
+        }
+        else{
+            dispatch(Notify(removed.error.message, "errorNotification", 3))
+        }
     }
     if(userQuery.loading){
         return (
