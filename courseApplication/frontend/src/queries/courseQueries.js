@@ -63,6 +63,7 @@ query GetCourse($uniqueName: String!) {
         id
         content
         submitted
+        submittedDate
       }
     }
     teacher {

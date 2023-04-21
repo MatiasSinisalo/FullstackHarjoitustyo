@@ -13,6 +13,7 @@ type Submission{
     fromUser: User!
     content: String!
     submitted: Boolean!
+    submittedDate: String
 }
 
 

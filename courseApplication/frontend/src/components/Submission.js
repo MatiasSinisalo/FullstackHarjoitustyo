@@ -11,11 +11,25 @@ const Submission = ({course, task, submission}) => {
     const removeSubmission = async () => {
         await dispatch(removeSubmissionFromTask(course, task, submission, client))
     }
+
+    const isLate = (task, submission) => {
+        if(submission?.submittedDate)
+        {
+            const deadline = new Date(Number(task.deadline))
+            const submittedDate = new Date(Number(submission.submittedDate))
+
+            return submittedDate > deadline
+        }
+        return false
+    }
+
     return(
         <div className={`submission:${submission.id}`}>
+        {isLate(task, submission) ? <p className="lateMessage">this submission was returned late</p> : <></>}
         <p>{submission.content}</p>
         <p>submitted: {submission.submitted ? <>true</> : <>false</>}</p>
         <button onClick={removeSubmission}>remove</button>
+        
         </div>
     )
 }

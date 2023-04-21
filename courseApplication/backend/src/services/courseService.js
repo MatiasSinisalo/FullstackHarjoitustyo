@@ -196,7 +196,8 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
     const newSubmission = {
         fromUser: userInCourse.id,
         content: content,
-        submitted: submitted
+        submitted: submitted,
+        submittedDate: new Date(Date.now())
     }
     const submissionObj = new Submission(newSubmission)
     taskInCourse.submissions.push(submissionObj)

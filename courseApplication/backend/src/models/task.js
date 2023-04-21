@@ -9,6 +9,9 @@ const submissionSchema = new mongoose.Schema({
     },
     submitted:{
         type: Boolean
+    },
+    submittedDate:{
+        type: Date
     }
 })
 
