@@ -1023,7 +1023,9 @@ describe('course tests', () => {
             expect(createdSubmission.submitted).toEqual(submission.submitted)
             expect(createdSubmission.fromUser.username).toEqual("username")
             expect(createdSubmission.fromUser.name).toEqual("name")
-            
+            console.log(createdSubmission)
+            expect(new Date(Number(createdSubmission.submittedDate)).toISOString().slice(0, 16)).toEqual(new Date(Date.now()).toISOString().slice(0, 16))
+           
             
             const courseInDB = await Course.findOne({courseUniqueName: course.uniqueName}).populate('tasks')
             expect(courseInDB.tasks[0].description).toEqual(task.description)
@@ -1033,6 +1035,7 @@ describe('course tests', () => {
             expect(courseInDB.tasks[0].submissions[0].content).toEqual(submission.content)
             expect(courseInDB.tasks[0].submissions[0].submitted).toEqual(submission.submitted)
             expect(courseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(userid)
+            expect(new Date(courseInDB.tasks[0].submissions[0].submittedDate).toISOString().slice(0, 16)).toEqual(new Date(Date.now()).toISOString().slice(0, 16))
         })
         test('user can create a submission to a task only once', async () => {
             const userQuery = await User.findOne({username: "username"})

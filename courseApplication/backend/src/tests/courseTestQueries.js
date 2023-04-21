@@ -86,6 +86,7 @@ mutation Mutation($courseUniqueName: String!, $taskId: String!, $content: String
     }
     id
     submitted
+    submittedDate
   }
 }
 `
