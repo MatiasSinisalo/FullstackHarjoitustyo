@@ -1,5 +1,5 @@
 
-import { prepareTests, endTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser, joinCourseAsUser, visitCoursePageAsStudentFromDashboard} from "./helperFunctions.cy";
+import { prepareTests, endTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser, joinCourseAsUser, visitCoursePageAsStudentFromDashboard, createSubmissionToATask} from "./helperFunctions.cy";
 
 before(function(){
     prepareTests()
@@ -103,5 +103,50 @@ describe('submitting a solution to a task test', () => {
         cy.get('p').contains(submissionContent)
 
         
+    })
+})
+
+describe('submitting solution to a task deadline tests', () => {
+    it('if solution is submitted before deadline, no late message is shown', () => {
+        logInAsUser("username", "password1234")
+        const course = {
+            uniqueName: "this is a course for testing deadlines",
+            name:  "name of the course"
+        }
+        createCourseAsUser(course.uniqueName, course.name)
+        
+
+        const today = new Date(Date.now())
+        const tomorrow = new Date()
+        tomorrow.setDate(today.getDate() + 1)
+        const task = {
+            description: "description for a task",
+            deadline: tomorrow
+        }
+        createTaskOnCourseAsUser(course.uniqueName, task.description, task.deadline)
+        createSubmissionToATask("description for a task", "this is an answer")
+        cy.get(`[class*="lateMessage"]`).should('not.exist')
+        cy.contains("Log Out").click()
+    })
+
+    it('if solution is submitted after deadline, late message is shown', () => {
+        logInAsUser("username", "password1234")
+        const course = {
+            uniqueName: "this is a course for testing deadlines2",
+            name:  "name of the course"
+        }
+        createCourseAsUser(course.uniqueName, course.name)
+        
+
+        const today = new Date(Date.now())
+        const yesterday = new Date()
+        yesterday.setDate(today.getDate() - 1)
+        const task = {
+            description: "description for a task",
+            deadline: yesterday
+        }
+        createTaskOnCourseAsUser(course.uniqueName, task.description, task.deadline)
+        createSubmissionToATask("description for a task", "this is an answer")
+        cy.get(`[class*="lateMessage"]`).contains("this submission was returned late")
     })
 })

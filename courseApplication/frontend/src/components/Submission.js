@@ -25,7 +25,7 @@ const Submission = ({course, task, submission}) => {
 
     return(
         <div className={`submission:${submission.id}`}>
-        {isLate(task, submission) ? <p>this submission was returned late</p> : <></>}
+        {isLate(task, submission) ? <p className="lateMessage">this submission was returned late</p> : <></>}
         <p>{submission.content}</p>
         <p>submitted: {submission.submitted ? <>true</> : <>false</>}</p>
         <button onClick={removeSubmission}>remove</button>
