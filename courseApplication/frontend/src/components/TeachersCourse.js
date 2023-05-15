@@ -19,6 +19,7 @@ const StudentListing = ({student}) => {
   return (
     <tr>
         <td>{student.username}</td>
+        <td><button>remove from course</button></td>
     </tr>
   )
 }
@@ -31,6 +32,7 @@ const CourseParticipants = ({course}) => {
         <thead>
             <tr>
                 <th>username</th>
+                <th>remove</th>
             </tr>
         </thead>
         <tbody>
