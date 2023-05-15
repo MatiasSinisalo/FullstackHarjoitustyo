@@ -148,7 +148,14 @@ const visitCoursePageAsStudentFromDashboard = (courseUniqueName) => {
     
 }
 
-const createSubmissionToATask = (taskDescription, content) => {
+const createSubmissionToATask = (taskDescription, content, isLate=false) => {
+    if(isLate){
+        cy.get(`[class*="pastTaskButton"]`).click()
+    }
+    else{
+        cy.get(`[class*="futureTaskButton"]`).click()
+    }
+
     cy.contains(taskDescription).parent().as('taskComponent')
     const submissionContentField = cy.get('@taskComponent').get('[name="content"]')
     const submissionSubmitButton = cy.get('@taskComponent').get('[value="submit solution"]')

@@ -146,7 +146,7 @@ describe('submitting solution to a task deadline tests', () => {
             deadline: yesterday
         }
         createTaskOnCourseAsUser(course.uniqueName, task.description, task.deadline)
-        createSubmissionToATask("description for a task", "this is an answer")
+        createSubmissionToATask("description for a task", "this is an answer", true)
         cy.get(`[class*="lateMessage"]`).contains("this submission was returned late")
     })
 })
