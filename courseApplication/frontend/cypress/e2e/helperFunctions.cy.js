@@ -111,9 +111,6 @@ const createTaskOnCourseAsUser = (courseUniqueName, description, deadline) => {
     const taskDeadlineField = cy.get('[name="taskDeadLine"]')
     const taskCreateButton = cy.get('[value="create task"]')
 
-    const today = new Date(Date.now())
-    const tomorrow = new Date()
-    tomorrow.setDate(today.getDate() + 1)
     const newTask = {
         description: description,
         deadline: deadline
