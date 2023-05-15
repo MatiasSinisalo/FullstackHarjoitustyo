@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import Task from "./Task"
 import './styles/course.css'
+
+
 const TaskListings = ({course}) => {
   
   const isLate = (task) => {
@@ -15,12 +17,20 @@ const TaskListings = ({course}) => {
     late: "late"
   }
   const [displayMode, setDisplay] = useState(displayModes.future)
+  const updateDisplay = (event) => {
+    setDisplay(event.target.value)
+  }
   
   return(
     <div className="taskListing blueBox">
     <h2>tasks of the course: </h2>
-    <button className="pastTaskButton" onClick={() => setDisplay(displayModes.late)}>show past tasks</button>
-    <button className="futureTaskButton" onClick={() => setDisplay(displayModes.future)}>show future tasks</button>
+    
+    <label htmlFor="task-select">Show task: </label>
+    <select name="taskSelect" id="task-select" onChange={updateDisplay}>
+        <option value={displayModes.future}>future</option>
+        <option value={displayModes.past}>past</option>
+    </select> 
+    
     {
       displayMode == displayModes.future 
       ?
