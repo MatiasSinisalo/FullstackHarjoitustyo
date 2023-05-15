@@ -14,7 +14,32 @@ import TaskListings from "./TaskListings"
 import "./styles/course.css"
 import { createNewTaskOnCourse, removeCourse } from "../reducers/courseReducer"
 
+const StudentListing = ({student}) => {
+  console.log(student)
+  return (
+    <tr>
+        <td>{student.username}</td>
+    </tr>
+  )
+}
 
+const CourseParticipants = ({course}) => {
+  return (
+    <div className="blueBox">
+      <h3>participating students</h3>
+      <table>
+        <thead>
+            <tr>
+                <th>username</th>
+            </tr>
+        </thead>
+        <tbody>
+            {course.students.map((student) => <StudentListing student={student} key={student.username}></StudentListing>)}
+        </tbody>
+    </table>
+    </div>
+  )
+}
 
 const TaskCreationForm = ({createTaskOnThisCourse}) => {
   return (
@@ -79,13 +104,14 @@ const TeachersCourse = () =>{
     <h1>this is the teachers course page</h1>
     <h2>{course.uniqueName} <button className="removeCourseButton" onClick={removeThisCourse}>remove</button></h2>
     <h3>{course.name}</h3>
-    
-    <TaskCreationForm createTaskOnThisCourse={createTaskOnThisCourse}></TaskCreationForm>
 
+    <CourseParticipants course={course}></CourseParticipants>
+    <TaskCreationForm createTaskOnThisCourse={createTaskOnThisCourse}></TaskCreationForm>
     <TaskListings course={course}></TaskListings>
     
+   
     </div>
-
+    
   )
   
 }
