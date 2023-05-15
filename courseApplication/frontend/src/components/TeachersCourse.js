@@ -79,8 +79,6 @@ const TeachersCourse = () =>{
     <h1>this is the teachers course page</h1>
     <h2>{course.uniqueName} <button className="removeCourseButton" onClick={removeThisCourse}>remove</button></h2>
     <h3>{course.name}</h3>
-   
-    
     
     <TaskCreationForm createTaskOnThisCourse={createTaskOnThisCourse}></TaskCreationForm>
 
