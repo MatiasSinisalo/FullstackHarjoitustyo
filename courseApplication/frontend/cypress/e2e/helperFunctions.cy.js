@@ -155,4 +155,11 @@ const createSubmissionToATask = (taskDescription, content) => {
     submissionContentField.type(content)
     submissionSubmitButton.click()
 }
-export {prepareTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser,joinCourseAsUser, endTests, visitCoursePageAsStudentFromDashboard, createSubmissionToATask}
+
+const tomorrow = () => {
+    const today = new Date()
+    const tomorrow = new Date(today)
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    return tomorrow
+}
+export {prepareTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser,joinCourseAsUser, endTests, visitCoursePageAsStudentFromDashboard, createSubmissionToATask, tomorrow}

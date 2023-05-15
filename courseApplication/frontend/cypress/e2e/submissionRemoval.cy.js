@@ -1,4 +1,4 @@
-import { prepareTests, endTests, logInAsUser, createCourseAsUser, joinCourseAsUser, createTaskOnCourseAsUser, createSubmissionToATask, visitCoursePageAsStudentFromDashboard } from "./helperFunctions.cy"
+import { prepareTests, endTests, logInAsUser, createCourseAsUser, joinCourseAsUser, createTaskOnCourseAsUser, createSubmissionToATask, visitCoursePageAsStudentFromDashboard, tomorrow } from "./helperFunctions.cy"
 
 
 beforeEach(function () {
@@ -17,7 +17,10 @@ describe('submission removal tests teacher', () => {
             name:  "name of the course"
         }
         createCourseAsUser(course.uniqueName, course.name)
-        createTaskOnCourseAsUser(course.uniqueName, "this is a task", new Date(Date.now()))
+
+       
+        createTaskOnCourseAsUser(course.uniqueName, "this is a task", tomorrow())
+
         createSubmissionToATask( "this is a task","this is an answer to a task")
 
         cy.intercept('POST', 'http://localhost:4000', (request) => {
@@ -46,7 +49,7 @@ describe('submission removal tests teacher', () => {
             name:  "name of the course"
         }
         createCourseAsUser(course.uniqueName, course.name)
-        createTaskOnCourseAsUser(course.uniqueName, "this is a task", new Date(Date.now()))
+        createTaskOnCourseAsUser(course.uniqueName, "this is a task", tomorrow())
        
         cy.contains("Log Out").click()
         logInAsUser("second username", "password1234")
@@ -81,7 +84,7 @@ describe('submission removal tests student', () => {
             name:  "name of the course"
         }
         createCourseAsUser(course.uniqueName, course.name)
-        createTaskOnCourseAsUser(course.uniqueName, "this is a task", new Date(Date.now()))
+        createTaskOnCourseAsUser(course.uniqueName, "this is a task", tomorrow())
        
         cy.contains("Log Out").click()
         logInAsUser("second username", "password1234")
