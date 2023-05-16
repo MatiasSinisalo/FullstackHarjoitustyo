@@ -12,13 +12,12 @@ import TaskListings from "./TaskListings"
 import "./styles/course.css"
 
 
-
-
 const Course = () =>{
   const dispatch = useDispatch()
   const client = useApolloClient()
-  const uniqueName = useParams().uniqueName
 
+  const uniqueName = useParams().uniqueName
+ 
   const courseQuery = useQuery(GET_COURSE, {variables: {uniqueName}})
   if(courseQuery.loading)
   {
@@ -27,10 +26,12 @@ const Course = () =>{
   const course = courseQuery.data?.getCourse
   if(!course)
   {
-    return(<>
+    return(
+    <>
     <h1>Whoops</h1>
     <Link to='/dashboard'>it seems like this course doesnt exist, click here to go back to dashboard</Link>
-    </>)
+    </>
+    )
   }
   console.log(course)
   

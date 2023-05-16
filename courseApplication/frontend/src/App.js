@@ -25,6 +25,7 @@ import CreateAccount from "./components/CreateAccount";
 import Notification from "./components/Notification";
 import { Notify } from "./reducers/notificationReducer";
 import "./components/styles/app.css"
+import Task from "./components/Task";
 
 const App = () =>{
   
@@ -81,6 +82,7 @@ const App = () =>{
         <Route path="/CreateCourse" element={<CreateCourse/>}/>
         <Route path="/course/:uniqueName" element={<Course/>}/>
         <Route path="/course/:uniqueName/teacher" element={<TeachersCourse/>}/>
+        <Route path="/course/:uniqueName/task/:taskId" element={<Task/>}/>
       </Routes>
     </div>
   );
