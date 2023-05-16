@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react"
 import Task from "./Task"
 import './styles/course.css'
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 const TaskShowCase = ({course, task}) => {
-  const navigate = useNavigate()
   const deadline = new Date(parseInt(task.deadline)).toISOString().split('T')[0]
   return(
     <div className={`task:${task.id} taskShowcase`}>
               <p>{task.description}</p>
               <p>deadline: {deadline}</p>
-              <button onClick={() => {navigate(`/course/${course.uniqueName}/task/${task.id}`)}}>view</button>
-
+              <Link to={`/course/${course.uniqueName}/task/${task.id}`}>view</Link>
     </div>
   )
 }
