@@ -19,11 +19,15 @@ const Task = () => {
     console.log(taskId)
     const courseQuery = useQuery(GET_COURSE, {variables: {uniqueName}})
     
-    if(courseQuery.loading)
+    if(courseQuery.loading || userQuery.loading)
     {
       return(<p>loading...</p>)
     }
+
+    const user = userQuery.data.me
     const course = courseQuery.data?.getCourse
+    const task = course.tasks.find((task) => task.id === taskId)
+    
     if(!course)
     {
       return(
@@ -34,14 +38,6 @@ const Task = () => {
       )
     }
     
-    if(userQuery.loading){
-        return (
-            <p>loading...</p>
-        )
-    }
-    const user = userQuery.data.me
-
-    const task = course.tasks.find((task) => task.id === taskId)
     if(!task){
         return (
             <>
@@ -50,12 +46,14 @@ const Task = () => {
             </>
         )
     }
+    
     const deadline = new Date(parseInt(task.deadline)).toISOString().split('T')[0]
+    const backlink =  user.username === course.teacher.username ? `/course/${course.uniqueName}/teacher` : `/course/${course.uniqueName}`
+  
     const removeTask = async () => {
         await dispatch(removeTaskFromCourse(course, task, client))
     }
 
-    const backlink =  user.username === course.teacher.username ? `/course/${course.uniqueName}/teacher` : `/course/${course.uniqueName}`
     return (
         <div className={`task:${task.id} task`}>
             <Link to={backlink}>back to course</Link> 
