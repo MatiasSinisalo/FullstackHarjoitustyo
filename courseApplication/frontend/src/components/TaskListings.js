@@ -1,6 +1,20 @@
 import { useEffect, useState } from "react"
 import Task from "./Task"
 import './styles/course.css'
+import { useNavigate } from "react-router-dom"
+
+const TaskShowCase = ({course, task}) => {
+  const navigate = useNavigate()
+  const deadline = new Date(parseInt(task.deadline)).toISOString().split('T')[0]
+  return(
+    <div className={`task:${task.id} taskShowcase`}>
+              <p>{task.description}</p>
+              <p>deadline: {deadline}</p>
+              <button onClick={() => {navigate(`/course/${course.uniqueName}/task/${task.id}`)}}>view</button>
+
+    </div>
+  )
+}
 
 
 const TaskListings = ({course}) => {
@@ -34,9 +48,9 @@ const TaskListings = ({course}) => {
     {
       displayMode == displayModes.future 
       ?
-        futureTasks.map((task) => <Task course = {course} task={task} key={task.id}></Task>)
+        futureTasks.map((task) => <TaskShowCase course = {course} task={task} key={task.id}></TaskShowCase>)
       :
-        lateTasks.map((task) => <Task course = {course} task={task} key={task.id}></Task>)
+        lateTasks.map((task) => <TaskShowCase course = {course} task={task} key={task.id}></TaskShowCase>)
     }
     </div>
   )
