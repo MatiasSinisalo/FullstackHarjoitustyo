@@ -55,9 +55,10 @@ const Task = () => {
         await dispatch(removeTaskFromCourse(course, task, client))
     }
 
-
+    const backlink =  user.username === course.teacher.username ? `/course/${course.uniqueName}/teacher` : `/course/${course.uniqueName}`
     return (
         <div className={`task:${task.id} task`}>
+            <Link to={backlink}>back to course</Link> 
             <p>{task.description}</p>
             <p>deadline: {deadline}</p>
             {user.username === course.teacher.username ? <button onClick={removeTask}>remove task</button> : <></>}
