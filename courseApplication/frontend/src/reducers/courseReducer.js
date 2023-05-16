@@ -29,15 +29,24 @@ export const addStudentToCourse = (courseUniqueName, username, client) => {
 
 export const removeStudentFromCourse = (courseUniqueName, username, client) => {
     return async dispatch => {
-        const updatedCourse = await courseService.removeUserFromCourse(courseUniqueName, username, client)
-        if(!updatedCourse.error){
-            dispatch(Notify("successfully removed student", "successNotification", 3))
-            return true
+
+        const prompt = window.prompt(`type ${username} to confirm removal`)
+        if(prompt === username)
+        {
+            const updatedCourse = await courseService.removeUserFromCourse(courseUniqueName, username, client)
+            if(!updatedCourse.error){
+                dispatch(Notify("successfully removed student", "successNotification", 3))
+                return true
+            }
+            else{
+                dispatch(Notify(updatedCourse.error.message, "errorNotification", 3))
+                return false
+            }
         }
         else{
-            dispatch(Notify(updatedCourse.error.message, "errorNotification", 3))
-            return false
+            dispatch(Notify("removal cancelled", "errorNotification", 3))
         }
+        
     }
 }
 
