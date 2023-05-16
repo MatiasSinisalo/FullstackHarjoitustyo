@@ -7,7 +7,7 @@ before(function () {
 describe('course joining tests', () => {
     it('user can join and leave a course created by another user', function (){
         logInAsUser("second username", "password1234")
-    
+        
         createCourseAsUser("this course is created by user second username", "courses name")
         cy.visit('http://localhost:3000/CourseBrowser')
         cy.wait(500)
@@ -15,7 +15,9 @@ describe('course joining tests', () => {
         cy.contains("Log Out").click()
     
         logInAsUser("username", "password1234")
-        cy.visit('http://localhost:3000/CourseBrowser')
+        cy.visit('http://localhost:3000/CourseBrowser', {onBeforeLoad(win) {
+            cy.stub(win, 'prompt').returns("username")
+        }})
         cy.wait(500)
         const courseShowCase = cy.contains("this course is created by user second username").parent()
         const joinButton = courseShowCase.contains("button","Join")
