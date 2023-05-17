@@ -20,7 +20,35 @@ import CourseParticipants from "./CourseParticipants"
 import { ME } from "../queries/userQueries"
 
 
-const TaskCreationForm = ({createTaskOnThisCourse}) => {
+const TaskCreationForm = () => {
+  const dispatch = useDispatch()
+  const client = useApolloClient()
+  const uniqueName = useParams().uniqueName
+  
+  //check if this course exists, just in case the user typed in a wrong url
+  const courseQuery = useQuery(GET_COURSE, {variables: {uniqueName}})
+  if(courseQuery.loading){
+    return(
+      <p>loading...</p>
+    )
+  }
+  const course = courseQuery.data?.getCourse
+  if(!course)
+  {
+    return(<>
+    <h1>Whoops</h1>
+    <Link to='/dashboard'>it seems like this course doesnt exist, click here to go back to dashboard</Link>
+    </>)
+  }
+  
+  const createTaskOnThisCourse = async (event) => {
+    event.preventDefault()    
+    const description = event.target.taskDescription.value
+    const deadline = event.target.taskDeadLine.value
+   
+    await dispatch(createNewTaskOnCourse(uniqueName, description, deadline, client))
+}
+
   return (
     <div className="blueBox">
       <h3>create a new task on the course</h3>
@@ -65,14 +93,6 @@ const TeachersCourse = () =>{
   if(!(user.username === course.teacher.username)){
     return (<Navigate to={`/course/${course.uniqueName}`} />)
   }
-
-  const createTaskOnThisCourse = async (event) => {
-      event.preventDefault()    
-      const description = event.target.taskDescription.value
-      const deadline = event.target.taskDeadLine.value
-     
-      await dispatch(createNewTaskOnCourse(uniqueName, description, deadline, client))
-  }
   
   const removeThisCourse = async() =>{
     await dispatch(removeCourse(course, client, navigate))
@@ -86,7 +106,7 @@ const TeachersCourse = () =>{
       <Link to="participants">see course participants</Link>
     </div>
     <Outlet></Outlet>
-    <TaskCreationForm createTaskOnThisCourse={createTaskOnThisCourse}></TaskCreationForm>
+    <TaskCreationForm></TaskCreationForm>
     </div>
     
   )
