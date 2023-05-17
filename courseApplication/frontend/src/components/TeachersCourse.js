@@ -3,6 +3,8 @@ import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {
   Link,
+  Navigate,
+  redirect,
   useNavigate,
     useParams
 } from "react-router-dom"
@@ -14,6 +16,7 @@ import TaskListings from "./TaskListings"
 import "./styles/course.css"
 import { createNewTaskOnCourse, removeCourse, removeStudentFromCourse } from "../reducers/courseReducer"
 import CourseParticipants from "./CourseParticipants"
+import { ME } from "../queries/userQueries"
 
 
 const TaskCreationForm = ({createTaskOnThisCourse}) => {
@@ -39,10 +42,11 @@ const TeachersCourse = () =>{
   const dispatch = useDispatch()
   const client = useApolloClient()
   const navigate = useNavigate()
-  
+
   const uniqueName = useParams().uniqueName
   const courseQuery = useQuery(GET_COURSE, {variables: {uniqueName}})
-  if(courseQuery.loading)
+  const userQuery = useQuery(ME)
+  if(courseQuery.loading || userQuery.loading)
   {
     return(<p>loading...</p>)
   }
@@ -54,6 +58,11 @@ const TeachersCourse = () =>{
     <h1>Whoops</h1>
     <Link to='/dashboard'>it seems like this course doesnt exist, click here to go back to dashboard</Link>
     </>)
+  }
+
+  const user = userQuery.data.me
+  if(!(user.username === course.teacher.username)){
+    return (<Navigate to={`/course/${course.uniqueName}`} />)
   }
 
   const createTaskOnThisCourse = async (event) => {
@@ -68,12 +77,6 @@ const TeachersCourse = () =>{
     await dispatch(removeCourse(course, client, navigate))
   }
 
-
-  console.log(course)
-  if(!course){
-    return (<></>)
-  }
-  
   return(
     <div className="course">
     <h1>this is the teachers view</h1>
