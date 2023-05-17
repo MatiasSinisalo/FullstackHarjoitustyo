@@ -48,7 +48,7 @@ const Task = () => {
     }
     
     const deadline = new Date(parseInt(task.deadline)).toISOString().split('T')[0]
-    const backlink =  user.username === course.teacher.username ? `/course/${course.uniqueName}/teacher` : `/course/${course.uniqueName}`
+    
   
     const removeTask = async () => {
         await dispatch(removeTaskFromCourse(course, task, client))
@@ -56,7 +56,7 @@ const Task = () => {
 
     return (
         <div className={`task:${task.id} task`}>
-            <Link to={backlink}>back to course</Link> 
+            <Link to={`/course/${course.uniqueName}/tasks`}>back to tasks</Link> 
             <p>{task.description}</p>
             <p>deadline: {deadline}</p>
             {user.username === course.teacher.username ? <button onClick={removeTask}>remove task</button> : <></>}
