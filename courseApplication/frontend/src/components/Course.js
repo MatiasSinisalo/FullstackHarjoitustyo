@@ -11,6 +11,7 @@ import { getCourseWithUniqueName } from "../reducers/courseReducer"
 import Task from "./Task"
 import TaskListings from "./TaskListings"
 import "./styles/course.css"
+import { ME } from "../queries/userQueries"
 
 
 const Course = () =>{
@@ -20,10 +21,12 @@ const Course = () =>{
   const uniqueName = useParams().uniqueName
  
   const courseQuery = useQuery(GET_COURSE, {variables: {uniqueName}})
-  if(courseQuery.loading)
+  const userQuery = useQuery(ME)
+  if(courseQuery.loading || userQuery.loading)
   {
     return(<p>loading...</p>)
   }
+  
   const course = courseQuery.data?.getCourse
   if(!course)
   {
@@ -34,7 +37,7 @@ const Course = () =>{
     </>
     )
   }
-  console.log(course)
+  const user = userQuery.data.me
   
   return(
     <div className="course">
@@ -43,7 +46,7 @@ const Course = () =>{
     <p>single course page</p>
     <div className="blueBox">
       <p>course navigation</p>
-      <Link to="teacher">teachers view</Link>
+      {user.username === course.teacher.username ? <Link to="teacher">teachers view</Link> : <></>}
       <br></br>
       <Link to="tasks">tasks</Link>
     </div>
