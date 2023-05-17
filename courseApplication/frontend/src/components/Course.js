@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {
   Link,
+    Outlet,
     useParams
 } from "react-router-dom"
 import { GET_COURSE } from "../queries/courseQueries"
@@ -41,6 +42,7 @@ const Course = () =>{
     <h2>{course.name}</h2>
     <p>single course page</p>
     <TaskListings course={course}></TaskListings>
+    <Outlet></Outlet>
     </div>
 
   )

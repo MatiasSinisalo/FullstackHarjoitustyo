@@ -80,9 +80,11 @@ const App = () =>{
         <Route path="/messages" element={<Messages/>}/>
         <Route path="/CourseBrowser" element={<CourseBrowser/>}/>
         <Route path="/CreateCourse" element={<CreateCourse/>}/>
-        <Route path="/course/:uniqueName" element={<Course/>}/>
-        <Route path="/course/:uniqueName/teacher" element={<TeachersCourse/>}/>
-        <Route path="/course/:uniqueName/task/:taskId" element={<Task/>}/>
+        <Route path="/course/:uniqueName" element={<Course/>}>
+          <Route path="teacher" element={<TeachersCourse/>}/>
+          <Route path="task/:taskId" element={<Task/>}/>  
+        </Route>
+      
       </Routes>
     </div>
   );
