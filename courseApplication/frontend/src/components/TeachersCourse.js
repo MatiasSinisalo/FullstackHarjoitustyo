@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import {
   Link,
   Navigate,
+  Outlet,
   redirect,
   useNavigate,
     useParams
@@ -81,9 +82,10 @@ const TeachersCourse = () =>{
     <div className="course">
     <h1>this is the teachers view</h1>
     <h2><button className="removeCourseButton" onClick={removeThisCourse}>remove course</button></h2>
-    
-
-    <CourseParticipants></CourseParticipants>
+    <div className="blueBox">
+      <Link to="participants">see course participants</Link>
+    </div>
+    <Outlet></Outlet>
     <TaskCreationForm createTaskOnThisCourse={createTaskOnThisCourse}></TaskCreationForm>
     </div>
     
