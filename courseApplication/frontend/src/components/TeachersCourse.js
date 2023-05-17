@@ -20,7 +20,7 @@ import CourseParticipants from "./CourseParticipants"
 import { ME } from "../queries/userQueries"
 
 
-const TaskCreationForm = () => {
+export const TaskCreationForm = () => {
   const dispatch = useDispatch()
   const client = useApolloClient()
   const uniqueName = useParams().uniqueName
@@ -104,9 +104,10 @@ const TeachersCourse = () =>{
     <h2><button className="removeCourseButton" onClick={removeThisCourse}>remove course</button></h2>
     <div className="blueBox">
       <Link to="participants">see course participants</Link>
+      <br></br>
+      <Link to="newTask">create new task</Link>
     </div>
     <Outlet></Outlet>
-    <TaskCreationForm></TaskCreationForm>
     </div>
     
   )

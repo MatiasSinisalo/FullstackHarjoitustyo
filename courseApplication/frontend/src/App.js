@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateUser, userLogIn } from "./reducers/userReducer";
 import { setCourses } from "./reducers/courseReducer";
 import { GET_ALL_COURSES } from "./queries/courseQueries";
-import TeachersCourse from "./components/TeachersCourse";
+import TeachersCourse, { TaskCreationForm } from "./components/TeachersCourse";
 import CreateAccount from "./components/CreateAccount";
 import Notification from "./components/Notification";
 import { Notify } from "./reducers/notificationReducer";
@@ -85,6 +85,7 @@ const App = () =>{
         <Route path="/course/:uniqueName" element={<Course/>}>
           <Route path="teacher" element={<TeachersCourse/>}>
             <Route path="participants" element={<CourseParticipants></CourseParticipants>}/>
+            <Route path="newTask" element={<TaskCreationForm></TaskCreationForm>}/>
           </Route>
           <Route path="tasks" element={<TaskListings></TaskListings>}/>
           <Route path="task/:taskId" element={<Task/>}/>  
