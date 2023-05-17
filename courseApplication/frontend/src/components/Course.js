@@ -41,7 +41,12 @@ const Course = () =>{
     <h1>{course.uniqueName}</h1>
     <h2>{course.name}</h2>
     <p>single course page</p>
-    <TaskListings course={course}></TaskListings>
+    <div className="blueBox">
+      <p>course navigation</p>
+      <Link to="teacher">teachers view</Link>
+      <br></br>
+      <Link to="tasks">tasks</Link>
+    </div>
     <Outlet></Outlet>
     </div>
 

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react"
 import Task from "./Task"
 import './styles/course.css'
-import { Link, useNavigate } from "react-router-dom"
+import { Link, Route, Routes, useNavigate, useParams } from "react-router-dom"
+import { useQuery } from "@apollo/client"
+import { GET_COURSE } from "../queries/courseQueries"
 
 const TaskShowCase = ({course, task}) => {
   const deadline = new Date(parseInt(task.deadline)).toISOString().split('T')[0]
@@ -15,8 +17,31 @@ const TaskShowCase = ({course, task}) => {
 }
 
 
-const TaskListings = ({course}) => {
+const TaskListings = () => {
+  const displayModes = {
+    future: "future",
+    late: "late"
+  }
+  const [displayMode, setDisplay] = useState(displayModes.future)
   
+  const uniqueName = useParams().uniqueName
+  const courseQuery = useQuery(GET_COURSE, {variables: {uniqueName}})
+  if(courseQuery.loading)
+  {
+    return(<p>loading...</p>)
+  }
+  const course = courseQuery.data?.getCourse
+  if(!course)
+  {
+    return(
+    <>
+    <h1>Whoops</h1>
+    <Link to='/dashboard'>it seems like this course doesnt exist, click here to go back to dashboard</Link>
+    </>
+    )
+  }
+
+
   const isLate = (task) => {
     const deadline = new Date(parseInt(task.deadline))
     return deadline < Date.now()
@@ -24,17 +49,14 @@ const TaskListings = ({course}) => {
   const futureTasks = course.tasks.filter((task) => !isLate(task))
   const lateTasks = course.tasks.filter((task) => isLate(task))
   
-  const displayModes = {
-    future: "future",
-    late: "late"
-  }
-  const [displayMode, setDisplay] = useState(displayModes.future)
   const updateDisplay = (event) => {
     setDisplay(event.target.value)
   }
   
   return(
+    
     <div className="taskListing blueBox">
+    
     <h2>tasks of the course: </h2>
     
     <label htmlFor="task-select">Show task: </label>
