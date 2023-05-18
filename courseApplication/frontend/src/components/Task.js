@@ -41,8 +41,7 @@ const Task = () => {
     if(!task){
         return (
             <>
-            <h1>Whoops</h1>
-            <Link to='/dashboard'>it seems like this task doesnt exist, click here to go back to dashboard</Link>
+            <Link to={`/course/${course.uniqueName}/tasks`}>it seems like this task doesnt exist, click here to go back to course tasks</Link>
             </>
         )
     }
