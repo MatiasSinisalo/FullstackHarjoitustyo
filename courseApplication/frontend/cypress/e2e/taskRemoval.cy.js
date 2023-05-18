@@ -1,4 +1,4 @@
-import { prepareTests, endTests, logInAsUser, createCourseAsUser, joinCourseAsUser, createTaskOnCourseAsUser } from "./helperFunctions.cy"
+import { prepareTests, endTests, logInAsUser, createCourseAsUser, joinCourseAsUser, createTaskOnCourseAsUser, visitTaskView } from "./helperFunctions.cy"
 
 
 beforeEach(function () {
@@ -27,8 +27,8 @@ describe('task removal tests', () => {
             deadline: tomorrow
         }
         createTaskOnCourseAsUser(course.uniqueName, task.description, task.deadline)
-    
-        const createdTask = cy.get(`[class*="taskListing"]`).contains("description for a removed task").parent()
+        visitTaskView(task.description)
+        const createdTask = cy.contains("description for a removed task").parent()
         const removeButton =  createdTask.get(`button`).contains("remove task")
     
         cy.intercept('POST', 'http://localhost:4000/', (request) => {
