@@ -105,8 +105,10 @@ const createTaskOnCourseAsUser = (courseUniqueName, description, deadline) => {
 
     const course = cy.get('div[class*="course:"]').contains(`${courseUniqueName}`).parent()
     course.contains("See Teachers Course Page").click()
-  
 
+    cy.contains("teachers view").click()
+    cy.contains("create new task").click()
+    
     const taskDescriptionField = cy.get('[name="taskDescription"]')
     const taskDeadlineField = cy.get('[name="taskDeadLine"]')
     const taskCreateButton = cy.get('[value="create task"]')
@@ -149,6 +151,7 @@ const visitCoursePageAsStudentFromDashboard = (courseUniqueName) => {
 }
 
 const createSubmissionToATask = (taskDescription, content, isLate=false) => {
+    cy.contains("tasks").click()
     if(isLate){
         cy.get(`select[name="taskSelect"]`).select("past")
     }
@@ -156,9 +159,9 @@ const createSubmissionToATask = (taskDescription, content, isLate=false) => {
         cy.get(`select[name="taskSelect"]`).select("future")
     }
 
-    cy.contains(taskDescription).parent().as('taskComponent')
-    const submissionContentField = cy.get('@taskComponent').get('[name="content"]')
-    const submissionSubmitButton = cy.get('@taskComponent').get('[value="submit solution"]')
+    cy.contains(taskDescription).parent().contains("view").click()
+    const submissionContentField = cy.get('[name="content"]')
+    const submissionSubmitButton = cy.get('[value="submit solution"]')
     submissionContentField.type(content)
     submissionSubmitButton.click()
 }

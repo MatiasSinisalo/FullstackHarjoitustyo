@@ -60,6 +60,8 @@ describe('submission removal tests teacher', () => {
         cy.contains("Log Out").click()
         logInAsUser("username", "password1234")
         cy.contains("See Teachers Course Page").click()
+        cy.contains("tasks").click()
+        cy.get(`[class*="task:"]`).contains("view").click()
         cy.get(`[class*="submission:"]`).contains("remove").click()
 
         cy.get(`[class*="submission:"]`).should("not.exist")
