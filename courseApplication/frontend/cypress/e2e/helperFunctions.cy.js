@@ -174,7 +174,8 @@ const tomorrow = () => {
 }
 
 const visitTaskView = (description) => {
-    cy.contains("tasks").click()
+    const navigation = cy.contains("course navigation").parent()
+    navigation.contains("tasks").click()
     const taskShowcase = cy.contains(description).parent()
     taskShowcase.contains("view").click()
 }

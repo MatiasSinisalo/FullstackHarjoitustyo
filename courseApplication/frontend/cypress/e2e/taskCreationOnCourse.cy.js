@@ -1,5 +1,5 @@
 
-import { prepareTests, endTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser, joinCourseAsUser, visitCoursePageAsStudentFromDashboard} from "./helperFunctions.cy";
+import { prepareTests, endTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser, joinCourseAsUser, visitCoursePageAsStudentFromDashboard, visitTaskView} from "./helperFunctions.cy";
 
 before(function(){
     prepareTests()
@@ -20,7 +20,8 @@ describe('task creation on course tests', () => {
         cy.wait(100)
 
         cy.contains("See Teachers Course Page").click()
-        cy.wait(100)
+        cy.contains("teachers view").click()
+        cy.contains("create new task").click()
 
         const taskDescriptionField = cy.get('[name="taskDescription"]')
         const taskDeadlineField = cy.get('[name="taskDeadLine"]')
@@ -46,13 +47,14 @@ describe('task creation on course tests', () => {
             const savedDeadline =new Date(parseInt(createdTask.deadline)).toISOString().split('T')[0]
             expect(savedDeadline).to.equal(deadlineString)
 
-            const createdTaskId = createdTask.id
-            const taskComponent =`[class*="task:${createdTaskId}"]`
-            cy.get(taskComponent).contains(newTask.description)
-            cy.get(taskComponent).contains(`deadline: ${deadlineString}`)
-            cy.get(taskComponent).contains(`submit solution`)
+          
 
         })
+        visitTaskView(newTask.description)
+        cy.contains(newTask.description).parent().as("task")
+        cy.get("@task").contains(`deadline: ${deadlineString}`)
+        cy.get("@task").contains(`submit solution`)
+
     })
 
     it('User can see tasks created on a course', () => {
@@ -78,6 +80,9 @@ describe('task creation on course tests', () => {
 
         joinCourseAsUser(course.uniqueName, "second username")
         visitCoursePageAsStudentFromDashboard(course.uniqueName)
+        cy.contains("tasks").click()
+        const taskShowCase = cy.contains(task.description).parent()
+        taskShowCase.contains("view").click()
 
         cy.contains(task.description).parent().as('taskComponent')
         cy.get('@taskComponent').contains(task.description)
