@@ -172,4 +172,10 @@ const tomorrow = () => {
     tomorrow.setDate(tomorrow.getDate() + 1)
     return tomorrow
 }
-export {prepareTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser,joinCourseAsUser, endTests, visitCoursePageAsStudentFromDashboard, createSubmissionToATask, tomorrow}
+
+const visitTaskView = (description) => {
+    cy.contains("tasks").click()
+    const taskShowcase = cy.contains(description).parent()
+    taskShowcase.contains("view").click()
+}
+export {prepareTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser,joinCourseAsUser, endTests, visitCoursePageAsStudentFromDashboard, createSubmissionToATask, tomorrow, visitTaskView}

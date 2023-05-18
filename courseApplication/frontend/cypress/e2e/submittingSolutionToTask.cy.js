@@ -1,5 +1,5 @@
 
-import { prepareTests, endTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser, joinCourseAsUser, visitCoursePageAsStudentFromDashboard, createSubmissionToATask} from "./helperFunctions.cy";
+import { prepareTests, endTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser, joinCourseAsUser, visitCoursePageAsStudentFromDashboard, createSubmissionToATask, visitTaskView} from "./helperFunctions.cy";
 
 before(function(){
     prepareTests()
@@ -35,6 +35,8 @@ describe('submitting a solution to a task test', () => {
 
         joinCourseAsUser(course.uniqueName, "second username")
         visitCoursePageAsStudentFromDashboard(course.uniqueName)
+        
+        visitTaskView(task.description)
 
         cy.contains(task.description).parent().as('taskComponent')
         cy.get('@taskComponent').contains(task.description)
@@ -80,6 +82,8 @@ describe('submitting a solution to a task test', () => {
             deadline: tomorrow
         }
         createTaskOnCourseAsUser(course.uniqueName, task.description, task.deadline)
+
+        visitTaskView(task.description)
         
         const submissionContentField = cy.get('[name="content"]')
         const submissionSubmitButton = cy.get('[value="submit solution"]')
