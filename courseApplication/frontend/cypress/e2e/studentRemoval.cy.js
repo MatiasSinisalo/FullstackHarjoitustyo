@@ -23,7 +23,7 @@ describe('student removal from course tests', () => {
         }})
 
         cy.contains("See Teachers Course Page").click()
-        cy.contains("participating students")
+        cy.contains("see course participants").click()
         const studentInfo = cy.contains("second username").parent()
         
         cy.intercept('POST', 'http://localhost:4000/', (request) => {
