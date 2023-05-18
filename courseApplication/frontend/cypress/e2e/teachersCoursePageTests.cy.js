@@ -22,7 +22,8 @@ describe('teacher page tests', () => {
 
         cy.contains("this course is created by user username")
         cy.contains("courses name")
-        cy.contains("this is the teachers course page")
+        cy.contains("teachers view").click()
+        cy.contains("this is the teachers view")
     })
 
     it('user can visit the teachers course page from the course dashboard if the user created is the teacher of the course', () => {
@@ -37,7 +38,7 @@ describe('teacher page tests', () => {
         cy.contains("See Teachers Course Page").click()
         cy.contains("this course is created by user username")
         cy.contains("courses name")
-        cy.contains("this is the teachers course page")
+        cy.contains("teachers view")
     })
 
     it('user can remove a course from the teachers course page', () => {
@@ -59,8 +60,8 @@ describe('teacher page tests', () => {
       
         cy.contains("this course is created by user username")
         cy.contains("courses name")
-        cy.contains("this is the teachers course page")
-
+        cy.contains("teachers view").click()
+     
         cy.intercept('POST', 'http://localhost:4000/', (request) => {
             if(request.body.query.includes('removeCourse'))
             {
@@ -96,7 +97,9 @@ describe('teacher page tests', () => {
       
         cy.contains("this course is created by user username")
         cy.contains("courses name")
-        cy.contains("this is the teachers course page")
+        
+        cy.contains("teachers view").click()
+      
 
         cy.get('[class="removeCourseButton"]').click()
        
