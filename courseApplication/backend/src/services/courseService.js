@@ -206,6 +206,10 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
     return submissionObj
 }
 
+const modifySubmission = async(courseUniqueName, taskId, submissionId, content, submitted, userForToken) => {
+
+}
+
 const removeTaskFromCourse = async (courseUniqueName, taskId, userForToken) =>{
     const course = await Course.findOne({uniqueName: courseUniqueName})
     if(!course){
@@ -263,4 +267,6 @@ module.exports = {  createCourse,
                     getAllCourses, 
                     getCourse, 
                     removeTaskFromCourse, 
-                    removeSubmissionFromCourseTask}
+                    removeSubmissionFromCourseTask,
+                    modifySubmission,
+                }

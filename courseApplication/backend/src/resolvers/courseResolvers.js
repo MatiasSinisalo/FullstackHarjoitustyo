@@ -120,7 +120,7 @@ const courseMutationResolvers = {
         const submissionId = args.submissionId
         const content = args.content
         const submitted = args.submitted
-        const modifiedSubmission = null
+        const modifiedSubmission = await courseService.modifySubmission(courseUniqueName, taskID, submissionId, content, submitted, context.userForToken)
         return modifiedSubmission
         
     },
