@@ -172,7 +172,21 @@ mutation RemoveSubmissionFromCourseTask($courseUniqueName: String!, $taskId: Str
 `
 
 
+const modifySubmission = `
+mutation ModifySubmission($courseUniqueName: String!, $taskId: String!, $submissionId: String!, $content: String!, $submitted: Boolean!) {
+  modifySubmission(courseUniqueName: $courseUniqueName, taskId: $taskId, submissionId: $submissionId, content: $content, submitted: $submitted) {
+    content
+    fromUser {
+      id
+      name
+      username
+    }
+    id
+    submitted
+    submittedDate
+  }
+}
+`
 
-
-module.exports = {createCourse, removeCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses, getCourse, removeTaskFromCourse, removeSubmissionFromCourseTask}
+module.exports = {createCourse, removeCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses, getCourse, removeTaskFromCourse, removeSubmissionFromCourseTask, modifySubmission}
 

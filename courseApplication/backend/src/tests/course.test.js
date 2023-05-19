@@ -4,7 +4,7 @@ const Course = require('../models/course')
 const User = require('../models/user')
 const {Task} = require('../models/task')
 const { userCreateQuery, userLogInQuery, createSpesificUserQuery } = require('./userTestQueries')
-const { createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses, removeCourse, getCourse, removeTaskFromCourse, removeSubmissionFromCourseTask } = require('./courseTestQueries')
+const { createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses, removeCourse, getCourse, removeTaskFromCourse, removeSubmissionFromCourseTask, modifySubmission } = require('./courseTestQueries')
 const { query } = require('express')
 const mongoose = require('mongoose')
 const course = require('../models/course')
@@ -1307,5 +1307,36 @@ describe('course tests', () => {
         })
 
 
+    })
+    describe('modify submission tests', () => {
+        test('user can modify a submission made by the user', async () => {
+            const user = await helpers.logIn("username", apolloServer)
+            const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+            const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
+            const submission = await helpers.createSubmission(course, task.id, "this is an answer", true, apolloServer);
+
+
+            const newContent = "this is modified content"
+            const newSubmitted = false
+            const modifySubmissionQuery = await apolloServer.executeOperation({query: modifySubmission, 
+                variables: 
+                {courseUniqueName: course.uniqueName, taskId: task.id, submissionId: submission.id, content: newContent, submitted: newSubmitted}})
+            console.log(modifySubmissionQuery)
+            const returnedModifiedSubmission = modifySubmissionQuery.data.modifySubmission
+            expect(returnedModifiedSubmission.content).toEqual(newContent)
+            expect(returnedModifiedSubmission.submitted).toEqual(newSubmitted)
+            expect(returnedModifiedSubmission.fromUser).toEqual({username: user.username, name: user.name, id: user.id})
+            
+            const courseInDB = await Course.findOne({uniqueName: "course unique name"})
+            const tasks = courseInDB.tasks
+            expect(tasks.length).toBe(1)
+            expect(tasks[0].submissions.length).toBe(1)
+            
+            const submissionInDB = tasks[0].submissions[0]
+            expect(submissionInDB.content).toEqual(newContent)
+            expect(submissionInDB.submitted).toEqual(newSubmitted)
+            expect(submissionInDB.fromUser.toString()).toEqual(user.id)
+
+        })
     })
 })

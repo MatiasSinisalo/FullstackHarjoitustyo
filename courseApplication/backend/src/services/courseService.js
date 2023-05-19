@@ -207,6 +207,30 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
 }
 
 const modifySubmission = async(courseUniqueName, taskId, submissionId, content, submitted, userForToken) => {
+    const course = await Course.findOne({uniqueName: courseUniqueName})
+    if(!course){
+        throw new UserInputError("Given course not found")
+    }
+
+    const task = course.tasks.find((task) => task.id === taskId)
+    if(!task){
+        throw new UserInputError("Given task not found")
+    }
+    
+    const submission = task.submissions.find((submission) => submission.id === submissionId)
+    if(!submission){
+        throw new UserInputError("Given submission not found")
+    }
+
+    if(submission.fromUser.toString() !== userForToken.id)
+    {
+        throw new UserInputError("Unauthorized")
+    }
+
+    submission.content = content
+    submission.submitted = submitted
+    await course.save()
+    return {...submission.toObject(), id: submission.id, fromUser: {id: userForToken.id, username: userForToken.username, name: userForToken.name}}
 
 }
 
