@@ -109,6 +109,21 @@ const courseMutationResolvers = {
         
         return createdSubmission
     },
+    modifySubmission: async(root, args, context) => {
+        if(!context.userForToken)
+        {
+            throw new UserInputError("Unauthorized")
+        }
+
+        const courseUniqueName = args.courseUniqueName
+        const taskID = args.taskId
+        const submissionId = args.submissionId
+        const content = args.content
+        const submitted = args.submitted
+        const modifiedSubmission = null
+        return modifiedSubmission
+        
+    },
     removeSubmissionFromCourseTask: async(root, args, context) =>{
         if(!context.userForToken)
         {
