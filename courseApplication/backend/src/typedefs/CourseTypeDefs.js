@@ -79,6 +79,14 @@ type Mutation{
         content: String!
         submitted: Boolean!
     ):Submission
+
+    modifySubmission(
+        courseUniqueName: String!
+        taskId: String!
+        submissionId: String!
+        content: String!
+        submitted: Boolean!
+    ):Submission
 }
 `
 
