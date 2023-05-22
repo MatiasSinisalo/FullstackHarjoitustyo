@@ -101,7 +101,7 @@ export const editTaskSubmission = (course, taskId, submissionId, content, client
     return async function(dispatch){
         const modifiedSubmission = await courseService.modifySubmission(course.uniqueName, taskId, submissionId, content, true, client)
         if(!modifiedSubmission.error){
-            dispatch(Notify(`successfully answered to task`, "successNotification", 5))
+            dispatch(Notify(`successfully edited task`, "successNotification", 5))
             return true
         }
         else{
