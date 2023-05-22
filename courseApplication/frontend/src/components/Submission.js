@@ -38,10 +38,11 @@ const Submission = ({course, task, submission}) => {
     return(
         <div className={`submission:${submission.id}`}>
         {isLate(task, submission) ? <p className="lateMessage">this submission was returned late</p> : <></>}
-        <textarea value={submissionContent} onChange={updateSubmissionContent}></textarea>
+        
+        <textarea cols="100" rows="20" value={submissionContent} onChange={updateSubmissionContent}></textarea>
         <br></br>
         <button onClick={editSubmission}>save</button>
-       
+        
         <p>submitted: {submission.submitted ? <>true</> : <>false</>}</p>
         <button onClick={removeSubmission}>remove</button>
         
