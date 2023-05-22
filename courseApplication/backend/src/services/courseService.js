@@ -197,7 +197,7 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
         fromUser: userInCourse.id,
         content: content,
         submitted: submitted,
-        submittedDate: new Date(Date.now())
+        submittedDate: submitted ? new Date(Date.now()) : null
     }
     const submissionObj = new Submission(newSubmission)
     taskInCourse.submissions.push(submissionObj)
@@ -229,6 +229,7 @@ const modifySubmission = async(courseUniqueName, taskId, submissionId, content, 
 
     submission.content = content
     submission.submitted = submitted
+    submission.submittedDate = submitted ? new Date(Date.now()) : null
     await course.save()
     return {...submission.toObject(), id: submission.id, fromUser: {id: userForToken.id, username: userForToken.username, name: userForToken.name}}
 
