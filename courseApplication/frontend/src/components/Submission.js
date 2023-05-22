@@ -2,7 +2,7 @@ import { useApolloClient } from "@apollo/client"
 import courseService from "../services/courseService"
 import { useDispatch } from "react-redux"
 import { Notify } from "../reducers/notificationReducer"
-import { removeSubmissionFromTask } from "../reducers/courseReducer"
+import { editTaskSubmission, removeSubmissionFromTask } from "../reducers/courseReducer"
 import { useState } from "react"
 
 
@@ -16,6 +16,7 @@ const Submission = ({course, task, submission}) => {
 
     const editSubmission = async () => {
         console.log("editing submission")
+        await dispatch(editTaskSubmission(course, task.id, submission.id, submissionContent, client))
     }
 
     const updateSubmissionContent = (event) => {
