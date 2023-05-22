@@ -1,15 +1,31 @@
-import { useApolloClient } from "@apollo/client"
+import { useApolloClient, useQuery } from "@apollo/client"
 import courseService from "../services/courseService"
 import { useDispatch } from "react-redux"
 import { Notify } from "../reducers/notificationReducer"
 import { editTaskSubmission, removeSubmissionFromTask } from "../reducers/courseReducer"
 import { useState } from "react"
+import { ME } from "../queries/userQueries"
 
+const ContentEditView = ({submissionContent, editSubmission, onContentChange}) => {
+    return(
+        <>
+        <textarea cols="100" rows="20" value={submissionContent} onChange={onContentChange}></textarea>
+        <br></br>
+        <button onClick={editSubmission}>save</button>
+        </>
+    )
+}
 
 const Submission = ({course, task, submission}) => {
     const client = useApolloClient()
     const dispatch = useDispatch()
     const [submissionContent, setSubmissionContent] = useState(submission.content)
+    const {loading: userLoading, data: {me: user}} = useQuery(ME)
+    if(userLoading){
+        return(<p>loading...</p>)
+    }
+    console.log(user)
+    
     const removeSubmission = async () => {
         await dispatch(removeSubmissionFromTask(course, task, submission, client))
     }
@@ -38,11 +54,12 @@ const Submission = ({course, task, submission}) => {
     return(
         <div className={`submission:${submission.id}`}>
         {isLate(task, submission) ? <p className="lateMessage">this submission was returned late</p> : <></>}
-        
-        <textarea cols="100" rows="20" value={submissionContent} onChange={updateSubmissionContent}></textarea>
-        <br></br>
-        <button onClick={editSubmission}>save</button>
-        
+        {user.username === submission.fromUser.username ? 
+            <ContentEditView submissionContent={submissionContent} editSubmission={editSubmission} onContentChange={updateSubmissionContent}></ContentEditView>
+             :
+             <textarea cols="100" rows="20" value={submissionContent} readOnly></textarea> 
+        } 
+       
         <p>submitted: {submission.submitted ? <>true</> : <>false</>}</p>
         <button onClick={removeSubmission}>remove</button>
         
