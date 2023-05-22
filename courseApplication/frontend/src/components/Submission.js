@@ -6,12 +6,15 @@ import { editTaskSubmission, removeSubmissionFromTask } from "../reducers/course
 import { useState } from "react"
 import { ME } from "../queries/userQueries"
 
-const ContentEditView = ({submissionContent, editSubmission, onContentChange}) => {
+const ContentEditView = ({submissionContent, editSubmission, returnSubmission, onContentChange}) => {
     return(
         <>
+       
         <textarea cols="100" rows="20" value={submissionContent} onChange={onContentChange}></textarea>
         <br></br>
         <button onClick={editSubmission}>save</button>
+        <button onClick={returnSubmission}>return task</button>
+       
         </>
     )
 }
@@ -32,7 +35,12 @@ const Submission = ({course, task, submission}) => {
 
     const editSubmission = async () => {
         console.log("editing submission")
-        await dispatch(editTaskSubmission(course, task.id, submission.id, submissionContent, client))
+        await dispatch(editTaskSubmission(course, task.id, submission.id, submissionContent, false, client))
+    }
+
+    const returnSubmission = async () =>{
+        console.log("editing submission")
+        await dispatch(editTaskSubmission(course, task.id, submission.id, submissionContent, true, client))
     }
 
     const updateSubmissionContent = (event) => {
@@ -55,7 +63,7 @@ const Submission = ({course, task, submission}) => {
         <div className={`submission:${submission.id}`}>
         {isLate(task, submission) ? <p className="lateMessage">this submission was returned late</p> : <></>}
         {user.username === submission.fromUser.username ? 
-            <ContentEditView submissionContent={submissionContent} editSubmission={editSubmission} onContentChange={updateSubmissionContent}></ContentEditView>
+            <ContentEditView submissionContent={submissionContent} editSubmission={editSubmission} returnSubmission={returnSubmission} onContentChange={updateSubmissionContent}></ContentEditView>
              :
              <textarea cols="100" rows="20" value={submissionContent} readOnly></textarea> 
         } 

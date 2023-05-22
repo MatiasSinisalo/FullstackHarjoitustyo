@@ -97,11 +97,17 @@ export const addSubmissionToTask = (course, task, content, client) => {
     }
 }
 
-export const editTaskSubmission = (course, taskId, submissionId, content, client) => {
+export const editTaskSubmission = (course, taskId, submissionId, content, submitted, client) => {
     return async function(dispatch){
-        const modifiedSubmission = await courseService.modifySubmission(course.uniqueName, taskId, submissionId, content, true, client)
+        const modifiedSubmission = await courseService.modifySubmission(course.uniqueName, taskId, submissionId, content, submitted, client)
         if(!modifiedSubmission.error){
-            dispatch(Notify(`successfully edited task`, "successNotification", 5))
+            if(submitted)
+            {
+                dispatch(Notify(`successfully returned task`, "successNotification", 5))
+            }
+            else{
+                dispatch(Notify(`successfully edited task`, "successNotification", 5))
+            }
             return true
         }
         else{
