@@ -3,55 +3,74 @@ import '@testing-library/jest-dom/extend-expect'
 import { renderer, render, screen } from '@testing-library/react'
 import client from '../client'
 import { ApolloProvider } from '@apollo/client'
+import { MockedProvider } from "@apollo/client/testing";
 import Submission from '../components/Submission' 
 import store from '../store';
 import { Provider } from 'react-redux';
+import { ME } from '../queries/userQueries'
 describe('Submission Component tests', () => {
-    test('submission component displays no late message if submittedDate < deadline', () => {
+    const mocks = [
+        {
+          request: {query: ME},
+          result: {
+            data: {
+              me: { username: "username"}
+            }
+          }
+        }
+      ];
+
+
+    test('submission component displays no late message if submittedDate < deadline', async () => {
         const containter = render(
-            <ApolloProvider client={client}>
+            <MockedProvider mocks={mocks}>
                 <Provider store={store}>
-                    <Submission course={null} task = {{deadline: new Date(Date.now() + 1)}} submission={{id: "abc1234", content: "this is the answer", submitted: true, submittedDate: new Date(Date.now())}}></Submission>
+                    <Submission course={null} task = {{deadline: new Date(Date.now() + 1)}} submission={{id: "abc1234", fromUser: {username: "username"}, content: "this is the answer", submitted: true, submittedDate: new Date(Date.now())}}></Submission>
                 </Provider>
-            </ApolloProvider>
+            </MockedProvider>
         )
-        const lateMessage = containter.container.querySelector(".lateMessage")
-        expect(lateMessage).toBeNull()
+        expect(await screen.findByText("loading...")).toBeInTheDocument();
+        expect(await screen.findByText("this is the answer")).toBeInTheDocument();
+        expect(await screen.queryByText("this submission was returned late")).not.toBeInTheDocument();
     })
 
-    test('submission component displays late message if submittedDate > deadline', () => {
+    test('submission component displays late message if submittedDate > deadline', async () => {
+        const returnDate = new Date(Date.now())
+        const correctDate = new Date(Date.now() + 100000)
+        
         const containter = render(
-            <ApolloProvider client={client}>
+            <MockedProvider mocks={mocks}>
                 <Provider store={store}>
-                    <Submission course={null} task = {{deadline: new Date(Date.now())}} submission={{id: "abc1234", content: "this is the answer", submitted: true, submittedDate: new Date(Date.now() + 1)}}></Submission>
+                    <Submission course={null} task = {{deadline: returnDate}} submission={{id: "abc1234", fromUser: {username: "username"}, content: "this is the answer", submitted: true, submittedDate: correctDate}}></Submission>
                 </Provider>
-            </ApolloProvider>
+            </MockedProvider>
         )
-        const lateMessage = containter.container.querySelector(".lateMessage")
-        expect(lateMessage).not.toBeNull()
+      
+        expect(await screen.findByText("loading...")).toBeInTheDocument();
+        expect(await screen.findByText("this submission was returned late")).toBeInTheDocument();
     })
 
-    test('submission component displays no late message if submittedDate does not exist', () => {
+    test('submission component displays no late message if submittedDate does not exist', async () => {
         const containter = render(
-            <ApolloProvider client={client}>
+            <MockedProvider mocks={mocks}>
                 <Provider store={store}>
-                    <Submission course={null} task = {{deadline: new Date(Date.now())}} submission={{id: "abc1234", content: "this is the answer", submitted: true}}></Submission>
+                    <Submission course={null} task = {{deadline: new Date(Date.now())}} submission={{id: "abc1234", fromUser: {username: "username"}, content: "this is the answer", submitted: true}}></Submission>
                 </Provider>
-            </ApolloProvider>
+            </MockedProvider>
         )
-        const lateMessage = containter.container.querySelector(".lateMessage")
-        expect(lateMessage).toBeNull()
+        expect(await screen.findByText("this is the answer")).toBeInTheDocument();
+        expect(await screen.queryByText("this submission was returned late")).not.toBeInTheDocument();
     })
 
-    test('submission component displays no late message if submittedDate exist but is null', () => {
+    test('submission component displays no late message if submittedDate exist but is null', async () => {
         const containter = render(
-            <ApolloProvider client={client}>
+            <MockedProvider mocks={mocks}>
                 <Provider store={store}>
-                    <Submission course={null} task = {{deadline: new Date(Date.now())}} submission={{id: "abc1234", content: "this is the answer", submitted: true, submittedDate: null}}></Submission>
+                    <Submission course={null} task = {{deadline: new Date(Date.now())}} submission={{id: "abc1234", fromUser: {username: "username"}, content: "this is the answer", submitted: true, submittedDate: null}}></Submission>
                 </Provider>
-            </ApolloProvider>
+            </MockedProvider>
         )
-        const lateMessage = containter.container.querySelector(".lateMessage")
-        expect(lateMessage).toBeNull()
+        expect(await screen.findByText("this is the answer")).toBeInTheDocument();
+        expect(await screen.queryByText("this submission was returned late")).not.toBeInTheDocument();
     })
 })

@@ -23,10 +23,11 @@ const Submission = ({course, task, submission}) => {
     const client = useApolloClient()
     const dispatch = useDispatch()
     const [submissionContent, setSubmissionContent] = useState(submission.content)
-    const {loading: userLoading, data: {me: user}} = useQuery(ME)
+    const {loading: userLoading, data: userData} = useQuery(ME)
     if(userLoading){
         return(<p>loading...</p>)
     }
+    const user = userData.me
     console.log(user)
     
     const removeSubmission = async () => {
