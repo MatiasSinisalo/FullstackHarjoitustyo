@@ -10,16 +10,14 @@ const SubmitSolutionView = ({course, task}) => {
     const dispatch = useDispatch()
     const submitSolution = async (event) => {
         event.preventDefault()
-        const content = event.target.content.value
+        const content = "this is an empty solution"
         await dispatch(addSubmissionToTask(course, task, content, apolloClient))
     }
     return (
         <div>
             <p>please answer below:</p>
             <form onSubmit={submitSolution}>
-                <input name="content" type="text"></input>
-                <br></br>
-                <input type="submit" value="submit solution"></input>
+                <input type="submit" value="create new solution"></input>
             </form>
         </div>
     )

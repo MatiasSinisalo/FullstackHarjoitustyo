@@ -85,7 +85,7 @@ export const createNewTaskOnCourse = (uniqueName, description, deadline, client)
 
 export const addSubmissionToTask = (course, task, content, client) => {
     return async function(dispatch){
-        const createdSolutionQuery = await courseService.addSubmissionToCourseTask(course.uniqueName, task.id, content, true, client)
+        const createdSolutionQuery = await courseService.addSubmissionToCourseTask(course.uniqueName, task.id, content, false, client)
         if(!createdSolutionQuery.error){
             dispatch(Notify(`successfully answered to task`, "successNotification", 5))
             return true
