@@ -227,6 +227,11 @@ const modifySubmission = async(courseUniqueName, taskId, submissionId, content, 
         throw new UserInputError("Unauthorized")
     }
 
+    if(submission.submitted)
+    {
+        throw new UserInputError("This submission has already been returned")
+    }
+
     submission.content = content
     submission.submitted = submitted
     submission.submittedDate = submitted ? new Date(Date.now()) : null
