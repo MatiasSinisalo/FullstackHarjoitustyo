@@ -1313,11 +1313,11 @@ describe('course tests', () => {
             const user = await helpers.logIn("username", apolloServer)
             const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
             const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
-            const submission = await helpers.createSubmission(course, task.id, "this is an answer", true, apolloServer);
+            const submission = await helpers.createSubmission(course, task.id, "this is an answer", false, apolloServer);
 
 
             const newContent = "this is modified content"
-            const newSubmitted = false
+            const newSubmitted = true
             const modifySubmissionQuery = await apolloServer.executeOperation({query: modifySubmission, 
                 variables: 
                 {courseUniqueName: course.uniqueName, taskId: task.id, submissionId: submission.id, content: newContent, submitted: newSubmitted}})
@@ -1335,6 +1335,35 @@ describe('course tests', () => {
             const submissionInDB = tasks[0].submissions[0]
             expect(submissionInDB.content).toEqual(newContent)
             expect(submissionInDB.submitted).toEqual(newSubmitted)
+            expect(submissionInDB.fromUser.toString()).toEqual(user.id)
+
+
+        })
+
+        test('user can not modify a returned submission', async () => {
+            const user = await helpers.logIn("username", apolloServer)
+            const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+            const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
+            const submission = await helpers.createSubmission(course, task.id, "this is an answer", true, apolloServer);
+
+
+            const newContent = "this is modified content"
+            const newSubmitted = false
+            const modifySubmissionQuery = await apolloServer.executeOperation({query: modifySubmission, 
+                variables: 
+                {courseUniqueName: course.uniqueName, taskId: task.id, submissionId: submission.id, content: newContent, submitted: newSubmitted}})
+         
+            expect(modifySubmissionQuery.errors[0].message).toEqual("This submission has already been returned")
+            expect(modifySubmissionQuery.data.modifySubmission).toEqual(null)
+            
+            const courseInDB = await Course.findOne({uniqueName: "course unique name"})
+            const tasks = courseInDB.tasks
+            expect(tasks.length).toBe(1)
+            expect(tasks[0].submissions.length).toBe(1)
+            
+            const submissionInDB = tasks[0].submissions[0]
+            expect(submissionInDB.content).toEqual(submission.content)
+            expect(submissionInDB.submitted).toEqual(submission.submitted)
             expect(submissionInDB.fromUser.toString()).toEqual(user.id)
 
 
