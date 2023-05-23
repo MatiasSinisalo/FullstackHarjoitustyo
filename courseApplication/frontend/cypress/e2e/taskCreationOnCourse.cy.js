@@ -53,7 +53,7 @@ describe('task creation on course tests', () => {
         visitTaskView(newTask.description)
         cy.contains(newTask.description).parent().as("task")
         cy.get("@task").contains(`deadline: ${deadlineString}`)
-        cy.get("@task").contains(`submit solution`)
+        cy.get("@task").contains(`create new solution`)
 
     })
 
@@ -87,7 +87,7 @@ describe('task creation on course tests', () => {
         cy.contains(task.description).parent().as('taskComponent')
         cy.get('@taskComponent').contains(task.description)
         cy.get('@taskComponent').contains(task.deadline.toISOString().split('T')[0])
-        cy.get('@taskComponent').contains("submit solution")
+        cy.get('@taskComponent').contains("create new solution")
         
     })
 })

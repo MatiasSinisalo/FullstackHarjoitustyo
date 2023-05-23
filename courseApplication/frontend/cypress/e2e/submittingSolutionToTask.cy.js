@@ -41,27 +41,27 @@ describe('submitting a solution to a task test', () => {
         cy.contains(task.description).parent().as('taskComponent')
         cy.get('@taskComponent').contains(task.description)
         cy.get('@taskComponent').contains(task.deadline.toISOString().split('T')[0])
-        cy.get('@taskComponent').contains("submit solution")
+        cy.get('@taskComponent').contains("create new solution").click()
         
         const submissionContentField = cy.get('@taskComponent').get('[name="content"]')
-        const submissionSubmitButton = cy.get('@taskComponent').get('[value="submit solution"]')
+        const submissionSubmitButton = cy.get('@taskComponent').contains('return task')
         submissionContentField.type("this is a solution to a task")
         
         cy.intercept('POST', 'http://localhost:4000', (request) => {
-            if(request.body.query.includes('addSubmissionToCourseTask'))
+            if(request.body.query.includes('modifySubmission'))
             {
                 request.alias = "submitSolution"
             }
         }).as("submitSolution")
         submissionSubmitButton.click()
         cy.wait('@submitSolution').then((communication) => {
-            const submission = communication.response.body.data.addSubmissionToCourseTask
+            const submission = communication.response.body.data.modifySubmission
             console.log(communication)
             expect(submission.content).to.equal("this is a solution to a task")
             expect(submission.submitted).to.equal(true)
         })
        
-        cy.get('p').contains("this is a solution to a task")
+        cy.get('[name="content"]').contains("this is a solution to a task")
 
         
     })
@@ -84,27 +84,27 @@ describe('submitting a solution to a task test', () => {
         createTaskOnCourseAsUser(course.uniqueName, task.description, task.deadline)
 
         visitTaskView(task.description)
-        
+        cy.contains("create new solution").click()
         const submissionContentField = cy.get('[name="content"]')
-        const submissionSubmitButton = cy.get('[value="submit solution"]')
+        const submissionSubmitButton = cy.contains('return task')
         const submissionContent = "this is a second solution to a task"
         submissionContentField.type(submissionContent)
         
         cy.intercept('POST', 'http://localhost:4000', (request) => {
-            if(request.body.query.includes('addSubmissionToCourseTask'))
+            if(request.body.query.includes('modifySubmission'))
             {
                 request.alias = "submitSolution"
             }
         }).as("submitSolution")
         submissionSubmitButton.click()
         cy.wait('@submitSolution').then((communication) => {
-            const submission = communication.response.body.data.addSubmissionToCourseTask
+            const submission = communication.response.body.data.modifySubmission
             console.log(communication)
             expect(submission.content).to.equal(submissionContent)
             expect(submission.submitted).to.equal(true)
         })
        
-        cy.get('p').contains(submissionContent)
+        cy.get('[name="content"]').contains("this is a second solution to a task")
 
         
     })
