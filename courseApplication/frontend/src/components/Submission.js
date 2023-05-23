@@ -10,7 +10,7 @@ const ContentEditView = ({submissionContent, editSubmission, returnSubmission, o
     return(
         <>
        
-        <textarea cols="100" rows="20" value={submissionContent} onChange={onContentChange}></textarea>
+        <textarea name="content" cols="100" rows="20" placeholder="this is an empty answer" value={submissionContent} onChange={onContentChange}></textarea>
         <br></br>
         <button onClick={editSubmission}>save</button>
         <button onClick={returnSubmission}>return task</button>
@@ -66,7 +66,7 @@ const Submission = ({course, task, submission}) => {
         {user.username === submission.fromUser.username ? 
             <ContentEditView submissionContent={submissionContent} editSubmission={editSubmission} returnSubmission={returnSubmission} onContentChange={updateSubmissionContent}></ContentEditView>
              :
-             <textarea cols="100" rows="20" value={submissionContent} readOnly></textarea> 
+             <textarea name="content" cols="100" rows="20" value={submissionContent} placeholder="this is an empty answer" readOnly></textarea> 
         } 
        
         <p>submitted: {submission.submitted ? <>true</> : <>false</>}</p>

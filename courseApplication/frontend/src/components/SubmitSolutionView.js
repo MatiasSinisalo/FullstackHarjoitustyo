@@ -10,7 +10,7 @@ const SubmitSolutionView = ({course, task}) => {
     const dispatch = useDispatch()
     const submitSolution = async (event) => {
         event.preventDefault()
-        const content = "this is an empty solution"
+        const content = ""
         await dispatch(addSubmissionToTask(course, task, content, apolloClient))
     }
     return (
