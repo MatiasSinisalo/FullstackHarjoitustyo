@@ -1,7 +1,7 @@
 
 import { prepareTests, endTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser, joinCourseAsUser, visitCoursePageAsStudentFromDashboard, createSubmissionToATask, visitTaskView} from "./helperFunctions.cy";
 
-before(function(){
+beforeEach(function(){
     prepareTests()
 })
 
@@ -105,6 +105,60 @@ describe('submitting a solution to a task test', () => {
         })
        
         cy.get('[name="content"]').contains("this is a second solution to a task")
+
+        
+    })
+
+    it('User can save a solution on a task', () => {
+        logInAsUser("username", "password1234")
+        const course = {
+            uniqueName: "this is a course for testing task visibility",
+            name:  "name of the course"
+        }
+        createCourseAsUser(course.uniqueName, course.name)
+        cy.wait(100)
+
+        const today = new Date(Date.now())
+        const tomorrow = new Date()
+        tomorrow.setDate(today.getDate() + 1)
+        const task = {
+            description: "description for a task",
+            deadline: tomorrow
+        }
+        createTaskOnCourseAsUser(course.uniqueName, task.description, task.deadline)
+
+        cy.contains("Log Out").click()
+        logInAsUser("second username", "password1234")
+
+        joinCourseAsUser(course.uniqueName, "second username")
+        visitCoursePageAsStudentFromDashboard(course.uniqueName)
+        
+        visitTaskView(task.description)
+
+        cy.contains(task.description).parent().as('taskComponent')
+        cy.get('@taskComponent').contains(task.description)
+        cy.get('@taskComponent').contains(task.deadline.toISOString().split('T')[0])
+        cy.get('@taskComponent').contains("create new solution").click()
+        
+        const submissionContentField = cy.get('@taskComponent').get('[name="content"]')
+        const submissionSubmitButton = cy.get('@taskComponent').contains('save')
+        submissionContentField.type("this is a solution to a task")
+        
+        cy.intercept('POST', 'http://localhost:4000', (request) => {
+            if(request.body.query.includes('modifySubmission'))
+            {
+                request.alias = "submitSolution"
+            }
+        }).as("submitSolution")
+        submissionSubmitButton.click()
+        cy.wait('@submitSolution').then((communication) => {
+            const submission = communication.response.body.data.modifySubmission
+            console.log(communication)
+            expect(submission.content).to.equal("this is a solution to a task")
+            expect(submission.submitted).to.equal(false)
+        })
+       
+        cy.get('[name="content"]').contains("this is a solution to a task")
 
         
     })
