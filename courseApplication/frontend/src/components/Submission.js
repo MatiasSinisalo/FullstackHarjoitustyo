@@ -6,14 +6,26 @@ import { editTaskSubmission, removeSubmissionFromTask } from "../reducers/course
 import { useState } from "react"
 import { ME } from "../queries/userQueries"
 
-const ContentEditView = ({submissionContent, editSubmission, returnSubmission, onContentChange}) => {
+const ContentEditView = ({submitted, submissionContent, editSubmission, returnSubmission, onContentChange}) => {
     return(
         <>
-       
-        <textarea name="content" cols="100" rows="20" placeholder="this is an empty answer" value={submissionContent} onChange={onContentChange}></textarea>
+        {
+            !submitted ? 
+            <textarea name="content" cols="100" rows="20" placeholder="this is an empty answer" value={submissionContent} onChange={onContentChange}></textarea>
+            :
+            <textarea name="content" cols="100" rows="20" placeholder="this is an empty answer" value={submissionContent} readOnly></textarea>
+        }
         <br></br>
-        <button onClick={editSubmission}>save</button>
-        <button onClick={returnSubmission}>return task</button>
+        {
+            !submitted?
+            <>
+                <button onClick={editSubmission}>save</button>
+                <button onClick={returnSubmission}>return task</button>
+            </>
+            :
+            <></>
+        }
+       
        
         </>
     )
@@ -64,7 +76,7 @@ const Submission = ({course, task, submission}) => {
         <div className={`submission:${submission.id}`}>
         {isLate(task, submission) ? <p className="lateMessage">this submission was returned late</p> : <></>}
         {user.username === submission.fromUser.username ? 
-            <ContentEditView submissionContent={submissionContent} editSubmission={editSubmission} returnSubmission={returnSubmission} onContentChange={updateSubmissionContent}></ContentEditView>
+            <ContentEditView submitted={submission.submitted} submissionContent={submissionContent} editSubmission={editSubmission} returnSubmission={returnSubmission} onContentChange={updateSubmissionContent}></ContentEditView>
              :
              <textarea name="content" cols="100" rows="20" value={submissionContent} placeholder="this is an empty answer" readOnly></textarea> 
         } 
