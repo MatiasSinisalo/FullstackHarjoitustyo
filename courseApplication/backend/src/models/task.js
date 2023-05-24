@@ -1,4 +1,14 @@
 const mongoose = require('mongoose')
+
+const gradeSchema = new mongoose.Schema({
+    points: {
+        type: Number
+    },
+    date: {
+        type: Date
+    }
+})
+
 const submissionSchema = new mongoose.Schema({
     fromUser: {
         type: mongoose.Schema.Types.ObjectId,
@@ -7,6 +17,7 @@ const submissionSchema = new mongoose.Schema({
     content: {
         type: String
     },
+    grade: gradeSchema,
     submitted:{
         type: Boolean
     },
@@ -28,4 +39,4 @@ const taskSchema = new mongoose.Schema({
 })
 
 
-module.exports = {Task: mongoose.model('courseApplicationTask', taskSchema), taskSchema, Submission: mongoose.model('taskSubmission', submissionSchema)}
+module.exports = {Task: mongoose.model('courseApplicationTask', taskSchema), taskSchema, Submission: mongoose.model('taskSubmission', submissionSchema), Grade: mongoose.model('submissionGrade', gradeSchema)}
