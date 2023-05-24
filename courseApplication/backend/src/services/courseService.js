@@ -287,6 +287,9 @@ const removeSubmissionFromCourseTask = async (courseUniqueName, taskId, submissi
     return true
 }
 
+const gradeSubmission = (courseUniqueName, taskId, submissionId, points, date, userForToken) => {
+    return null
+}
 
 module.exports = {  createCourse, 
                     removeCourse, 
@@ -299,4 +302,5 @@ module.exports = {  createCourse,
                     removeTaskFromCourse, 
                     removeSubmissionFromCourseTask,
                     modifySubmission,
+                    gradeSubmission
                 }
