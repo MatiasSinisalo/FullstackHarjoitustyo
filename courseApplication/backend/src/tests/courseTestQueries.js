@@ -188,5 +188,37 @@ mutation ModifySubmission($courseUniqueName: String!, $taskId: String!, $submiss
 }
 `
 
-module.exports = {createCourse, removeCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses, getCourse, removeTaskFromCourse, removeSubmissionFromCourseTask, modifySubmission}
+const gradeSubmission = `
+mutation GradeSubmission($courseUniqueName: String!, $taskId: String!, $submissionId: String!, $points: Int!) {
+  gradeSubmission(courseUniqueName: $courseUniqueName, taskId: $taskId, submissionId: $submissionId, points: $points) {
+    content
+    fromUser {
+      id
+      name
+      username
+    }
+    grade {
+      date
+      id
+      points
+    }
+    id
+    submitted
+    submittedDate
+  }
+}
+`
+module.exports = {createCourse, 
+                  removeCourse, 
+                  addStudentToCourse, 
+                  removeStudentFromCourse, 
+                  addTaskToCourse, 
+                  addSubmissionToCourseTask, 
+                  getAllCourses, 
+                  getCourse, 
+                  removeTaskFromCourse, 
+                  removeSubmissionFromCourseTask, 
+                  modifySubmission,
+                  gradeSubmission,
+                }
 

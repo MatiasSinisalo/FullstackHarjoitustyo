@@ -2,7 +2,7 @@ const { UserInputError } = require('apollo-server-core')
 const User = require('../models/user')
 const Course = require('../models/course')
 const { default: mongoose } = require('mongoose')
-const { Task, Submission } = require('../models/task')
+const { Task, Submission, Grade } = require('../models/task')
 
 const getAllCourses = async (userForToken) => {
     const courses = await Course.find({}, {tasks: 0}).populate(["teacher"]).populate("students", null, {username: userForToken.username})
@@ -287,8 +287,37 @@ const removeSubmissionFromCourseTask = async (courseUniqueName, taskId, submissi
     return true
 }
 
-const gradeSubmission = (courseUniqueName, taskId, submissionId, points, date, userForToken) => {
-    return null
+const gradeSubmission = async (courseUniqueName, taskId, submissionId, points, date, userForToken) => {
+    const course = await Course.findOne({uniqueName: courseUniqueName})
+    if(!course){
+        throw new UserInputError("Given course not found")
+    }
+
+    const task = course.tasks.find((task) => task.id === taskId)
+    if(!task){
+        throw new UserInputError("Given task not found")
+    }
+    
+    const submission = task.submissions.find((submission) => submission.id === submissionId)
+    if(!submission){
+        throw new UserInputError("Given submission not found")
+    }
+
+    if(course.teacher.toString() !== userForToken.id)
+    {
+        throw new UserInputError("Unauthorized")
+    }
+
+    const grade = {
+        points: points,
+        date: new Date(Date.now())
+    }
+    const gradeObj = new Grade(grade)
+    
+    submission.grade = gradeObj
+    await course.save()
+    await course.populate({path: "tasks.submissions.fromUser", match: {id: submission.id}})
+    return submission
 }
 
 module.exports = {  createCourse, 

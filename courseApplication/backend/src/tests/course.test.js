@@ -4,7 +4,7 @@ const Course = require('../models/course')
 const User = require('../models/user')
 const {Task} = require('../models/task')
 const { userCreateQuery, userLogInQuery, createSpesificUserQuery } = require('./userTestQueries')
-const { createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses, removeCourse, getCourse, removeTaskFromCourse, removeSubmissionFromCourseTask, modifySubmission } = require('./courseTestQueries')
+const { createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses, removeCourse, getCourse, removeTaskFromCourse, removeSubmissionFromCourseTask, modifySubmission, gradeSubmission } = require('./courseTestQueries')
 const { query } = require('express')
 const mongoose = require('mongoose')
 const course = require('../models/course')
@@ -1499,5 +1499,36 @@ describe('course tests', () => {
             expect(anotherCourseInDB.tasks[0].submissions[0].submitted).toEqual(submissionOnAnotherTask.submitted)    
 
         })  
+    })
+
+    describe('grade submission tests', () => {
+        test('teacher can give a grade', async () => {
+            const user = await helpers.logIn("username", apolloServer)
+            const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+            const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
+            const submission = await helpers.createSubmission(course, task.id, "this is an answer", false, apolloServer)
+
+            const points = 10
+            const gradeSubmissionQuery = await apolloServer.executeOperation({query: gradeSubmission, variables: {courseUniqueName: course.uniqueName, taskId: task.id, submissionId: submission.id, points: points}})
+            console.log(gradeSubmissionQuery)
+            const gradedSubmission = gradeSubmissionQuery.data.gradeSubmission
+            expect(gradedSubmission.grade.points).toBe(10)
+
+            const courseInDB = await Course.findOne({uniqueName: course.uniqueName})
+            const taskInDB = courseInDB.tasks[0]
+            expect(taskInDB.submissions.length).toBe(1)
+            
+            const submissionInDB = taskInDB.submissions[0]
+            expect(submissionInDB.content).toEqual("this is an answer")
+            expect(submissionInDB.fromUser.toString()).toEqual(user.id)
+            expect(submissionInDB.submitted).toEqual(false)
+            expect(submissionInDB.submittedDate).toEqual(null)
+
+
+            expect(submissionInDB.grade.points).toBe(10)
+            const gradingDate = new Date(Number(submissionInDB.grade.date)).toISOString().split('T')[0]
+            const today = new Date(Date.now()).toISOString().split('T')[0]
+            expect(gradingDate).toEqual(today)
+        })
     })
 })
