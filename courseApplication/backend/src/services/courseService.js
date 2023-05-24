@@ -287,7 +287,7 @@ const removeSubmissionFromCourseTask = async (courseUniqueName, taskId, submissi
     return true
 }
 
-const gradeSubmission = async (courseUniqueName, taskId, submissionId, points, date, userForToken) => {
+const gradeSubmission = async (courseUniqueName, taskId, submissionId, points, userForToken) => {
     const course = await Course.findOne({uniqueName: courseUniqueName})
     if(!course){
         throw new UserInputError("Given course not found")

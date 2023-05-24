@@ -99,7 +99,6 @@ type Mutation{
         taskId: String!
         submissionId: String!
         points: Int!
-        date: String
     ):Submission
 }
 `
