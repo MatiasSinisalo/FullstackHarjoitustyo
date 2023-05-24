@@ -93,6 +93,14 @@ type Mutation{
         content: String!
         submitted: Boolean!
     ):Submission
+
+    gradeSubmission(
+        courseUniqueName: String!
+        taskId: String!
+        submissionId: String!
+        points: Int!
+        date: String
+    ):Submission
 }
 `
 
