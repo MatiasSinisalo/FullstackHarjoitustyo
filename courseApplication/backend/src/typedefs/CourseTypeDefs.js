@@ -7,11 +7,17 @@ type Task{
     submissions: [Submission!]!
 }
 
+type Grade{
+    id: ID!
+    points: Int!
+    date: String
+}
 
 type Submission{
     id: ID!
     fromUser: User!
     content: String!
+    grade: Grade
     submitted: Boolean!
     submittedDate: String
 }
