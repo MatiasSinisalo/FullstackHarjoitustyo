@@ -5,37 +5,16 @@ import { Notify } from "../reducers/notificationReducer"
 import { editTaskSubmission, removeSubmissionFromTask } from "../reducers/courseReducer"
 import { useState } from "react"
 import { ME } from "../queries/userQueries"
+import { useNavigate } from "react-router-dom"
 
-const ContentEditView = ({submitted, submissionContent, editSubmission, returnSubmission, onContentChange}) => {
-    return(
-        <>
-        {
-            !submitted ? 
-            <textarea name="content" cols="100" rows="20" placeholder="this is an empty answer" value={submissionContent} onChange={onContentChange}></textarea>
-            :
-            <textarea name="content" cols="100" rows="20" placeholder="this is an empty answer" value={submissionContent} readOnly></textarea>
-        }
-        <br></br>
-        {
-            !submitted?
-            <>
-                <button onClick={editSubmission}>save</button>
-                <button onClick={returnSubmission}>return task</button>
-            </>
-            :
-            <></>
-        }
-       
-       
-        </>
-    )
-}
+
 
 const Submission = ({course, task, submission}) => {
     const client = useApolloClient()
     const dispatch = useDispatch()
     const [submissionContent, setSubmissionContent] = useState(submission.content)
     const {loading: userLoading, data: userData} = useQuery(ME)
+    const navigate = useNavigate()
     if(userLoading){
         return(<p>loading...</p>)
     }
@@ -82,9 +61,54 @@ const Submission = ({course, task, submission}) => {
         } 
        
         <p>submitted: {submission.submitted ? <>true</> : <>false</>}</p>
+
         <button onClick={removeSubmission}>remove</button>
-        
+        {(submission.submitted  && user.username ===  course.teacher.username) ? <SubmissionGradeForm course={course} task={task} submission={submission}></SubmissionGradeForm> : <></>}
         </div>
+    )
+}
+
+const SubmissionGradeForm = ({course, task, submission}) => {
+    const submitGrade = (event) => {
+        event.preventDefault()
+        console.log("grading submission")
+        console.log(event.target.points.value)
+    }
+
+    return(
+        <>
+        <p>this task can be graded: </p>
+        <form onSubmit={submitGrade}>
+            <input type="number" name="points"></input>
+            <input type="submit" value="submit grade"></input>
+        </form>
+        </>
+    )
+}
+
+
+const ContentEditView = ({submitted, submissionContent, editSubmission, returnSubmission, onContentChange}) => {
+    return(
+        <>
+        {
+            !submitted ? 
+            <textarea name="content" cols="100" rows="20" placeholder="this is an empty answer" value={submissionContent} onChange={onContentChange}></textarea>
+            :
+            <textarea name="content" cols="100" rows="20" placeholder="this is an empty answer" value={submissionContent} readOnly></textarea>
+        }
+        <br></br>
+        {
+            !submitted?
+            <>
+                <button onClick={editSubmission}>save</button>
+                <button onClick={returnSubmission}>return task</button>
+            </>
+            :
+            <></>
+        }
+       
+       
+        </>
     )
 }
 
