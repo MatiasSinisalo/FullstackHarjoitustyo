@@ -177,3 +177,24 @@ mutation ModifySubmission($courseUniqueName: String!, $taskId: String!, $submiss
   }
 }
 `
+
+export const GRADE_SUBMISSION = gql`
+mutation GradeSubmission($courseUniqueName: String!, $taskId: String!, $submissionId: String!, $points: Int!) {
+  gradeSubmission(courseUniqueName: $courseUniqueName, taskId: $taskId, submissionId: $submissionId, points: $points) {
+    content
+    fromUser {
+      id
+      name
+      username
+    }
+    grade {
+      date
+      id
+      points
+    }
+    id
+    submitted
+    submittedDate
+  }
+}
+`

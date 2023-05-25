@@ -2,7 +2,7 @@ import { useApolloClient, useQuery } from "@apollo/client"
 import courseService from "../services/courseService"
 import { useDispatch } from "react-redux"
 import { Notify } from "../reducers/notificationReducer"
-import { editTaskSubmission, removeSubmissionFromTask } from "../reducers/courseReducer"
+import { editTaskSubmission, gradeSubmission, removeSubmissionFromTask } from "../reducers/courseReducer"
 import { useState } from "react"
 import { ME } from "../queries/userQueries"
 import { useNavigate } from "react-router-dom"
@@ -69,10 +69,13 @@ const Submission = ({course, task, submission}) => {
 }
 
 const SubmissionGradeForm = ({course, task, submission}) => {
-    const submitGrade = (event) => {
+    const dispatch = useDispatch()
+    const client = useApolloClient()
+    const submitGrade = async (event) => {
         event.preventDefault()
         console.log("grading submission")
-        console.log(event.target.points.value)
+        const grade = event.target.points.value
+        await dispatch(gradeSubmission(course.uniqueName, task.id, submission.id, grade, client))
     }
 
     return(

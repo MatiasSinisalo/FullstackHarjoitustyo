@@ -117,6 +117,21 @@ export const editTaskSubmission = (course, taskId, submissionId, content, submit
     }
 }
 
+export const gradeSubmission = (courseUniqueName, taskId, submissionId, grade, client) => {
+    return async function(dispatch){
+        const gradedSubmission = {error: {message: "not implemented"}}
+        if(!gradedSubmission.error){
+            dispatch(Notify(`successfully graded submission`, "successNotification", 5))
+            return true
+        }
+        else{
+            dispatch(Notify(`${gradedSubmission.error.message}`, "errorNotification", 5))
+            return false
+        }
+    }
+}
+
+
 export const removeTaskFromCourse = (course, task, client) => {
     return async function(dispatch){
         const removed = await courseService.removeTaskFromCourse(course.uniqueName, task.id, client);
@@ -153,3 +168,4 @@ export const removeCourse = (course, client, navigate) => {
         return false
     }
 }
+
