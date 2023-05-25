@@ -119,7 +119,7 @@ export const editTaskSubmission = (course, taskId, submissionId, content, submit
 
 export const gradeSubmission = (courseUniqueName, taskId, submissionId, grade, client) => {
     return async function(dispatch){
-        const gradedSubmission = {error: {message: "not implemented"}}
+        const gradedSubmission = await courseService.gradeSubmission(courseUniqueName, taskId, submissionId, grade, client) 
         if(!gradedSubmission.error){
             dispatch(Notify(`successfully graded submission`, "successNotification", 5))
             return true

@@ -1,4 +1,4 @@
-import { ADD_STUDENT_TO_COURSE, ADD_SUBMISSION_TO_COURSE, ADD_TASK_TO_COURSE, CREATE_COURSE, GET_ALL_COURSES, GET_COURSE, MODIFY_SUBMISSION, REMOVE_COURSE, REMOVE_STUDENT_FROM_COURSE, REMOVE_SUBMISSION_FROM_COURSE_TASK, REMOVE_TASK_FROM_COURSE } from "../queries/courseQueries"
+import { ADD_STUDENT_TO_COURSE, ADD_SUBMISSION_TO_COURSE, ADD_TASK_TO_COURSE, CREATE_COURSE, GET_ALL_COURSES, GET_COURSE, GRADE_SUBMISSION, MODIFY_SUBMISSION, REMOVE_COURSE, REMOVE_STUDENT_FROM_COURSE, REMOVE_SUBMISSION_FROM_COURSE_TASK, REMOVE_TASK_FROM_COURSE } from "../queries/courseQueries"
 //teacher field is not currently being used on the backend at all when creating a course
 
 export const getAllCourses = async (apolloClient) => {
@@ -179,6 +179,20 @@ const modifySubmission = async (courseUniqueName, taskId, submissionId, content,
     }
 }
 
+const gradeSubmission = async (courseUniqueName, taskId, submissionId, grade, client) => {
+    try{
+        const result = await client.mutate({mutation: GRADE_SUBMISSION, variables: {courseUniqueName, taskId, submissionId, points: grade}})
+        if(result.data.gradeSubmission)
+        {
+            return result.data.gradeSubmission
+        }
+    }
+    catch(err)
+    {
+        return {error: err}
+    }
+}
+
 export default {getAllCourses, 
     createCourse, 
     removeCourse, 
@@ -189,5 +203,6 @@ export default {getAllCourses,
     addSubmissionToCourseTask, 
     removeTaskFromCourse,
     removeSubmissionFromCourseTask,
-    modifySubmission
+    modifySubmission,
+    gradeSubmission
 }

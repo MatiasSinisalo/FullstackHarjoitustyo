@@ -75,7 +75,7 @@ const SubmissionGradeForm = ({course, task, submission}) => {
         event.preventDefault()
         console.log("grading submission")
         const grade = event.target.points.value
-        await dispatch(gradeSubmission(course.uniqueName, task.id, submission.id, grade, client))
+        await dispatch(gradeSubmission(course.uniqueName, task.id, submission.id, Number(grade), client))
     }
 
     return(
