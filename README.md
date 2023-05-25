@@ -11,6 +11,7 @@ https://studastudy.onrender.com/
 - user can join/leave a course
 - user can add/remove a task on a course
 - user can add/modify/remove an answer to a task
+- teacher of a course can grade an answer
 - user can remove a student from the users course
 - tasks have a deadline
 ------------ 
