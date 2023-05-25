@@ -20,12 +20,13 @@ describe('Submission Component tests', () => {
         }
       ];
 
+      const mockCourse = {teacher: {username: "username"}}
 
     test('submission component displays no late message if submittedDate < deadline', async () => {
         const containter = render(
             <MockedProvider mocks={mocks}>
                 <Provider store={store}>
-                    <Submission course={null} task = {{deadline: new Date(Date.now() + 1)}} submission={{id: "abc1234", fromUser: {username: "username"}, content: "this is the answer", submitted: true, submittedDate: new Date(Date.now())}}></Submission>
+                    <Submission course={mockCourse} task = {{deadline: new Date(Date.now() + 1)}} submission={{id: "abc1234", fromUser: {username: "username"}, content: "this is the answer", submitted: true, submittedDate: new Date(Date.now())}}></Submission>
                 </Provider>
             </MockedProvider>
         )
@@ -41,7 +42,7 @@ describe('Submission Component tests', () => {
         const containter = render(
             <MockedProvider mocks={mocks}>
                 <Provider store={store}>
-                    <Submission course={null} task = {{deadline: returnDate}} submission={{id: "abc1234", fromUser: {username: "username"}, content: "this is the answer", submitted: true, submittedDate: correctDate}}></Submission>
+                    <Submission course={mockCourse} task = {{deadline: returnDate}} submission={{id: "abc1234", fromUser: {username: "username"}, content: "this is the answer", submitted: true, submittedDate: correctDate}}></Submission>
                 </Provider>
             </MockedProvider>
         )
@@ -54,7 +55,7 @@ describe('Submission Component tests', () => {
         const containter = render(
             <MockedProvider mocks={mocks}>
                 <Provider store={store}>
-                    <Submission course={null} task = {{deadline: new Date(Date.now())}} submission={{id: "abc1234", fromUser: {username: "username"}, content: "this is the answer", submitted: true}}></Submission>
+                    <Submission course={mockCourse} task = {{deadline: new Date(Date.now())}} submission={{id: "abc1234", fromUser: {username: "username"}, content: "this is the answer", submitted: true}}></Submission>
                 </Provider>
             </MockedProvider>
         )
@@ -66,7 +67,7 @@ describe('Submission Component tests', () => {
         const containter = render(
             <MockedProvider mocks={mocks}>
                 <Provider store={store}>
-                    <Submission course={null} task = {{deadline: new Date(Date.now())}} submission={{id: "abc1234", fromUser: {username: "username"}, content: "this is the answer", submitted: true, submittedDate: null}}></Submission>
+                    <Submission course={mockCourse} task = {{deadline: new Date(Date.now())}} submission={{id: "abc1234", fromUser: {username: "username"}, content: "this is the answer", submitted: true, submittedDate: null}}></Submission>
                 </Provider>
             </MockedProvider>
         )
