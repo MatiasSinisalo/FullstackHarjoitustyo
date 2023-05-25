@@ -61,10 +61,21 @@ const Submission = ({course, task, submission}) => {
         } 
        
         <p>submitted: {submission.submitted ? <>true</> : <>false</>}</p>
-
+        
         <button onClick={removeSubmission}>remove</button>
         {(submission.submitted  && user.username ===  course.teacher.username) ? <SubmissionGradeForm course={course} task={task} submission={submission}></SubmissionGradeForm> : <></>}
+        {submission?.grade ? <SubmissionGradeDisplay points={submission?.grade.points} date={submission?.grade.date}></SubmissionGradeDisplay> : <></>}
         </div>
+    )
+}
+
+const SubmissionGradeDisplay = ({points, date}) => {
+    const dateString = new Date(Number(date)).toISOString().split('T')[0]
+    return(
+        <>
+        <p>this answer got grade: {points}</p>
+        <p>date of grading: {dateString}</p>
+        </>
     )
 }
 

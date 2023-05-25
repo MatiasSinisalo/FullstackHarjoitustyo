@@ -68,6 +68,10 @@ query GetCourse($uniqueName: String!) {
           username
           name
         }
+        grade{
+          points
+          date
+        }
       }
     }
     teacher {
