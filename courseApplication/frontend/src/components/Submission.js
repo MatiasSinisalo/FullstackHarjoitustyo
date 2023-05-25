@@ -14,24 +14,23 @@ const Submission = ({course, task, submission}) => {
     const dispatch = useDispatch()
     const [submissionContent, setSubmissionContent] = useState(submission.content)
     const {loading: userLoading, data: userData} = useQuery(ME)
-    const navigate = useNavigate()
     if(userLoading){
         return(<p>loading...</p>)
     }
     const user = userData.me
-    console.log(user)
+    
     
     const removeSubmission = async () => {
         await dispatch(removeSubmissionFromTask(course, task, submission, client))
     }
 
     const editSubmission = async () => {
-        console.log("editing submission")
+      
         await dispatch(editTaskSubmission(course, task.id, submission.id, submissionContent, false, client))
     }
 
     const returnSubmission = async () =>{
-        console.log("editing submission")
+     
         await dispatch(editTaskSubmission(course, task.id, submission.id, submissionContent, true, client))
     }
 
@@ -84,7 +83,7 @@ const SubmissionGradeForm = ({course, task, submission}) => {
     const client = useApolloClient()
     const submitGrade = async (event) => {
         event.preventDefault()
-        console.log("grading submission")
+       
         const grade = event.target.points.value
         await dispatch(gradeSubmission(course.uniqueName, task.id, submission.id, Number(grade), client))
     }
