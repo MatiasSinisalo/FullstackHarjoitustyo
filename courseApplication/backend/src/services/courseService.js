@@ -154,11 +154,7 @@ const addTaskToCourse = async (courseUniqueName, taskDescription, deadline, user
 }
 
 const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, submitted, userForToken) => {
-    const course = await Course.findOne({uniqueName: courseUniqueName}).populate(["students", "tasks", "teacher"])
-    if(!course)
-    {
-        throw new UserInputError("Given course not found")
-    }
+    const course = await serviceUtils.fetchCourse(courseUniqueName, ["students", "tasks", "teacher"])
    
     const taskInCourse = course.tasks.find((task) => task._id.toString() === taskID)
     if(!taskInCourse)
