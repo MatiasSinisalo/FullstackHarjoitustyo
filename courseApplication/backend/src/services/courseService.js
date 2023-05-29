@@ -3,6 +3,8 @@ const User = require('../models/user')
 const Course = require('../models/course')
 const { default: mongoose } = require('mongoose')
 const { Task, Submission, Grade } = require('../models/task')
+const serviceUtils = require('./serviceUtils')
+
 
 const getAllCourses = async (userForToken) => {
     const courses = await Course.find({}, {tasks: 0}).populate(["teacher"]).populate("students", null, {username: userForToken.username})
@@ -60,7 +62,6 @@ const createCourse = async (uniqueName, name, teacherUsername) => {
 
 const removeCourse = async(courseUniqueName, userForToken)=>{
     const courseToRemove = await Course.findOne({uniqueName: courseUniqueName}).populate("teacher")
-    
     if(!courseToRemove)
     {
         throw new UserInputError("No given course found!")
@@ -207,10 +208,7 @@ const addSubmissionToCourseTask = async (courseUniqueName, taskID, content, subm
 }
 
 const modifySubmission = async(courseUniqueName, taskId, submissionId, content, submitted, userForToken) => {
-    const course = await Course.findOne({uniqueName: courseUniqueName})
-    if(!course){
-        throw new UserInputError("Given course not found")
-    }
+    const course = await serviceUtils.fetchCourse(courseUniqueName)
 
     const task = course.tasks.find((task) => task.id === taskId)
     if(!task){
@@ -319,6 +317,8 @@ const gradeSubmission = async (courseUniqueName, taskId, submissionId, points, u
     await course.populate({path: "tasks.submissions.fromUser", match: {id: submission.id}})
     return submission
 }
+
+
 
 module.exports = {  createCourse, 
                     removeCourse, 
