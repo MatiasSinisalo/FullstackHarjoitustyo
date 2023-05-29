@@ -131,14 +131,10 @@ const removeStudentFromCourse = async (studentUsername, courseUniqueName, userFo
 }
 
 const addTaskToCourse = async (courseUniqueName, taskDescription, deadline, userForToken) => {
-    const course = await Course.findOne({uniqueName: courseUniqueName}).populate("teacher")
-    if(!course)
-    {
-        throw new UserInputError("Given course not found")
-    }
+    const course = await serviceUtils.fetchCourse(courseUniqueName)
 
     //only teacher should be able to add a task to the course
-    if(userForToken.username !== course.teacher.username)
+    if(userForToken.id !== course.teacher.toString())
     {
         throw new UserInputError("Unauthorized")
     }
