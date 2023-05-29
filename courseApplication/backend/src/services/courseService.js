@@ -218,10 +218,7 @@ const modifySubmission = async(courseUniqueName, taskId, submissionId, content, 
 }
 
 const removeTaskFromCourse = async (courseUniqueName, taskId, userForToken) =>{
-    const course = await Course.findOne({uniqueName: courseUniqueName})
-    if(!course){
-        throw new UserInputError("Given course not found")
-    }
+    const course = await serviceUtils.fetchCourse(courseUniqueName)
   
     if(course.teacher.toString() !== userForToken.id)
     {
