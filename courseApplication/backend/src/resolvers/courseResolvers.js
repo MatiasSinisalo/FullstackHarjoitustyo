@@ -105,7 +105,7 @@ const courseMutationResolvers = {
         const submitted = args.submitted
         const taskID = args.taskId
         
-        const createdSubmission = await courseService.tasks.addSubmissionToCourseTask(courseUniqueName, taskID, content, submitted, context.userForToken)
+        const createdSubmission = await courseService.submissions.addSubmissionToCourseTask(courseUniqueName, taskID, content, submitted, context.userForToken)
         
         return createdSubmission
     },
@@ -120,7 +120,7 @@ const courseMutationResolvers = {
         const submissionId = args.submissionId
         const content = args.content
         const submitted = args.submitted
-        const modifiedSubmission = await courseService.modifySubmission(courseUniqueName, taskID, submissionId, content, submitted, context.userForToken)
+        const modifiedSubmission = await courseService.submissions.modifySubmission(courseUniqueName, taskID, submissionId, content, submitted, context.userForToken)
         return modifiedSubmission
         
     },
@@ -132,7 +132,7 @@ const courseMutationResolvers = {
         const courseUniqueName = args.courseUniqueName
         const taskId = args.taskId
         const submissionId = args.submissionId
-        const submissionRemoved = await courseService.tasks.removeSubmissionFromCourseTask(courseUniqueName, taskId, submissionId, context.userForToken)
+        const submissionRemoved = await courseService.submissions.removeSubmissionFromCourseTask(courseUniqueName, taskId, submissionId, context.userForToken)
         return submissionRemoved
     },
     gradeSubmission: async(root, args, context) => {
@@ -144,7 +144,7 @@ const courseMutationResolvers = {
         const taskId = args.taskId
         const submissionId = args.submissionId
         const points = args.points
-        const gradedSubmission = await courseService.gradeSubmission(courseUniqueName, taskId, submissionId, points, context.userForToken)
+        const gradedSubmission = await courseService.submissions.gradeSubmission(courseUniqueName, taskId, submissionId, points, context.userForToken)
         return gradedSubmission
 
     }

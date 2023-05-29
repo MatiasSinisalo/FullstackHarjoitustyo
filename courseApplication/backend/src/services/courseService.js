@@ -5,7 +5,7 @@ const { default: mongoose } = require('mongoose')
 const { Task, Submission, Grade } = require('../models/task')
 const serviceUtils = require('./serviceUtils')
 const taskService = require('./course/taskService')
-
+const submissionService = require('./course/submissionService')
 const getAllCourses = async (userForToken) => {
     const courses = await Course.find({}, {tasks: 0}).populate(["teacher"]).populate("students", null, {username: userForToken.username})
     return courses
@@ -130,70 +130,12 @@ const removeStudentFromCourse = async (studentUsername, courseUniqueName, userFo
     return updatedCourse
 }
 
-
-
-const modifySubmission = async(courseUniqueName, taskId, submissionId, content, submitted, userForToken) => {
-    const course = await serviceUtils.fetchCourse(courseUniqueName)
-
-    const task = serviceUtils.findTask(course, taskId)
-    
-    const submission = serviceUtils.findSubmission(task, submissionId)
-
-    if(submission.fromUser.toString() !== userForToken.id)
-    {
-        throw new UserInputError("Unauthorized")
-    }
-
-    if(submission.submitted)
-    {
-        throw new UserInputError("This submission has already been returned")
-    }
-
-    submission.content = content
-    submission.submitted = submitted
-    submission.submittedDate = submitted ? new Date(Date.now()) : null
-    await course.save()
-    return {...submission.toObject(), id: submission.id, fromUser: {id: userForToken.id, username: userForToken.username, name: userForToken.name}}
-
-}
-
-
-
-
-
-const gradeSubmission = async (courseUniqueName, taskId, submissionId, points, userForToken) => {
-    const course = await serviceUtils.fetchCourse(courseUniqueName)
-
-    const task = serviceUtils.findTask(course, taskId)
-    
-    const submission = serviceUtils.findSubmission(task, submissionId)
-
-    if(course.teacher.toString() !== userForToken.id)
-    {
-        throw new UserInputError("Unauthorized")
-    }
-
-    const grade = {
-        points: points,
-        date: new Date(Date.now())
-    }
-    const gradeObj = new Grade(grade)
-    
-    submission.grade = gradeObj
-    await course.save()
-    await course.populate({path: "tasks.submissions.fromUser", match: {id: submission.id}})
-    return submission
-}
-
-
-
 module.exports = {  createCourse, 
                     removeCourse, 
                     addStudentToCourse,
                     removeStudentFromCourse, 
                     getAllCourses, 
                     getCourse,
-                    modifySubmission,
-                    gradeSubmission,
+                    submissions: submissionService,
                     tasks: taskService,
                 }
