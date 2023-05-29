@@ -308,7 +308,7 @@ describe('course tests', () => {
 
     describe('Course add student tests', () => {
         test('addStudentToCourse query made by the teacher of the course allows any user to be added', async () => {
-            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            await helpers.logIn("username", apolloServer)
             
             const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
             const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "course owned by username"}})
@@ -341,7 +341,7 @@ describe('course tests', () => {
         })
 
         test('addStudentToCourse query returns error given username not found if trying to add a student that does not exist, and does not modifyi database', async () => {
-            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            await helpers.logIn("username", apolloServer)
             
             const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
             const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "this user does not exist", courseUniqueName: "course owned by username"}})
@@ -363,7 +363,7 @@ describe('course tests', () => {
         })
 
         test('addStudentToCourse query returns error given username not found if trying to add a student to a course that does not exist and does not modifyi database', async () => {
-            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            await helpers.logIn("username", apolloServer)
             
             const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "this course does not exist"}})
             
@@ -376,7 +376,7 @@ describe('course tests', () => {
         })
 
         test('addStudentToCourse query returns error if trying to add a student to a course that already exists in the course', async () => {
-            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            await helpers.logIn("username", apolloServer)
             
             const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
             
@@ -402,7 +402,7 @@ describe('course tests', () => {
 
         test('addStudentToCourse allows an user to add themselves to the course', async () => {
             //create course as username
-            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            await helpers.logIn("username", apolloServer)
             const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
             
             //add student to course as a course student
@@ -435,7 +435,7 @@ describe('course tests', () => {
 
         test('addStudentToCourse doesnt allow user that is not a teacher to add other users as students but return Unauthorized and doesnt modfyi database', async () => {
             //create course as username
-            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            await helpers.logIn("username", apolloServer)
             const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
             
             //add other student to course as a course student
@@ -460,7 +460,7 @@ describe('course tests', () => {
 
     describe('removeStudentFromCourse query tests', () => {
         test('removeStudentFromCourse query allows teacher to remove any student from course', async () => {
-            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            await helpers.logIn("username", apolloServer)
             const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
             const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "course owned by username"}})
            
@@ -489,11 +489,11 @@ describe('course tests', () => {
         })
 
         test('removeStudentFromCourse query allows student to remove themselves from the course', async () => {
-            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            await helpers.logIn("username", apolloServer)
             const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
             const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "course owned by username"}})
            
-            apolloServer.context = {userForToken: {username: "students username", name: "students name"}}
+            await helpers.logIn("students username", apolloServer)
             const courseAfterRemoval = await apolloServer.executeOperation({query: removeStudentFromCourse, variables: {username: "students username", courseUniqueName: "course owned by username"}})
             expect(courseAfterRemoval.data.removeStudentFromCourse).toEqual(
                 {
