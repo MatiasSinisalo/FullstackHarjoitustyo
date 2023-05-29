@@ -24,4 +24,12 @@ const findTask = (course, taskId) => {
     return taskInCourse
 }
 
-module.exports= {fetchCourse, findTask}
+const findSubmission = (task, submissionId) => {
+    const submission = task.submissions.find((submission) => submission.id === submissionId)
+    if(!submission){
+        throw new UserInputError("Given submission not found")
+    }
+    return submission
+}
+
+module.exports= {fetchCourse, findTask, findSubmission}

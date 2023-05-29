@@ -187,10 +187,7 @@ const modifySubmission = async(courseUniqueName, taskId, submissionId, content, 
 
     const task = serviceUtils.findTask(course, taskId)
     
-    const submission = task.submissions.find((submission) => submission.id === submissionId)
-    if(!submission){
-        throw new UserInputError("Given submission not found")
-    }
+    const submission = serviceUtils.findSubmission(task, submissionId)
 
     if(submission.fromUser.toString() !== userForToken.id)
     {
@@ -218,6 +215,7 @@ const removeTaskFromCourse = async (courseUniqueName, taskId, userForToken) =>{
         throw new UserInputError("Unauthorized")
     }
 
+    
     const task = serviceUtils.findTask(course, taskId)
 
     const updatedTaskList = course.tasks.filter((task) => task.id != taskId)
@@ -230,10 +228,7 @@ const removeSubmissionFromCourseTask = async (courseUniqueName, taskId, submissi
 
     const task = serviceUtils.findTask(course, taskId)
     
-    const submission = task.submissions.find((submission) => submission.id === submissionId)
-    if(!submission){
-        throw new UserInputError("Given submission not found")
-    }
+    const submission = serviceUtils.findSubmission(task, submissionId)
 
     if(submission.fromUser.toString() !== userForToken.id && course.teacher.toString() !== userForToken.id)
     {
@@ -250,10 +245,7 @@ const gradeSubmission = async (courseUniqueName, taskId, submissionId, points, u
 
     const task = serviceUtils.findTask(course, taskId)
     
-    const submission = task.submissions.find((submission) => submission.id === submissionId)
-    if(!submission){
-        throw new UserInputError("Given submission not found")
-    }
+    const submission = serviceUtils.findSubmission(task, submissionId)
 
     if(course.teacher.toString() !== userForToken.id)
     {
