@@ -891,7 +891,7 @@ describe('course tests', () => {
 
     describe('removeCourse tests', () => {
         test('removeCourse removes course and its child objects from database', async ()=>{
-            apolloServer.context = {userForToken: {username: "username", name: "name"}}
+            await helpers.logIn("username", apolloServer)
 
             const courseToBeRemoved = {
                 uniqueName:  "course to be removed",
@@ -975,7 +975,7 @@ describe('course tests', () => {
             
             const courseRemoveQuery = await apolloServer.executeOperation({query: removeCourse, variables: {uniqueName: "this course does not exist"}})
             expect(courseRemoveQuery.data.removeCourse).toBe(null)
-            expect(courseRemoveQuery.errors[0].message).toBe("No given course found!")
+            expect(courseRemoveQuery.errors[0].message).toBe("Given course not found")
 
 
             const coursesInDB = await Course.find({})

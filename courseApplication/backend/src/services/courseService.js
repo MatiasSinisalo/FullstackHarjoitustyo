@@ -61,13 +61,9 @@ const createCourse = async (uniqueName, name, teacherUsername) => {
 }
 
 const removeCourse = async(courseUniqueName, userForToken)=>{
-    const courseToRemove = await Course.findOne({uniqueName: courseUniqueName}).populate("teacher")
-    if(!courseToRemove)
-    {
-        throw new UserInputError("No given course found!")
-    }
+    const courseToRemove = await serviceUtils.fetchCourse(courseUniqueName)
 
-    if(courseToRemove.teacher.username !== userForToken.username){
+    if(courseToRemove.teacher.toString() !== userForToken.id){
         throw new UserInputError("Unauthorized")
     }
     try{
