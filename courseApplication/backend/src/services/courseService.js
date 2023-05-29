@@ -113,14 +113,9 @@ const removeStudentFromCourse = async (studentUsername, courseUniqueName, userFo
         throw new UserInputError("Given username not found")
     }
 
-    const course = await Course.findOne({uniqueName: courseUniqueName}).populate("teacher")
-    if(!course)
-    {
-        throw new UserInputError("Given course not found")
-    }
-
+    const course =  await serviceUtils.fetchCourse(courseUniqueName)
     //only teacher can remove any student or student can leave by their own accord
-    if(userForToken.username !== course.teacher.username && studentUser.username !== userForToken.username)
+    if(userForToken.id !== course.teacher.toString() && studentUser.username !== userForToken.username)
     {
         throw new UserInputError("Unauthorized")
     }
