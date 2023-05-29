@@ -15,4 +15,13 @@ const fetchCourse = async (courseUniqueName, populateCommand) => {
     return course;
 }
 
-module.exports= {fetchCourse}
+const findTask = (course, taskId) => {
+    const taskInCourse = course.tasks.find((task) => task._id.toString() === taskId)
+    if(!taskInCourse)
+    {
+        throw new UserInputError("Given task not found")
+    }
+    return taskInCourse
+}
+
+module.exports= {fetchCourse, findTask}
