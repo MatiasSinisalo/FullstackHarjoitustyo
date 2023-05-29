@@ -78,7 +78,7 @@ const courseMutationResolvers = {
         const courseUniqueName = args.courseUniqueName
         const description = args.description
         const deadline = args.deadline
-        const newTask = await courseService.addTaskToCourse(courseUniqueName, description, deadline, context.userForToken)
+        const newTask = await courseService.tasks.addTaskToCourse(courseUniqueName, description, deadline, context.userForToken)
 
         return newTask
 
@@ -91,7 +91,7 @@ const courseMutationResolvers = {
 
         const courseUniqueName = args.courseUniqueName
         const taskId = args.taskId
-        const taskRemoved = await courseService.removeTaskFromCourse(courseUniqueName, taskId, context.userForToken)
+        const taskRemoved = await courseService.tasks.removeTaskFromCourse(courseUniqueName, taskId, context.userForToken)
         return taskRemoved
 
     },
@@ -105,7 +105,7 @@ const courseMutationResolvers = {
         const submitted = args.submitted
         const taskID = args.taskId
         
-        const createdSubmission = await courseService.addSubmissionToCourseTask(courseUniqueName, taskID, content, submitted, context.userForToken)
+        const createdSubmission = await courseService.tasks.addSubmissionToCourseTask(courseUniqueName, taskID, content, submitted, context.userForToken)
         
         return createdSubmission
     },
@@ -132,7 +132,7 @@ const courseMutationResolvers = {
         const courseUniqueName = args.courseUniqueName
         const taskId = args.taskId
         const submissionId = args.submissionId
-        const submissionRemoved = await courseService.removeSubmissionFromCourseTask(courseUniqueName, taskId, submissionId, context.userForToken)
+        const submissionRemoved = await courseService.tasks.removeSubmissionFromCourseTask(courseUniqueName, taskId, submissionId, context.userForToken)
         return submissionRemoved
     },
     gradeSubmission: async(root, args, context) => {

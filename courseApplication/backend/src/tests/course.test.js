@@ -779,7 +779,6 @@ describe('course tests', () => {
             expect(createdTask).toBeDefined()
            
             const response = await apolloServer.executeOperation({query: removeTaskFromCourse, variables: {courseUniqueName: course.uniqueName, taskId: createdTask.id}})
-         
             expect(response.data.removeTaskFromCourse).toBe(true)
 
             const modifiedCourse = await Course.findOne({uniqueName: course.uniqueName})
