@@ -1,19 +1,16 @@
 const { UserInputError } = require('apollo-server-core')
 const courseService = require('../services/courseService')
 const Course = require('../models/course')
+const { mustHaveToken } = require('./resolverUtils')
 
 const courseQueryResolvers = {
     allCourses: async (root, args, context) => {
-        if(!context.userForToken){
-            throw new UserInputError("Unauthorized")
-        }
+        mustHaveToken(context)
         const courses = await courseService.getAllCourses(context.userForToken)
         return courses
     },
     getCourse: async (root, args, context) => {
-        if(!context.userForToken){
-            throw new UserInputError("Unauthorized")
-        }
+        mustHaveToken(context)
 
         const uniqueName = args.uniqueName
         const course = await courseService.getCourse(uniqueName, context.userForToken)
@@ -23,9 +20,7 @@ const courseQueryResolvers = {
 
 const courseMutationResolvers = {
     createCourse: async (root, args, context) => {
-        if(!context.userForToken){
-            throw new UserInputError("Unauthorized")
-        }
+        mustHaveToken(context)
 
         const uniqueName = args.uniqueName
         const name = args.name
@@ -35,18 +30,13 @@ const courseMutationResolvers = {
         return course
     },
     removeCourse: async(root, args, context)=>{
-        if(!context.userForToken)
-        {
-            throw new UserInputError("Unauthorized")
-        }
+        mustHaveToken(context)
         const uniqueName = args.uniqueName
         const removalSuccess = await courseService.removeCourse(uniqueName, context.userForToken)
         return removalSuccess
     }, 
     addStudentToCourse: async (root, args, context) => {
-        if(!context.userForToken){
-            throw new UserInputError("Unauthorized")
-        }
+        mustHaveToken(context)
 
         const studentUsername = args.username
         const courseUniqueName = args.courseUniqueName
@@ -55,10 +45,7 @@ const courseMutationResolvers = {
         return courseWithNewStudents
     },
     removeStudentFromCourse: async(root, args, context) => {
-        if(!context.userForToken)
-        {
-            throw new UserInputError("Unauthorized")
-        }
+        mustHaveToken(context)
 
         
         const studentUsername = args.username
@@ -69,10 +56,7 @@ const courseMutationResolvers = {
 
     },
     addTaskToCourse: async(root, args, context) => {
-        if(!context.userForToken)
-        {
-            throw new UserInputError("Unauthorized")
-        }
+        mustHaveToken(context)
 
       
         const courseUniqueName = args.courseUniqueName
@@ -84,10 +68,7 @@ const courseMutationResolvers = {
 
     },
     removeTaskFromCourse: async (root, args, context) => {
-        if(!context.userForToken)
-        {
-            throw new UserInputError("Unauthorized")
-        }
+        mustHaveToken(context)
 
         const courseUniqueName = args.courseUniqueName
         const taskId = args.taskId
@@ -96,10 +77,7 @@ const courseMutationResolvers = {
 
     },
     addSubmissionToCourseTask: async(root, args, context) => {
-        if(!context.userForToken)
-        {
-            throw new UserInputError("Unauthorized")
-        }
+        mustHaveToken(context)
         const courseUniqueName = args.courseUniqueName
         const content = args.content
         const submitted = args.submitted
@@ -110,10 +88,7 @@ const courseMutationResolvers = {
         return createdSubmission
     },
     modifySubmission: async(root, args, context) => {
-        if(!context.userForToken)
-        {
-            throw new UserInputError("Unauthorized")
-        }
+        mustHaveToken(context)
 
         const courseUniqueName = args.courseUniqueName
         const taskID = args.taskId
@@ -125,10 +100,7 @@ const courseMutationResolvers = {
         
     },
     removeSubmissionFromCourseTask: async(root, args, context) =>{
-        if(!context.userForToken)
-        {
-            throw new UserInputError("Unauthorized")
-        }
+        mustHaveToken(context)
         const courseUniqueName = args.courseUniqueName
         const taskId = args.taskId
         const submissionId = args.submissionId
@@ -136,10 +108,7 @@ const courseMutationResolvers = {
         return submissionRemoved
     },
     gradeSubmission: async(root, args, context) => {
-        if(!context.userForToken)
-        {
-            throw new UserInputError("Unauthorized")
-        }
+        mustHaveToken(context)
         const courseUniqueName = args.courseUniqueName
         const taskId = args.taskId
         const submissionId = args.submissionId

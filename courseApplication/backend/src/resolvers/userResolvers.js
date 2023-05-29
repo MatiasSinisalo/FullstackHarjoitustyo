@@ -1,6 +1,7 @@
 const { UserInputError } = require('apollo-server-core')
 const userService = require('../services/userService')
 const User = require('../models/user')
+const { mustHaveToken } = require('./resolverUtils')
 
 const userQueryResolvers = {
     
@@ -9,9 +10,7 @@ const userQueryResolvers = {
         return allUsers
     },
     me: async (root, args, context) => {
-        if(!context.userForToken){
-            throw new UserInputError("Unauthorized")
-        }
+        mustHaveToken(context)
 
         const currentUserInformation = userService.getUser(context.userForToken)
         return currentUserInformation
