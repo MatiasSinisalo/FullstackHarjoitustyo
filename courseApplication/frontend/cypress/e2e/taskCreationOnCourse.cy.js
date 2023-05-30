@@ -1,7 +1,7 @@
 
 import { prepareTests, endTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser, joinCourseAsUser, visitCoursePageAsStudentFromDashboard, visitTaskView} from "./helperFunctions.cy";
 
-before(function(){
+beforeEach(function(){
     prepareTests()
 })
 
@@ -53,6 +53,56 @@ describe('task creation on course tests', () => {
         visitTaskView(newTask.description)
         cy.contains(newTask.description).parent().as("task")
         cy.get("@task").contains(`deadline: ${deadlineString}`)
+        cy.get("@task").contains(`create new solution`)
+
+    })
+
+    it('user can create a new task with max grade on course where the user is a teacher', () => {
+        logInAsUser("username", "password1234")
+        createCourseAsUser("course created for task testing", "testing for tasks")
+        
+        cy.contains("dashboard").click()
+        cy.wait(100)
+
+        cy.contains("See Teachers Course Page").click()
+        cy.contains("teachers view").click()
+        cy.contains("create new task").click()
+
+        const taskDescriptionField = cy.get('[name="taskDescription"]')
+        const taskDeadlineField = cy.get('[name="taskDeadLine"]')
+        const taskMaxGradeField = cy.get('[name="taskMaxGrade"]')
+        const taskCreateButton = cy.get('[value="create task"]')
+
+        const today = new Date(Date.now())
+        const tomorrow = new Date()
+        tomorrow.setDate(today.getDate() + 1)
+        const newTask = {
+            description: "this is a new task for the course",
+            deadline: tomorrow,
+            maxGrade: 10
+        }
+        const deadlineString = newTask.deadline.toISOString().split('T')[0]
+        taskDescriptionField.type(newTask.description)
+        taskDeadlineField.type(deadlineString)
+        taskMaxGradeField.type(newTask.maxGrade)
+
+        cy.intercept('POST', 'http://localhost:4000').as('serverResponse')
+        taskCreateButton.click()
+        cy.wait('@serverResponse').then((communication) => {
+            const responseData = communication.response.body.data.addTaskToCourse
+            const createdTask = responseData
+            expect(createdTask.description).to.equal(newTask.description)
+            expect(createdTask.maxGrade).to.equal(newTask.maxGrade)
+            const savedDeadline =new Date(parseInt(createdTask.deadline)).toISOString().split('T')[0]
+            expect(savedDeadline).to.equal(deadlineString)
+
+          
+
+        })
+        visitTaskView(newTask.description)
+        cy.contains(newTask.description).parent().as("task")
+        cy.get("@task").contains(`deadline: ${deadlineString}`)
+        cy.get("@task").contains(`max grade: ${newTask.maxGrade}`)
         cy.get("@task").contains(`create new solution`)
 
     })
