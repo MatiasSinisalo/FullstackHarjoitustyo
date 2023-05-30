@@ -58,6 +58,7 @@ const Task = () => {
             <Link to={`/course/${course.uniqueName}/tasks`}>back to tasks</Link> 
             <p>{task.description}</p>
             <p>deadline: {deadline}</p>
+            {task?.maxGrade ? <p>max grade: {task?.maxGrade}</p> : <></>}
             {user.username === course.teacher.username ? <button onClick={removeTask}>remove task</button> : <></>}
             <SubmitSolutionView course={course} task={task}></SubmitSolutionView>
             <AnswersView course={course} task={task}></AnswersView>
