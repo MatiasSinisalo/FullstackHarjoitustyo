@@ -33,6 +33,9 @@ const taskSchema = new mongoose.Schema({
     deadline: {
         type: Date
     },
+    maxGrade: {
+        type: Number
+    },
     submissions: {
         type: [submissionSchema]
     }
