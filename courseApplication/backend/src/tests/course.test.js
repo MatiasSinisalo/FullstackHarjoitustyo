@@ -634,6 +634,37 @@ describe('course tests', () => {
             expect(course.tasks[0].maxGrade).toEqual(task.maxGrade)
 
         })
+        test('addTaskToCourse creates a new task on the course without giving maxGrade', async () => {
+            await helpers.logIn("username", apolloServer)
+            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+
+            const task = {
+                courseUniqueName: "course owned by username",
+                description:  "this is the description of the course that is about testing",
+                deadline: new Date("2030-06-25"),
+                submissions: []
+            }
+            
+            const newTaskQuery = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: task.courseUniqueName, description: task.description, deadline: task.deadline.toString()}});
+         
+            expect(newTaskQuery.data.addTaskToCourse.description).toEqual(task.description);
+            expect(newTaskQuery.data.addTaskToCourse.submissions).toEqual([]);
+
+            const dateReturned =  parseInt(newTaskQuery.data.addTaskToCourse.deadline)
+           
+            expect(new Date(dateReturned)).toEqual(task.deadline);
+
+            const CoursesInDataBase = await Course.find({}).populate('tasks')
+            expect(CoursesInDataBase.length).toBe(1)
+            const course = CoursesInDataBase[0]
+
+            expect(course.tasks.length).toEqual(1);
+            expect(course.tasks[0].description).toEqual(task.description);
+            expect(course.tasks[0].submissions.length).toEqual(0);
+            expect(course.tasks[0].deadline).toEqual(task.deadline);
+            expect(course.tasks[0].maxGrade).toEqual(undefined)
+
+        })
 
         test('addTaskToCourse creates a new task on the course that already has tasks with correct parameters', async () => {
             await helpers.logIn("username", apolloServer)
