@@ -32,4 +32,17 @@ const findSubmission = (task, submissionId) => {
     return submission
 }
 
-module.exports= {fetchCourse, findTask, findSubmission}
+const validateDate = (date) => {
+    
+    const dateNumber = Date.parse(date)
+    if(isNaN(dateNumber))
+    {
+        throw new UserInputError("Incorrect date")
+    }
+
+    const correctDate = new Date(dateNumber) 
+    return correctDate
+    
+}
+
+module.exports= {fetchCourse, findTask, findSubmission, validateDate}

@@ -5,6 +5,8 @@ const { default: mongoose } = require('mongoose')
 const { Task, Submission, Grade } = require('../../models/task')
 const serviceUtils = require('../serviceUtils')
 
+
+
 const addTaskToCourse = async (courseUniqueName, taskDescription, deadline, maxGrade, userForToken) => {
     const course = await serviceUtils.fetchCourse(courseUniqueName)
     //only teacher should be able to add a task to the course
@@ -13,10 +15,11 @@ const addTaskToCourse = async (courseUniqueName, taskDescription, deadline, maxG
         throw new UserInputError("Unauthorized")
     }
 
+    const validatedDeadline = serviceUtils.validateDate(deadline)
     const newTask = {
         id: mongoose.Types.ObjectId(),
         description: taskDescription,
-        deadline: new Date(deadline),
+        deadline: validatedDeadline,
         maxGrade: maxGrade,
         submissions: []
     }

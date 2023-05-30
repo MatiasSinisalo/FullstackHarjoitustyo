@@ -771,6 +771,52 @@ describe('course tests', () => {
             expect(course.tasks).toEqual([])
 
         })
+
+        test('addTaskToCourse with empty date parameter', async () => {
+            await helpers.logIn("username", apolloServer)
+            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+
+            const task = {
+                courseUniqueName: "course owned by username",
+                description:  "this is the description of the course that is about testing",
+                deadline: new Date("2030-06-25"),
+                maxGrade: 10,
+                submissions: []
+            }
+            
+            const newTaskQuery = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: task.courseUniqueName, description: task.description, deadline: "", maxGrade: undefined}});
+            expect(newTaskQuery.errors[0].message).toEqual("Incorrect date")
+            console.log(newTaskQuery)
+            expect(newTaskQuery.data.addTaskToCourse).toEqual(null);
+            
+            const CoursesInDataBase = await Course.find({}).populate('tasks')
+            expect(CoursesInDataBase.length).toBe(1)
+            const course = CoursesInDataBase[0]
+            expect(course.tasks.length).toEqual(0);
+        })
+
+        test('addTaskToCourse with incorrect date parameter', async () => {
+            await helpers.logIn("username", apolloServer)
+            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+
+            const task = {
+                courseUniqueName: "course owned by username",
+                description:  "this is the description of the course that is about testing",
+                deadline: new Date("2030-06-25"),
+                maxGrade: 10,
+                submissions: []
+            }
+            
+            const newTaskQuery = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: task.courseUniqueName, description: task.description, deadline: "wrong date", maxGrade: undefined}});
+            expect(newTaskQuery.errors[0].message).toEqual("Incorrect date")
+            console.log(newTaskQuery)
+            expect(newTaskQuery.data.addTaskToCourse).toEqual(null);
+            
+            const CoursesInDataBase = await Course.find({}).populate('tasks')
+            expect(CoursesInDataBase.length).toBe(1)
+            const course = CoursesInDataBase[0]
+            expect(course.tasks.length).toEqual(0);
+        })
     })
 
     describe('removeTaskFromCourse tests', ()=> {
