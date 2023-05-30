@@ -59,6 +59,7 @@ query GetCourse($uniqueName: String!) {
       id
       deadline
       description
+      maxGrade
       submissions{
         id
         content
@@ -121,11 +122,12 @@ export const REMOVE_STUDENT_FROM_COURSE = gql`mutation RemoveStudentFromCourse($
 }`
 
 export const ADD_TASK_TO_COURSE = gql`
-mutation AddTaskToCourse($courseUniqueName: String!, $description: String!, $deadline: String!) {
-  addTaskToCourse(courseUniqueName: $courseUniqueName, description: $description, deadline: $deadline) {
+mutation AddTaskToCourse($courseUniqueName: String!, $description: String!, $deadline: String!, $maxGrade: Int) {
+  addTaskToCourse(courseUniqueName: $courseUniqueName, description: $description, deadline: $deadline, maxGrade: $maxGrade) {
     id
     deadline
     description
+    maxGrade
     submissions {
       content
       fromUser {

@@ -45,7 +45,8 @@ export const TaskCreationForm = () => {
     event.preventDefault()    
     const description = event.target.taskDescription.value
     const deadline = event.target.taskDeadLine.value
-    const maxGrade = event.target.taskMaxGrade?.value
+    const maxGrade = Number(event.target.taskMaxGrade?.value)
+    console.log(maxGrade)
     await dispatch(createNewTaskOnCourse(uniqueName, description, deadline, maxGrade, client))
 }
 
