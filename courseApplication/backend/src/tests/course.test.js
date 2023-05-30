@@ -610,10 +610,11 @@ describe('course tests', () => {
                 courseUniqueName: "course owned by username",
                 description:  "this is the description of the course that is about testing",
                 deadline: new Date("2030-06-25"),
+                maxGrade: 10,
                 submissions: []
             }
             
-            const newTaskQuery = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: task.courseUniqueName, description: task.description, deadline: task.deadline.toString()}});
+            const newTaskQuery = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: task.courseUniqueName, description: task.description, deadline: task.deadline.toString(), maxGrade: task.maxGrade}});
          
             expect(newTaskQuery.data.addTaskToCourse.description).toEqual(task.description);
             expect(newTaskQuery.data.addTaskToCourse.submissions).toEqual([]);
@@ -630,6 +631,7 @@ describe('course tests', () => {
             expect(course.tasks[0].description).toEqual(task.description);
             expect(course.tasks[0].submissions.length).toEqual(0);
             expect(course.tasks[0].deadline).toEqual(task.deadline);
+            expect(course.tasks[0].maxGrade).toEqual(task.maxGrade)
 
         })
 

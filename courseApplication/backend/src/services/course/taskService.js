@@ -5,7 +5,7 @@ const { default: mongoose } = require('mongoose')
 const { Task, Submission, Grade } = require('../../models/task')
 const serviceUtils = require('../serviceUtils')
 
-const addTaskToCourse = async (courseUniqueName, taskDescription, deadline, userForToken) => {
+const addTaskToCourse = async (courseUniqueName, taskDescription, deadline, maxGrade, userForToken) => {
     const course = await serviceUtils.fetchCourse(courseUniqueName)
     //only teacher should be able to add a task to the course
     if(userForToken.id !== course.teacher.toString())
@@ -17,6 +17,7 @@ const addTaskToCourse = async (courseUniqueName, taskDescription, deadline, user
         id: mongoose.Types.ObjectId(),
         description: taskDescription,
         deadline: new Date(deadline),
+        maxGrade: maxGrade,
         submissions: []
     }
 

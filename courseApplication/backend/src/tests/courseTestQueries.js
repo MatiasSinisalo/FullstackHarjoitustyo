@@ -55,8 +55,8 @@ const removeStudentFromCourse = `mutation RemoveStudentFromCourse($username: Str
   }
 }`
 
-const addTaskToCourse = `mutation Mutation($courseUniqueName: String!, $description: String!, $deadline: String!) {
-  addTaskToCourse(courseUniqueName: $courseUniqueName, description: $description, deadline: $deadline) {
+const addTaskToCourse = `mutation Mutation($courseUniqueName: String!, $description: String!, $deadline: String!, $maxGrade: Int) {
+  addTaskToCourse(courseUniqueName: $courseUniqueName, description: $description, deadline: $deadline, maxGrade: $maxGrade) {
     deadline
     description
     id

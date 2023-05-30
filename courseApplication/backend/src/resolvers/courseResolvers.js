@@ -62,8 +62,9 @@ const courseMutationResolvers = {
         const courseUniqueName = args.courseUniqueName
         const description = args.description
         const deadline = args.deadline
-        const newTask = await courseService.tasks.addTaskToCourse(courseUniqueName, description, deadline, context.userForToken)
-
+        const maxGrade = args?.maxGrade
+        const newTask = await courseService.tasks.addTaskToCourse(courseUniqueName, description, deadline, maxGrade, context.userForToken)
+        
         return newTask
 
     },
