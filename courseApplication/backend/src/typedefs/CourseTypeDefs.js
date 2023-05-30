@@ -5,6 +5,7 @@ type Task{
     description: String!
     deadline: String!
     submissions: [Submission!]!
+    maxGrade: Int
 }
 
 type Grade{
@@ -65,6 +66,7 @@ type Mutation{
         courseUniqueName: String!
         description: String!
         deadline: String!
+        maxGrade: Int
     ):Task
     
     removeTaskFromCourse(
