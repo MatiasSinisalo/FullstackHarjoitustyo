@@ -134,6 +134,7 @@ describe('courseService tests', () => {
             const task = {
                 description: "description of a task",
                 deadline: new Date(Date.now() + 1),
+                maxGrade: 10,
                 submissions: [],
             }
             
@@ -142,14 +143,14 @@ describe('courseService tests', () => {
             mockClient.cache.modify = jest.fn((x) => {return x})
             mockClient.cache.identify = jest.fn()
             
-            const result = await addTaskToCourse("course", task.description, task.deadline, mockClient)
+            const result = await addTaskToCourse("course", task.description, task.deadline, task.maxGrade , mockClient)
             expect(result).toEqual(task)
             
             const mutation = mockClient.mutate.mock.calls[0][0].mutation
             expect(mutation).toEqual(ADD_TASK_TO_COURSE)
 
             const variables = mockClient.mutate.mock.calls[0][0].variables
-            expect(variables).toEqual({courseUniqueName: "course", description: task.description, deadline: task.deadline})
+            expect(variables).toEqual({courseUniqueName: "course", description: task.description, deadline: task.deadline, maxGrade: task.maxGrade})
 
             const cacheUpdateArgs = mockClient.cache.modify.mock.calls[0][0]
             expect(mockClient.cache.modify).toHaveBeenCalled()
