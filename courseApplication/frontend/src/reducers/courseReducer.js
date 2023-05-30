@@ -69,9 +69,9 @@ export const removeSubmissionFromTask = (course, task, submission, client) => {
     }
 }
 
-export const createNewTaskOnCourse = (uniqueName, description, deadline, client) => {
+export const createNewTaskOnCourse = (uniqueName, description, deadline, maxGrade, client) => {
     return async function (dispatch){
-      const addedTask = await courseService.addTaskToCourse(uniqueName, description, deadline, client)
+      const addedTask = await courseService.addTaskToCourse(uniqueName, description, deadline, maxGrade, client)
       if(!addedTask.error){
         dispatch(Notify(`successfully created task`, "successNotification", 5))
         return true

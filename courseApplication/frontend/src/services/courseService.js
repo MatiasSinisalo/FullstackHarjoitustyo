@@ -79,10 +79,10 @@ export const removeUserFromCourse = async (uniqueName, username, apolloClient) =
    
 }
 //adds task to a course an returns a list of all the courses in that course
-export const addTaskToCourse = async (uniqueName, description, deadline, apolloClient) => {
+export const addTaskToCourse = async (uniqueName, description, deadline, maxGrade, apolloClient) => {
 try{
     //add a task to a course in the database
-    const result = await apolloClient.mutate({mutation: ADD_TASK_TO_COURSE, variables: {courseUniqueName: uniqueName, description: description, deadline: deadline}})
+    const result = await apolloClient.mutate({mutation: ADD_TASK_TO_COURSE, variables: {courseUniqueName: uniqueName, description: description, deadline: deadline, maxGrade: maxGrade}})
     
     if(result.data?.addTaskToCourse){
         //update course tasks in in cache to include the reference to the added task
