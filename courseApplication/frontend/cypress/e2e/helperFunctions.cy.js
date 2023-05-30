@@ -99,7 +99,7 @@ const createCourseAsUser = (courseUniqueName, courseName) => {
     courseSubmitButton.click()
 }
 
-const createTaskOnCourseAsUser = (courseUniqueName, description, deadline) => {
+const createTaskOnCourseAsUser = (courseUniqueName, description, deadline, maxGrade) => {
     cy.contains("dashboard").click()
    
 
@@ -111,7 +111,10 @@ const createTaskOnCourseAsUser = (courseUniqueName, description, deadline) => {
     
     const taskDescriptionField = cy.get('[name="taskDescription"]')
     const taskDeadlineField = cy.get('[name="taskDeadLine"]')
+    const taskGradeField = cy.get('[name="taskMaxGrade"]')
     const taskCreateButton = cy.get('[value="create task"]')
+   
+   
 
     const newTask = {
         description: description,
@@ -120,7 +123,11 @@ const createTaskOnCourseAsUser = (courseUniqueName, description, deadline) => {
     const deadlineString = newTask.deadline.toISOString().split('T')[0]
     taskDescriptionField.type(newTask.description)
     taskDeadlineField.type(deadlineString)
-    
+   
+    if(maxGrade){
+        taskGradeField.type(maxGrade)
+    }
+   
     taskCreateButton.click()
    
 }
