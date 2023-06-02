@@ -1,4 +1,4 @@
-import { prepareTests, endTests, logInAsUser, createCourseAsUser, joinCourseAsUser, createTaskOnCourseAsUser, createSubmissionToATask, visitCoursePageAsStudentFromDashboard, tomorrow } from "./helperFunctions.cy"
+import { prepareTests, endTests, logInAsUser, createCourseAsUser, joinCourseAsUser, createTaskOnCourseAsUser, createSubmissionToATask, visitCoursePageAsStudentFromDashboard, tomorrow, visitTaskView } from "./helperFunctions.cy"
 
 
 beforeEach(function () {
@@ -36,10 +36,13 @@ describe('submission removal tests teacher', () => {
         })
 
         cy.get(`[class*="submission:"]`).should("not.exist")
+       
         cy.reload(true)
         logInAsUser("username", "password1234")
         cy.contains("See Teachers Course Page").click()
-        cy.get('[class*="submission:"]').should('not.exist');
+        visitTaskView("this is a task")
+        cy.wait(10)
+        cy.get('[class*="submissionShowCase:"]').should('not.exist');
     })
 
     it('teacher can remove an created submission made by a student', () => {
@@ -60,20 +63,22 @@ describe('submission removal tests teacher', () => {
         cy.contains("Log Out").click()
         logInAsUser("username", "password1234")
         cy.contains("See Teachers Course Page").click()
-        cy.contains("tasks").click()
-        cy.get(`[class*="task:"]`).contains("view").click()
+        visitTaskView("this is a task")
+        cy.get('[class*="submissionsListing"').contains("view").click()
+        
         cy.get(`[class*="submission:"]`).contains("remove").click()
-
         cy.get(`[class*="submission:"]`).should("not.exist")
+
         cy.reload(true)
         logInAsUser("username", "password1234")
         cy.contains("See Teachers Course Page").click()
-        cy.get('[class*="submission:"]').should('not.exist');
+        cy.get('[class*="submissionShowCase:"]').should('not.exist');
 
         cy.contains("Log Out").click()
         logInAsUser("second username", "password1234")
         visitCoursePageAsStudentFromDashboard(course.uniqueName)
-        cy.get('[class*="submission:"]').should('not.exist');
+        visitTaskView("this is a task")
+        cy.get('[class*="submissionShowCase:"]').should('not.exist');
 
     })
 })
@@ -95,11 +100,12 @@ describe('submission removal tests student', () => {
         createSubmissionToATask("this is a task", "this is an answer by a second user")
 
         cy.get(`[class*="submission:"]`).contains("remove").click()
-
         cy.get(`[class*="submission:"]`).should("not.exist")
+
         cy.reload(true)
         logInAsUser("second username", "password1234")
         visitCoursePageAsStudentFromDashboard(course.uniqueName)
-        cy.get('[class*="submission:"]').should('not.exist');
+        visitTaskView("this is a task")
+        cy.get('[class*="submissionShowCase:"]').should('not.exist');
     })
 })

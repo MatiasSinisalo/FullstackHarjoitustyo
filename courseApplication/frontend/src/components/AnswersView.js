@@ -27,7 +27,7 @@ const SubmissionShowCase = ({course, task, submission}) => {
     const navigate = useNavigate()
     const submittedDate = submission.submitted ? new Date(Number(submission.submittedDate)).toISOString().split("T")[0] : 'not submitted'
     return (
-        <tr>
+        <tr className={`submissionShowCase:${submission.id}`}>
             <td>{submission.fromUser.username}</td>
             <td>{submittedDate}</td>
             <td><button onClick={() => {navigate(`submission/${submission.id}`)}}>view</button></td>
