@@ -37,14 +37,16 @@ describe('submitting a solution to a task test', () => {
         visitCoursePageAsStudentFromDashboard(course.uniqueName)
         
         visitTaskView(task.description)
-
+       
         cy.contains(task.description).parent().as('taskComponent')
         cy.get('@taskComponent').contains(task.description)
         cy.get('@taskComponent').contains(task.deadline.toISOString().split('T')[0])
         cy.get('@taskComponent').contains("create new solution").click()
         
-        const submissionContentField = cy.get('@taskComponent').get('[name="content"]')
-        const submissionSubmitButton = cy.get('@taskComponent').contains('return task')
+        cy.get('[class*="submissionShowCase:"]').contains("view").click()
+
+        const submissionContentField = cy.get('[class*="submission:"]').get('[name="content"]')
+        const submissionSubmitButton = cy.get('[class*="submission:"]').contains('return task')
         submissionContentField.type("this is a solution to a task")
         
         cy.intercept('POST', 'http://localhost:4000', (request) => {
@@ -85,6 +87,7 @@ describe('submitting a solution to a task test', () => {
 
         visitTaskView(task.description)
         cy.contains("create new solution").click()
+        cy.get('[class*="submissionShowCase:"]').contains("view").click()
         const submissionContentField = cy.get('[name="content"]')
         const submissionSubmitButton = cy.contains('return task')
         const submissionContent = "this is a second solution to a task"
@@ -134,14 +137,16 @@ describe('submitting a solution to a task test', () => {
         visitCoursePageAsStudentFromDashboard(course.uniqueName)
         
         visitTaskView(task.description)
+       
 
         cy.contains(task.description).parent().as('taskComponent')
         cy.get('@taskComponent').contains(task.description)
         cy.get('@taskComponent').contains(task.deadline.toISOString().split('T')[0])
         cy.get('@taskComponent').contains("create new solution").click()
-        
-        const submissionContentField = cy.get('@taskComponent').get('[name="content"]')
-        const submissionSubmitButton = cy.get('@taskComponent').contains('save')
+       
+        cy.get('[class*="submissionShowCase:"]').contains("view").click()
+        const submissionContentField = cy.get('[class*="submission:"]').get('[name="content"]')
+        const submissionSubmitButton = cy.get('[class*="submission:"]').contains('save')
         submissionContentField.type("this is a solution to a task")
         
         cy.intercept('POST', 'http://localhost:4000', (request) => {
