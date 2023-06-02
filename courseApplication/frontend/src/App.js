@@ -28,6 +28,8 @@ import "./components/styles/app.css"
 import Task from "./components/Task";
 import TaskListings from "./components/TaskListings";
 import CourseParticipants from "./components/CourseParticipants";
+import Submission from "./components/Submission";
+import SubmissionPage from "./components/SubmissionPage";
 
 const App = () =>{
   
@@ -89,6 +91,7 @@ const App = () =>{
           </Route>
           <Route path="tasks" element={<TaskListings></TaskListings>}/>
           <Route path="task/:taskId" element={<Task/>}/>  
+          <Route path="task/:taskId/submission/:submissionId" element={<SubmissionPage/>}/>  
         </Route>
       
       </Routes>

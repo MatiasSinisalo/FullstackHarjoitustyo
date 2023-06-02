@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"
 import Submission from "./Submission"
 import "./styles/course.css"
 
@@ -23,12 +24,13 @@ const AnswersView = ({course, task}) => {
 }
 
 const SubmissionShowCase = ({course, task, submission}) => {
+    const navigate = useNavigate()
     const submittedDate = submission.submitted ? new Date(Number(submission.submittedDate)).toISOString().split("T")[0] : 'not submitted'
     return (
         <tr>
             <td>{submission.fromUser.username}</td>
             <td>{submittedDate}</td>
-            <td><button onClick={() => console.log(`viewing submission ${submission.id}`)}>view</button></td>
+            <td><button onClick={() => {navigate(`submission/${submission.id}`)}}>view</button></td>
         </tr>
     )
 }
