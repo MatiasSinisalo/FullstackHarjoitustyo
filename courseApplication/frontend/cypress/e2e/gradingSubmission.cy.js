@@ -32,6 +32,7 @@ describe('grading a submission tests', () => {
         
         cy.contains("See Teachers Course Page").click()
         visitTaskView(task.description)
+        cy.get('[class*="submissionsListing"]').contains("view").click()
 
         cy.get(`input[name="points"]`).type("1")
 
@@ -77,7 +78,8 @@ describe('grading a submission tests', () => {
         
         cy.contains("See Teachers Course Page").click()
         visitTaskView(task.description)
-
+        cy.get('[class*="submissionsListing"]').contains("view").click()
+        
         cy.get(`input[name="points"]`).type("5")
         cy.get('input[value="submit grade"]').click()
         

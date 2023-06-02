@@ -168,6 +168,7 @@ const createSubmissionToATask = (taskDescription, content, isLate=false) => {
 
     cy.contains(taskDescription).parent().contains("view").click()
     cy.contains("create new solution").click()
+    cy.get('[class*="submissionsListing"]').contains("view").click()
     const submissionContentField = cy.get('[name="content"]')
     const submissionSubmitButton = cy.contains('return task')
     submissionContentField.type(content)
