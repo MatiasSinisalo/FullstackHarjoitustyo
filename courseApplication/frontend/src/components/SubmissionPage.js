@@ -5,25 +5,10 @@ import { GET_COURSE } from "../queries/courseQueries"
 
 
 
-const SubmissionPage = () => {
-    const courseUniqueName = useParams().uniqueName
+const SubmissionPage = ({course}) => {
     const taskId = useParams().taskId
     const submissionId = useParams().submissionId
-    const courseQuery = useQuery(GET_COURSE, {variables: {uniqueName: courseUniqueName}})
-    if(courseQuery.loading)
-    {
-        return(<p>loading...</p>)
-    }
     
-    const course = courseQuery.data?.getCourse
-    if(!course)
-    {
-        return(
-        <>
-        <h1>Whoops</h1>
-        <Link to='/dashboard'>it seems like this course doesnt exist, click here to go back to dashboard</Link>
-        </>)
-    }
     const task = course.tasks.find((t) => t.id === taskId)
     if(!task){
         return(

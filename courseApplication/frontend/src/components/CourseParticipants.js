@@ -29,23 +29,7 @@ const StudentListing = ({student, course}) => {
   )
 }
 
-const CourseParticipants = () => {
-  const uniqueName = useParams().uniqueName
-  const courseQuery = useQuery(GET_COURSE, {variables: {uniqueName}})
-  if(courseQuery.loading)
-  {
-    return(<p>loading...</p>)
-  }
-  
-  const course = courseQuery.data?.getCourse
-  if(!course)
-  {
-    return(<>
-    <h1>Whoops</h1>
-    <Link to='/dashboard'>it seems like this course doesnt exist, click here to go back to dashboard</Link>
-    </>)
-  }
-
+const CourseParticipants = ({course}) => {
   return (
     <div className="blueBox">
       <h3>participating students</h3>

@@ -20,26 +20,9 @@ import CourseParticipants from "./CourseParticipants"
 import { ME } from "../queries/userQueries"
 
 
-export const TaskCreationForm = () => {
+export const TaskCreationForm = ({course}) => {
   const dispatch = useDispatch()
   const client = useApolloClient()
-  const uniqueName = useParams().uniqueName
-  
-  //check if this course exists, just in case the user typed in a wrong url
-  const courseQuery = useQuery(GET_COURSE, {variables: {uniqueName}})
-  if(courseQuery.loading){
-    return(
-      <p>loading...</p>
-    )
-  }
-  const course = courseQuery.data?.getCourse
-  if(!course)
-  {
-    return(<>
-    <h1>Whoops</h1>
-    <Link to='/dashboard'>it seems like this course doesnt exist, click here to go back to dashboard</Link>
-    </>)
-  }
   
   const createTaskOnThisCourse = async (event) => {
     event.preventDefault()    
@@ -47,7 +30,7 @@ export const TaskCreationForm = () => {
     const deadline = event.target.taskDeadLine.value
     const maxGrade = Number(event.target.taskMaxGrade?.value)
     console.log(maxGrade)
-    await dispatch(createNewTaskOnCourse(uniqueName, description, deadline, maxGrade, client))
+    await dispatch(createNewTaskOnCourse(course.uniqueName, description, deadline, maxGrade, client))
 }
 
   return (
@@ -70,28 +53,16 @@ export const TaskCreationForm = () => {
 }
 
 
-const TeachersCourse = () =>{
+const TeachersCourse = ({course}) =>{
   const dispatch = useDispatch()
   const client = useApolloClient()
   const navigate = useNavigate()
 
-  const uniqueName = useParams().uniqueName
-  const courseQuery = useQuery(GET_COURSE, {variables: {uniqueName}})
   const userQuery = useQuery(ME)
-  if(courseQuery.loading || userQuery.loading)
+  if(userQuery.loading)
   {
     return(<p>loading...</p>)
   }
-  
-  const course = courseQuery.data?.getCourse
-  if(!course)
-  {
-    return(<>
-    <h1>Whoops</h1>
-    <Link to='/dashboard'>it seems like this course doesnt exist, click here to go back to dashboard</Link>
-    </>)
-  }
-
   const user = userQuery.data.me
   if(!(user.username === course.teacher.username)){
     return (<Navigate to={`/course/${course.uniqueName}`} />)

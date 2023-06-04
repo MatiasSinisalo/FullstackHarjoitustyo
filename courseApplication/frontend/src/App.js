@@ -84,14 +84,7 @@ const App = () =>{
         <Route path="/messages" element={<Messages/>}/>
         <Route path="/CourseBrowser" element={<CourseBrowser/>}/>
         <Route path="/CreateCourse" element={<CreateCourse/>}/>
-        <Route path="/course/:uniqueName" element={<Course/>}>
-          <Route path="teacher" element={<TeachersCourse/>}>
-            <Route path="participants" element={<CourseParticipants></CourseParticipants>}/>
-            <Route path="newTask" element={<TaskCreationForm></TaskCreationForm>}/>
-          </Route>
-          <Route path="tasks" element={<TaskListings></TaskListings>}/>
-          <Route path="task/:taskId" element={<Task/>}/>  
-          <Route path="task/:taskId/submission/:submissionId" element={<SubmissionPage/>}/>  
+        <Route path="/course/:uniqueName/*" element={<Course/>}>
         </Route>
       
       </Routes>

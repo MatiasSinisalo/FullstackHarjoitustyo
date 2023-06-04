@@ -9,34 +9,19 @@ import { Notify } from "../reducers/notificationReducer"
 import { removeTaskFromCourse } from "../reducers/courseReducer"
 import { Link, useParams } from "react-router-dom"
 import { GET_COURSE } from "../queries/courseQueries"
-const Task = () => {
+const Task = ({course}) => {
     const client = useApolloClient()
     const dispatch = useDispatch()
-    const userQuery = useQuery(ME)
-
-    const uniqueName = useParams().uniqueName
     const taskId = useParams().taskId
-    console.log(taskId)
-    const courseQuery = useQuery(GET_COURSE, {variables: {uniqueName}})
-    
-    if(courseQuery.loading || userQuery.loading)
+    const userQuery = useQuery(ME)
+    if(userQuery.loading)
     {
       return(<p>loading...</p>)
     }
 
+  
     const user = userQuery.data.me
-    const course = courseQuery.data?.getCourse
     const task = course.tasks.find((task) => task.id === taskId)
-    
-    if(!course)
-    {
-      return(
-      <>
-      <h1>Whoops</h1>
-      <Link to='/dashboard'>it seems like this course doesnt exist, click here to go back to dashboard</Link>
-      </>
-      )
-    }
     
     if(!task){
         return (

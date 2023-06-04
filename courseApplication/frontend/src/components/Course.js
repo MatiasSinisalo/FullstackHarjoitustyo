@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux"
 import {
   Link,
     Outlet,
+    Route,
+    Routes,
     useParams
 } from "react-router-dom"
 import { GET_COURSE } from "../queries/courseQueries"
@@ -12,6 +14,9 @@ import Task from "./Task"
 import TaskListings from "./TaskListings"
 import "./styles/course.css"
 import { ME } from "../queries/userQueries"
+import TeachersCourse, { TaskCreationForm } from "./TeachersCourse"
+import CourseParticipants from "./CourseParticipants"
+import SubmissionPage from "./SubmissionPage"
 
 
 const Course = () =>{
@@ -26,7 +31,6 @@ const Course = () =>{
   {
     return(<p>loading...</p>)
   }
-  
   const course = courseQuery.data?.getCourse
   if(!course)
   {
@@ -50,7 +54,17 @@ const Course = () =>{
       <br></br>
       <Link to="tasks">tasks</Link>
     </div>
-    <Outlet></Outlet>
+    
+    <Routes>
+      <Route path="teacher" element={<TeachersCourse course={course}/>}>
+          <Route path="participants" element={<CourseParticipants course={course}></CourseParticipants>}/>
+          <Route path="newTask" element={<TaskCreationForm course={course}></TaskCreationForm>}/>
+        </Route>
+      <Route path="tasks" element={<TaskListings course={course}></TaskListings>}/>
+      <Route path="task/:taskId" element={<Task course={course}/>}/>  
+      <Route path="task/:taskId/submission/:submissionId" element={<SubmissionPage course={course}/>}/>  
+    </Routes>
+    
     </div>
 
   )

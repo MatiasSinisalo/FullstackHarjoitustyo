@@ -17,31 +17,12 @@ const TaskShowCase = ({course, task}) => {
 }
 
 
-const TaskListings = () => {
+const TaskListings = ({course}) => {
   const displayModes = {
     future: "future",
     late: "late"
   }
   const [displayMode, setDisplay] = useState(displayModes.future)
-  
-  const uniqueName = useParams().uniqueName
-  const courseQuery = useQuery(GET_COURSE, {variables: {uniqueName}})
-  if(courseQuery.loading)
-  {
-    return(<p>loading...</p>)
-  }
-  const course = courseQuery.data?.getCourse
-  if(!course)
-  {
-    return(
-    <>
-    <h1>Whoops</h1>
-    <Link to='/dashboard'>it seems like this course doesnt exist, click here to go back to dashboard</Link>
-    </>
-    )
-  }
-
-
   const isLate = (task) => {
     const deadline = new Date(parseInt(task.deadline))
     return deadline < Date.now()
