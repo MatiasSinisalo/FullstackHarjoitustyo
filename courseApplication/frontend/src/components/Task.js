@@ -7,8 +7,15 @@ import {ME} from '../queries/userQueries'
 import { useDispatch } from "react-redux"
 import { Notify } from "../reducers/notificationReducer"
 import { removeTaskFromCourse } from "../reducers/courseReducer"
-import { Link, useParams } from "react-router-dom"
 import { GET_COURSE } from "../queries/courseQueries"
+import {
+      Link,
+      Outlet,
+      Route,
+      Routes,
+      useParams
+  } from "react-router-dom"
+import Submission from "./Submission"
 const Task = ({course}) => {
     const client = useApolloClient()
     const dispatch = useDispatch()
@@ -46,8 +53,10 @@ const Task = ({course}) => {
             {task?.maxGrade ? <p>max grade: {task?.maxGrade}</p> : <></>}
             {user.username === course.teacher.username ? <button onClick={removeTask}>remove task</button> : <></>}
             <SubmitSolutionView course={course} task={task}></SubmitSolutionView>
-            <AnswersView course={course} task={task}></AnswersView>
-        
+            <Routes>
+                <Route path="/" element={<AnswersView course={course} task={task}/>}/>
+                <Route path="submission/:submissionId" element={<Submission course={course} task={task}/>}/>
+            </Routes>
         </div>
     )
 }

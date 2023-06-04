@@ -5,20 +5,22 @@ import { Notify } from "../reducers/notificationReducer"
 import { editTaskSubmission, gradeSubmission, removeSubmissionFromTask } from "../reducers/courseReducer"
 import { useState } from "react"
 import { ME } from "../queries/userQueries"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 
 
 
-const Submission = ({course, task, submission}) => {
+const Submission = ({course, task}) => {
     const client = useApolloClient()
     const dispatch = useDispatch()
-    const [submissionContent, setSubmissionContent] = useState(submission.content)
+    const submissionId = useParams().submissionId
+    const submission = task.submissions.find((s) => s.id === submissionId)
+    const [submissionContent, setSubmissionContent] = useState(submission?.content)
+   
     const {loading: userLoading, data: userData} = useQuery(ME)
     if(userLoading){
         return(<p>loading...</p>)
     }
     const user = userData.me
-    
     
     const removeSubmission = async () => {
         await dispatch(removeSubmissionFromTask(course, task, submission, client))
@@ -50,6 +52,13 @@ const Submission = ({course, task, submission}) => {
         return false
     }
 
+    if(!submission){
+        return(
+            <>
+                <Link to={`/course/${course.uniqueName}/task/${task.id}`}>it seems like this submission doesnt exist, click here to go to task</Link>
+            </>
+            )
+    }
     return(
         <div className={`submission:${submission.id}`}>
         {isLate(task, submission) ? <p className="lateMessage">this submission was returned late</p> : <></>}
