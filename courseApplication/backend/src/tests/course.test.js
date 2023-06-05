@@ -1722,9 +1722,36 @@ describe('course tests', () => {
         test('createInfoPageOnCourse creates a new info page correctly', async () => {
             const user = await helpers.logIn("username", apolloServer)
             const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+           
             const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageOnCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "test"}})
+            
+            expect(infoPageQuery.data.addInfoPageToCourse.locationUrl).toBeDefined()
 
-            expect(infoPageQuery.data.addInfoPageOnCourse).toBeDefined()
+            const coursesInDB = await Course.find()
+            expect(coursesInDB.length).toBe(1)
+            const courseInDB = coursesInDB[0]
+
+            expect(courseInDB.infoPages.length).toBe(1)
+            const infoPageInDB = courseInDB.infoPages[0]
+          
+            expect(infoPageInDB.contentBlocks).toEqual([])
+            expect(infoPageInDB.locationUrl).toEqual("test")
+        })
+        test('createInfoPageOnCourse returns Unauthorized if the user is not a teacher', async () => {
+            const user = await helpers.logIn("username", apolloServer)
+            const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+           
+            const secondUser = await helpers.logIn("second username", apolloServer)
+            const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageOnCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "test"}})
+            expect(infoPageQuery.errors[0].message).toEqual("Unauthorized")
+            expect(infoPageQuery.data.addInfoPageToCourse).toBe(null)
+
+            const coursesInDB = await Course.find()
+            expect(coursesInDB.length).toBe(1)
+            const courseInDB = coursesInDB[0]
+
+            expect(courseInDB.infoPages.length).toBe(0)
+           
         })
     })
 })

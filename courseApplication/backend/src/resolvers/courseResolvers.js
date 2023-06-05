@@ -55,7 +55,7 @@ const courseMutationResolvers = {
         return updatedCourse
 
     },
-    addInfoPageToCourse: async(args, context) => {
+    addInfoPageToCourse: async(root, args, context) => {
         mustHaveToken(context)
         const courseUniqueName = args.courseUniqueName
         const locationUrl = args.locationUrl

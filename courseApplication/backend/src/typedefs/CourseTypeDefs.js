@@ -24,12 +24,14 @@ type Submission{
 }
 
 type ContentBlock{
+    id: ID!
     content: String!
     position: Int!
 }
 type InfoPage{
+    id: ID!
     locationUrl: String!
-    blocks: [ContentBlock!]!
+    contentBlocks: [ContentBlock!]!
 }
 
 type Course{

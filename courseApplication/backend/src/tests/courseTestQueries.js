@@ -29,7 +29,8 @@ mutation Mutation($uniqueName: String!) {
 const addInfoPageOnCourse = `
 mutation AddInfoPageToCourse($locationUrl: String!, $courseUniqueName: String!) {
   addInfoPageToCourse(locationUrl: $locationUrl, courseUniqueName: $courseUniqueName) {
-    blocks {
+    id
+    contentBlocks {
       content
       position
     }
