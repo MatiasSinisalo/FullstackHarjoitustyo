@@ -26,7 +26,7 @@ mutation Mutation($uniqueName: String!) {
   removeCourse(uniqueName: $uniqueName)
 }
 `
-const addInfoPageOnCourse = `
+const addInfoPageToCourse = `
 mutation AddInfoPageToCourse($locationUrl: String!, $courseUniqueName: String!) {
   addInfoPageToCourse(locationUrl: $locationUrl, courseUniqueName: $courseUniqueName) {
     id
@@ -244,7 +244,7 @@ module.exports = {createCourse,
                   removeSubmissionFromCourseTask, 
                   modifySubmission,
                   gradeSubmission,
-                  addInfoPageOnCourse,
+                  addInfoPageToCourse,
                   addContentBlockToInfoPage
                 }
 
