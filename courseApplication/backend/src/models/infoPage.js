@@ -21,4 +21,4 @@ const infoPageSchema = new mongoose.Schema({
     contentBlocks: [contentBlockSchema]
 })
 
-module.exports = {InfoPage: mongoose.model('infoPage', infoPageSchema), ContentBlock: mongoose.model('contentBlock', contentBlockSchema)}
+module.exports = {InfoPage: mongoose.model('infoPage', infoPageSchema), infoPageSchema, ContentBlock: mongoose.model('contentBlock', contentBlockSchema)}
