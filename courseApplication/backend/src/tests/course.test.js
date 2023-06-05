@@ -244,7 +244,6 @@ describe('course tests', () => {
             apolloServer.context = {userForToken: {username: "username", name: "name"}}
 
             const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "uniqueName", name: "common name", teacher: "username"}})
-            
             const correctReturnValue = {
                 uniqueName: 'uniqueName',
                 name: 'common name',
@@ -253,7 +252,8 @@ describe('course tests', () => {
                     name: 'name'
                 },
                 students: [],
-                tasks: []
+                tasks: [],
+                infoPages: []
             }
             expect(createdCourse.data.createCourse).toEqual(correctReturnValue)
         })
@@ -269,7 +269,8 @@ describe('course tests', () => {
                     username: 'username',
                     name: 'name'
                 },
-                students: []
+                students: [],
+                infoPages: []
             }
 
             //database was cleared before this test, so the database should only have 1 course created
@@ -282,7 +283,7 @@ describe('course tests', () => {
             expect(savedCourse.teacher.username).toEqual(correctReturnValue.teacher.username)
             expect(savedCourse.teacher.name).toEqual(correctReturnValue.teacher.name)
             expect(savedCourse.students).toEqual(correctReturnValue.students)
-
+            expect(savedCourse.infoPages).toEqual(correctReturnValue.infoPages)
         })
 
         test('createCourse query returns error if teacher user does not exist', async () => {

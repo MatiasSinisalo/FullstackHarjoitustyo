@@ -23,7 +23,14 @@ type Submission{
     submittedDate: String
 }
 
-
+type ContentBlock{
+    content: String!
+    position: Int!
+}
+type InfoPage{
+    locationUrl: String!
+    blocks: [ContentBlock!]!
+}
 
 type Course{
     id: ID!
@@ -32,6 +39,7 @@ type Course{
     teacher: User!
     students: [User!]!
     tasks: [Task!]
+    infoPages: [InfoPage!]!
 }
 
 type Query{

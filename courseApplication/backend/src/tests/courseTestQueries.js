@@ -15,6 +15,9 @@ const createCourse = `mutation Mutation($uniqueName: String!, $name: String!, $t
         description
       }
       uniqueName
+      infoPages{
+        locationUrl
+      }
     }
   }`
 
