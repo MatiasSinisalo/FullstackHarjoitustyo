@@ -26,7 +26,17 @@ mutation Mutation($uniqueName: String!) {
   removeCourse(uniqueName: $uniqueName)
 }
 `
-
+const addInfoPageOnCourse = `
+mutation AddInfoPageToCourse($locationUrl: String!, $courseUniqueName: String!) {
+  addInfoPageToCourse(locationUrl: $locationUrl, courseUniqueName: $courseUniqueName) {
+    blocks {
+      content
+      position
+    }
+    locationUrl
+  }
+}
+`
 
 const addStudentToCourse = `mutation AddStudentToCourse($addStudentToCourseUsername: String!, $courseUniqueName: String!) {
   addStudentToCourse(username: $addStudentToCourseUsername, courseUniqueName: $courseUniqueName) {
@@ -223,5 +233,6 @@ module.exports = {createCourse,
                   removeSubmissionFromCourseTask, 
                   modifySubmission,
                   gradeSubmission,
+                  addInfoPageOnCourse
                 }
 

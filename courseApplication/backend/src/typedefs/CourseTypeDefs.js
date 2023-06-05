@@ -70,6 +70,11 @@ type Mutation{
         courseUniqueName: String!
     ):Course
 
+    addInfoPageToCourse(
+        locationUrl: String!
+        courseUniqueName: String!
+    ):InfoPage
+
     addTaskToCourse(
         courseUniqueName: String!
         description: String!

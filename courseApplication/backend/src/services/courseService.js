@@ -6,6 +6,7 @@ const { Task, Submission, Grade } = require('../models/task')
 const serviceUtils = require('./serviceUtils')
 const taskService = require('./course/taskService')
 const submissionService = require('./course/submissionService')
+const infoPageService = require('./course/infoPageService')
 const getAllCourses = async (userForToken) => {
     const courses = await Course.find({}, {tasks: 0}).populate(["teacher"]).populate("students", null, {username: userForToken.username})
     return courses
@@ -138,4 +139,5 @@ module.exports = {  createCourse,
                     getCourse,
                     submissions: submissionService,
                     tasks: taskService,
+                    infoPages: infoPageService
                 }

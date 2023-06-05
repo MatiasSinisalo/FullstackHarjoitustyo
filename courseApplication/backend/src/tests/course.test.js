@@ -4,7 +4,7 @@ const Course = require('../models/course')
 const User = require('../models/user')
 const {Task} = require('../models/task')
 const { userCreateQuery, userLogInQuery, createSpesificUserQuery } = require('./userTestQueries')
-const { createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses, removeCourse, getCourse, removeTaskFromCourse, removeSubmissionFromCourseTask, modifySubmission, gradeSubmission } = require('./courseTestQueries')
+const { createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses, removeCourse, getCourse, removeTaskFromCourse, removeSubmissionFromCourseTask, modifySubmission, gradeSubmission, addInfoPageOnCourse } = require('./courseTestQueries')
 const { query } = require('express')
 const mongoose = require('mongoose')
 const course = require('../models/course')
@@ -1717,5 +1717,14 @@ describe('course tests', () => {
             expect(submissionInDB.grade).toBe(undefined)
         })
 
+    })
+    describe('addInfoPageOnCourse tests', () => {
+        test('createInfoPageOnCourse creates a new info page correctly', async () => {
+            const user = await helpers.logIn("username", apolloServer)
+            const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+            const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageOnCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "test"}})
+
+            expect(infoPageQuery.data.addInfoPageOnCourse).toBeDefined()
+        })
     })
 })
