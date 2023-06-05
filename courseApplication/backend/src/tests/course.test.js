@@ -1741,7 +1741,7 @@ describe('course tests', () => {
             const user = await helpers.logIn("username", apolloServer)
             const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
            
-            const secondUser = await helpers.logIn("second username", apolloServer)
+            const secondUser = await helpers.logIn("students username", apolloServer)
             const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageOnCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "test"}})
             expect(infoPageQuery.errors[0].message).toEqual("Unauthorized")
             expect(infoPageQuery.data.addInfoPageToCourse).toBe(null)

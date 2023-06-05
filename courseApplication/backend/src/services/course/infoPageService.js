@@ -13,9 +13,9 @@ const { InfoPage, ContentBlock } = require('../../models/infoPage')
 const addInfoPage = async (uniqueName, locationUrl, userForToken) => {
     const course =  await serviceUtils.fetchCourse(uniqueName)
     
-    if(!course.teacher.toString() === userForToken.id)
+    if(course.teacher.toString() !== userForToken.id)
     {
-        throw new UserInputError("Unauthorized!")
+        throw new UserInputError("Unauthorized")
     }
 
     const infoPage = {
