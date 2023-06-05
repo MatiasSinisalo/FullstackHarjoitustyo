@@ -32,9 +32,9 @@ const addInfoPage = async (uniqueName, locationUrl, userForToken) => {
 const addContentBlock = async (uniqueName, infoPageId, content, position, userForToken) => {
     const course =  await serviceUtils.fetchCourse(uniqueName)
     
-    if(!course.teacher.toString() === userForToken.id)
+    if(course.teacher.toString() !== userForToken.id)
     {
-        throw new UserInputError("Unauthorized!")
+        throw new UserInputError("Unauthorized")
     }
 
     const infoPage = course.infoPages.find((page) => page.id === infoPageId)
