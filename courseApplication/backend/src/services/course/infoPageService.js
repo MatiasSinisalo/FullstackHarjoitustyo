@@ -7,7 +7,7 @@ const Course = require('../../models/course')
 const { default: mongoose } = require('mongoose')
 const { Task, Submission, Grade } = require('../../models/task')
 const serviceUtils = require('../serviceUtils')
-const { InfoPage } = require('../../models/infoPage')
+const { InfoPage, ContentBlock } = require('../../models/infoPage')
 
 
 const addInfoPage = async (uniqueName, locationUrl, userForToken) => {
@@ -29,5 +29,33 @@ const addInfoPage = async (uniqueName, locationUrl, userForToken) => {
     return infoPageObj
 }
 
+const addContentBlock = async (uniqueName, infoPageId, content, position, userForToken) => {
+    const course =  await serviceUtils.fetchCourse(uniqueName)
+    
+    if(!course.teacher.toString() === userForToken.id)
+    {
+        throw new UserInputError("Unauthorized!")
+    }
 
-module.exports = {addInfoPage}
+    const infoPage = course.infoPages.find((page) => page.id === infoPageId)
+    if(!infoPage)
+    {
+        throw new UserInputError("Given info page not found")
+    }
+
+    const contentBlock = {
+        content: content,
+        position: position
+    }
+
+    const contentBlockObj = new ContentBlock(contentBlock)
+    infoPage.contentBlocks.push(contentBlockObj)
+    await course.save()
+    return contentBlockObj
+}
+
+
+module.exports = {
+    addInfoPage,
+    addContentBlock
+}

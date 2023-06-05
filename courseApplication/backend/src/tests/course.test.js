@@ -4,7 +4,7 @@ const Course = require('../models/course')
 const User = require('../models/user')
 const {Task} = require('../models/task')
 const { userCreateQuery, userLogInQuery, createSpesificUserQuery } = require('./userTestQueries')
-const { createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses, removeCourse, getCourse, removeTaskFromCourse, removeSubmissionFromCourseTask, modifySubmission, gradeSubmission, addInfoPageOnCourse } = require('./courseTestQueries')
+const { createCourse, addStudentToCourse, removeStudentFromCourse, addTaskToCourse, addSubmissionToCourseTask, getAllCourses, removeCourse, getCourse, removeTaskFromCourse, removeSubmissionFromCourseTask, modifySubmission, gradeSubmission, addInfoPageOnCourse, addContentBlockToInfoPage } = require('./courseTestQueries')
 const { query } = require('express')
 const mongoose = require('mongoose')
 const course = require('../models/course')
@@ -1854,5 +1854,47 @@ describe('course tests', () => {
                 expect(courseInDB.infoPages.length).toBe(0)
             })
         })
+    })
+
+    describe('addContentBlockToInfoPage query tests', () => {
+        test('addContentBlockToInfoPage creates content block correctly on info page', async () => {
+            const user = await helpers.logIn("username", apolloServer)
+            const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+            const allowedLocationUrl = "test123-1234abc-a1b2c"
+            const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageOnCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
+            const infoPage = infoPageQuery.data.addInfoPageToCourse
+            
+            const content = "this is some info content"
+            const position = 1
+            
+            const contentBlockQuery = await apolloServer.executeOperation({query: addContentBlockToInfoPage, variables: {
+                courseUniqueName: course.uniqueName, 
+                infoPageId: infoPage.id, 
+                content: content,
+                position: position
+            }})
+            console.log(contentBlockQuery)
+            const contentBlock = contentBlockQuery.data.addContentBlockToInfoPage
+            expect(contentBlock.content).toEqual(content)
+            expect(contentBlock.position).toEqual(position)
+
+
+            const coursesInDB = await Course.find()
+            expect(coursesInDB.length).toBe(1)
+            const courseInDB = coursesInDB[0]
+
+            expect(courseInDB.infoPages.length).toBe(1)
+            const infoPageInDB = courseInDB.infoPages[0]
+
+            expect(infoPageInDB.locationUrl).toEqual(allowedLocationUrl)
+            expect(infoPageInDB.contentBlocks.length).toBe(1)
+            
+            const contentBlockDB = infoPageInDB.contentBlocks[0].toObject()
+            delete contentBlockDB._id
+            expect(contentBlockDB).toEqual({content, position})
+            
+
+        })
+      
     })
 })

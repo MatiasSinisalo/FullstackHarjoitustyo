@@ -39,6 +39,16 @@ mutation AddInfoPageToCourse($locationUrl: String!, $courseUniqueName: String!) 
 }
 `
 
+const addContentBlockToInfoPage = `
+mutation AddContentBlockToInfoPage($courseUniqueName: String!, $content: String!, $position: Int!, $infoPageId: String!) {
+  addContentBlockToInfoPage(courseUniqueName: $courseUniqueName, content: $content, position: $position, infoPageId: $infoPageId) {
+    content
+    id
+    position
+  }
+}
+`
+
 const addStudentToCourse = `mutation AddStudentToCourse($addStudentToCourseUsername: String!, $courseUniqueName: String!) {
   addStudentToCourse(username: $addStudentToCourseUsername, courseUniqueName: $courseUniqueName) {
     name
@@ -234,6 +244,7 @@ module.exports = {createCourse,
                   removeSubmissionFromCourseTask, 
                   modifySubmission,
                   gradeSubmission,
-                  addInfoPageOnCourse
+                  addInfoPageOnCourse,
+                  addContentBlockToInfoPage
                 }
 
