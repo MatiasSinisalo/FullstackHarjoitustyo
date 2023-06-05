@@ -8,6 +8,20 @@ import Submission from '../components/Submission'
 import store from '../store';
 import { Provider } from 'react-redux';
 import { ME } from '../queries/userQueries'
+import {
+    BrowserRouter as Router,
+  } from "react-router-dom"
+
+
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useParams: () => ({
+        submissionId: 'abc1234',
+    }),
+}));
+
+
 describe('Submission Component tests', () => {
     const mocks = [
         {
@@ -20,15 +34,37 @@ describe('Submission Component tests', () => {
         }
       ];
 
-      const mockCourse = {teacher: {username: "username"}}
+    const mockCourse = {teacher: {username: "username"}}
+    
+  
 
     test('submission component displays no late message if submittedDate < deadline', async () => {
+        const submission={
+            id: "abc1234", 
+            fromUser: {username: "username"}, 
+            content: "this is the answer", 
+            submitted: true, 
+            submittedDate: new Date(Date.now())
+        }
+        const task = {
+            deadline: new Date(Date.now() + 1),
+            submissions: [submission]
+        }
+       
+       
         const containter = render(
-            <MockedProvider mocks={mocks}>
+          
+        <MockedProvider mocks={mocks}>
+           <Router>
                 <Provider store={store}>
-                    <Submission course={mockCourse} task = {{deadline: new Date(Date.now() + 1)}} submission={{id: "abc1234", fromUser: {username: "username"}, content: "this is the answer", submitted: true, submittedDate: new Date(Date.now())}}></Submission>
+               
+                        <Submission course={mockCourse} task = {task} ></Submission>
+               
                 </Provider>
-            </MockedProvider>
+            </Router>
+        </MockedProvider>
+           
+            
         )
         expect(await screen.findByText("loading...")).toBeInTheDocument();
         expect(await screen.findByText("this is the answer")).toBeInTheDocument();
@@ -38,11 +74,24 @@ describe('Submission Component tests', () => {
     test('submission component displays late message if submittedDate > deadline', async () => {
         const returnDate = new Date(Date.now())
         const correctDate = new Date(Date.now() + 100000)
-        
+        const submission={
+            id: "abc1234", 
+            fromUser: {username: "username"}, 
+            content: "this is the answer", 
+            submitted: true, 
+            submittedDate: correctDate
+        }
+        const task = {
+            deadline: new Date(Date.now() + 1),
+            submissions: [submission]
+        }
+
         const containter = render(
             <MockedProvider mocks={mocks}>
                 <Provider store={store}>
-                    <Submission course={mockCourse} task = {{deadline: returnDate}} submission={{id: "abc1234", fromUser: {username: "username"}, content: "this is the answer", submitted: true, submittedDate: correctDate}}></Submission>
+                    <Router>
+                        <Submission course={mockCourse} task = {task} ></Submission>
+                    </Router>
                 </Provider>
             </MockedProvider>
         )
@@ -52,10 +101,16 @@ describe('Submission Component tests', () => {
     })
 
     test('submission component displays no late message if submittedDate does not exist', async () => {
+        const submission= {
+            id: "abc1234", 
+            fromUser: {username: "username"}, 
+            content: "this is the answer", 
+            submitted: true
+        }
         const containter = render(
             <MockedProvider mocks={mocks}>
                 <Provider store={store}>
-                    <Submission course={mockCourse} task = {{deadline: new Date(Date.now())}} submission={{id: "abc1234", fromUser: {username: "username"}, content: "this is the answer", submitted: true}}></Submission>
+                    <Submission course={mockCourse} task = {{deadline: new Date(Date.now()), submissions: [submission]}} ></Submission>
                 </Provider>
             </MockedProvider>
         )
@@ -64,10 +119,19 @@ describe('Submission Component tests', () => {
     })
 
     test('submission component displays no late message if submittedDate exist but is null', async () => {
+
+        const submission={
+            id: "abc1234", 
+            fromUser: {username: "username"}, 
+            content: "this is the answer", 
+            submitted: true, 
+            submittedDate: null
+        }
+
         const containter = render(
             <MockedProvider mocks={mocks}>
                 <Provider store={store}>
-                    <Submission course={mockCourse} task = {{deadline: new Date(Date.now())}} submission={{id: "abc1234", fromUser: {username: "username"}, content: "this is the answer", submitted: true, submittedDate: null}}></Submission>
+                    <Submission course={mockCourse} task = {{deadline: new Date(Date.now()), submissions: [submission]}} ></Submission>
                 </Provider>
             </MockedProvider>
         )
