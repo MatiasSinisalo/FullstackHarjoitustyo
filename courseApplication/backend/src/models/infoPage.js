@@ -16,7 +16,13 @@ const contentBlockSchema = new mongoose.Schema({
 const infoPageSchema = new mongoose.Schema({
     locationUrl: {
         type: String,
-        required: true
+        required: true,
+        validate: {
+            validator: function(value) {
+              return /^([A-Za-z0-9])+((-?)([A-Za-z0-9]+))*$/.test(value);
+            },
+            message: props => `Incorrect locationUrl`
+        }
     },
     contentBlocks: [contentBlockSchema]
 })

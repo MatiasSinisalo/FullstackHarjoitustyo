@@ -1722,8 +1722,8 @@ describe('course tests', () => {
         test('createInfoPageOnCourse creates a new info page correctly', async () => {
             const user = await helpers.logIn("username", apolloServer)
             const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
-           
-            const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageOnCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "test"}})
+            const allowedLocationUrl = "test123-1234abc-a1b2c"
+            const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageOnCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
             
             expect(infoPageQuery.data.addInfoPageToCourse.locationUrl).toBeDefined()
 
@@ -1735,7 +1735,7 @@ describe('course tests', () => {
             const infoPageInDB = courseInDB.infoPages[0]
           
             expect(infoPageInDB.contentBlocks).toEqual([])
-            expect(infoPageInDB.locationUrl).toEqual("test")
+            expect(infoPageInDB.locationUrl).toEqual(allowedLocationUrl)
         })
         test('createInfoPageOnCourse returns Unauthorized if the user is not a teacher', async () => {
             const user = await helpers.logIn("username", apolloServer)
@@ -1752,6 +1752,107 @@ describe('course tests', () => {
 
             expect(courseInDB.infoPages.length).toBe(0)
            
+        })
+        describe('createInfoPageOnCourse returns Incorrect locationUrl if the location url is incorrect', () => {
+           
+            test('with spaces ', async () => {
+                const user = await helpers.logIn("username", apolloServer)
+                const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+           
+                const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageOnCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "this is incorrect url"}})
+                expect(infoPageQuery.errors[0].message).toContain("Incorrect locationUrl")
+                expect(infoPageQuery.data.addInfoPageToCourse).toBe(null)
+
+                const coursesInDB = await Course.find()
+                expect(coursesInDB.length).toBe(1)
+                const courseInDB = coursesInDB[0]
+
+                expect(courseInDB.infoPages.length).toBe(0)
+            })
+            test('with / ', async () => {
+                const user = await helpers.logIn("username", apolloServer)
+                const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+           
+                const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageOnCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "this/is/incorrect/url"}})
+                expect(infoPageQuery.errors[0].message).toContain("Incorrect locationUrl")
+                expect(infoPageQuery.data.addInfoPageToCourse).toBe(null)
+
+                const coursesInDB = await Course.find()
+                expect(coursesInDB.length).toBe(1)
+                const courseInDB = coursesInDB[0]
+
+                expect(courseInDB.infoPages.length).toBe(0)
+            })
+            test('with % ', async () => {
+                const user = await helpers.logIn("username", apolloServer)
+                const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+           
+                const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageOnCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "this%is%incorrect%url"}})
+                expect(infoPageQuery.errors[0].message).toContain("Incorrect locationUrl")
+                expect(infoPageQuery.data.addInfoPageToCourse).toBe(null)
+
+                const coursesInDB = await Course.find()
+                expect(coursesInDB.length).toBe(1)
+                const courseInDB = coursesInDB[0]
+
+                expect(courseInDB.infoPages.length).toBe(0)
+            })
+            test('starting with - ', async () => {
+                const user = await helpers.logIn("username", apolloServer)
+                const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+           
+                const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageOnCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "-this-is-incorrect-url"}})
+                expect(infoPageQuery.errors[0].message).toContain("Incorrect locationUrl")
+                expect(infoPageQuery.data.addInfoPageToCourse).toBe(null)
+
+                const coursesInDB = await Course.find()
+                expect(coursesInDB.length).toBe(1)
+                const courseInDB = coursesInDB[0]
+
+                expect(courseInDB.infoPages.length).toBe(0)
+            })
+            test('ending with -', async () => {
+                const user = await helpers.logIn("username", apolloServer)
+                const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+           
+                const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageOnCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "this-is-incorrect-url-"}})
+                expect(infoPageQuery.errors[0].message).toContain("Incorrect locationUrl")
+                expect(infoPageQuery.data.addInfoPageToCourse).toBe(null)
+
+                const coursesInDB = await Course.find()
+                expect(coursesInDB.length).toBe(1)
+                const courseInDB = coursesInDB[0]
+
+                expect(courseInDB.infoPages.length).toBe(0)
+            })
+            test('starting and ending with -', async () => {
+                const user = await helpers.logIn("username", apolloServer)
+                const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+           
+                const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageOnCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "-this-is-incorrect-url-"}})
+                expect(infoPageQuery.errors[0].message).toContain("Incorrect locationUrl")
+                expect(infoPageQuery.data.addInfoPageToCourse).toBe(null)
+
+                const coursesInDB = await Course.find()
+                expect(coursesInDB.length).toBe(1)
+                const courseInDB = coursesInDB[0]
+
+                expect(courseInDB.infoPages.length).toBe(0)
+            })
+            test('with double -', async () => {
+                const user = await helpers.logIn("username", apolloServer)
+                const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+           
+                const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageOnCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "this--is-incorrect-url"}})
+                expect(infoPageQuery.errors[0].message).toContain("Incorrect locationUrl")
+                expect(infoPageQuery.data.addInfoPageToCourse).toBe(null)
+
+                const coursesInDB = await Course.find()
+                expect(coursesInDB.length).toBe(1)
+                const courseInDB = coursesInDB[0]
+
+                expect(courseInDB.infoPages.length).toBe(0)
+            })
         })
     })
 })
