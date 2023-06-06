@@ -173,14 +173,14 @@ export const createInfoPageOnCourse = (course, pageUrl, client) => {
     return async function(dispatch)
     {
         console.log(pageUrl)
-        const removed = null
-        if(!removed.error)
+        const infoPage = await courseService.createInfoPage(course.uniqueName, pageUrl, client)
+        if(!infoPage?.error)
         {
             dispatch(Notify("successfully created info page", "successNotification", 3))
             return true
         }
         else{
-            dispatch(Notify(removed.error.message, "errorNotification", 3))
+            dispatch(Notify(infoPage.error.message, "errorNotification", 3))
             return false
         }
     }

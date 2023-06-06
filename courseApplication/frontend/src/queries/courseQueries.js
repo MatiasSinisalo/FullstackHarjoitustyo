@@ -204,3 +204,16 @@ mutation GradeSubmission($courseUniqueName: String!, $taskId: String!, $submissi
   }
 }
 `
+
+export const ADD_INFO_PAGE_TO_COURSE = gql`
+mutation AddInfoPageToCourse($locationUrl: String!, $courseUniqueName: String!) {
+  addInfoPageToCourse(locationUrl: $locationUrl, courseUniqueName: $courseUniqueName) {
+    id
+    contentBlocks {
+      content
+      position
+    }
+    locationUrl
+  }
+}
+` 
