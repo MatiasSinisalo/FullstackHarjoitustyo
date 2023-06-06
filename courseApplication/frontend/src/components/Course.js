@@ -72,7 +72,7 @@ const Course = () =>{
         </Route>
       <Route path="tasks" element={<TaskListings course={course}></TaskListings>}/>
       <Route path="task/:taskId/*" element={<Task course={course}/>}/>  
-      <Route path="page/:infoPageUrl" element={<InfoPage course={course}></InfoPage>}/>
+      <Route path="page/:infoPageUrl" element={<InfoPage course={course} user={user}></InfoPage>}/>
     </Routes>
     
     </div>

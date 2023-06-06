@@ -1,10 +1,10 @@
 import { useState } from "react"
 
 
-const ContentBlockCreateForm = () => {
-    const [blocks, setBlocks] = useState([])
+const ContentBlockCreateForm = ({blocks, setBlocks}) => {
+   
     const createNewBlock = () => {
-        setBlocks(blocks.concat({position: blocks.length, content: "hello"}))
+        setBlocks(blocks.concat({position: blocks.length, content: ""}))
     }
 
     const modifyBlockContent = (newContent, block) => {
@@ -15,14 +15,14 @@ const ContentBlockCreateForm = () => {
     return (
         <>
             <p>content blocks: </p>
-            {blocks.map((block) => <Block key={block.position} block={block} modifyBlock={modifyBlockContent}></Block>)} 
+            {blocks.map((block) => <EditableBlock key={block.position} block={block} modifyBlock={modifyBlockContent}></EditableBlock>)} 
             <br/>
             <button type="button" onClick={createNewBlock}>new block</button>
         </>
     )
 }
 
-const Block = ({block, modifyBlock}) => {
+const EditableBlock = ({block, modifyBlock}) => {
     const whenChanged = (event) => {
         modifyBlock(event.target.value, block)
     }
