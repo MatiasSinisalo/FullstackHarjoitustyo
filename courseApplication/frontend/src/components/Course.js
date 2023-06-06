@@ -55,7 +55,14 @@ const Course = () =>{
       {user.username === course.teacher.username ? <Link to="teacher">teachers view</Link> : <></>}
       <br></br>
       <Link to="tasks">tasks</Link>
+
+      <div className="blueBox infoPageListing">
+        <p>courses info pages</p>
+        {course.infoPages.map((page) => <Link key={page.locationUrl} to={`page/${page.locationUrl}`}>{page.locationUrl}</Link>)}
+      </div>
     </div>
+
+   
     
     <Routes>
       <Route path="teacher" element={<TeachersCourse course={course}/>}>

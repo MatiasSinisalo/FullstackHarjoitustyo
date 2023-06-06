@@ -13,6 +13,11 @@
     background-color: lightblue;
 }
 
+.infoPageListing{
+    display: flex;
+    flex-direction: column;
+}
+
 .task{
     background-color: white;
     margin: 2%;
