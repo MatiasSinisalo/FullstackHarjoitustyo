@@ -169,3 +169,20 @@ export const removeCourse = (course, client, navigate) => {
     }
 }
 
+export const createInfoPageOnCourse = (course, pageUrl, client) => {
+    return async function(dispatch)
+    {
+        console.log(pageUrl)
+        const removed = null
+        if(!removed.error)
+        {
+            dispatch(Notify("successfully created info page", "successNotification", 3))
+            return true
+        }
+        else{
+            dispatch(Notify(removed.error.message, "errorNotification", 3))
+            return false
+        }
+    }
+}
+

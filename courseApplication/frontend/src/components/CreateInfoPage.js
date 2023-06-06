@@ -1,11 +1,17 @@
+import { useApolloClient } from "@apollo/client"
 import { useState } from "react"
+import { useDispatch } from "react-redux"
+import { createInfoPageOnCourse } from "../reducers/courseReducer"
 
 
 
-const CreateInfoPage = () => {
-   
+const CreateInfoPage = ({course}) => {
+    const dispatch = useDispatch()
+    const client = useApolloClient()
     const createInfoPage = (event) => {
         event.preventDefault()
+        const pageUrl = event.target.locationUrl.value
+        dispatch(createInfoPageOnCourse(course, pageUrl, client))
     }
     return(
        <div>
