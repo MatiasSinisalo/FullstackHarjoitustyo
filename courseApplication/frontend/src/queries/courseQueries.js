@@ -79,6 +79,15 @@ query GetCourse($uniqueName: String!) {
       name
       username
     }
+    infoPages{
+      id
+      locationUrl
+      contentBlocks{
+        id
+        content
+        position
+      }
+    }
   }
 }
 `

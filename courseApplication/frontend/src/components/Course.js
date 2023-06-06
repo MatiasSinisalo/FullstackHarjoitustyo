@@ -17,6 +17,7 @@ import { ME } from "../queries/userQueries"
 import TeachersCourse, { TaskCreationForm } from "./TeachersCourse"
 import CourseParticipants from "./CourseParticipants"
 import CreateInfoPage from "./CreateInfoPage"
+import InfoPage from "./InfoPage"
 
 
 
@@ -64,7 +65,7 @@ const Course = () =>{
         </Route>
       <Route path="tasks" element={<TaskListings course={course}></TaskListings>}/>
       <Route path="task/:taskId/*" element={<Task course={course}/>}/>  
-      
+      <Route path="page/:infoPageUrl" element={<InfoPage course={course}></InfoPage>}/>
     </Routes>
     
     </div>
