@@ -5,7 +5,7 @@ beforeEach(function () {
     prepareTests()
  })
 
- describe('course page tests', () => {
+describe('course page tests', () => {
     it('user can visit the course page that the user participates in from the course browser', () => {
         logInAsUser("username", "password1234")
         createCourseAsUser("this course is created by user username", "courses name")

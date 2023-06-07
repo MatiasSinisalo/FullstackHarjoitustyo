@@ -188,4 +188,22 @@ const visitTaskView = (description) => {
     const taskShowcase = cy.contains(description).parent()
     taskShowcase.contains("view").click()
 }
-export {prepareTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser,joinCourseAsUser, endTests, visitCoursePageAsStudentFromDashboard, createSubmissionToATask, tomorrow, visitTaskView}
+
+const createInfoPage = (pageurl) => {
+    cy.contains("teachers view").click()
+    cy.contains("create new info page").click()
+    cy.get(`input[name="locationUrl"]`).type(pageurl)
+    cy.get(`input[value="create new info page"]`).click() 
+}
+export {prepareTests, 
+    logInAsUser, 
+    createCourseAsUser, 
+    createTaskOnCourseAsUser,
+    joinCourseAsUser, 
+    endTests, 
+    visitCoursePageAsStudentFromDashboard, 
+    createSubmissionToATask, 
+    tomorrow, 
+    visitTaskView,
+    createInfoPage
+}
