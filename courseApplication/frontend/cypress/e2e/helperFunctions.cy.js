@@ -195,6 +195,11 @@ const createInfoPage = (pageurl) => {
     cy.get(`input[name="locationUrl"]`).type(pageurl)
     cy.get(`input[value="create new info page"]`).click() 
 }
+
+const createContentBlock = (content) => {
+    cy.get(`textarea[name="newBlockContent"]`).type(content)
+    cy.get(`button`).contains("new block").click()
+}
 export {prepareTests, 
     logInAsUser, 
     createCourseAsUser, 
@@ -205,5 +210,6 @@ export {prepareTests,
     createSubmissionToATask, 
     tomorrow, 
     visitTaskView,
-    createInfoPage
+    createInfoPage,
+    createContentBlock
 }
