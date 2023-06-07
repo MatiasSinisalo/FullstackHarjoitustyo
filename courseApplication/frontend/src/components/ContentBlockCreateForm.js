@@ -1,8 +1,13 @@
 import { useState } from "react"
+import { useDispatch } from "react-redux"
+import { createContentBlockOnInfoPage } from "../reducers/courseReducer"
+import { useApolloClient } from "@apollo/client"
 
 
-const ContentBlockCreateForm = ({blocks, setBlocks}) => {
+const ContentBlockCreateForm = ({blocks, course, infoPage}) => {
     const [content, setContent] = useState()
+    const dispatch = useDispatch()
+    const client = useApolloClient()
     const whenChanged = (event) => {
         if(event.nativeEvent.inputType === "insertLineBreak")
         {
@@ -13,7 +18,7 @@ const ContentBlockCreateForm = ({blocks, setBlocks}) => {
 
     const createNewBlock = () => {
         console.log(content)
-        setBlocks(blocks.concat({position: blocks.length, content}))
+        dispatch(createContentBlockOnInfoPage(course, infoPage.id, content, blocks.length, client))
     }
 
     return (

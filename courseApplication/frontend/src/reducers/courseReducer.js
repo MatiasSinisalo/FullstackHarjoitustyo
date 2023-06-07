@@ -186,3 +186,19 @@ export const createInfoPageOnCourse = (course, pageUrl, client) => {
     }
 }
 
+export const createContentBlockOnInfoPage = (course, pageId, content, position, client) => {
+    return async function(dispatch)
+    {
+        const contentBlock = await courseService.createContentBlock(course.uniqueName, pageId, content, position, client)
+        if(!contentBlock?.error)
+        {
+            dispatch(Notify("successfully created content block", "successNotification", 3))
+            return true
+        }
+        else{
+            dispatch(Notify(contentBlock.error.message, "errorNotification", 3))
+            return false
+        }
+    }
+}
+
