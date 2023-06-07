@@ -196,9 +196,18 @@ const gradeSubmission = async (courseUniqueName, taskId, submissionId, grade, cl
 const createInfoPage = async (courseUniqueName, locationUrl, client) => {
     try{
         const result = await client.mutate({mutation: ADD_INFO_PAGE_TO_COURSE, variables: {courseUniqueName, locationUrl}})
-        if(result.data.gradeSubmission)
+        if(result.data.addInfoPageToCourse)
         {
-            return result.data.gradeSubmission
+            const course = client.readQuery({query: GET_COURSE, variables: {uniqueName: courseUniqueName}}).getCourse
+            client.cache.modify({
+                id: client.cache.identify(course),
+                fields: {
+                    infoPages(pages){
+                        return pages.concat({__ref: `InfoPage:${result.data.addInfoPageToCourse.id}`})
+                    }
+                }
+            })
+            return result.data.addInfoPageToCourse
         }
     }
     catch(err)
