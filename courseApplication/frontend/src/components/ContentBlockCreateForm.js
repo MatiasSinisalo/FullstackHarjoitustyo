@@ -24,6 +24,10 @@ const ContentBlockCreateForm = ({blocks, setBlocks}) => {
 
 const EditableBlock = ({block, modifyBlock}) => {
     const whenChanged = (event) => {
+        if(event.nativeEvent.inputType === "insertLineBreak")
+        {
+            return
+        }
         modifyBlock(event.target.value, block)
     }
 
