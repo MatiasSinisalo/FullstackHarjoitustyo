@@ -35,7 +35,7 @@ beforeEach(async () => {
 
 
 describe('addInfoPageToCourse tests', () => {
-    test('createInfoPageOnCourse creates a new info page correctly', async () => {
+    test('createInfoPageToCourse creates a new info page correctly', async () => {
         const user = await helpers.logIn("username", apolloServer)
         const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
         const allowedLocationUrl = "test123-1234abc-a1b2c"
@@ -53,7 +53,7 @@ describe('addInfoPageToCourse tests', () => {
         expect(infoPageInDB.contentBlocks).toEqual([])
         expect(infoPageInDB.locationUrl).toEqual(allowedLocationUrl)
     })
-    test('createInfoPageOnCourse returns Unauthorized if the user is not a teacher', async () => {
+    test('createInfoPageToCourse returns Unauthorized if the user is not a teacher', async () => {
         const user = await helpers.logIn("username", apolloServer)
         const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
        
@@ -65,11 +65,27 @@ describe('addInfoPageToCourse tests', () => {
         const coursesInDB = await Course.find()
         expect(coursesInDB.length).toBe(1)
         const courseInDB = coursesInDB[0]
-
         expect(courseInDB.infoPages.length).toBe(0)
        
     })
-    describe('createInfoPageOnCourse returns Incorrect locationUrl if the location url is incorrect', () => {
+    test('createInfoPageToCourse does not allow multiple pages with the same url', async () => {
+        const user = await helpers.logIn("username", apolloServer)
+        const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+        const allowedLocationUrl = "test123-1234abc-a1b2c"
+        const firstInfoPageQuery = await apolloServer.executeOperation({query: addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
+        const secondInfoPageQuery = await apolloServer.executeOperation({query: addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
+
+        expect(secondInfoPageQuery.data.addInfoPageToCourse).toBe(null)
+        expect(secondInfoPageQuery.errors[0].message).toEqual("Given page already exists")
+        
+        const coursesInDB = await Course.find()
+        expect(coursesInDB.length).toBe(1)
+        const courseInDB = coursesInDB[0]
+        expect(courseInDB.infoPages.length).toBe(1)
+
+        
+    })
+    describe('createInfoPageToCourse returns Incorrect locationUrl if the location url is incorrect', () => {
        
         test('with spaces ', async () => {
             const user = await helpers.logIn("username", apolloServer)
