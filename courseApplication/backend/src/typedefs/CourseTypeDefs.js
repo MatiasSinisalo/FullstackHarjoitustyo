@@ -84,6 +84,12 @@ type Mutation{
         position: Int!
     ):ContentBlock
 
+    removeContentBlockFromInfoPage(
+        courseUniqueName: String!
+        infoPageId: String!
+        contentBlockId: String!
+    )
+    
     addTaskToCourse(
         courseUniqueName: String!
         description: String!
