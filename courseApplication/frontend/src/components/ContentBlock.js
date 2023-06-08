@@ -15,8 +15,8 @@ const ContentBlock = ({course, page, block, user}) => {
     return (
         <div className={`contentBlock:${block.id}`}>
             <p>{block.content}</p>
-            {user.username === course.teacher.username}
-            <button onClick={deleteBlock}>delete</button> 
+            {user.username === course.teacher.username ? <button onClick={deleteBlock}>delete</button>  : <></>}
+            
         </div>
     )
 }
