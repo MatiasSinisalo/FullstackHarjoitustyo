@@ -236,3 +236,9 @@ mutation AddContentBlockToInfoPage($courseUniqueName: String!, $content: String!
   }
 }
 `
+
+export const REMOVE_CONTENT_BLOCK_FROM_INFO_PAGE = gql`
+mutation RemoveContentBlockFromInfoPage($courseUniqueName: String!, $infoPageId: String!, $contentBlockId: String!) {
+  removeContentBlockFromInfoPage(courseUniqueName: $courseUniqueName, infoPageId: $infoPageId, contentBlockId: $contentBlockId)
+}
+`

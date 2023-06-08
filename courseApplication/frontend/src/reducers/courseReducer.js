@@ -202,3 +202,18 @@ export const createContentBlockOnInfoPage = (course, pageId, content, position, 
     }
 }
 
+export const removeContentBlockFromInfoPage = (course, pageId, contentBlockId, client) => {
+    return async function(dispatch)
+    {
+        const removed = await courseService.removeContentBlock(course.uniqueName, pageId, contentBlockId, client)
+        if(!removed.error)
+        {
+            dispatch(Notify("successfully removed content block", "successNotification", 3))
+            return true
+        }
+        else{
+            dispatch(Notify(removed.error.message, "errorNotification", 3))
+            return false
+        }
+    }
+}
