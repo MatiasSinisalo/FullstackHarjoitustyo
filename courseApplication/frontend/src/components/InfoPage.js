@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom"
 import ContentBlockCreateForm from "./ContentBlockCreateForm"
 import { useState } from "react"
+import ContentBlock from "./ContentBlock"
 
 
 const InfoPage = ({course, user}) => {
@@ -20,7 +21,7 @@ const InfoPage = ({course, user}) => {
         <>
         <h1>{infoPage.locationUrl}</h1>
         <p>this is an info page</p>
-        {blocks.map((b) => <p>{b.content}</p>)}
+        {blocks.map((block) => <ContentBlock key={block.id} block={block} user={user} course={course}></ContentBlock>)}
         {course.teacher.username === user.username ? 
             <ContentBlockCreateForm startingBlocks={infoPage.contentBlocks} blocks={blocks} course={course} infoPage={infoPage}></ContentBlockCreateForm>
         :
