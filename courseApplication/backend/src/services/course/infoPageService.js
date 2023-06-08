@@ -9,7 +9,6 @@ const { Task, Submission, Grade } = require('../../models/task')
 const serviceUtils = require('../serviceUtils')
 const { InfoPage, ContentBlock } = require('../../models/infoPage')
 
-
 const addInfoPage = async (uniqueName, locationUrl, userForToken) => {
     const course =  await serviceUtils.fetchCourse(uniqueName)
     
@@ -61,8 +60,29 @@ const addContentBlock = async (uniqueName, infoPageId, content, position, userFo
 }
 
 const removeContentBlock = async (courseUniqueName, infoPageId, contentBlockId, userForToken) => {
+    const course = await serviceUtils.fetchCourse(courseUniqueName)
     
-    return false
+    if(course.teacher.toString() !== userForToken.id)
+    {
+        throw new UserInputError("Unauthorized")
+    }
+
+    const infoPage = course.infoPages.find((page) => page.id === infoPageId)
+    if(!infoPage)
+    {
+        throw new UserInputError("Given info page not found")
+    }
+
+    const contentBlock = infoPage.contentBlocks.find((block) => block.id === contentBlockId)
+    if(!contentBlock)
+    {
+        throw new UserInputError("Given content block not found")
+    }
+
+    const filteredBlocks = infoPage.contentBlocks.filter((block) => block.id !== contentBlock.id)
+    infoPage.contentBlocks = filteredBlocks
+    await course.save()
+    return true
 }
 
 module.exports = {
