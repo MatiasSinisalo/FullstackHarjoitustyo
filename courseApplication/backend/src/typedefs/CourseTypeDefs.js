@@ -88,8 +88,8 @@ type Mutation{
         courseUniqueName: String!
         infoPageId: String!
         contentBlockId: String!
-    )
-    
+    ):Boolean
+
     addTaskToCourse(
         courseUniqueName: String!
         description: String!
