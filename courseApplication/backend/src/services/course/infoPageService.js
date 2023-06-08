@@ -60,8 +60,13 @@ const addContentBlock = async (uniqueName, infoPageId, content, position, userFo
     return contentBlockObj
 }
 
+const removeContentBlock = async (courseUniqueName, infoPageId, contentBlockId, userForToken) => {
+    
+    return false
+}
 
 module.exports = {
     addInfoPage,
-    addContentBlock
+    addContentBlock,
+    removeContentBlock
 }
