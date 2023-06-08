@@ -248,6 +248,8 @@ const removeContentBlock = async(courseUniqueName, pageId, contentBlockId, clien
         })
         if(result.data.removeContentBlockFromInfoPage)
         {
+            client.cache.evict({id: `ContentBlock:${contentBlockId}`})
+            client.cache.gc()
             return result.data.removeContentBlockFromInfoPage
         }
     }
