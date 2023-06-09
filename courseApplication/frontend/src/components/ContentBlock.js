@@ -2,24 +2,42 @@ import { useState } from "react"
 import { removeContentBlockFromInfoPage } from "../reducers/courseReducer"
 import { useApolloClient } from "@apollo/client"
 import { useDispatch } from "react-redux"
+import EditableBlock from "./EditableBlock"
 
 
 const ContentBlock = ({course, page, block, user}) => {
     const client = useApolloClient()
     const dispatch = useDispatch()
-    const deleteBlock = () => {
-        dispatch(removeContentBlockFromInfoPage(course, page.id, block.id, client))
-        console.log("deleting block")
-    }
+    const [editing, setEditing] = useState(false)
 
+ 
     return (
         <div className={`contentBlock:${block.id}`}>
-            <p>{block.content}</p>
-            {user.username === course.teacher.username ? <button onClick={deleteBlock}>delete</button>  : <></>}
-            
+            {
+                editing ? 
+                <EditableBlock course={course} page={page} block={block}></EditableBlock>
+                :
+                <p>{block.content}</p>
+            }
+            <br/>
+            {user.username === course.teacher.username ?  <ToggleEditButton editing={editing} setEditing={setEditing}></ToggleEditButton>  : <></>}
         </div>
     )
 }
+
+const ToggleEditButton = ({editing, setEditing}) => {
+    return(
+        <>
+        {
+            editing ? 
+            <button onClick={() => setEditing(false)}>cancel</button>
+            :
+            <button onClick={() => setEditing(true)}>edit</button>
+        }
+        </>
+    )
+}
+
 
 export default ContentBlock
 
