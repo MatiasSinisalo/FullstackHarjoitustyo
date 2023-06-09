@@ -19,7 +19,7 @@ describe('content blocks removal tests', () => {
         createInfoPage("test-url")
         cy.contains("courses info pages").parent().contains("test-url").click()
         createContentBlock("this is a sample content block")
-
+        cy.get('div[class*="contentBlock:"]').contains("edit").click()
         cy.intercept("POST", "http://localhost:4000/", (request) => {
             if(request.body.query.includes('removeContentBlockFromInfoPage'))
             {
@@ -49,7 +49,7 @@ describe('content blocks removal tests', () => {
         joinCourseAsUser("courses unique name", "second username")
         visitCoursePageAsStudentFromDashboard("courses unique name")
         cy.contains("courses info pages").parent().contains("test-url").click()
-        
+        cy.get('div[class*="contentBlock:"]').contains("edit").should('not.exist')
         cy.get('div[class*="contentBlock:"]').contains("delete").should('not.exist')
        
     })
