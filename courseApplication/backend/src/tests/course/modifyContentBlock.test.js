@@ -71,6 +71,51 @@ describe('modifyContentBlock tests', () => {
             variables: {courseUniqueName: course.uniqueName, infoPageId: infopage.id, contentBlockId: contentBlock.id, content: newContent}})
         expect(contentBlockEditQuery.data.modifyContentBlock).toEqual(null)
         expect(contentBlockEditQuery.errors[0].message).toEqual("Unauthorized")
+
+        await checkContentBlockContent(contentBlock.content)
+    })
+
+    test('modifyContentBlock modifies returns Given course not found if course is not found', async () => {
+        await helpers.logIn("username", apolloServer)
+        const course = await helpers.createCourse("unique name", "name", [], apolloServer)
+        const infopage = await helpers.createInfoPage(course, "page-url", apolloServer)
+        const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0, apolloServer)
+        
+        const newContent = "this is modified content"
+        const contentBlockEditQuery = await apolloServer.executeOperation({query: modifyContentBlock, 
+            variables: {courseUniqueName: "does not exist", infoPageId: infopage.id, contentBlockId: contentBlock.id, content: newContent}})
+        expect(contentBlockEditQuery.data.modifyContentBlock).toEqual(null)
+        expect(contentBlockEditQuery.errors[0].message).toEqual("Given course not found")
+        
+        await checkContentBlockContent(contentBlock.content)
+    })
+
+    test('modifyContentBlock modifies returns Given info page not found if page is not found', async () => {
+        await helpers.logIn("username", apolloServer)
+        const course = await helpers.createCourse("unique name", "name", [], apolloServer)
+        const infopage = await helpers.createInfoPage(course, "page-url", apolloServer)
+        const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0, apolloServer)
+        
+        const newContent = "this is modified content"
+        const contentBlockEditQuery = await apolloServer.executeOperation({query: modifyContentBlock, 
+            variables: {courseUniqueName: course.uniqueName, infoPageId:"abc1234", contentBlockId: contentBlock.id, content: newContent}})
+        expect(contentBlockEditQuery.data.modifyContentBlock).toEqual(null)
+        expect(contentBlockEditQuery.errors[0].message).toEqual("Given info page not found")
+        
+        await checkContentBlockContent(contentBlock.content)
+    })
+
+    test('modifyContentBlock modifies returns Given content block not found if content block is not found', async () => {
+        await helpers.logIn("username", apolloServer)
+        const course = await helpers.createCourse("unique name", "name", [], apolloServer)
+        const infopage = await helpers.createInfoPage(course, "page-url", apolloServer)
+        const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0, apolloServer)
+        
+        const newContent = "this is modified content"
+        const contentBlockEditQuery = await apolloServer.executeOperation({query: modifyContentBlock, 
+            variables: {courseUniqueName: course.uniqueName, infoPageId:infopage.id, contentBlockId: "abc1234", content: newContent}})
+        expect(contentBlockEditQuery.data.modifyContentBlock).toEqual(null)
+        expect(contentBlockEditQuery.errors[0].message).toEqual("Given content block not found")
         
         await checkContentBlockContent(contentBlock.content)
     })
