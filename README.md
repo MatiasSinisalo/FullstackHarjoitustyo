@@ -9,7 +9,7 @@ https://studastudy.onrender.com/
 - user can create an account and log in  
 - user can create/remove a course
 - user can join/leave a course
-- user can create an info page on course
+- user can create/remove an info page on course
 - user can create/remove paragraph blocks on a info page
 - user can add/remove a task on a course
 - user can add/modify/remove an answer to a task
