@@ -34,6 +34,26 @@ const addInfoPage = async (uniqueName, locationUrl, userForToken) => {
     return infoPageObj
 }
 
+const removeInfoPage = async (uniqueName, infoPageId, userForToken) => {
+    const course = await serviceUtils.fetchCourse(uniqueName)
+    
+    if(course.teacher.toString() !== userForToken.id)
+    {
+        throw new UserInputError("Unauthorized")
+    }
+    
+    const alreadyExistingInfoPage = course.infoPages.find((page) => page.id === infoPageId)
+    if(!alreadyExistingInfoPage)
+    {
+        throw new UserInputError("Given page not found")
+    }
+
+    const filteredInfoPages = course.infoPages.filter((page) => page.id !== infoPageId)
+    course.infoPages = filteredInfoPages
+    await course.save()
+    return true
+}
+
 const addContentBlock = async (uniqueName, infoPageId, content, position, userForToken) => {
     const course =  await serviceUtils.fetchCourse(uniqueName)
     
@@ -88,5 +108,6 @@ const removeContentBlock = async (courseUniqueName, infoPageId, contentBlockId, 
 module.exports = {
     addInfoPage,
     addContentBlock,
-    removeContentBlock
+    removeContentBlock,
+    removeInfoPage
 }
