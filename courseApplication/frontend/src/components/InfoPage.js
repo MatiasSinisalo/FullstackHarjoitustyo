@@ -20,7 +20,6 @@ const InfoPage = ({course, user}) => {
     return (
         <>
         <h1>{infoPage.locationUrl}</h1>
-        <p>this is an info page</p>
         {blocks.map((block) => <ContentBlock key={block.id} block={block} user={user} course={course} page={infoPage}></ContentBlock>)}
         {course.teacher.username === user.username ? 
             <ContentBlockCreateForm startingBlocks={infoPage.contentBlocks} blocks={blocks} course={course} infoPage={infoPage}></ContentBlockCreateForm>
