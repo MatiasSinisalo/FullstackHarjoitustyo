@@ -223,7 +223,8 @@ const removeInfoPage = async (courseUniqueName, infoPageId, client) => {
         })
         if(result.data.removeInfoPageFromCourse)
         {
-          
+            client.cache.evict({id: `InfoPage:${infoPageId}`})
+            client.cache.gc()
             return result.data.removeInfoPageFromCourse
         }
     }
