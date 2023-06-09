@@ -70,6 +70,19 @@ describe('removeInfoPageFromCourse tests', () => {
         await checkInfoPageStillExists(infoPage)
     })
 
+    test('removeInfoPageFromCourse returns given course not found if the course is not found', async () => {
+        await helpers.logIn("username", apolloServer)
+        const course = await helpers.createCourse("courses unique name", "name", [], apolloServer)
+        const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "this-is-url"}})
+        const infoPage = infoPageQuery.data.addInfoPageToCourse
+        const infoPageRemoveQuery = await apolloServer.executeOperation({query: removeInfoPageFromCourse, variables: {courseUniqueName: "course does not exist", infoPageId: infoPage.id}})
+        
+        expect(infoPageRemoveQuery.errors[0].message).toBe("Given course not found")
+        expect(infoPageRemoveQuery.data.removeInfoPageFromCourse).toBe(null)
+
+        await checkInfoPageStillExists(infoPage)
+    })
+
 
 })
 
