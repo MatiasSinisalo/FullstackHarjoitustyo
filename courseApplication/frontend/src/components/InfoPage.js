@@ -17,9 +17,14 @@ const InfoPage = ({course, user}) => {
         )
     }
 
+    const removePage = () => {
+        console.log("removing info page!")
+    }
     return (
         <>
         <h1>{infoPage.locationUrl}</h1>
+        {course.teacher.username === user.username ? <button onClick={removePage}>remove page</button> : <></>}
+        <br/>
         {blocks.map((block) => <ContentBlock key={block.id} block={block} user={user} course={course} page={infoPage}></ContentBlock>)}
         {course.teacher.username === user.username ? 
             <ContentBlockCreateForm startingBlocks={infoPage.contentBlocks} blocks={blocks} course={course} infoPage={infoPage}></ContentBlockCreateForm>
