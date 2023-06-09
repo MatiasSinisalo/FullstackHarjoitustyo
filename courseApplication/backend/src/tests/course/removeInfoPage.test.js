@@ -30,6 +30,13 @@ beforeEach(async () => {
     await Task.deleteMany({})
 })
 
+const checkInfoPageStillExists = async (infoPage) => {
+    const coursesInDB = await Course.find({})
+    expect(coursesInDB.length).toBe(1)
+    const courseInDB = coursesInDB[0]
+    expect(courseInDB.infoPages.length).toBe(1)
+    expect(courseInDB.infoPages[0].id).toEqual(infoPage.id)
+}
 
 describe('removeInfoPageFromCourse tests', () => {
     test('remove info page removes info page correctly', async () => {
@@ -46,13 +53,23 @@ describe('removeInfoPageFromCourse tests', () => {
         
         expect(infoPageRemoveQuery.data.removeInfoPageFromCourse).toBe(true)
 
-        const coursesInDB = await Course.find({})
-        expect(coursesInDB.length).toBe(1)
-
-        const courseInDB = coursesInDB[0]
-        expect(courseInDB.infoPages.length).toBe(1)
-        expect(courseInDB.infoPages[0].id).toEqual(infoPageThatShouldNotBeRemoved.data.addInfoPageToCourse.id)
+        await checkInfoPageStillExists(infoPageThatShouldNotBeRemoved.data.addInfoPageToCourse)
     })
+
+    test('remove info page returns Unauthorized if the user is not a teacher', async () => {
+        await helpers.logIn("username", apolloServer)
+        const course = await helpers.createCourse("courses unique name", "name", [], apolloServer)
+        const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "this-is-url"}})
+        const infoPage = infoPageQuery.data.addInfoPageToCourse
+        await helpers.logIn("students username", apolloServer)
+        const infoPageRemoveQuery = await apolloServer.executeOperation({query: removeInfoPageFromCourse, variables: {courseUniqueName: course.uniqueName, infoPageId: infoPage.id}})
+        
+        expect(infoPageRemoveQuery.errors[0].message).toBe("Unauthorized")
+        expect(infoPageRemoveQuery.data.removeInfoPageFromCourse).toBe(null)
+
+        await checkInfoPageStillExists(infoPage)
+    })
+
 
 })
 
