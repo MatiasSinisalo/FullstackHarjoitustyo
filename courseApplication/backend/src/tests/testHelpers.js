@@ -39,4 +39,22 @@ const createSubmission = async (course, taskId, content, submitted, apolloServer
    
     return submission.data.addSubmissionToCourseTask
 }
-module.exports = {logIn, createCourse, createTask, createSubmission}
+
+const createInfoPage = async(course, url, apolloServer) => {
+    const infoPageQuery = await apolloServer.executeOperation({query: testQueries.addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: url}})
+    const infoPage = infoPageQuery.data.addInfoPageToCourse
+    return infoPage
+}
+
+const createContentBlock = async (course, infoPage, content, position, apolloServer) => {
+   
+    
+    const contentBlockQuery = await apolloServer.executeOperation({query: testQueries.addContentBlockToInfoPage, variables: {
+        courseUniqueName: course.uniqueName, 
+        infoPageId: infoPage.id, 
+        content: content,
+        position: position
+    }})
+    return contentBlockQuery.data.addContentBlockToInfoPage
+}
+module.exports = {logIn, createCourse, createTask, createSubmission, createInfoPage, createContentBlock}

@@ -54,6 +54,16 @@ mutation AddContentBlockToInfoPage($courseUniqueName: String!, $content: String!
   }
 }
 `
+
+const modifyContentBlock = `
+mutation ModifyContentBlock($courseUniqueName: String!, $infoPageId: String!, $contentBlockId: String!, $content: String!) {
+  modifyContentBlock(courseUniqueName: $courseUniqueName, infoPageId: $infoPageId, contentBlockId: $contentBlockId, content: $content) {
+    content
+    id
+    position
+  }
+}
+`
 const removeContentBlockFromInfoPage = `
 mutation RemoveContentBlockFromInfoPage($courseUniqueName: String!, $infoPageId: String!, $contentBlockId: String!) {
   removeContentBlockFromInfoPage(courseUniqueName: $courseUniqueName, infoPageId: $infoPageId, contentBlockId: $contentBlockId)
@@ -258,6 +268,7 @@ module.exports = {createCourse,
                   addInfoPageToCourse,
                   removeInfoPageFromCourse,
                   addContentBlockToInfoPage,
-                  removeContentBlockFromInfoPage
+                  removeContentBlockFromInfoPage,
+                  modifyContentBlock
                 }
 

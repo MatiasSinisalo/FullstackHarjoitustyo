@@ -79,8 +79,29 @@ const addContentBlock = async (uniqueName, infoPageId, content, position, userFo
     return contentBlockObj
 }
 
-const modifyContentBlock = async(courseUniqueName, infoPageId, contentBlockId, content, userForToken) => {
-    return null
+const modifyContentBlock = async(uniqueName, infoPageId, contentBlockId, newContent, userForToken) => {
+    const course = await serviceUtils.fetchCourse(uniqueName)
+
+    if(course.teacher.toString() !== userForToken.id)
+    {
+        throw new UserInputError("Unauthorized")
+    }
+
+    const infoPage = course.infoPages.find((page) => page.id === infoPageId)
+    if(!infoPage)
+    {
+        throw new UserInputError("Given info page not found")
+    }
+
+    const contentBlock = infoPage.contentBlocks.find((block) => block.id === contentBlockId)
+    if(!contentBlock)
+    {
+        throw new UserInputError("Given content block not found")
+    }
+
+    contentBlock.content = newContent
+    await course.save()
+    return contentBlock
 }
 
 const removeContentBlock = async (courseUniqueName, infoPageId, contentBlockId, userForToken) => {
