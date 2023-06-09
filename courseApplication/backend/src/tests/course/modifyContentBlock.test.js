@@ -30,6 +30,19 @@ beforeEach(async () => {
     await Task.deleteMany({})
 })
 
+const checkContentBlockContent = async (content) => {
+    const coursesInDB = await Course.find({})
+    expect(coursesInDB.length).toBe(1)
+
+    const courseInDB = coursesInDB[0]
+    expect(courseInDB.infoPages.length).toBe(1)
+
+    const infoPageInDB = courseInDB.infoPages[0]
+    expect(infoPageInDB.contentBlocks.length).toBe(1)
+    
+    const contentBlockInDB = infoPageInDB.contentBlocks[0]
+    expect(contentBlockInDB.content).toEqual(content)
+}
 
 describe('modifyContentBlock tests', () => {
     test('modifyContentBlock modifies content block content correctly', async () => {
@@ -43,17 +56,23 @@ describe('modifyContentBlock tests', () => {
             variables: {courseUniqueName: course.uniqueName, infoPageId: infopage.id, contentBlockId: contentBlock.id, content: newContent}})
         expect(contentBlockEditQuery.data.modifyContentBlock.content).toEqual(newContent)
 
-        const coursesInDB = await Course.find({})
-        expect(coursesInDB.length).toBe(1)
+        await checkContentBlockContent(newContent)
+    })
 
-        const courseInDB = coursesInDB[0]
-        expect(courseInDB.infoPages.length).toBe(1)
-
-        const infoPageInDB = courseInDB.infoPages[0]
-        expect(infoPageInDB.contentBlocks.length).toBe(1)
+    test('modifyContentBlock modifies returns Unauthorized if user is not teacher', async () => {
+        await helpers.logIn("username", apolloServer)
+        const course = await helpers.createCourse("unique name", "name", [], apolloServer)
+        const infopage = await helpers.createInfoPage(course, "page-url", apolloServer)
+        const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0, apolloServer)
         
-        const contentBlockInDB = infoPageInDB.contentBlocks[0]
-        expect(contentBlockInDB.content).toEqual(newContent)
+        const newContent = "this is modified content"
+        await helpers.logIn("students username", apolloServer)
+        const contentBlockEditQuery = await apolloServer.executeOperation({query: modifyContentBlock, 
+            variables: {courseUniqueName: course.uniqueName, infoPageId: infopage.id, contentBlockId: contentBlock.id, content: newContent}})
+        expect(contentBlockEditQuery.data.modifyContentBlock).toEqual(null)
+        expect(contentBlockEditQuery.errors[0].message).toEqual("Unauthorized")
+        
+        await checkContentBlockContent(contentBlock.content)
     })
 
 })
