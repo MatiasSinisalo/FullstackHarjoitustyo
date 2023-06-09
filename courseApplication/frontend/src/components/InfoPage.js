@@ -2,9 +2,14 @@ import { Link, useParams } from "react-router-dom"
 import ContentBlockCreateForm from "./ContentBlockCreateForm"
 import { useState } from "react"
 import ContentBlock from "./ContentBlock"
+import { useDispatch } from "react-redux"
+import { removeInfoPageFromCourse } from "../reducers/courseReducer"
+import { useApolloClient } from "@apollo/client"
 
 
 const InfoPage = ({course, user}) => {
+    const dispatch = useDispatch()
+    const client = useApolloClient()
     const infoPageUrl = useParams().infoPageUrl
     const infoPage = course.infoPages.find((page) => page.locationUrl === infoPageUrl)
     const blocks = infoPage?.contentBlocks
@@ -18,7 +23,7 @@ const InfoPage = ({course, user}) => {
     }
 
     const removePage = () => {
-        console.log("removing info page!")
+        dispatch(removeInfoPageFromCourse(course, infoPage, client))
     }
     return (
         <>

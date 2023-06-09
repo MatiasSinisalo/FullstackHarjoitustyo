@@ -186,6 +186,26 @@ export const createInfoPageOnCourse = (course, pageUrl, client) => {
     }
 }
 
+export const removeInfoPageFromCourse = (course, infoPage, client) => {
+    return async function(dispatch)
+    {
+        const prompt = window.prompt(`type ${infoPage.locationUrl} to confirm removal`)
+        if(prompt === infoPage.locationUrl)
+        {
+            const removed = true
+            if(!removed.error){
+                dispatch(Notify(`successfully removed infoPage`, "successNotification", 5))
+                return true
+            }
+            else{
+                dispatch(Notify(removed.error.message, "errorNotification", 5))
+                return false
+            }
+        }
+        return false
+    }
+}
+
 export const createContentBlockOnInfoPage = (course, pageId, content, position, client) => {
     return async function(dispatch)
     {
