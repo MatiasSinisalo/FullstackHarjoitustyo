@@ -77,6 +77,11 @@ type Mutation{
         courseUniqueName: String!
     ):InfoPage
 
+    removeInfoPageFromCourse(
+        courseUniqueName: String!
+        infoPageId: String!
+    ):Boolean
+
     addContentBlockToInfoPage(
         courseUniqueName: String!
         infoPageId : String!
