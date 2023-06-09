@@ -225,7 +225,7 @@ export const createContentBlockOnInfoPage = (course, pageId, content, position, 
 export const modifyContentBlock = (course, pageId, contentBlockId, newContent, client) => {
     return async function(dispatch)
     {
-        const modifiedContentBlock = true
+        const modifiedContentBlock = await courseService.modifyContentBlock(course.uniqueName, pageId, contentBlockId, newContent, client)
         if(!modifiedContentBlock.error)
         {
             dispatch(Notify("successfully modified content block", "successNotification", 3))

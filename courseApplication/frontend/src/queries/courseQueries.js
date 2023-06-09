@@ -248,3 +248,13 @@ mutation RemoveContentBlockFromInfoPage($courseUniqueName: String!, $infoPageId:
   removeContentBlockFromInfoPage(courseUniqueName: $courseUniqueName, infoPageId: $infoPageId, contentBlockId: $contentBlockId)
 }
 `
+
+export const MODIFY_CONTENT_BLOCK = gql`
+mutation ModifyContentBlock($courseUniqueName: String!, $infoPageId: String!, $contentBlockId: String!, $content: String!) {
+  modifyContentBlock(courseUniqueName: $courseUniqueName, infoPageId: $infoPageId, contentBlockId: $contentBlockId, content: $content) {
+    content
+    id
+    position
+  }
+}
+`
