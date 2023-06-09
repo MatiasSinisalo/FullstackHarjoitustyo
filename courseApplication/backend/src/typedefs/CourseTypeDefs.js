@@ -88,6 +88,12 @@ type Mutation{
         content: String!
         position: Int!
     ):ContentBlock
+    
+    modifyContentBlock(
+        courseUniqueName: String!
+        infoPageId : String!
+        content: String!
+    ):ContentBlock
 
     removeContentBlockFromInfoPage(
         courseUniqueName: String!
