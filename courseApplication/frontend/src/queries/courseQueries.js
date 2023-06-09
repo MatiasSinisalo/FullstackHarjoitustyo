@@ -227,6 +227,12 @@ mutation AddInfoPageToCourse($locationUrl: String!, $courseUniqueName: String!) 
 }
 ` 
 
+export const REMOVE_INFO_PAGE_FROM_COURSE = gql`
+mutation RemoveInfoPageFromCourse($courseUniqueName: String!, $infoPageId: String!) {
+  removeInfoPageFromCourse(courseUniqueName: $courseUniqueName, infoPageId: $infoPageId)
+}
+`
+
 export const ADD_CONTENT_BLOCK_TO_INFO_PAGE = gql`
 mutation AddContentBlockToInfoPage($courseUniqueName: String!, $content: String!, $position: Int!, $infoPageId: String!) {
   addContentBlockToInfoPage(courseUniqueName: $courseUniqueName, content: $content, position: $position, infoPageId: $infoPageId) {

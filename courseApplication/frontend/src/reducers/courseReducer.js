@@ -192,7 +192,7 @@ export const removeInfoPageFromCourse = (course, infoPage, client) => {
         const prompt = window.prompt(`type ${infoPage.locationUrl} to confirm removal`)
         if(prompt === infoPage.locationUrl)
         {
-            const removed = true
+            const removed = await courseService.removeInfoPage(course.uniqueName, infoPage.id, client)
             if(!removed.error){
                 dispatch(Notify(`successfully removed infoPage`, "successNotification", 5))
                 return true

@@ -1,4 +1,4 @@
-import { ADD_CONTENT_BLOCK_TO_INFO_PAGE, ADD_INFO_PAGE_TO_COURSE, ADD_STUDENT_TO_COURSE, ADD_SUBMISSION_TO_COURSE, ADD_TASK_TO_COURSE, CREATE_COURSE, GET_ALL_COURSES, GET_COURSE, GRADE_SUBMISSION, MODIFY_SUBMISSION, REMOVE_CONTENT_BLOCK_FROM_INFO_PAGE, REMOVE_COURSE, REMOVE_STUDENT_FROM_COURSE, REMOVE_SUBMISSION_FROM_COURSE_TASK, REMOVE_TASK_FROM_COURSE } from "../queries/courseQueries"
+import { ADD_CONTENT_BLOCK_TO_INFO_PAGE, ADD_INFO_PAGE_TO_COURSE, ADD_STUDENT_TO_COURSE, ADD_SUBMISSION_TO_COURSE, ADD_TASK_TO_COURSE, CREATE_COURSE, GET_ALL_COURSES, GET_COURSE, GRADE_SUBMISSION, MODIFY_SUBMISSION, REMOVE_CONTENT_BLOCK_FROM_INFO_PAGE, REMOVE_COURSE, REMOVE_INFO_PAGE_FROM_COURSE, REMOVE_STUDENT_FROM_COURSE, REMOVE_SUBMISSION_FROM_COURSE_TASK, REMOVE_TASK_FROM_COURSE } from "../queries/courseQueries"
 //teacher field is not currently being used on the backend at all when creating a course
 
 export const getAllCourses = async (apolloClient) => {
@@ -216,6 +216,24 @@ const createInfoPage = async (courseUniqueName, locationUrl, client) => {
     }
 } 
 
+const removeInfoPage = async (courseUniqueName, infoPageId, client) => {
+    try{
+        const result = await client.mutate({
+            mutation: REMOVE_INFO_PAGE_FROM_COURSE, variables: {courseUniqueName, infoPageId},
+        })
+        if(result.data.removeInfoPageFromCourse)
+        {
+          
+            return result.data.removeInfoPageFromCourse
+        }
+    }
+    catch(err)
+    {
+        return {error: err}
+    }
+
+}
+
 const createContentBlock = async (courseUniqueName, pageId, content, position, client) => {
     try{
         const result = await client.mutate({
@@ -272,6 +290,7 @@ export default {getAllCourses,
     modifySubmission,
     gradeSubmission,
     createInfoPage,
+    removeInfoPage,
     createContentBlock,
     removeContentBlock
 }
