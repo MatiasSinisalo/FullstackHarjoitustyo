@@ -222,6 +222,22 @@ export const createContentBlockOnInfoPage = (course, pageId, content, position, 
     }
 }
 
+export const modifyContentBlock = (course, pageId, contentBlockId, newContent, client) => {
+    return async function(dispatch)
+    {
+        const modifiedContentBlock = true
+        if(!modifiedContentBlock.error)
+        {
+            dispatch(Notify("successfully modified content block", "successNotification", 3))
+            return true
+        }
+        else{
+            dispatch(Notify(modifiedContentBlock.error.message, "errorNotification", 3))
+            return false
+        }
+    }
+}
+
 export const removeContentBlockFromInfoPage = (course, pageId, contentBlockId, client) => {
     return async function(dispatch)
     {

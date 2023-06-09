@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client"
 import { useDispatch } from "react-redux"
-import { removeContentBlockFromInfoPage } from "../reducers/courseReducer"
+import { modifyContentBlock, removeContentBlockFromInfoPage } from "../reducers/courseReducer"
 import { useState } from "react"
 
 const EditableBlock = ({course, page, block}) => {
@@ -23,6 +23,7 @@ const EditableBlock = ({course, page, block}) => {
 
     const modifyBlock = () => {
         console.log("saving changes to block!")
+        dispatch(modifyContentBlock(course, page.id, block.id, content, client))
     }
 
     return(
