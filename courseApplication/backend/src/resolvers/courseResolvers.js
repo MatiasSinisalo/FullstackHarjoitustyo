@@ -78,6 +78,15 @@ const courseMutationResolvers = {
         const newContentBloc = await courseService.infoPages.addContentBlock(courseUniqueName, infoPageId, content, position, context.userForToken)
         return newContentBloc
     },
+    modifyContentBlock: async(root, args, context) => {
+        mustHaveToken(context)
+        const courseUniqueName = args.courseUniqueName
+        const infoPageId = args.infoPageId
+        const contentBlockId = args.contentBlockId
+        const content = args.content
+        const modifiedContentBlock = await courseService.infoPages.modifyContentBlock(courseUniqueName, infoPageId, contentBlockId, content, context.userForToken)
+        return modifiedContentBlock
+    },
     removeContentBlockFromInfoPage: async(root, args, context) => {
         mustHaveToken(context)
         const courseUniqueName = args.courseUniqueName

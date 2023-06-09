@@ -91,7 +91,8 @@ type Mutation{
     
     modifyContentBlock(
         courseUniqueName: String!
-        infoPageId : String!
+        infoPageId: String!
+        contentBlockId: String!
         content: String!
     ):ContentBlock
 

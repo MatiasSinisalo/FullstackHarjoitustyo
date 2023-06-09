@@ -79,6 +79,10 @@ const addContentBlock = async (uniqueName, infoPageId, content, position, userFo
     return contentBlockObj
 }
 
+const modifyContentBlock = async(courseUniqueName, infoPageId, contentBlockId, content, userForToken) => {
+    return null
+}
+
 const removeContentBlock = async (courseUniqueName, infoPageId, contentBlockId, userForToken) => {
     const course = await serviceUtils.fetchCourse(courseUniqueName)
     
@@ -109,5 +113,6 @@ module.exports = {
     addInfoPage,
     addContentBlock,
     removeContentBlock,
-    removeInfoPage
+    removeInfoPage,
+    modifyContentBlock
 }
