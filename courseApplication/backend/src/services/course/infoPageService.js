@@ -12,10 +12,7 @@ const { InfoPage, ContentBlock } = require('../../models/infoPage')
 const addInfoPage = async (uniqueName, locationUrl, userForToken) => {
     const course =  await serviceUtils.fetchCourse(uniqueName)
     
-    if(course.teacher.toString() !== userForToken.id)
-    {
-        throw new UserInputError("Unauthorized")
-    }
+    serviceUtils.checkIsTeacher(course, userForToken)
 
     const alreadyExistingInfoPage = course.infoPages.find((page) => page.locationUrl === locationUrl)
     if(alreadyExistingInfoPage)
@@ -37,10 +34,7 @@ const addInfoPage = async (uniqueName, locationUrl, userForToken) => {
 const removeInfoPage = async (uniqueName, infoPageId, userForToken) => {
     const course = await serviceUtils.fetchCourse(uniqueName)
     
-    if(course.teacher.toString() !== userForToken.id)
-    {
-        throw new UserInputError("Unauthorized")
-    }
+    serviceUtils.checkIsTeacher(course, userForToken)
     
     const alreadyExistingInfoPage = course.infoPages.find((page) => page.id === infoPageId)
     if(!alreadyExistingInfoPage)
@@ -57,10 +51,7 @@ const removeInfoPage = async (uniqueName, infoPageId, userForToken) => {
 const addContentBlock = async (uniqueName, infoPageId, content, position, userForToken) => {
     const course =  await serviceUtils.fetchCourse(uniqueName)
     
-    if(course.teacher.toString() !== userForToken.id)
-    {
-        throw new UserInputError("Unauthorized")
-    }
+    serviceUtils.checkIsTeacher(course, userForToken)
 
     const infoPage = course.infoPages.find((page) => page.id === infoPageId)
     if(!infoPage)
@@ -82,10 +73,7 @@ const addContentBlock = async (uniqueName, infoPageId, content, position, userFo
 const modifyContentBlock = async(uniqueName, infoPageId, contentBlockId, newContent, userForToken) => {
     const course = await serviceUtils.fetchCourse(uniqueName)
 
-    if(course.teacher.toString() !== userForToken.id)
-    {
-        throw new UserInputError("Unauthorized")
-    }
+    serviceUtils.checkIsTeacher(course, userForToken)
 
     const infoPage = course.infoPages.find((page) => page.id === infoPageId)
     if(!infoPage)
@@ -107,10 +95,7 @@ const modifyContentBlock = async(uniqueName, infoPageId, contentBlockId, newCont
 const removeContentBlock = async (courseUniqueName, infoPageId, contentBlockId, userForToken) => {
     const course = await serviceUtils.fetchCourse(courseUniqueName)
     
-    if(course.teacher.toString() !== userForToken.id)
-    {
-        throw new UserInputError("Unauthorized")
-    }
+    serviceUtils.checkIsTeacher(course, userForToken)
 
     const infoPage = course.infoPages.find((page) => page.id === infoPageId)
     if(!infoPage)
