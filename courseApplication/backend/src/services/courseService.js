@@ -52,8 +52,14 @@ const createCourse = async (uniqueName, name, teacherUsername) => {
     }
     catch(error)
     {
-      
-        throw new UserInputError("Course uniqueName must be unique")
+        if(error.message.includes("Incorrect unique name"))
+        {
+            throw new UserInputError("Incorrect unique name")
+        }
+        else if(error.code === 11000)
+        {
+            throw new UserInputError("Course uniqueName must be unique")
+        }
     }
 }
 

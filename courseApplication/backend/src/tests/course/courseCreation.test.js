@@ -36,9 +36,9 @@ describe('course creation tests', () => {
     test('createCourse query returns correctly with correct parameters', async () => {
         apolloServer.context = {userForToken: {username: "username", name: "name"}}
 
-        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "uniqueName", name: "common name", teacher: "username"}})
+        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "unique-name", name: "common name", teacher: "username"}})
         const correctReturnValue = {
-            uniqueName: 'uniqueName',
+            uniqueName: 'unique-name',
             name: 'common name',
             teacher: {
                 username: 'username',
@@ -96,4 +96,27 @@ describe('course creation tests', () => {
         expect(savedCourses.length).toBe(0)
         
     })
+    describe('createCourse course unique name tests', () => {
+        test('createCourse query returns error if unique name contains spaces', async () => {
+            await helpers.logIn("username", apolloServer)
+            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "unique name", name: "common name", teacher: "does not exist"}})
+            expect(createdCourse.data.createCourse).toEqual(null)
+            expect(createdCourse.errors[0].message).toEqual('Incorrect unique name')
+    
+            const savedCourses = await Course.find({}).populate('teacher')
+            expect(savedCourses.length).toBe(0)
+            
+        })
+        test('createCourse query returns error if unique name contains /', async () => {
+            await helpers.logIn("username", apolloServer)
+            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "unique/name", name: "common name", teacher: "does not exist"}})
+            expect(createdCourse.data.createCourse).toEqual(null)
+            expect(createdCourse.errors[0].message).toEqual('Incorrect unique name')
+    
+            const savedCourses = await Course.find({}).populate('teacher')
+            expect(savedCourses.length).toBe(0)
+            
+        })
+    })
+    
 })
