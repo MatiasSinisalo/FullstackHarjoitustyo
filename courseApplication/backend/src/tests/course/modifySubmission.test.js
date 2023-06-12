@@ -167,7 +167,7 @@ describe('modify submission tests', () => {
         const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
 
 
-        const anotherCourse = await helpers.createCourse("second course-unique-name", "name of course", [], apolloServer)
+        const anotherCourse = await helpers.createCourse("second-course-unique-name", "name of course", [], apolloServer)
         const taskOnAnotherCourse = await  helpers.createTask(anotherCourse, "this is a task in another course", new Date(Date.now()), [], apolloServer)
       
 
@@ -196,7 +196,7 @@ describe('modify submission tests', () => {
         const wrongSubmssionOnCourse = await helpers.createSubmission(course, task.id, "this is an answer that should not be modified", true, apolloServer);
 
 
-        const anotherCourse = await helpers.createCourse("second course-unique-name", "name of course", [], apolloServer)
+        const anotherCourse = await helpers.createCourse("second-course-unique-name", "name of course", [], apolloServer)
         const taskOnAnotherCourse = await  helpers.createTask(anotherCourse, "this is a task in another course", new Date(Date.now()), [], apolloServer)
         const submissionOnAnotherTask = await helpers.createSubmission(anotherCourse, taskOnAnotherCourse.id, "this is an answer", true, apolloServer);
 

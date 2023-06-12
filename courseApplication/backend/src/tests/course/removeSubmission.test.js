@@ -189,7 +189,7 @@ describe('removeSubmissionFromCourseTask tests', () => {
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", true, apolloServer);
       
-        const anotherCourse = await helpers.createCourse("second course", "name of course", [], apolloServer)
+        const anotherCourse = await helpers.createCourse("second-course", "name of course", [], apolloServer)
         const anotherTask = await  helpers.createTask(anotherCourse, "this is a different task", new Date(Date.now()), [], apolloServer)
         const differentSubmission = await helpers.createSubmission(anotherCourse, anotherTask.id, "this is an different answer", true, apolloServer);
     
@@ -205,7 +205,7 @@ describe('removeSubmissionFromCourseTask tests', () => {
         expect(courseInDB.tasks[0].submissions[0].content).toEqual(submission.content)
         expect(courseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(submission.fromUser.id)
 
-        const secondCourseInDB = await Course.findOne({uniqueName: "second course"})
+        const secondCourseInDB = await Course.findOne({uniqueName: "second-course"})
         expect(secondCourseInDB.tasks[0].submissions.length).toBe(1)
         expect(secondCourseInDB.tasks[0].submissions[0].content).toEqual(differentSubmission.content)
         expect(secondCourseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(differentSubmission.fromUser.id)
@@ -217,7 +217,7 @@ describe('removeSubmissionFromCourseTask tests', () => {
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", true, apolloServer);
       
-        const anotherCourse = await helpers.createCourse("second course", "name of course", [], apolloServer)
+        const anotherCourse = await helpers.createCourse("second-course", "name of course", [], apolloServer)
         const anotherTask = await  helpers.createTask(anotherCourse, "this is a different task", new Date(Date.now()), [], apolloServer)
         const differentSubmission = await helpers.createSubmission(anotherCourse, anotherTask.id, "this is an different answer", true, apolloServer);
     
@@ -233,7 +233,7 @@ describe('removeSubmissionFromCourseTask tests', () => {
         expect(courseInDB.tasks[0].submissions[0].content).toEqual(submission.content)
         expect(courseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(submission.fromUser.id)
 
-        const secondCourseInDB = await Course.findOne({uniqueName: "second course"})
+        const secondCourseInDB = await Course.findOne({uniqueName: "second-course"})
         expect(secondCourseInDB.tasks[0].submissions.length).toBe(1)
         expect(secondCourseInDB.tasks[0].submissions[0].content).toEqual(differentSubmission.content)
         expect(secondCourseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(differentSubmission.fromUser.id)
