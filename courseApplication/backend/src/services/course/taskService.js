@@ -10,10 +10,7 @@ const serviceUtils = require('../serviceUtils')
 const addTaskToCourse = async (courseUniqueName, taskDescription, deadline, maxGrade, userForToken) => {
     const course = await serviceUtils.fetchCourse(courseUniqueName)
     //only teacher should be able to add a task to the course
-    if(userForToken.id !== course.teacher.toString())
-    {
-        throw new UserInputError("Unauthorized")
-    }
+    serviceUtils.checkIsTeacher(course, userForToken)
 
     const validatedDeadline = serviceUtils.validateDate(deadline)
     const newTask = {
@@ -34,11 +31,7 @@ const addTaskToCourse = async (courseUniqueName, taskDescription, deadline, maxG
 const removeTaskFromCourse = async (courseUniqueName, taskId, userForToken) =>{
     const course = await serviceUtils.fetchCourse(courseUniqueName)
   
-    if(course.teacher.toString() !== userForToken.id)
-    {
-        throw new UserInputError("Unauthorized")
-    }
-
+    serviceUtils.checkIsTeacher(course, userForToken)
     
     const task = serviceUtils.findTask(course, taskId)
 
