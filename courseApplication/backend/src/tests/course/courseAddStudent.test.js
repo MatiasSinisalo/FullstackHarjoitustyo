@@ -36,11 +36,11 @@ describe('Course add student tests', () => {
     test('addStudentToCourse query made by the teacher of the course allows any user to be added', async () => {
         await helpers.logIn("username", apolloServer)
         
-        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
-        const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "course owned by username"}})
+        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course-owned-by-username", name: "common name", teacher: "username"}})
+        const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "course-owned-by-username"}})
         
         expect(courseWithAddedStudent.data.addStudentToCourse).toEqual({
-            uniqueName: "course owned by username", 
+            uniqueName: "course-owned-by-username", 
             name: "common name", 
             teacher: {
                 username: "username",
@@ -53,7 +53,7 @@ describe('Course add student tests', () => {
         expect(allCourses.length).toBe(1)
 
         const course = allCourses[0]
-        expect(course.uniqueName).toBe("course owned by username")
+        expect(course.uniqueName).toBe("course-owned-by-username")
         expect(course.name).toBe("common name")
         expect(course.students.length).toBe(1)
         expect(course.students[0].username).toBe("students username")
@@ -69,8 +69,8 @@ describe('Course add student tests', () => {
     test('addStudentToCourse query returns error given username not found if trying to add a student that does not exist, and does not modifyi database', async () => {
         await helpers.logIn("username", apolloServer)
         
-        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
-        const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "this user does not exist", courseUniqueName: "course owned by username"}})
+        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course-owned-by-username", name: "common name", teacher: "username"}})
+        const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "this user does not exist", courseUniqueName: "course-owned-by-username"}})
         
         expect(courseWithAddedStudent.errors[0].message).toEqual("Given username not found")
         expect(courseWithAddedStudent.data.addStudentToCourse).toEqual(null)
@@ -81,7 +81,7 @@ describe('Course add student tests', () => {
         expect(allCourses.length).toBe(1)
         
         const course = allCourses[0]
-        expect(course.uniqueName).toBe("course owned by username")
+        expect(course.uniqueName).toBe("course-owned-by-username")
         expect(course.name).toBe("common name")
         expect(course.students.length).toBe(0)
         expect(course.teacher.username).toBe("username")
@@ -104,10 +104,10 @@ describe('Course add student tests', () => {
     test('addStudentToCourse query returns error if trying to add a student to a course that already exists in the course', async () => {
         await helpers.logIn("username", apolloServer)
         
-        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course-owned-by-username", name: "common name", teacher: "username"}})
         
-        const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "course owned by username"}})
-        const courseWithDoublicateAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "course owned by username"}})
+        const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "course-owned-by-username"}})
+        const courseWithDoublicateAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "course-owned-by-username"}})
         
         expect(courseWithDoublicateAddedStudent.errors[0].message).toEqual("Given user is already in the course")
         expect(courseWithDoublicateAddedStudent.data.addStudentToCourse).toEqual(null)
@@ -115,7 +115,7 @@ describe('Course add student tests', () => {
         const allCourses = await Course.find({}).populate(['teacher', 'students'])
         expect(allCourses.length).toBe(1)
         const course = allCourses[0]
-        expect(course.uniqueName).toBe("course owned by username")
+        expect(course.uniqueName).toBe("course-owned-by-username")
         expect(course.name).toBe("common name")
         expect(course.students.length).toBe(1)
         expect(course.students[0].username).toBe("students username")
@@ -129,14 +129,14 @@ describe('Course add student tests', () => {
     test('addStudentToCourse allows an user to add themselves to the course', async () => {
         //create course as username
         await helpers.logIn("username", apolloServer)
-        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course-owned-by-username", name: "common name", teacher: "username"}})
         
         //add student to course as a course student
         apolloServer.context = {userForToken: {username: "students username", name: "students name"}}
-        const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "course owned by username"}})
+        const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "course-owned-by-username"}})
         
         expect(courseWithAddedStudent.data.addStudentToCourse).toEqual({
-            uniqueName: "course owned by username", 
+            uniqueName: "course-owned-by-username", 
             name: "common name", 
             teacher: {
                 username: "username",
@@ -149,7 +149,7 @@ describe('Course add student tests', () => {
         expect(allCourses.length).toBe(1)
 
         const course = allCourses[0]
-        expect(course.uniqueName).toBe("course owned by username")
+        expect(course.uniqueName).toBe("course-owned-by-username")
         expect(course.name).toBe("common name")
         expect(course.students.length).toBe(1)
         expect(course.students[0].username).toBe("students username")
@@ -162,11 +162,11 @@ describe('Course add student tests', () => {
     test('addStudentToCourse doesnt allow user that is not a teacher to add other users as students but return Unauthorized and doesnt modfyi database', async () => {
         //create course as username
         await helpers.logIn("username", apolloServer)
-        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course-owned-by-username", name: "common name", teacher: "username"}})
         
         //add other student to course as a course student
         apolloServer.context = {userForToken: {username: "students username", name: "students name"}}
-        const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "username", courseUniqueName: "course owned by username"}})
+        const courseWithAddedStudent = await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "username", courseUniqueName: "course-owned-by-username"}})
         
         expect(courseWithAddedStudent.errors[0].message).toEqual("Unauthorized")
         expect(courseWithAddedStudent.data.addStudentToCourse).toEqual(null)
@@ -175,7 +175,7 @@ describe('Course add student tests', () => {
         expect(allCourses.length).toBe(1)
 
         const course = allCourses[0]
-        expect(course.uniqueName).toBe("course owned by username")
+        expect(course.uniqueName).toBe("course-owned-by-username")
         expect(course.name).toBe("common name")
         expect(course.students.length).toBe(0)
         expect(course.teacher.username).toBe("username")

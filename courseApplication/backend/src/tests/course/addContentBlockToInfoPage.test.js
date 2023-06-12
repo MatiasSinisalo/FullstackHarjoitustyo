@@ -7,7 +7,6 @@ const { userCreateQuery, userLogInQuery, createSpesificUserQuery } = require('..
 const { addContentBlockToInfoPage, addInfoPageToCourse} = require('../courseTestQueries')
 const { query } = require('express')
 const mongoose = require('mongoose')
-const course = require('../../models/course')
 const helpers = require('../testHelpers')
 
 beforeAll(async () => {
@@ -36,9 +35,11 @@ beforeEach(async () => {
 describe('addContentBlockToInfoPage query tests', () => {
     test('addContentBlockToInfoPage creates content block correctly on info page', async () => {
         const user = await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
+       
         const allowedLocationUrl = "test123-1234abc-a1b2c"
         const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
+        console.log(infoPageQuery)
         const infoPage = infoPageQuery.data.addInfoPageToCourse
         
         const content = "this is some info content"
@@ -50,7 +51,7 @@ describe('addContentBlockToInfoPage query tests', () => {
             content: content,
             position: position
         }})
-      
+       
         const contentBlock = contentBlockQuery.data.addContentBlockToInfoPage
         expect(contentBlock.content).toEqual(content)
         expect(contentBlock.position).toEqual(position)
@@ -75,7 +76,7 @@ describe('addContentBlockToInfoPage query tests', () => {
   
     test('addContentBlockToInfoPage returns Unauthorized if the user is not a teacher', async () => {
         const user = await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
         const allowedLocationUrl = "test123-1234abc-a1b2c"
         const infoPageQuery = await apolloServer.executeOperation({query:addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
         const infoPage = infoPageQuery.data.addInfoPageToCourse
@@ -106,7 +107,7 @@ describe('addContentBlockToInfoPage query tests', () => {
 
     test('addContentBlockToInfoPage returns info page not found if the info page id is incorrect', async () => {
         const user = await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
         const allowedLocationUrl = "test123-1234abc-a1b2c"
         const infoPageQuery = await apolloServer.executeOperation({query:addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
         const infoPage = infoPageQuery.data.addInfoPageToCourse

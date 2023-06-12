@@ -37,7 +37,7 @@ describe('addSubmissionToCourseTask tests', () => {
         const userQuery = await User.findOne({username: "username"})
         const userid = userQuery._id.toString()
         apolloServer.context = {userForToken: {username: "username", name:"name", id: userid}}
-        const course = {uniqueName: "course owned by username", name: "common name", teacher: "username", tasks: []}
+        const course = {uniqueName: "course-owned-by-username", name: "common name", teacher: "username", tasks: []}
         const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: course})
         const task = {
             description:  "this is the description of a task that is about testing",
@@ -87,7 +87,7 @@ describe('addSubmissionToCourseTask tests', () => {
         const userQuery = await User.findOne({username: "username"})
         const userid = userQuery._id.toString()
         apolloServer.context = {userForToken: {username: userQuery.username, name: userQuery.name, id: userid, _id: userQuery._id}}
-        const course = {uniqueName: "course owned by username", name: "common name", teacher: "username", tasks: []}
+        const course = {uniqueName: "course-owned-by-username", name: "common name", teacher: "username", tasks: []}
         const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: course})
         const task = {
             description:  "this is the description of a task that is about testing",

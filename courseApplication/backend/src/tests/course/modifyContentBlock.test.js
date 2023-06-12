@@ -47,7 +47,7 @@ const checkContentBlockContent = async (content) => {
 describe('modifyContentBlock tests', () => {
     test('modifyContentBlock modifies content block content correctly', async () => {
         await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("unique name", "name", [], apolloServer)
+        const course = await helpers.createCourse("unique-name", "name", [], apolloServer)
         const infopage = await helpers.createInfoPage(course, "page-url", apolloServer)
         const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0, apolloServer)
         
@@ -61,7 +61,7 @@ describe('modifyContentBlock tests', () => {
 
     test('modifyContentBlock modifies returns Unauthorized if user is not teacher', async () => {
         await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("unique name", "name", [], apolloServer)
+        const course = await helpers.createCourse("unique-name", "name", [], apolloServer)
         const infopage = await helpers.createInfoPage(course, "page-url", apolloServer)
         const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0, apolloServer)
         
@@ -77,7 +77,7 @@ describe('modifyContentBlock tests', () => {
 
     test('modifyContentBlock modifies returns Given course not found if course is not found', async () => {
         await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("unique name", "name", [], apolloServer)
+        const course = await helpers.createCourse("unique-name", "name", [], apolloServer)
         const infopage = await helpers.createInfoPage(course, "page-url", apolloServer)
         const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0, apolloServer)
         
@@ -92,7 +92,7 @@ describe('modifyContentBlock tests', () => {
 
     test('modifyContentBlock modifies returns Given info page not found if page is not found', async () => {
         await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("unique name", "name", [], apolloServer)
+        const course = await helpers.createCourse("unique-name", "name", [], apolloServer)
         const infopage = await helpers.createInfoPage(course, "page-url", apolloServer)
         const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0, apolloServer)
         
@@ -107,7 +107,7 @@ describe('modifyContentBlock tests', () => {
 
     test('modifyContentBlock modifies returns Given content block not found if content block is not found', async () => {
         await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("unique name", "name", [], apolloServer)
+        const course = await helpers.createCourse("unique-name", "name", [], apolloServer)
         const infopage = await helpers.createInfoPage(course, "page-url", apolloServer)
         const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0, apolloServer)
         

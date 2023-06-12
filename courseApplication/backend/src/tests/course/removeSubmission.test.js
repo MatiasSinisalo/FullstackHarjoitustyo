@@ -34,7 +34,7 @@ describe('removeSubmissionFromCourseTask tests', () => {
     test('removeSubmissionFromCourseTask modifies database state correctly when a task has one submission', async () => {
         const userQuery = await User.findOne({username: "username"})
         apolloServer.context = {userForToken: userQuery}
-        const course = {uniqueName: "course owned by username", name: "common name", teacher: "username", tasks: []}
+        const course = {uniqueName: "course-owned-by-username", name: "common name", teacher: "username", tasks: []}
         const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: course})
         expect(createdCourse.data.createCourse).toBeDefined()
 
@@ -71,7 +71,7 @@ describe('removeSubmissionFromCourseTask tests', () => {
     test('removeSubmissionFromCourseTask modifies database state correctly when a task has 2 submissions', async () => {
         const userQuery = await User.findOne({username: "username"})
         apolloServer.context = {userForToken: userQuery}
-        const course = {uniqueName: "course owned by username", name: "common name", teacher: "username", tasks: []}
+        const course = {uniqueName: "course-owned-by-username", name: "common name", teacher: "username", tasks: []}
         const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: course})
         expect(createdCourse.data.createCourse).toBeDefined()
 
@@ -86,7 +86,7 @@ describe('removeSubmissionFromCourseTask tests', () => {
        
         const otherUserQuery = await User.findOne({username: "students username"})
         apolloServer.context = {userForToken: otherUserQuery}
-        await apolloServer.executeOperation({query: addStudentToCourse, variables: {courseUniqueName: "course owned by username", addStudentToCourseUsername: "students username"}})
+        await apolloServer.executeOperation({query: addStudentToCourse, variables: {courseUniqueName: "course-owned-by-username", addStudentToCourseUsername: "students username"}})
        
         const submissionToNotBeRemoved = {
             content : "this is the answer to a task and should not be removed",
@@ -130,7 +130,7 @@ describe('removeSubmissionFromCourseTask tests', () => {
 
     test('removeSubmissionFromCourseTask student can not remove other students submission', async () => {
         await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", true, apolloServer);
         
@@ -140,7 +140,7 @@ describe('removeSubmissionFromCourseTask tests', () => {
         expect(removedQuery.errors[0].message).toEqual("Unauthorized")
         expect(removedQuery.data.removeSubmissionFromCourseTask).toEqual(null)
         
-        const courseInDB = await Course.findOne({uniqueName: "course unique name"})
+        const courseInDB = await Course.findOne({uniqueName: "course-unique-name"})
         expect(courseInDB.tasks[0].submissions.length).toBe(1)
         expect(courseInDB.tasks[0].submissions[0].content).toEqual(submission.content)
         expect(courseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(submission.fromUser.id)
@@ -148,11 +148,11 @@ describe('removeSubmissionFromCourseTask tests', () => {
 
     test('removeSubmissionFromCourseTask teacher can remove students submission', async () => {
         await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
          
         await helpers.logIn("students username", apolloServer)
-        await apolloServer.executeOperation({query: addStudentToCourse, variables: {courseUniqueName: "course unique name", addStudentToCourseUsername: "students username"}})
+        await apolloServer.executeOperation({query: addStudentToCourse, variables: {courseUniqueName: "course-unique-name", addStudentToCourseUsername: "students username"}})
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", true, apolloServer);
       
         await helpers.logIn("username", apolloServer)
@@ -160,13 +160,13 @@ describe('removeSubmissionFromCourseTask tests', () => {
             variables: {courseUniqueName: course.uniqueName, taskId: task.id,  submissionId: submission.id}})
         expect(removedQuery.data.removeSubmissionFromCourseTask).toEqual(true)
         
-        const courseInDB = await Course.findOne({uniqueName: "course unique name"})
+        const courseInDB = await Course.findOne({uniqueName: "course-unique-name"})
         expect(courseInDB.tasks[0].submissions.length).toBe(0)
     })
 
     test('removeSubmissionFromCourseTask returns course not found if course does not exist', async () => {
         await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", true, apolloServer);
       
@@ -177,7 +177,7 @@ describe('removeSubmissionFromCourseTask tests', () => {
         expect(removedQuery.errors[0].message).toEqual("Given course not found")
         expect(removedQuery.data.removeSubmissionFromCourseTask).toEqual(null)
         
-        const courseInDB = await Course.findOne({uniqueName: "course unique name"})
+        const courseInDB = await Course.findOne({uniqueName: "course-unique-name"})
         expect(courseInDB.tasks[0].submissions.length).toBe(1)
         expect(courseInDB.tasks[0].submissions[0].content).toEqual(submission.content)
         expect(courseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(submission.fromUser.id)
@@ -185,7 +185,7 @@ describe('removeSubmissionFromCourseTask tests', () => {
 
     test('removeSubmissionFromCourseTask returns task not found if task does not exist', async () => {
         await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", true, apolloServer);
       
@@ -195,12 +195,12 @@ describe('removeSubmissionFromCourseTask tests', () => {
     
 
         const removedQuery = await apolloServer.executeOperation({query: removeSubmissionFromCourseTask, 
-            variables: {courseUniqueName: "course unique name", taskId: anotherTask.id,  submissionId: submission.id}})
+            variables: {courseUniqueName: "course-unique-name", taskId: anotherTask.id,  submissionId: submission.id}})
       
         expect(removedQuery.errors[0].message).toEqual("Given task not found")
         expect(removedQuery.data.removeSubmissionFromCourseTask).toEqual(null)
         
-        const courseInDB = await Course.findOne({uniqueName: "course unique name"})
+        const courseInDB = await Course.findOne({uniqueName: "course-unique-name"})
         expect(courseInDB.tasks[0].submissions.length).toBe(1)
         expect(courseInDB.tasks[0].submissions[0].content).toEqual(submission.content)
         expect(courseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(submission.fromUser.id)
@@ -213,7 +213,7 @@ describe('removeSubmissionFromCourseTask tests', () => {
 
     test('removeSubmissionFromCourseTask returns submission not found if submission does not exist', async () => {
         await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", true, apolloServer);
       
@@ -223,12 +223,12 @@ describe('removeSubmissionFromCourseTask tests', () => {
     
 
         const removedQuery = await apolloServer.executeOperation({query: removeSubmissionFromCourseTask, 
-            variables: {courseUniqueName: "course unique name", taskId: task.id,  submissionId: differentSubmission.id}})
+            variables: {courseUniqueName: "course-unique-name", taskId: task.id,  submissionId: differentSubmission.id}})
       
         expect(removedQuery.errors[0].message).toEqual("Given submission not found")
         expect(removedQuery.data.removeSubmissionFromCourseTask).toEqual(null)
         
-        const courseInDB = await Course.findOne({uniqueName: "course unique name"})
+        const courseInDB = await Course.findOne({uniqueName: "course-unique-name"})
         expect(courseInDB.tasks[0].submissions.length).toBe(1)
         expect(courseInDB.tasks[0].submissions[0].content).toEqual(submission.content)
         expect(courseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(submission.fromUser.id)

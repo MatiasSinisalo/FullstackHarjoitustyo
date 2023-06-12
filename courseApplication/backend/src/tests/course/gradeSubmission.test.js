@@ -36,7 +36,7 @@ beforeEach(async () => {
 describe('grade submission tests', () => {
     test('teacher can give a grade', async () => {
         const user = await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", false, apolloServer)
 
@@ -65,7 +65,7 @@ describe('grade submission tests', () => {
 
     test('grade submission returns course not found if the Course does not exist', async () => {
         const user = await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", false, apolloServer)
 
@@ -91,7 +91,7 @@ describe('grade submission tests', () => {
     
     test('grade submission returns task not found if the task does not exist', async () => {
         const user = await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", false, apolloServer)
 
@@ -117,7 +117,7 @@ describe('grade submission tests', () => {
 
     test('grade submission returns submission not found if the submission does not exist', async () => {
         const user = await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", false, apolloServer)
 
@@ -143,12 +143,12 @@ describe('grade submission tests', () => {
 
     test('grade submission returns unauthorized if the user is not teacher', async () => {
         const user = await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", false, apolloServer)
 
         const anotherUser = await helpers.logIn("students username", apolloServer)
-        await apolloServer.executeOperation({query: addStudentToCourse, variables: {courseUniqueName: "course unique name", addStudentToCourseUsername: "students username"}})
+        await apolloServer.executeOperation({query: addStudentToCourse, variables: {courseUniqueName: "course-unique-name", addStudentToCourseUsername: "students username"}})
 
         const points = 10
         const gradeSubmissionQuery = await apolloServer.executeOperation({query: gradeSubmission, variables: {courseUniqueName: course.uniqueName, taskId: task.id, submissionId: submission.id, points: points}})

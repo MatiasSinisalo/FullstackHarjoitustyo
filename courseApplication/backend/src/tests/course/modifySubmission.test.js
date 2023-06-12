@@ -35,7 +35,7 @@ beforeEach(async () => {
 describe('modify submission tests', () => {
     test('user can modify a submission made by the user', async () => {
         const user = await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", false, apolloServer);
 
@@ -51,7 +51,7 @@ describe('modify submission tests', () => {
         expect(returnedModifiedSubmission.submitted).toEqual(newSubmitted)
         expect(returnedModifiedSubmission.fromUser).toEqual({username: user.username, name: user.name, id: user.id})
         
-        const courseInDB = await Course.findOne({uniqueName: "course unique name"})
+        const courseInDB = await Course.findOne({uniqueName: "course-unique-name"})
         const tasks = courseInDB.tasks
         expect(tasks.length).toBe(1)
         expect(tasks[0].submissions.length).toBe(1)
@@ -66,7 +66,7 @@ describe('modify submission tests', () => {
 
     test('user can not modify a returned submission', async () => {
         const user = await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", true, apolloServer);
 
@@ -80,7 +80,7 @@ describe('modify submission tests', () => {
         expect(modifySubmissionQuery.errors[0].message).toEqual("This submission has already been returned")
         expect(modifySubmissionQuery.data.modifySubmission).toEqual(null)
         
-        const courseInDB = await Course.findOne({uniqueName: "course unique name"})
+        const courseInDB = await Course.findOne({uniqueName: "course-unique-name"})
         const tasks = courseInDB.tasks
         expect(tasks.length).toBe(1)
         expect(tasks[0].submissions.length).toBe(1)
@@ -94,7 +94,7 @@ describe('modify submission tests', () => {
     })
     test('user can not modify a submission made by another user', async () => {
         const user = await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", true, apolloServer);
 
@@ -107,7 +107,7 @@ describe('modify submission tests', () => {
         expect(modifySubmissionQuery.errors[0].message).toEqual("Unauthorized")
         expect(modifySubmissionQuery.data.modifySubmission).toEqual(null)
         
-        const courseInDB = await Course.findOne({uniqueName: "course unique name"})
+        const courseInDB = await Course.findOne({uniqueName: "course-unique-name"})
         const tasks = courseInDB.tasks
         expect(tasks.length).toBe(1)
         expect(tasks[0].submissions.length).toBe(1)
@@ -121,7 +121,7 @@ describe('modify submission tests', () => {
     })
     test('user must be logged in to modify a submission', async () => {
         const user = await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", true, apolloServer);
 
@@ -134,7 +134,7 @@ describe('modify submission tests', () => {
         expect(modifySubmissionQuery.errors[0].message).toEqual("Unauthorized")
         expect(modifySubmissionQuery.data.modifySubmission).toEqual(null)
         
-        const courseInDB = await Course.findOne({uniqueName: "course unique name"})
+        const courseInDB = await Course.findOne({uniqueName: "course-unique-name"})
         const tasks = courseInDB.tasks
         expect(tasks.length).toBe(1)
         expect(tasks[0].submissions.length).toBe(1)
@@ -164,10 +164,10 @@ describe('modify submission tests', () => {
 
     test('modify submission returns task not found if given task is not found', async () => {
         const user = await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
 
 
-        const anotherCourse = await helpers.createCourse("second course unique name", "name of course", [], apolloServer)
+        const anotherCourse = await helpers.createCourse("second course-unique-name", "name of course", [], apolloServer)
         const taskOnAnotherCourse = await  helpers.createTask(anotherCourse, "this is a task in another course", new Date(Date.now()), [], apolloServer)
       
 
@@ -191,12 +191,12 @@ describe('modify submission tests', () => {
 
     test('modify submission returns submission not found if given submission is not found', async () => {
         const user = await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course unique name", "name of course", [], apolloServer)
+        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
         const task = await  helpers.createTask(course, "this is a task in course", new Date(Date.now()), [], apolloServer)
         const wrongSubmssionOnCourse = await helpers.createSubmission(course, task.id, "this is an answer that should not be modified", true, apolloServer);
 
 
-        const anotherCourse = await helpers.createCourse("second course unique name", "name of course", [], apolloServer)
+        const anotherCourse = await helpers.createCourse("second course-unique-name", "name of course", [], apolloServer)
         const taskOnAnotherCourse = await  helpers.createTask(anotherCourse, "this is a task in another course", new Date(Date.now()), [], apolloServer)
         const submissionOnAnotherTask = await helpers.createSubmission(anotherCourse, taskOnAnotherCourse.id, "this is an answer", true, apolloServer);
 

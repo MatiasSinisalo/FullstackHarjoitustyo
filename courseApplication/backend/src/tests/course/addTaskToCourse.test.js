@@ -33,10 +33,10 @@ beforeEach(async () => {
 describe('addTaskToCourse query tests', () => {
     test('addTaskToCourse creates a new task on the course with correct parameters', async () => {
         await helpers.logIn("username", apolloServer)
-        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course-owned-by-username", name: "common name", teacher: "username"}})
 
         const task = {
-            courseUniqueName: "course owned by username",
+            courseUniqueName: "course-owned-by-username",
             description:  "this is the description of the course that is about testing",
             deadline: new Date("2030-06-25"),
             maxGrade: 10,
@@ -65,10 +65,10 @@ describe('addTaskToCourse query tests', () => {
     })
     test('addTaskToCourse creates a new task on the course without giving maxGrade', async () => {
         await helpers.logIn("username", apolloServer)
-        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course-owned-by-username", name: "common name", teacher: "username"}})
 
         const task = {
-            courseUniqueName: "course owned by username",
+            courseUniqueName: "course-owned-by-username",
             description:  "this is the description of the course that is about testing",
             deadline: new Date("2030-06-25"),
             submissions: []
@@ -97,10 +97,10 @@ describe('addTaskToCourse query tests', () => {
 
     test('addTaskToCourse creates a new task on the course that already has tasks with correct parameters', async () => {
         await helpers.logIn("username", apolloServer)
-        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course-owned-by-username", name: "common name", teacher: "username"}})
 
         const task = {
-            courseUniqueName: "course owned by username",
+            courseUniqueName: "course-owned-by-username",
             description:  "this is the description of the task that is about testing",
             deadline: new Date("2030-06-25"),
             submissions: []
@@ -109,7 +109,7 @@ describe('addTaskToCourse query tests', () => {
        await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: task.courseUniqueName, description: task.description, deadline: task.deadline.toString()}});
 
         const secondTask = {
-            courseUniqueName: "course owned by username",
+            courseUniqueName: "course-owned-by-username",
             description:  "this is the description of a task about debugging",
             deadline: new Date("2060-12-01"),
             submissions: []
@@ -151,11 +151,11 @@ describe('addTaskToCourse query tests', () => {
   
     test('addTaskToCourse does not create a new task on the course if the user is not the teacher of the course', async () => {
         await helpers.logIn("username", apolloServer)
-        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course-owned-by-username", name: "common name", teacher: "username"}})
 
         apolloServer.context = {userForToken: {username: "this user is not the teacher of the course", name: "name"}}
         const task = {
-            courseUniqueName: "course owned by username",
+            courseUniqueName: "course-owned-by-username",
             description:  "this is the description of the course that is about testing",
             deadline: new Date("2030-06-25"),
             submissions: []
@@ -177,7 +177,7 @@ describe('addTaskToCourse query tests', () => {
 
     test('addTaskToCourse returns Given course not found error if the course of the task does not exist', async () => {
         await helpers.logIn("username", apolloServer)
-        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course-owned-by-username", name: "common name", teacher: "username"}})
 
         const task = {
             courseUniqueName: "this course does not exist",
@@ -203,10 +203,10 @@ describe('addTaskToCourse query tests', () => {
 
     test('addTaskToCourse with empty date parameter', async () => {
         await helpers.logIn("username", apolloServer)
-        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course-owned-by-username", name: "common name", teacher: "username"}})
 
         const task = {
-            courseUniqueName: "course owned by username",
+            courseUniqueName: "course-owned-by-username",
             description:  "this is the description of the course that is about testing",
             deadline: new Date("2030-06-25"),
             maxGrade: 10,
@@ -226,10 +226,10 @@ describe('addTaskToCourse query tests', () => {
 
     test('addTaskToCourse with incorrect date parameter', async () => {
         await helpers.logIn("username", apolloServer)
-        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course owned by username", name: "common name", teacher: "username"}})
+        const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "course-owned-by-username", name: "common name", teacher: "username"}})
 
         const task = {
-            courseUniqueName: "course owned by username",
+            courseUniqueName: "course-owned-by-username",
             description:  "this is the description of the course that is about testing",
             deadline: new Date("2030-06-25"),
             maxGrade: 10,

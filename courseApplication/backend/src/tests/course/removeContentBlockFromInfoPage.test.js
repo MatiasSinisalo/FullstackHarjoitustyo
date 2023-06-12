@@ -33,7 +33,7 @@ beforeEach(async () => {
 describe('removeContentBlockFromInfoPage tests', () => {
     test('removeContentBlockFromInfoPage removes contentBlock correctly', async () => {
         await helpers.logIn("username", apolloServer)
-        const coursename = "courses unique name"
+        const coursename = "courses-unique-name"
         const course = await helpers.createCourse(coursename, "name", [], apolloServer)
         
         const allowedLocationUrl = "test123-1234abc-a1b2c"
@@ -80,7 +80,7 @@ describe('removeContentBlockFromInfoPage tests', () => {
 
     test('removeContentBlockFromInfoPage returns Unauthorized if the user is not a teacher', async () => {
         await helpers.logIn("username", apolloServer)
-        const coursename = "courses unique name"
+        const coursename = "courses-unique-name"
         const course = await helpers.createCourse(coursename, "name", [], apolloServer)
         
         const allowedLocationUrl = "test123-1234abc-a1b2c"
@@ -120,7 +120,7 @@ describe('removeContentBlockFromInfoPage tests', () => {
 
     test('removeContentBlockFromInfoPage returns given course not found if the course is not found', async () => {
         await helpers.logIn("username", apolloServer)
-        const coursename = "courses unique name"
+        const coursename = "courses-unique-name"
         const course = await helpers.createCourse(coursename, "name", [], apolloServer)
         
         const allowedLocationUrl = "test123-1234abc-a1b2c"
@@ -159,7 +159,7 @@ describe('removeContentBlockFromInfoPage tests', () => {
 
     test('removeContentBlockFromInfoPage returns given info page not found if the infoPage is not found', async () => {
         await helpers.logIn("username", apolloServer)
-        const coursename = "courses unique name"
+        const coursename = "courses-unique-name"
         const course = await helpers.createCourse(coursename, "name", [], apolloServer)
         
         const allowedLocationUrl = "test123-1234abc-a1b2c"
@@ -198,7 +198,7 @@ describe('removeContentBlockFromInfoPage tests', () => {
 
     test('removeContentBlockFromInfoPage returns given content block not found if the infoPage is not found', async () => {
         await helpers.logIn("username", apolloServer)
-        const coursename = "courses unique name"
+        const coursename = "courses-unique-name"
         const course = await helpers.createCourse(coursename, "name", [], apolloServer)
         
         const allowedLocationUrl = "test123-1234abc-a1b2c"

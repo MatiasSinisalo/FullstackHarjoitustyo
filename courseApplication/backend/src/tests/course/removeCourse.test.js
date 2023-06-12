@@ -39,12 +39,12 @@ describe('removeCourse tests', () => {
         await helpers.logIn("username", apolloServer)
 
         const courseToBeRemoved = {
-            uniqueName:  "course to be removed",
+            uniqueName:  "course-to-be-removed",
             name: "common name"
         }
 
         const courseThatShouldNotBeRemoved = {
-            uniqueName:  "course that should not be removed",
+            uniqueName:  "course-that-should-not-be-removed",
             name: "common name"
         }
         const courseToRemove = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: courseToBeRemoved.uniqueName, name: courseToBeRemoved.name, teacher: ""}})
@@ -90,7 +90,7 @@ describe('removeCourse tests', () => {
         await helpers.logIn("username", apolloServer)
 
         const courseToNotBeRemoved = {
-            uniqueName:  "course to be removed",
+            uniqueName:  "course-to-be-removed",
             name: "common name"
         }
         await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: courseToNotBeRemoved.uniqueName, name: courseToNotBeRemoved.name, teacher: ""}})
@@ -113,7 +113,7 @@ describe('removeCourse tests', () => {
         await helpers.logIn("username", apolloServer)
 
         const courseToNotBeRemoved = {
-            uniqueName:  "course to be removed",
+            uniqueName:  "course-to-be-removed",
             name: "common name"
         }
         await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: courseToNotBeRemoved.uniqueName, name: courseToNotBeRemoved.name, teacher: ""}})
