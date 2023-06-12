@@ -90,7 +90,7 @@ describe('removeInfoPageFromCourse tests', () => {
         const infoPage = infoPageQuery.data.addInfoPageToCourse
         const infoPageRemoveQuery = await apolloServer.executeOperation({query: removeInfoPageFromCourse, variables: {courseUniqueName: course.uniqueName, infoPageId: "abc1234"}})
         
-        expect(infoPageRemoveQuery.errors[0].message).toBe("Given page not found")
+        expect(infoPageRemoveQuery.errors[0].message).toBe("Given info page not found")
         expect(infoPageRemoveQuery.data.removeInfoPageFromCourse).toBe(null)
 
         await checkInfoPageStillExists(infoPage)

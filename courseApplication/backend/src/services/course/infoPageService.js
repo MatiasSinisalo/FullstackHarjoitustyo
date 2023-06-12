@@ -36,11 +36,7 @@ const removeInfoPage = async (uniqueName, infoPageId, userForToken) => {
     
     serviceUtils.checkIsTeacher(course, userForToken)
     
-    const alreadyExistingInfoPage = course.infoPages.find((page) => page.id === infoPageId)
-    if(!alreadyExistingInfoPage)
-    {
-        throw new UserInputError("Given page not found")
-    }
+    const infoPage = serviceUtils.findInfoPage(course, infoPageId)
 
     const filteredInfoPages = course.infoPages.filter((page) => page.id !== infoPageId)
     course.infoPages = filteredInfoPages
@@ -53,11 +49,7 @@ const addContentBlock = async (uniqueName, infoPageId, content, position, userFo
     
     serviceUtils.checkIsTeacher(course, userForToken)
 
-    const infoPage = course.infoPages.find((page) => page.id === infoPageId)
-    if(!infoPage)
-    {
-        throw new UserInputError("Given info page not found")
-    }
+    const infoPage = serviceUtils.findInfoPage(course, infoPageId)
 
     const contentBlock = {
         content: content,
@@ -75,11 +67,7 @@ const modifyContentBlock = async(uniqueName, infoPageId, contentBlockId, newCont
 
     serviceUtils.checkIsTeacher(course, userForToken)
 
-    const infoPage = course.infoPages.find((page) => page.id === infoPageId)
-    if(!infoPage)
-    {
-        throw new UserInputError("Given info page not found")
-    }
+    const infoPage = serviceUtils.findInfoPage(course, infoPageId)
 
     const contentBlock = infoPage.contentBlocks.find((block) => block.id === contentBlockId)
     if(!contentBlock)
@@ -97,11 +85,7 @@ const removeContentBlock = async (courseUniqueName, infoPageId, contentBlockId, 
     
     serviceUtils.checkIsTeacher(course, userForToken)
 
-    const infoPage = course.infoPages.find((page) => page.id === infoPageId)
-    if(!infoPage)
-    {
-        throw new UserInputError("Given info page not found")
-    }
+    const infoPage = serviceUtils.findInfoPage(course, infoPageId)
 
     const contentBlock = infoPage.contentBlocks.find((block) => block.id === contentBlockId)
     if(!contentBlock)

@@ -36,7 +36,7 @@ const findInfoPage = (course, infoPageId) => {
     const alreadyExistingInfoPage = course.infoPages.find((page) => page.id === infoPageId)
     if(!alreadyExistingInfoPage)
     {
-        throw new UserInputError("Given page not found")
+        throw new UserInputError("Given info page not found")
     }
     return alreadyExistingInfoPage
 }
