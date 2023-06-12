@@ -64,9 +64,7 @@ const createCourse = async (uniqueName, name, teacherUsername) => {
 const removeCourse = async(courseUniqueName, userForToken)=>{
     const courseToRemove = await serviceUtils.fetchCourse(courseUniqueName)
 
-    if(courseToRemove.teacher.toString() !== userForToken.id){
-        throw new UserInputError("Unauthorized")
-    }
+    serviceUtils.checkIsTeacher(courseToRemove, userForToken)
     try{
         const removedCourse = await Course.findByIdAndDelete(courseToRemove.id)
         return true
