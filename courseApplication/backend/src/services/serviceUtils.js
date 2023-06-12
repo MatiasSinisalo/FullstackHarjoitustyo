@@ -45,4 +45,12 @@ const validateDate = (date) => {
     
 }
 
-module.exports= {fetchCourse, findTask, findSubmission, validateDate}
+const checkIsTeacher = (course, userForToken) => {
+    if(course.teacher.toString() !== userForToken.id)
+    {
+        throw new UserInputError("Unauthorized")
+    }
+    return true
+}
+
+module.exports= {fetchCourse, findTask, findSubmission, validateDate, checkIsTeacher}
