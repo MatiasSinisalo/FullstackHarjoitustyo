@@ -71,10 +71,7 @@ const gradeSubmission = async (courseUniqueName, taskId, submissionId, points, u
     
     const submission = serviceUtils.findSubmission(task, submissionId)
 
-    if(course.teacher.toString() !== userForToken.id)
-    {
-        throw new UserInputError("Unauthorized")
-    }
+    serviceUtils.checkIsTeacher(course, userForToken)
 
     const grade = {
         points: points,
