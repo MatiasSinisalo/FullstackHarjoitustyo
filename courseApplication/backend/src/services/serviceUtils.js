@@ -15,6 +15,15 @@ const fetchCourse = async (courseUniqueName, populateCommand) => {
     return course;
 }
 
+const fetchUser = async (username) => {
+    const user = await User.findOne({username: username})
+    if(!user)
+    {
+        throw new UserInputError("Given username not found")
+    }
+    return user
+}
+
 const findTask = (course, taskId) => {
     const taskInCourse = course.tasks.find((task) => task._id.toString() === taskId)
     if(!taskInCourse)
@@ -71,7 +80,8 @@ const checkIsTeacher = (course, userForToken) => {
     return true
 }
 
-module.exports= {fetchCourse, 
+module.exports= {fetchCourse,
+                fetchUser, 
                 findTask, 
                 findSubmission, 
                 validateDate, 
