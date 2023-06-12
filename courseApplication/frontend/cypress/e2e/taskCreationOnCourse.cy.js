@@ -14,7 +14,7 @@ after(function(){
 describe('task creation on course tests', () => {
     it('user can create a new task on course where the user is a teacher', () => {
         logInAsUser("username", "password1234")
-        createCourseAsUser("course created for task testing", "testing for tasks")
+        createCourseAsUser("course-created-for-task-testing", "testing for tasks")
         
         cy.contains("dashboard").click()
         cy.wait(100)
@@ -59,7 +59,7 @@ describe('task creation on course tests', () => {
 
     it('user can create a new task with max grade on course where the user is a teacher', () => {
         logInAsUser("username", "password1234")
-        createCourseAsUser("course created for task testing", "testing for tasks")
+        createCourseAsUser("course-created-for-task-testing", "testing for tasks")
         
         cy.contains("dashboard").click()
         cy.wait(100)
@@ -110,7 +110,7 @@ describe('task creation on course tests', () => {
     it('User can see tasks created on a course', () => {
         logInAsUser("username", "password1234")
         const course = {
-            uniqueName: "this is a course for testing task visibility",
+            uniqueName: "this-is-a-course-for-testing-task-visibility",
             name:  "name of the course"
         }
         createCourseAsUser(course.uniqueName, course.name)

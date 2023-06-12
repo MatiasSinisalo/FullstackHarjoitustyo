@@ -11,7 +11,7 @@ after(function(){
 describe('grading a submission tests', () => {
     it('teacher can grade an returned submission created by a student', () => {
         logInAsUser("username", "password1234")
-        const course = {uniqueName: "courses unique name", name: "course name"}
+        const course = {uniqueName: "courses-unique-name", name: "course name"}
         createCourseAsUser(course.uniqueName, course.name)
         
         const task = {description: "this is a task for testing grading", deadline: tomorrow()}
@@ -57,7 +57,7 @@ describe('grading a submission tests', () => {
 
     it('submission displays points / maxGrade if maxGrade is available', () => {
         logInAsUser("username", "password1234")
-        const course = {uniqueName: "courses unique name", name: "course name"}
+        const course = {uniqueName: "courses-unique-name", name: "course name"}
         createCourseAsUser(course.uniqueName, course.name)
         
         const task = {description: "this is a task for testing grading", deadline: tomorrow()}

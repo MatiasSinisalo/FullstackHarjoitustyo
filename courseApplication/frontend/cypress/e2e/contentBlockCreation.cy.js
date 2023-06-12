@@ -13,7 +13,7 @@ after(function (){
 describe('Content block creation tests', () => {
     it('user can create an content block on info page', () => {
         logInAsUser("username", "password1234")
-        createCourseAsUser("courses uniquename", "course name")
+        createCourseAsUser("courses-uniquename", "course name")
         cy.contains("dashboard").click()
         cy.contains("See Teachers Course Page").click()
         const pageurl = "this-is-a-test"
@@ -32,7 +32,7 @@ describe('Content block creation tests', () => {
         cy.wait("@addContentBlock").then((communication) => {
             const variables = communication.request.body.variables
             expect(variables.content).to.equal("this is a new block")
-            expect(variables.courseUniqueName).to.equal("courses uniquename")
+            expect(variables.courseUniqueName).to.equal("courses-uniquename")
         })
 
         cy.get('p').contains("this is a new block")
@@ -40,7 +40,7 @@ describe('Content block creation tests', () => {
 
     it('student can see an content block on info page', () => {
         logInAsUser("username", "password1234")
-        createCourseAsUser("courses uniquename", "course name")
+        createCourseAsUser("courses-uniquename", "course name")
         cy.contains("dashboard").click()
         cy.contains("See Teachers Course Page").click()
         const pageurl = "this-is-a-test"
@@ -52,8 +52,8 @@ describe('Content block creation tests', () => {
         cy.contains("Log Out").click()
 
         logInAsUser("second username", "password1234")
-        joinCourseAsUser("courses uniquename", "second username")
-        visitCoursePageAsStudentFromDashboard("courses uniquename")
+        joinCourseAsUser("courses-uniquename", "second username")
+        visitCoursePageAsStudentFromDashboard("courses-uniquename")
         cy.contains("courses info pages").parent().contains(pageurl).click()
         cy.get(`h1`).contains(pageurl)
         cy.get('p').contains(content)

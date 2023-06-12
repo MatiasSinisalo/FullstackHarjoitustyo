@@ -15,7 +15,7 @@ describe('submitting a solution to a task test', () => {
     it('User can submit a solution to a task where the user is a student', () => {
         logInAsUser("username", "password1234")
         const course = {
-            uniqueName: "this is a course for testing task visibility",
+            uniqueName: "this-is-a-course-for-testing-task-visibility",
             name:  "name of the course"
         }
         createCourseAsUser(course.uniqueName, course.name)
@@ -70,7 +70,7 @@ describe('submitting a solution to a task test', () => {
     it('User can submit a solution to a task where the user is a teacher', () => {
         logInAsUser("username", "password1234")
         const course = {
-            uniqueName: "this is a course for testing task visibility 2",
+            uniqueName: "this-is-a-course-for-testing-task-visibility-2",
             name:  "name of the course"
         }
         createCourseAsUser(course.uniqueName, course.name)
@@ -115,7 +115,7 @@ describe('submitting a solution to a task test', () => {
     it('User can save a solution on a task', () => {
         logInAsUser("username", "password1234")
         const course = {
-            uniqueName: "this is a course for testing task visibility",
+            uniqueName: "this-is-a-course-for-testing-task-visibility",
             name:  "name of the course"
         }
         createCourseAsUser(course.uniqueName, course.name)
@@ -173,7 +173,7 @@ describe('submitting solution to a task deadline tests', () => {
     it('if solution is submitted before deadline, no late message is shown', () => {
         logInAsUser("username", "password1234")
         const course = {
-            uniqueName: "this is a course for testing deadlines",
+            uniqueName: "this-is-a-course-for-testing-deadlines",
             name:  "name of the course"
         }
         createCourseAsUser(course.uniqueName, course.name)
@@ -195,7 +195,7 @@ describe('submitting solution to a task deadline tests', () => {
     it('if solution is submitted after deadline, late message is shown', () => {
         logInAsUser("username", "password1234")
         const course = {
-            uniqueName: "this is a course for testing deadlines2",
+            uniqueName: "this-is-a-course-for-testing-deadlines2",
             name:  "name of the course"
         }
         createCourseAsUser(course.uniqueName, course.name)

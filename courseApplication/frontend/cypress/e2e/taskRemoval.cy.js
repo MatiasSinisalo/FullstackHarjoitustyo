@@ -13,7 +13,7 @@ describe('task removal tests', () => {
     it('teacher can remove created task from a course', ()=> {
         logInAsUser("username", "password1234")
         const course = {
-            uniqueName: "this is a course for testing task removal",
+            uniqueName: "this-is-a-course-for-testing-task-removal",
             name:  "name of the course"
         }
         createCourseAsUser(course.uniqueName, course.name)
@@ -40,7 +40,7 @@ describe('task removal tests', () => {
         removeButton.click()
         cy.wait("@removeTask").then((communication) => {
             const requestVariables = communication.request.body.variables
-            expect(requestVariables.courseUniqueName).to.equal("this is a course for testing task removal")
+            expect(requestVariables.courseUniqueName).to.equal("this-is-a-course-for-testing-task-removal")
         })
 
         cy.get('[class*="Task:"]').should('not.exist');

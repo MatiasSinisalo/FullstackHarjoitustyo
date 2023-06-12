@@ -12,7 +12,7 @@ after(function (){
 describe('content blocks removal tests', () => {
     it('teacher can remove content block from info page view', () => {
         logInAsUser("username", "password1234")
-        createCourseAsUser("courses unique name", "username")
+        createCourseAsUser("courses-unique-name", "username")
         
         cy.contains("dashboard").click()
         cy.contains("See Teachers Course Page").click()
@@ -29,14 +29,14 @@ describe('content blocks removal tests', () => {
         cy.get('div[class*="contentBlock:"]').contains("delete").click()
         cy.wait("@removeContentBlock").then((communication) => {
             const variables = communication.request.body.variables
-            expect(variables.courseUniqueName).to.equal("courses unique name")
+            expect(variables.courseUniqueName).to.equal("courses-unique-name")
         })
 
         cy.get('p').contains("this is a sample content block").should('not.exist')
     })
     it('student can not see remove content block button from info page view', () => {
         logInAsUser("username", "password1234")
-        createCourseAsUser("courses unique name", "username")
+        createCourseAsUser("courses-unique-name", "username")
         
         cy.contains("dashboard").click()
         cy.contains("See Teachers Course Page").click()
@@ -46,8 +46,8 @@ describe('content blocks removal tests', () => {
 
         cy.contains("Log Out").click()
         logInAsUser("second username", "password1234")
-        joinCourseAsUser("courses unique name", "second username")
-        visitCoursePageAsStudentFromDashboard("courses unique name")
+        joinCourseAsUser("courses-unique-name", "second username")
+        visitCoursePageAsStudentFromDashboard("courses-unique-name")
         cy.contains("courses info pages").parent().contains("test-url").click()
         cy.get('div[class*="contentBlock:"]').contains("edit").should('not.exist')
         cy.get('div[class*="contentBlock:"]').contains("delete").should('not.exist')

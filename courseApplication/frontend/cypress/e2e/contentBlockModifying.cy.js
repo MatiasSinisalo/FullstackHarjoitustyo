@@ -12,7 +12,7 @@ after(function (){
 describe('content blocks removal tests', () => {
     it('teacher can edit content block from info page view', () => {
         logInAsUser("username", "password1234")
-        createCourseAsUser("courses unique name", "username")
+        createCourseAsUser("courses-unique-name", "username")
         
         cy.contains("dashboard").click()
         cy.contains("See Teachers Course Page").click()
@@ -33,7 +33,7 @@ describe('content blocks removal tests', () => {
         cy.get('div[class*="contentBlock:"]').contains("save").click()
         cy.wait("@modifyContentBlock").then((communication) => {
             const variables = communication.request.body.variables
-            expect(variables.courseUniqueName).to.equal("courses unique name")
+            expect(variables.courseUniqueName).to.equal("courses-unique-name")
             expect(variables.content).to.equal(modifiedContent)
         })
         cy.get('div[class*="contentBlock:"]').contains("cancel").click()

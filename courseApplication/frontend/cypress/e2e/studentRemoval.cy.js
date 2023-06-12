@@ -10,11 +10,11 @@ beforeEach(function () {
 describe('student removal from course tests', () => {
     it('teacher can remove a student from the course', () => {
         logInAsUser("username", "password1234")
-        createCourseAsUser("course for removal testing", "course name")
+        createCourseAsUser("course-for-removal-testing", "course name")
         cy.contains("Log Out").click()
         
         logInAsUser("second username", "password1234")
-        joinCourseAsUser("course for removal testing", "second username")
+        joinCourseAsUser("course-for-removal-testing", "second username")
         cy.contains("Log Out").click()
 
         logInAsUser("username", "password1234")
@@ -40,7 +40,7 @@ describe('student removal from course tests', () => {
 
         cy.contains("Log Out").click()
         logInAsUser("second username", "password1234")
-        cy.contains("course for removal testing").should("not.exist")
+        cy.contains("course-for-removal-testing").should("not.exist")
 
     })
 })

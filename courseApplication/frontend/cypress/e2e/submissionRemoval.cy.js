@@ -13,7 +13,7 @@ describe('submission removal tests teacher', () => {
     it('teacher can remove an created submission', () => {
         logInAsUser("username", "password1234")
         const course = {
-            uniqueName: "this is a course for testing submission removal",
+            uniqueName: "this-is-a-course-for-testing-submission-removal",
             name:  "name of the course"
         }
         createCourseAsUser(course.uniqueName, course.name)
@@ -48,7 +48,7 @@ describe('submission removal tests teacher', () => {
     it('teacher can remove an created submission made by a student', () => {
         logInAsUser("username", "password1234")
         const course = {
-            uniqueName: "this is a course for testing students submission removal",
+            uniqueName: "this-is-a-course-for-testing-students-submission-removal",
             name:  "name of the course"
         }
         createCourseAsUser(course.uniqueName, course.name)
@@ -87,7 +87,7 @@ describe('submission removal tests student', () => {
     it('student can remove an submission', () => {
         logInAsUser("username", "password1234")
         const course = {
-            uniqueName: "this is a course for testing students submission removal",
+            uniqueName: "this-is-a-course-for-testing-students-submission-removal",
             name:  "name of the course"
         }
         createCourseAsUser(course.uniqueName, course.name)

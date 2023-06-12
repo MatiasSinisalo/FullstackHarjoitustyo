@@ -12,11 +12,11 @@ describe('Course creation tests', () => {
         logInAsUser("username", "password1234")
 
 
-        createCourseAsUser("unique name of the course", "courses name")
+        createCourseAsUser("unique-name-of-the-course", "courses name")
 
         cy.visit('http://localhost:3000/CourseBrowser')
         cy.wait(500)
-        cy.contains("unique name of the course")
+        cy.contains("unique-name-of-the-course")
         cy.contains("courses name")
 
         cy.contains("Log Out").click()
@@ -29,7 +29,7 @@ describe('Course creation tests', () => {
 
 
         cy.intercept('POST', 'http://localhost:4000').as('serverResponse')
-        createCourseAsUser("unique name of the course", "courses name")
+        createCourseAsUser("unique-name-of-the-course", "courses name")
 
         cy.wait('@serverResponse').then((response) => {
             const serverError = response.response.body.errors[0]
