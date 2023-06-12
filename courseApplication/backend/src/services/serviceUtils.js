@@ -1,9 +1,9 @@
+const { default: mongoose } = require('mongoose')
+const { Task, Submission, Grade } = require('../models/task')
 const { UserInputError } = require('apollo-server-core')
 const User = require('../models/user')
 const Course = require('../models/course')
-const { default: mongoose } = require('mongoose')
-const { Task, Submission, Grade } = require('../models/task')
-const serviceUtils = require('./serviceUtils')
+
 
 const fetchCourse = async (courseUniqueName, populateCommand) => {
     const course = populateCommand ? 
@@ -13,10 +13,6 @@ const fetchCourse = async (courseUniqueName, populateCommand) => {
         throw new UserInputError("Given course not found")
     }
     return course;
-}
-
-const isValidAsUrl = (value) => {
-    return /^([A-Za-z0-9])+((-?)([A-Za-z0-9]+))*$/.test(value);
 }
 
 const fetchUser = async (username) => {
@@ -92,5 +88,4 @@ module.exports= {fetchCourse,
                 checkIsTeacher,
                 findInfoPage,
                 findContentBlock,
-                isValidAsUrl
             }

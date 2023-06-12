@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const { taskSchema } = require('./task');
-const { validateUrl, isValidAsUrl } = require('../services/serviceUtils');
+const { isValidAsUrl } = require('../regex');
 
 
 const contentBlockSchema = new mongoose.Schema({
@@ -19,8 +19,8 @@ const infoPageSchema = new mongoose.Schema({
         type: String,
         required: true,
         validate: {
-            validator: function(value) {
-              return isValidAsUrl(value);
+            validator: (value) => {
+              return isValidAsUrl(value)
             },
             message: props => `Incorrect locationUrl`
         }
