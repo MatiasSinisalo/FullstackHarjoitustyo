@@ -32,6 +32,15 @@ const findSubmission = (task, submissionId) => {
     return submission
 }
 
+const findInfoPage = (course, infoPageId) => {
+    const alreadyExistingInfoPage = course.infoPages.find((page) => page.id === infoPageId)
+    if(!alreadyExistingInfoPage)
+    {
+        throw new UserInputError("Given page not found")
+    }
+    return alreadyExistingInfoPage
+}
+
 const validateDate = (date) => {
     
     const dateNumber = Date.parse(date)
@@ -53,4 +62,9 @@ const checkIsTeacher = (course, userForToken) => {
     return true
 }
 
-module.exports= {fetchCourse, findTask, findSubmission, validateDate, checkIsTeacher}
+module.exports= {fetchCourse, 
+                findTask, 
+                findSubmission, 
+                validateDate, 
+                checkIsTeacher,
+                findInfoPage}
