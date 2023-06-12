@@ -15,6 +15,10 @@ const fetchCourse = async (courseUniqueName, populateCommand) => {
     return course;
 }
 
+const isValidAsUrl = (value) => {
+    return /^([A-Za-z0-9])+((-?)([A-Za-z0-9]+))*$/.test(value);
+}
+
 const fetchUser = async (username) => {
     const user = await User.findOne({username: username})
     if(!user)
@@ -87,5 +91,6 @@ module.exports= {fetchCourse,
                 validateDate, 
                 checkIsTeacher,
                 findInfoPage,
-                findContentBlock
+                findContentBlock,
+                isValidAsUrl
             }
