@@ -33,11 +33,7 @@ const getCourse = async(courseUniqueName, userForToken) => {
 }
 
 const createCourse = async (uniqueName, name, teacherUsername) => {
-    const teacherUser = await User.findOne({username:teacherUsername})
-    if(!teacherUser)
-    {
-        throw new UserInputError('no user with given username found!')
-    } 
+    const teacherUser = await serviceUtils.fetchUser(teacherUsername)
 
     const teacherID = teacherUser.id
     
@@ -77,11 +73,7 @@ const removeCourse = async(courseUniqueName, userForToken)=>{
 
 const addStudentToCourse = async (studentUsername, courseUniqueName, userForToken) => {
     
-    const studentUser = await User.findOne({username: studentUsername})
-    if(!studentUser)
-    {
-        throw new UserInputError("Given username not found")
-    }
+    const studentUser = await serviceUtils.fetchUser(studentUsername)
 
     
     const course = await serviceUtils.fetchCourse(courseUniqueName)
@@ -106,11 +98,7 @@ const addStudentToCourse = async (studentUsername, courseUniqueName, userForToke
 }
 
 const removeStudentFromCourse = async (studentUsername, courseUniqueName, userForToken) => {
-    const studentUser = await User.findOne({username: studentUsername})
-    if(!studentUser)
-    {
-        throw new UserInputError("Given username not found")
-    }
+    const studentUser = await serviceUtils.fetchUser(studentUsername)
 
     const course =  await serviceUtils.fetchCourse(courseUniqueName)
     //only teacher can remove any student or student can leave by their own accord

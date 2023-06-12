@@ -83,7 +83,7 @@ describe('course creation tests', () => {
         apolloServer.context = {userForToken: {username: "does not exist", name: "name"}}
         const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: "uniqueName", name: "common name", teacher: "does not exist"}})
         expect(createdCourse.data.createCourse).toEqual(null)
-        expect(createdCourse.errors[0].message).toEqual('no user with given username found!')
+        expect(createdCourse.errors[0].message).toEqual('Given username not found')
         
     })
 
