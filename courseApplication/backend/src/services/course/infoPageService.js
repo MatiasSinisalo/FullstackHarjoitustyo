@@ -69,11 +69,7 @@ const modifyContentBlock = async(uniqueName, infoPageId, contentBlockId, newCont
 
     const infoPage = serviceUtils.findInfoPage(course, infoPageId)
 
-    const contentBlock = infoPage.contentBlocks.find((block) => block.id === contentBlockId)
-    if(!contentBlock)
-    {
-        throw new UserInputError("Given content block not found")
-    }
+    const contentBlock = serviceUtils.findContentBlock(infoPage, contentBlockId)
 
     contentBlock.content = newContent
     await course.save()
@@ -87,11 +83,7 @@ const removeContentBlock = async (courseUniqueName, infoPageId, contentBlockId, 
 
     const infoPage = serviceUtils.findInfoPage(course, infoPageId)
 
-    const contentBlock = infoPage.contentBlocks.find((block) => block.id === contentBlockId)
-    if(!contentBlock)
-    {
-        throw new UserInputError("Given content block not found")
-    }
+    const contentBlock = serviceUtils.findContentBlock(infoPage, contentBlockId)
 
     const filteredBlocks = infoPage.contentBlocks.filter((block) => block.id !== contentBlock.id)
     infoPage.contentBlocks = filteredBlocks
