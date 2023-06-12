@@ -41,6 +41,15 @@ const findInfoPage = (course, infoPageId) => {
     return alreadyExistingInfoPage
 }
 
+const findContentBlock = (infoPage, contentBlockId) => {
+    const contentBlock = infoPage.contentBlocks.find((block) => block.id === contentBlockId)
+    if(!contentBlock)
+    {
+        throw new UserInputError("Given content block not found")
+    }
+    return contentBlock
+}
+
 const validateDate = (date) => {
     
     const dateNumber = Date.parse(date)
@@ -67,4 +76,6 @@ module.exports= {fetchCourse,
                 findSubmission, 
                 validateDate, 
                 checkIsTeacher,
-                findInfoPage}
+                findInfoPage,
+                findContentBlock
+            }
