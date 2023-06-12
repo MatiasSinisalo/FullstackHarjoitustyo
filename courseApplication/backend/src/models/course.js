@@ -9,7 +9,7 @@ const courseSchema = new mongoose.Schema({
         required: true,
         unique: true,
         validate:{
-            validator: () => {
+            validator: (value) => {
                 return isValidAsUrl(value)
             },
             message: props => `Incorrect unique name`
