@@ -41,6 +41,26 @@ const removeChatRoom = async (courseUniqueName, chatRoomId, userForToken) => {
     return true
 }
 
+const addUserToChatRoom = async (courseUniqueName, chatRoomId, username, userForToken) => {
+    const course = await serviceUtils.fetchCourse(courseUniqueName)
+    const user = await serviceUtils.fetchUser(username)
+    const chatRoom = await serviceUtils.findChatRoom(course, chatRoomId)
+    
+    if(chatRoom.admin.toString() !== userForToken.id)
+    {
+        throw new UserInputError("Unauthorized")
+    }
+    
+    if(!serviceUtils.isStudent(course, username))
+    {
+        throw new UserInputError("Given user is not participating in the course")
+    }
+
+    chatRoom.users.push(user.id)
+    await course.save()
+    return true
+}
+
 const createMessage = async (courseUniqueName, chatRoomId, content, userForToken) => {
     const course = await serviceUtils.fetchCourse(courseUniqueName)
     serviceUtils.checkIsTeacher(course, userForToken)
@@ -61,5 +81,6 @@ const createMessage = async (courseUniqueName, chatRoomId, content, userForToken
 module.exports = {
     createChatRoom, 
     removeChatRoom,
-    createMessage
+    createMessage,
+    addUserToChatRoom
 }

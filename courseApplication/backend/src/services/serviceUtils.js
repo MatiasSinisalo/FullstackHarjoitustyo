@@ -89,6 +89,16 @@ const checkIsTeacher = (course, userForToken) => {
     return true
 }
 
+const isTeacher = (course, userForToken) => {
+    return course.teacher.toString() === userForToken.id
+}
+
+const isStudent = (course, userForToken) => {
+    const student = course.students.find(((student) => student.id === userForToken.id))
+    return student !== null
+}
+
+
 module.exports= {fetchCourse,
                 fetchUser, 
                 findTask, 
@@ -97,5 +107,7 @@ module.exports= {fetchCourse,
                 checkIsTeacher,
                 findInfoPage,
                 findContentBlock,
-                findChatRoom
+                findChatRoom,
+                isTeacher,
+                isStudent
             }
