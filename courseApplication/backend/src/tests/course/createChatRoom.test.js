@@ -35,7 +35,8 @@ describe("createChatRoom tests", () => {
     test('createChatRoom creates chatRoom correctly', async () => {
         await helpers.logIn("username", apolloServer)
         const course = await helpers.createCourse("courseUniqueName", "name", [], apolloServer)
-        const createChatRoomQuery = await apolloServer.executeOperation({query: createChatRoom, variables: {courseUnqueName: course.uniqueName, name: "name of chat room"}})
+        const createChatRoomQuery = await apolloServer.executeOperation({query: createChatRoom, variables: {courseUniqueName: course.uniqueName, name: "name of chat room"}})
+        console.log(createChatRoomQuery)
         expect(createChatRoomQuery.data.createChatRoom.name).toEqual("name of chat room")
     })
 })

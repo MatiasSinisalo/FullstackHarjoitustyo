@@ -163,7 +163,7 @@ const courseMutationResolvers = {
         mustHaveToken(context)
         const courseUniqueName = args.courseUniqueName
         const name = args.name
-        const newChatRoom = null;
+        const newChatRoom = await courseService.chatRooms.createChatRoom(courseUniqueName, name, context.userForToken);
         return newChatRoom
     }
 }
