@@ -68,7 +68,7 @@ describe("createChatRoom tests", () => {
         const chatRoomInDB = courseInDB.chatRooms[0] 
         const chatRoomObj = chatRoomInDB.toObject()
         delete chatRoomObj._id
-        expect(chatRoomObj).toEqual({...expectedObj, admin: user._id})
+        await expect(chatRoomObj).toEqual({...expectedObj, admin: user._id})
     })
     test('createChatRoom returns Unauthorized if the user is not a teacher', async () => {
         const user = await helpers.logIn("username", apolloServer)
@@ -82,7 +82,7 @@ describe("createChatRoom tests", () => {
         expect(createChatRoomQuery.data.createChatRoom).toBe(null)  
         expect(createChatRoomQuery.errors[0].message).toEqual("Unauthorized")  
         
-        checkCourseNotChanged()
+        await checkCourseNotChanged()
     })
     test('createChatRoom returns given course not found if course is not found', async () => {
         const user = await helpers.logIn("username", apolloServer)
@@ -96,6 +96,6 @@ describe("createChatRoom tests", () => {
         expect(createChatRoomQuery.data.createChatRoom).toBe(null)  
         expect(createChatRoomQuery.errors[0].message).toEqual("Given course not found")  
         
-        checkCourseNotChanged()
+        await checkCourseNotChanged()
     })
 })
