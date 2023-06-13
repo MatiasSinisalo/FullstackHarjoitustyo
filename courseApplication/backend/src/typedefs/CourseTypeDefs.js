@@ -171,6 +171,12 @@ type Mutation{
         courseUniqueName: String!
         chatRoomId: String!
     ):Boolean
+
+    createMessage(
+        courseUniqueName: String!
+        chatRoomId: String!
+        content: String!
+    ):Message
 }
 `
 
