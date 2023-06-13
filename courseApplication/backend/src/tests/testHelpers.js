@@ -1,3 +1,4 @@
+
 const User = require('../models/user')
 const testQueries = require('./courseTestQueries')
 
@@ -57,4 +58,18 @@ const createContentBlock = async (course, infoPage, content, position, apolloSer
     }})
     return contentBlockQuery.data.addContentBlockToInfoPage
 }
-module.exports = {logIn, createCourse, createTask, createSubmission, createInfoPage, createContentBlock}
+
+const createChatRoom = async (course,name , apolloServer) => {
+    const chatRoomQuery = await apolloServer.executeOperation({query: testQueries.createChatRoom, variables: {courseUniqueName: course.uniqueName, name: name}})
+    const chatRoom = chatRoomQuery.data.createChatRoom
+    return chatRoom
+}
+module.exports = {
+    logIn, 
+    createCourse, 
+    createTask, 
+    createSubmission, 
+    createInfoPage,
+    createContentBlock,
+    createChatRoom
+}
