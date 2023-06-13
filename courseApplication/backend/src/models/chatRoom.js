@@ -24,7 +24,8 @@ const chatRoomSchema = new mongoose.Schema({
     },
     admin: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'courseApplicationUser'
+        ref: 'courseApplicationUser',
+        required: true
     },
     users: {
         type: [{
