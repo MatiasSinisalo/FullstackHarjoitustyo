@@ -158,6 +158,13 @@ const courseMutationResolvers = {
         const gradedSubmission = await courseService.submissions.gradeSubmission(courseUniqueName, taskId, submissionId, points, context.userForToken)
         return gradedSubmission
 
+    },
+    createChatRoom: async(root, args, context) => {
+        mustHaveToken(context)
+        const courseUniqueName = args.courseUniqueName
+        const name = args.name
+        const newChatRoom = null;
+        return newChatRoom
     }
 }
 

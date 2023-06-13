@@ -253,6 +253,35 @@ mutation GradeSubmission($courseUniqueName: String!, $taskId: String!, $submissi
   }
 }
 `
+
+const createChatRoom = `
+mutation CreateChatRoom($courseUniqueName: String!, $name: String!) {
+  createChatRoom(courseUniqueName: $courseUniqueName, name: $name) {
+    admin {
+      name
+      id
+      username
+    }
+    id
+    messages {
+      content
+      fromUser {
+        name
+        id
+        username
+      }
+      sendDate
+      id
+    }
+    name
+    users {
+      id
+      name
+      username
+    }
+  }
+}
+`
 module.exports = {createCourse, 
                   removeCourse, 
                   addStudentToCourse, 
@@ -269,6 +298,7 @@ module.exports = {createCourse,
                   removeInfoPageFromCourse,
                   addContentBlockToInfoPage,
                   removeContentBlockFromInfoPage,
-                  modifyContentBlock
+                  modifyContentBlock,
+                  createChatRoom
                 }
 
