@@ -33,10 +33,35 @@ beforeEach(async () => {
 
 describe("createChatRoom tests", () => {
     test('createChatRoom creates chatRoom correctly', async () => {
-        await helpers.logIn("username", apolloServer)
+        const user = await helpers.logIn("username", apolloServer)
+        console.log(user._id.toString())
         const course = await helpers.createCourse("courseUniqueName", "name", [], apolloServer)
-        const createChatRoomQuery = await apolloServer.executeOperation({query: createChatRoom, variables: {courseUniqueName: course.uniqueName, name: "name of chat room"}})
-        console.log(createChatRoomQuery)
-        expect(createChatRoomQuery.data.createChatRoom.name).toEqual("name of chat room")
+        const roomName = "name of chat room"
+        const createChatRoomQuery = await apolloServer.executeOperation({query: createChatRoom, variables: {courseUniqueName: course.uniqueName, name: roomName}})
+        delete createChatRoomQuery.data.createChatRoom.id
+        
+        const expectedObj = {
+            name: roomName,
+            admin: {
+                username: user.username,
+                name: user.name,
+                id: user.id
+            },
+            messages: [],
+            users: [],
+        }
+        expect(createChatRoomQuery.data.createChatRoom).toMatchObject(expectedObj)  
+        
+
+        const coursesInDB = await Course.find({})
+        expect(coursesInDB.length).toBe(1)
+
+        const courseInDB = coursesInDB[0]
+        expect(courseInDB.chatRooms.length).toBe(1)
+
+        const chatRoomInDB = courseInDB.chatRooms[0] 
+        const chatRoomObj = chatRoomInDB.toObject()
+        delete chatRoomObj._id
+        expect(chatRoomObj).toEqual({...expectedObj, admin: user._id})
     })
 })
