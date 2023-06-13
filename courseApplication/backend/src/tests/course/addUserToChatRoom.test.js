@@ -29,16 +29,84 @@ beforeEach(async () => {
     await Task.deleteMany({})
 })
 
+const checkCourseNotChanged = async () => {
+    const coursesInDB = await Course.find({}).populate("chatRooms.users")
+    expect(coursesInDB.length).toBe(1)
+
+    const courseInDB = coursesInDB[0]
+    expect(courseInDB.chatRooms.length).toBe(1)
+
+    const chatRoomInDB = courseInDB.chatRooms[0]
+    expect(chatRoomInDB.users.length).toBe(0)
+}
 
 describe('addUserToChatRoom tests', () => {
-    test('addUserToChatRoom adds user correctly to chat room if the user is a teacher', async () => {
+    test('addUserToChatRoom adds user correctly to chat room if the user is an admin', async () => {
         const user = await helpers.logIn("username", apolloServer)
         const course = await helpers.createCourse("uniqueName", "name", [], apolloServer)
         const chatRoom = await helpers.createChatRoom(course, "room name", apolloServer)
-        await apolloServer.executeOperation({query: addStudentToCourse, variables: {courseUniqueName: course.uniqueName, username: "students username"}})
+        const addStudentQuery = await apolloServer.executeOperation({query: addStudentToCourse, variables: {courseUniqueName: course.uniqueName, addStudentToCourseUsername: "students username"}})
+        
         const addUserToChatRoomQuery = await apolloServer.executeOperation({query: addUserToChatRoom, 
             variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom.id, username: "students username"}})
-        console.log(addUserToChatRoomQuery)
         expect(addUserToChatRoomQuery.data.addUserToChatRoom).toBe(true)
+
+        const coursesInDB = await Course.find({}).populate("chatRooms.users")
+        expect(coursesInDB.length).toBe(1)
+
+        const courseInDB = coursesInDB[0]
+        expect(courseInDB.chatRooms.length).toBe(1)
+
+        const chatRoomInDB = courseInDB.chatRooms[0]
+        expect(chatRoomInDB.users.length).toBe(1)
+
+        const userInChatRoom = chatRoomInDB.users[0]
+        expect(userInChatRoom.username).toBe("students username")
     })
+
+    test('addUserToChatRoom returns Unauthorized if the user is not an admin', async () => {
+        const user = await helpers.logIn("username", apolloServer)
+        const course = await helpers.createCourse("uniqueName", "name", [], apolloServer)
+        const chatRoom = await helpers.createChatRoom(course, "room name", apolloServer)
+        await apolloServer.executeOperation({query: addStudentToCourse, variables: {courseUniqueName: course.uniqueName, addStudentToCourseUsername: "students username"}})
+        
+        await helpers.logIn("students username", apolloServer)
+        const addUserToChatRoomQuery = await apolloServer.executeOperation({query: addUserToChatRoom, 
+            variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom.id, username: "students username"}})
+        
+        expect(addUserToChatRoomQuery.data.addUserToChatRoom).toBe(null)
+        expect(addUserToChatRoomQuery.errors[0].message).toBe("Unauthorized")
+      
+        await checkCourseNotChanged()
+    })
+
+    test('addUserToChatRoom returns given course not found if the course is not found', async () => {
+        const user = await helpers.logIn("username", apolloServer)
+        const course = await helpers.createCourse("uniqueName", "name", [], apolloServer)
+        const chatRoom = await helpers.createChatRoom(course, "room name", apolloServer)
+        await apolloServer.executeOperation({query: addStudentToCourse, variables: {courseUniqueName: course.uniqueName, addStudentToCourseUsername: "students username"}})
+        
+        const addUserToChatRoomQuery = await apolloServer.executeOperation({query: addUserToChatRoom, 
+            variables: {courseUniqueName: "not-found", chatRoomId: chatRoom.id, username: "students username"}})
+        
+        expect(addUserToChatRoomQuery.data.addUserToChatRoom).toBe(null)
+        expect(addUserToChatRoomQuery.errors[0].message).toBe("Given course not found")
+      
+        await checkCourseNotChanged()
+    })
+
+    test('addUserToChatRoom returns given user is not participating if the user is not a student', async () => {
+        const user = await helpers.logIn("username", apolloServer)
+        const course = await helpers.createCourse("uniqueName", "name", [], apolloServer)
+        const chatRoom = await helpers.createChatRoom(course, "room name", apolloServer)
+         
+        const addUserToChatRoomQuery = await apolloServer.executeOperation({query: addUserToChatRoom, 
+            variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom.id, username: "students username"}})
+        
+        expect(addUserToChatRoomQuery.data.addUserToChatRoom).toBe(null)
+        expect(addUserToChatRoomQuery.errors[0].message).toBe("Given user is not participating in the course")
+      
+        await checkCourseNotChanged()
+    })
+
 })
