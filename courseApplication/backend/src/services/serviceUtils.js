@@ -59,6 +59,15 @@ const findContentBlock = (infoPage, contentBlockId) => {
     return contentBlock
 }
 
+const findChatRoom = (course, chatRoomId) => {
+    const chatRoom = course.chatRooms.find((room) => room.id === chatRoomId)
+    if(!chatRoom)
+    {
+        throw new UserInputError("Given chatroom not found")
+    }
+    return chatRoom
+}
+
 const validateDate = (date) => {
     
     const dateNumber = Date.parse(date)
@@ -88,4 +97,5 @@ module.exports= {fetchCourse,
                 checkIsTeacher,
                 findInfoPage,
                 findContentBlock,
+                findChatRoom
             }

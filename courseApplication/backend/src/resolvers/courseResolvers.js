@@ -170,7 +170,7 @@ const courseMutationResolvers = {
         mustHaveToken(context)
         const courseUniqueName = args.courseUniqueName
         const chatRoomId = args.chatRoomId
-        const removed = null;
+        const removed = await courseService.chatRooms.removeChatRoom(courseUniqueName, chatRoomId, context.userForToken);
         return removed
     }
 }

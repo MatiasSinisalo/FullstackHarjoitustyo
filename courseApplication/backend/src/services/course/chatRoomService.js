@@ -28,4 +28,20 @@ const createChatRoom = async (courseUniqueName, name, userForToken) => {
     return {...chatRoomObj.toObject(), id: chatRoomObj._id.toString(), admin: {username: userForToken.username, name: userForToken.name, id: userForToken.id}}
 }
 
-module.exports = {createChatRoom}
+const removeChatRoom = async (courseUniqueName, chatRoomId, userForToken) => {
+    const course = await serviceUtils.fetchCourse(courseUniqueName)
+    serviceUtils.checkIsTeacher(course, userForToken)
+
+    const chatRoom = serviceUtils.findChatRoom(course, chatRoomId)
+
+    const filteredChatRooms = course.chatRooms.filter((room) => room.id !== chatRoomId)
+    course.chatRooms = filteredChatRooms
+    await course.save()
+
+    return true
+}
+
+module.exports = {
+    createChatRoom, 
+    removeChatRoom
+}

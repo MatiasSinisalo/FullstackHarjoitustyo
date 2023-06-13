@@ -39,5 +39,10 @@ describe('removeChatRoom tests', () => {
         const removeChatRoomQuery = await apolloServer.executeOperation({query: removeChatRoom, 
             variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom.id}})
         expect(removeChatRoomQuery.data.removeChatRoom).toBe(true)
+
+        const coursesInDB = await Course.find({})
+        expect(coursesInDB.length).toBe(1)
+        const courseInDB = coursesInDB[0]
+        expect(courseInDB.chatRooms.length).toBe(0) 
     })
 })
