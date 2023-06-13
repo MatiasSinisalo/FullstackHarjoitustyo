@@ -166,6 +166,14 @@ const courseMutationResolvers = {
         const newChatRoom = await courseService.chatRooms.createChatRoom(courseUniqueName, name, context.userForToken);
         return newChatRoom
     },
+    addUserToChatRoom: async (root, args, context) => {
+        mustHaveToken(context)
+        const courseUniqueName = args.courseUniqueName
+        const chatRoomId = args.chatRoomId
+        const username = args.username
+        const added = null
+        return added
+    },
     removeChatRoom: async(root, args, context) => {
         mustHaveToken(context)
         const courseUniqueName = args.courseUniqueName
