@@ -30,6 +30,12 @@ beforeEach(async () => {
     await Task.deleteMany({})
 })
 
+const checkCourseNotChanged = async () => {
+    const coursesInDB = await Course.find({})
+    expect(coursesInDB.length).toBe(1)
+    const courseInDB = coursesInDB[0]
+    expect(courseInDB.chatRooms.length).toBe(0)
+}
 
 describe("createChatRoom tests", () => {
     test('createChatRoom creates chatRoom correctly', async () => {
@@ -63,5 +69,33 @@ describe("createChatRoom tests", () => {
         const chatRoomObj = chatRoomInDB.toObject()
         delete chatRoomObj._id
         expect(chatRoomObj).toEqual({...expectedObj, admin: user._id})
+    })
+    test('createChatRoom returns Unauthorized if the user is not a teacher', async () => {
+        const user = await helpers.logIn("username", apolloServer)
+        console.log(user._id.toString())
+        const course = await helpers.createCourse("courseUniqueName", "name", [], apolloServer)
+        
+        await helpers.logIn("students username", apolloServer)
+        const roomName = "name of chat room"
+        const createChatRoomQuery = await apolloServer.executeOperation({query: createChatRoom, variables: {courseUniqueName: course.uniqueName, name: roomName}})
+         
+        expect(createChatRoomQuery.data.createChatRoom).toBe(null)  
+        expect(createChatRoomQuery.errors[0].message).toEqual("Unauthorized")  
+        
+        checkCourseNotChanged()
+    })
+    test('createChatRoom returns given course not found if course is not found', async () => {
+        const user = await helpers.logIn("username", apolloServer)
+        console.log(user._id.toString())
+        const course = await helpers.createCourse("courseUniqueName", "name", [], apolloServer)
+        
+        const roomName = "name of chat room"
+        const createChatRoomQuery = await apolloServer.executeOperation({query: createChatRoom, 
+            variables: {courseUniqueName: "does-not-exist", name: roomName}})
+         
+        expect(createChatRoomQuery.data.createChatRoom).toBe(null)  
+        expect(createChatRoomQuery.errors[0].message).toEqual("Given course not found")  
+        
+        checkCourseNotChanged()
     })
 })
