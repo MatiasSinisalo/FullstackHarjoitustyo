@@ -161,6 +161,11 @@ type Mutation{
         submissionId: String!
         points: Int!
     ):Submission
+
+    createChatRoom(
+        courseUniqueName: String!
+        name: String!
+    ):ChatRoom
 }
 `
 
