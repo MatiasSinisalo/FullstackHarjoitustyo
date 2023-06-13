@@ -45,6 +45,14 @@ describe('createMessage tests', () => {
         }
         const createMessageQuery = await apolloServer.executeOperation({query: createMessage, 
             variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom.id, content: expectedMessage.content}})
-        expect(createMessageQuery.data.createMessage).toEqual(expectedMessage)
+        console.log(createMessageQuery)
+        const message = createMessageQuery.data.createMessage
+        expect(message.fromUser).toEqual(expectedMessage.fromUser)
+        expect(message.content).toEqual(expectedMessage.content)
+        
+        expect(new Date(Number(message.sendDate)).getFullYear()).toEqual(expectedMessage.sendDate.getFullYear())
+        expect(new Date(Number(message.sendDate)).getMonth()).toEqual(expectedMessage.sendDate.getMonth())
+        expect(new Date(Number(message.sendDate)).getDate()).toEqual(expectedMessage.sendDate.getDate())
+        expect(new Date(Number(message.sendDate)).getMinutes()).toEqual(expectedMessage.sendDate.getMinutes())
     })
 })

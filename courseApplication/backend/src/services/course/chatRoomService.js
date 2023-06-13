@@ -7,7 +7,7 @@ const { default: mongoose } = require('mongoose')
 const { Task, Submission, Grade } = require('../../models/task')
 const serviceUtils = require('../serviceUtils')
 const { InfoPage, ContentBlock } = require('../../models/infoPage')
-const { ChatRoom } = require('../../models/chatRoom')
+const { ChatRoom, Message } = require('../../models/chatRoom')
 
 
 const createChatRoom = async (courseUniqueName, name, userForToken) => {
@@ -41,7 +41,25 @@ const removeChatRoom = async (courseUniqueName, chatRoomId, userForToken) => {
     return true
 }
 
+const createMessage = async (courseUniqueName, chatRoomId, content, userForToken) => {
+    const course = await serviceUtils.fetchCourse(courseUniqueName)
+    serviceUtils.checkIsTeacher(course, userForToken)
+
+    const chatRoom = serviceUtils.findChatRoom(course, chatRoomId)
+
+    const message = {
+        fromUser: userForToken.id,
+        sendDate: new Date(Date.now()),
+        content: content,
+    }
+    const messageObj = new Message(message)
+    chatRoom.messages.push(messageObj)
+    await course.save()
+    return {...messageObj.toObject(), id: messageObj._id.toString(), fromUser: {username: userForToken.username, name: userForToken.name, id: userForToken.id}}
+}
+
 module.exports = {
     createChatRoom, 
-    removeChatRoom
+    removeChatRoom,
+    createMessage
 }

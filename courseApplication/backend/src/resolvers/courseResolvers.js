@@ -178,7 +178,7 @@ const courseMutationResolvers = {
         const courseUniqueName = args.courseUniqueName
         const chatRoomId = args.chatRoomId
         const content = args.content
-        const newMessage = null
+        const newMessage = await courseService.chatRooms.createMessage(courseUniqueName, chatRoomId, content, context.userForToken)
         return newMessage
     }
 }
