@@ -4,7 +4,7 @@ const Course = require('../../models/course')
 const User = require('../../models/user')
 const {Task} = require('../../models/task')
 const { userCreateQuery, userLogInQuery, createSpesificUserQuery } = require('../userTestQueries')
-const { createCourse, addTaskToCourse, removeCourse, addSubmissionToCourseTask, createChatRoom, createMessage} = require('../courseTestQueries')
+const { createCourse, addTaskToCourse, removeCourse, addSubmissionToCourseTask, createChatRoom, createMessage, addStudentToCourse, addUserToChatRoom} = require('../courseTestQueries')
 const { query } = require('express')
 const mongoose = require('mongoose')
 const helpers = require('../testHelpers')
@@ -38,7 +38,7 @@ const checkCourseNotChanged = async () => {
 }
 
 describe('createMessage tests', () => {
-    test('createMessage creates message correctly', async () => {
+    test('createMessage creates message correctly if user is admin', async () => {
         const user = await helpers.logIn("username", apolloServer)
         const course = await helpers.createCourse("uniqueName", "name", [], apolloServer)
         const chatRoom = await helpers.createChatRoom(course, "room name", apolloServer)
@@ -57,34 +57,38 @@ describe('createMessage tests', () => {
         const message = createMessageQuery.data.createMessage
         expect(message.fromUser).toEqual(expectedMessage.fromUser)
         expect(message.content).toEqual(expectedMessage.content)
-        
-        expect(new Date(Number(message.sendDate)).getFullYear()).toEqual(expectedMessage.sendDate.getFullYear())
-        expect(new Date(Number(message.sendDate)).getMonth()).toEqual(expectedMessage.sendDate.getMonth())
-        expect(new Date(Number(message.sendDate)).getDate()).toEqual(expectedMessage.sendDate.getDate())
-        expect(new Date(Number(message.sendDate)).getMinutes()).toEqual(expectedMessage.sendDate.getMinutes())
+        checkDateCorrect(Number(message.sendDate), expectedMessage)
 
-        const coursesInDB = await Course.find({})
-        expect(coursesInDB.length).toBe(1)
+        await checkDataBaseInCorrectState(expectedMessage, user)
+    })
 
-        const courseInDB = coursesInDB[0]
-        expect(courseInDB.chatRooms.length).toBe(1)
-        
-        const chatRoomInDB = courseInDB.chatRooms[0]
-        expect(chatRoomInDB.messages.length).toBe(1)
+    test('createMessage creates message correctly if user is pariticipating in the chat room', async () => {
+        const adminUser = await helpers.logIn("username", apolloServer)
+        const course = await helpers.createCourse("uniqueName", "name", [], apolloServer)
+        const chatRoom = await helpers.createChatRoom(course, "room name", apolloServer)
+        await apolloServer.executeOperation({query: addStudentToCourse, variables: {courseUniqueName: course.uniqueName, addStudentToCourseUsername: "students username"}})
+        await apolloServer.executeOperation({query: addUserToChatRoom, variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom.id, username: "students username"}})
+       
+        const user =  await helpers.logIn("students username", apolloServer)
+       
+        const expectedMessage = {
+            fromUser: {
+                username: user.username,
+                name: user.name,
+                id: user.id
+            },
+            sendDate: new Date(Date.now()),
+            content: "hello there",
+        }
+        const createMessageQuery = await apolloServer.executeOperation({query: createMessage, 
+            variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom.id, content: expectedMessage.content}})
+        console.log(createMessageQuery)
+        const message = createMessageQuery.data.createMessage
+        expect(message.fromUser).toEqual(expectedMessage.fromUser)
+        expect(message.content).toEqual(expectedMessage.content)
+        checkDateCorrect(Number(message.sendDate), expectedMessage)
 
-        const messageInDB = chatRoomInDB.messages[0]
-        const messageObj = messageInDB.toObject()
-
-        const dateInDB = messageObj.sendDate
-        
-        expect(new Date(dateInDB).getFullYear()).toEqual(expectedMessage.sendDate.getFullYear())
-        expect(new Date(dateInDB).getMonth()).toEqual(expectedMessage.sendDate.getMonth())
-        expect(new Date(dateInDB).getDate()).toEqual(expectedMessage.sendDate.getDate())
-        expect(new Date(dateInDB).getMinutes()).toEqual(expectedMessage.sendDate.getMinutes())
-
-        delete messageObj._id
-        delete messageObj.sendDate
-        expect(messageObj).toEqual({...expectedMessage, fromUser: user._id, sendDate: undefined})
+        await checkDataBaseInCorrectState(expectedMessage, user)
     })
 
     test('createMessage returns Unauthorized if the user is not admin and not participating in chatRoom', async () => {
@@ -155,3 +159,32 @@ describe('createMessage tests', () => {
         await checkCourseNotChanged()
     })
 })
+
+async function checkDataBaseInCorrectState(expectedMessage, user) {
+    const coursesInDB = await Course.find({})
+    expect(coursesInDB.length).toBe(1)
+
+    const courseInDB = coursesInDB[0]
+    expect(courseInDB.chatRooms.length).toBe(1)
+
+    const chatRoomInDB = courseInDB.chatRooms[0]
+    expect(chatRoomInDB.messages.length).toBe(1)
+
+    const messageInDB = chatRoomInDB.messages[0]
+    const messageObj = messageInDB.toObject()
+
+    const dateInDB = messageObj.sendDate
+
+    checkDateCorrect(dateInDB, expectedMessage)
+
+    delete messageObj._id
+    delete messageObj.sendDate
+    expect(messageObj).toEqual({ ...expectedMessage, fromUser: user._id, sendDate: undefined })
+}
+
+function checkDateCorrect(messageInt, expectedMessage) {
+    expect(new Date(messageInt).getFullYear()).toEqual(expectedMessage.sendDate.getFullYear())
+    expect(new Date(messageInt).getMonth()).toEqual(expectedMessage.sendDate.getMonth())
+    expect(new Date(messageInt).getDate()).toEqual(expectedMessage.sendDate.getDate())
+    expect(new Date(messageInt).getMinutes()).toEqual(expectedMessage.sendDate.getMinutes())
+}

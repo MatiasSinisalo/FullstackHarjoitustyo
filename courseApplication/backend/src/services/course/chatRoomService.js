@@ -63,9 +63,16 @@ const addUserToChatRoom = async (courseUniqueName, chatRoomId, username, userFor
 
 const createMessage = async (courseUniqueName, chatRoomId, content, userForToken) => {
     const course = await serviceUtils.fetchCourse(courseUniqueName)
-    serviceUtils.checkIsTeacher(course, userForToken)
-
+    
     const chatRoom = serviceUtils.findChatRoom(course, chatRoomId)
+
+    const isAdmin = chatRoom.admin.toString() === userForToken.id
+    const isParticipant = chatRoom.users.find((user) => user.toString() == userForToken.id) ? true : false
+
+    if(!isAdmin && !isParticipant)
+    {
+        throw new UserInputError("Unauthorized")
+    }
 
     const message = {
         fromUser: userForToken.id,
