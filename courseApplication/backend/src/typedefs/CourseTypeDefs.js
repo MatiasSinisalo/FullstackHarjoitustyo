@@ -1,5 +1,23 @@
 const { gql } = require("apollo-server");
 const CourseTypeDefs = gql`
+
+type Message{
+    id: ID!
+    fromUser: User!
+    sendDate: String!
+    content: String!
+}
+
+type ChatRoom{
+    id: ID!
+    name: String!
+    admin: User!
+    users: [User!]!
+    messages: [Message!]!
+}
+
+
+
 type Task{
     id: ID!
     description: String!
@@ -42,6 +60,7 @@ type Course{
     students: [User!]!
     tasks: [Task!]
     infoPages: [InfoPage!]!
+    chatRooms: [ChatRoom!]!
 }
 
 type Query{
