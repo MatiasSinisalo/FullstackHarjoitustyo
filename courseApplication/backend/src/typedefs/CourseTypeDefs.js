@@ -166,6 +166,11 @@ type Mutation{
         courseUniqueName: String!
         name: String!
     ):ChatRoom
+
+    removeChatRoom(
+        courseUniqueName: String!
+        chatRoomId: String!
+    ):Boolean
 }
 `
 
