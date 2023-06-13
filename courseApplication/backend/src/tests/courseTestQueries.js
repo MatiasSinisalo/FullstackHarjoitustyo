@@ -288,6 +288,21 @@ mutation RemoveChatRoom($courseUniqueName: String!, $chatRoomId: String!) {
   removeChatRoom(courseUniqueName: $courseUniqueName, chatRoomId: $chatRoomId)
 }
 `
+
+const createMessage = `
+mutation RemoveChatRoom($courseUniqueName: String!, $chatRoomId: String!, $content: String!) {
+  createMessage(courseUniqueName: $courseUniqueName, chatRoomId: $chatRoomId, content: $content) {
+    content
+    fromUser {
+      id
+      name
+      username
+    }
+    id
+    sendDate
+  }
+}
+`
 module.exports = {createCourse, 
                   removeCourse, 
                   addStudentToCourse, 
@@ -306,6 +321,7 @@ module.exports = {createCourse,
                   removeContentBlockFromInfoPage,
                   modifyContentBlock,
                   createChatRoom,
-                  removeChatRoom
+                  removeChatRoom,
+                  createMessage
                 }
 
