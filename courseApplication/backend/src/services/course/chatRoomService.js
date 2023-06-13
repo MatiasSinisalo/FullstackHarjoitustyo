@@ -51,7 +51,7 @@ const addUserToChatRoom = async (courseUniqueName, chatRoomId, username, userFor
         throw new UserInputError("Unauthorized")
     }
     
-    if(!serviceUtils.isStudent(course, username))
+    if(!serviceUtils.isStudent(course, user.id))
     {
         throw new UserInputError("Given user is not participating in the course")
     }

@@ -93,9 +93,9 @@ const isTeacher = (course, userForToken) => {
     return course.teacher.toString() === userForToken.id
 }
 
-const isStudent = (course, userForToken) => {
-    const student = course.students.find(((student) => student.id === userForToken.id))
-    return student !== null
+const isStudent = (course, userId) => {
+    const student = course.students.find(((student) => student.toString() === userId))
+    return student ? true : false
 }
 
 
