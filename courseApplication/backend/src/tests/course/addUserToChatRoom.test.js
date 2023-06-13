@@ -94,6 +94,35 @@ describe('addUserToChatRoom tests', () => {
       
         await checkCourseNotChanged()
     })
+    test('addUserToChatRoom returns given chat room not found if the chatroom is not found', async () => {
+        const user = await helpers.logIn("username", apolloServer)
+        const course = await helpers.createCourse("uniqueName", "name", [], apolloServer)
+        const chatRoom = await helpers.createChatRoom(course, "room name", apolloServer)
+        await apolloServer.executeOperation({query: addStudentToCourse, variables: {courseUniqueName: course.uniqueName, addStudentToCourseUsername: "students username"}})
+        
+        const addUserToChatRoomQuery = await apolloServer.executeOperation({query: addUserToChatRoom, 
+            variables: {courseUniqueName: course.uniqueName, chatRoomId: "abc1234", username: "students username"}})
+        
+        expect(addUserToChatRoomQuery.data.addUserToChatRoom).toBe(null)
+        expect(addUserToChatRoomQuery.errors[0].message).toBe("Given chatroom not found")
+      
+        await checkCourseNotChanged()
+    })
+
+    test('addUserToChatRoom returns given username not found if the username is not found', async () => {
+        const user = await helpers.logIn("username", apolloServer)
+        const course = await helpers.createCourse("uniqueName", "name", [], apolloServer)
+        const chatRoom = await helpers.createChatRoom(course, "room name", apolloServer)
+        await apolloServer.executeOperation({query: addStudentToCourse, variables: {courseUniqueName: course.uniqueName, addStudentToCourseUsername: "students username"}})
+        
+        const addUserToChatRoomQuery = await apolloServer.executeOperation({query: addUserToChatRoom, 
+            variables: {courseUniqueName: course.uniqueName, chatRoomId:  chatRoom.id, username: "user that does not exist"}})
+        
+        expect(addUserToChatRoomQuery.data.addUserToChatRoom).toBe(null)
+        expect(addUserToChatRoomQuery.errors[0].message).toBe("Given username not found")
+      
+        await checkCourseNotChanged()
+    })
 
     test('addUserToChatRoom returns given user is not participating if the user is not a student', async () => {
         const user = await helpers.logIn("username", apolloServer)
