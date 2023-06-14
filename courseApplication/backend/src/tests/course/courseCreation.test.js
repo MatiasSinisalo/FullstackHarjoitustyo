@@ -14,18 +14,18 @@ const helpers = require('../testHelpers')
 const url = "http://localhost:4000/"
 
 beforeAll(async () => {
-    server = await startServer()
+    await mongoose.connect(config.MONGODB_URI)
     await Course.deleteMany({})
     await User.deleteMany({})
-    await request(url).post("/").send({query: userCreateQuery, variables: {}}) //helpers.makeQuery({query: userCreateQuery, variables: {username: "username", name: "name", password: "1234"}})
+    await request(url).post("/").send({query: userCreateQuery, variables: {}})
     await request(url).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
 })
 
 afterAll(async () => {
+    
     await Course.deleteMany({})
     await User.deleteMany({})
-    server.apolloServer.stop()
-    server.httpServer.close()
+    await mongoose.connection.close()
 })
 
 beforeEach(async () => {
@@ -33,6 +33,7 @@ beforeEach(async () => {
     await Task.deleteMany({})
     helpers.logOut()
 })
+
 
 
 

@@ -10,24 +10,26 @@ const mongoose = require('mongoose')
 const helpers = require('../testHelpers')
 
 beforeAll(async () => {
-    await server.start("test server ready")
+    await mongoose.connect(config.MONGODB_URI)
     await Course.deleteMany({})
     await User.deleteMany({})
-    await apolloServer.executeOperation({query: userCreateQuery, variables:{}})
-    await apolloServer.executeOperation({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "1234"}})
+    await request(url).post("/").send({query: userCreateQuery, variables: {}})
+    await request(url).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
 })
 
 afterAll(async () => {
+    
     await Course.deleteMany({})
     await User.deleteMany({})
-    await server.stop()
+    await mongoose.connection.close()
 })
 
 beforeEach(async () => {
-    apolloServer.context = {}
     await Course.deleteMany({})
     await Task.deleteMany({})
+    helpers.logOut()
 })
+
 
 const checkCourseNotChanged = async () => {
     const coursesInDB = await Course.find({}).populate("chatRooms.users")

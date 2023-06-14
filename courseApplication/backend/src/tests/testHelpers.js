@@ -19,7 +19,6 @@ const logOut = () => {
     token = null
 }
 const makeQuery = async (args) => {
-    console.log(token)
     const result = await request(url).post("/").send(args).set("Authorization", "bearer " + token)
     return result.body
 }

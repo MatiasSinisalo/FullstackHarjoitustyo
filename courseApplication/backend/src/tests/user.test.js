@@ -8,14 +8,24 @@ const User = require('../models/user')
 const {userCreateQuery, userLogInQuery, allUsersQuery, meQuery} = require('./userTestQueries')
 
 beforeAll(async () => {
-   await server.start()
-   console.log(`test server ready`)
+    await mongoose.connect(config.MONGODB_URI)
+    await Course.deleteMany({})
+    await User.deleteMany({})
+})
+
+afterAll(async () => {
+    
+    await Course.deleteMany({})
+    await User.deleteMany({})
+    await mongoose.connection.close()
 })
 
 beforeEach(async () => {
-   //we use different database for tests, lets clear the database
-   await User.deleteMany({})
+    await Course.deleteMany({})
+    await Task.deleteMany({})
+    helpers.logOut()
 })
+
 
 describe('user tests', () => {
 
