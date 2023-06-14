@@ -10,6 +10,11 @@
     "test:local": "cross-env NODE_ENV=test:local jest --verbose --runInBand --forceExit",
     "dev:E2E": "cross-env NODE_ENV=test node src/index.js"
   },
+  "jest": {
+    "verbose": true,
+    "globalSetup": "./src/tests/setup.js",
+    "globalTeardown": "./src/tests/teardown.js"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
