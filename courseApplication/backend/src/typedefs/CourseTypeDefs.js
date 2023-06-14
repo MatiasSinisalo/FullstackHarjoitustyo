@@ -183,7 +183,13 @@ type Mutation{
         chatRoomId: String!
         content: String!
     ):Message
+
+   
 }
+
+type Subscription {
+    messageCreated: Message!
+} 
 `
 
 module.exports = {CourseTypeDefs}

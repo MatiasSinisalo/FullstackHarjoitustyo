@@ -10,16 +10,35 @@ const cors = require('cors')
 const {json} = require('body-parser')
 const http = require('http')
 const {ApolloServerPluginDrainHttpServer } = require('@apollo/server/plugin/drainHttpServer')
-
-
+const { makeExecutableSchema } = require('@graphql-tools/schema')
+const { WebSocketServer } = require('ws')
+const { useServer } = require('graphql-ws/lib/use/ws')
 const startServer = async () => {
     const app = express()
     const httpServer = http.createServer(app)
-   
+
+    const wsServer = new WebSocketServer({
+        server: httpServer,
+        path: '/',
+      })
+
+    const schema =  makeExecutableSchema({ typeDefs, resolvers })
+    const serverCleanUp = useServer({schema}, wsServer)
+
     const apolloServer =  new ApolloServer({
-        typeDefs,
-        resolvers,
-        plugins: [ApolloServerPluginDrainHttpServer({httpServer})]
+        schema,
+        plugins: [
+        ApolloServerPluginDrainHttpServer({httpServer}),
+        {
+            async serverWillStart(){
+                return{
+                    async drainServer(){
+                        await serverCleanUp.dispose()
+                    },
+                };
+            },
+        },
+        ]
     })
    
 
@@ -27,11 +46,11 @@ const startServer = async () => {
     console.log("connected to database")
 
     await apolloServer.start()
-    app.use('/', cors(), json(), expressMiddleware(apolloServer, {context}));
-    await new Promise((resolve) => httpServer.listen({ port: config.PORT }, resolve));
+    app.use('/', cors(), express.json(), expressMiddleware(apolloServer, {context}));
+    httpServer.listen({ port: config.PORT });
     console.log("server is working")
    
-    return {apolloServer, app}
+    return {apolloServer, app, httpServer}
 }
 
 const server = {
@@ -57,4 +76,4 @@ const server = {
 
 }
 
-module.exports = {server, apolloServer: server.apolloServer, startServer}
+module.exports = {startServer}

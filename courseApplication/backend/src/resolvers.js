@@ -6,6 +6,7 @@ const userResolvers = require('./resolvers/userResolvers')
 const courseResolvers = require('./resolvers/courseResolvers')
 const Task = require('./models/task')
 
+const {pubsub} = require('./publisher')
 const resolvers  = {
     Query: {
         ...userResolvers.userQueryResolvers,
@@ -27,6 +28,11 @@ const resolvers  = {
             }
         },
     },
+    Subscription: {
+        messageCreated: {
+            subscribe: () => pubsub.asyncIterator('MESSAGE_CREATED')
+        }
+    }
 }
 
 

@@ -2,6 +2,7 @@ const { UserInputError } = require('apollo-server-core')
 const courseService = require('../services/courseService')
 const Course = require('../models/course')
 const { mustHaveToken } = require('./resolverUtils')
+const  {pubsub} = require('../publisher')
 
 const courseQueryResolvers = {
     allCourses: async (root, args, context) => {
@@ -187,6 +188,7 @@ const courseMutationResolvers = {
         const chatRoomId = args.chatRoomId
         const content = args.content
         const newMessage = await courseService.chatRooms.createMessage(courseUniqueName, chatRoomId, content, context.userForToken)
+        pubsub.publish('MESSAGE_CREATED', { messageCreated: newMessage })
         return newMessage
     }
 }
