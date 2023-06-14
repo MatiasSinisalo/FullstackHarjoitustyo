@@ -23,5 +23,6 @@ const MONGODB_URI = getCurrentUrlForEnvironment()
 
 const IS_TEST = process.env.NODE_ENV === 'test' ? true : false
 
+const LOCAL_SERVER_URL = "http://localhost:4000/"
 
-module.exports = {SECRET, PORT, MONGODB_URI, IS_TEST}
+module.exports = {SECRET, PORT, MONGODB_URI, IS_TEST, LOCAL_SERVER_URL}
