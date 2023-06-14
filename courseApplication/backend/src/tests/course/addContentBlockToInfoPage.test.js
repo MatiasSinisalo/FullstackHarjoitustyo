@@ -8,13 +8,13 @@ const { addContentBlockToInfoPage, addInfoPageToCourse} = require('../courseTest
 const { query } = require('express')
 const mongoose = require('mongoose')
 const helpers = require('../testHelpers')
-
+const config = require('../../config')
 beforeAll(async () => {
     await mongoose.connect(config.MONGODB_URI)
     await Course.deleteMany({})
     await User.deleteMany({})
-    await request(url).post("/").send({query: userCreateQuery, variables: {}})
-    await request(url).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: userCreateQuery, variables: {}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
 })
 
 afterAll(async () => {
@@ -40,14 +40,14 @@ describe('addContentBlockToInfoPage query tests', () => {
         const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
        
         const allowedLocationUrl = "test123-1234abc-a1b2c"
-        const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
+        const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
         console.log(infoPageQuery)
         const infoPage = infoPageQuery.data.addInfoPageToCourse
         
         const content = "this is some info content"
         const position = 1
         
-        const contentBlockQuery = await apolloServer.executeOperation({query: addContentBlockToInfoPage, variables: {
+        const contentBlockQuery = await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
             courseUniqueName: course.uniqueName, 
             infoPageId: infoPage.id, 
             content: content,
@@ -80,7 +80,7 @@ describe('addContentBlockToInfoPage query tests', () => {
         const user = await helpers.logIn("username", apolloServer)
         const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
         const allowedLocationUrl = "test123-1234abc-a1b2c"
-        const infoPageQuery = await apolloServer.executeOperation({query:addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
+        const infoPageQuery = await helpers.makeQuery({query:addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
         const infoPage = infoPageQuery.data.addInfoPageToCourse
         const otherUser = await helpers.logIn("students username", apolloServer)
         const content = "this is some info content"
@@ -88,7 +88,7 @@ describe('addContentBlockToInfoPage query tests', () => {
         
         
 
-        const contentBlockQuery = await apolloServer.executeOperation({query: addContentBlockToInfoPage, variables: {
+        const contentBlockQuery = await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
             courseUniqueName: course.uniqueName, 
             infoPageId: infoPage.id, 
             content: content,
@@ -111,12 +111,12 @@ describe('addContentBlockToInfoPage query tests', () => {
         const user = await helpers.logIn("username", apolloServer)
         const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
         const allowedLocationUrl = "test123-1234abc-a1b2c"
-        const infoPageQuery = await apolloServer.executeOperation({query:addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
+        const infoPageQuery = await helpers.makeQuery({query:addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
         const infoPage = infoPageQuery.data.addInfoPageToCourse
         
         const content = "this is some info content"
         const position = 1
-        const contentBlockQuery = await apolloServer.executeOperation({query: addContentBlockToInfoPage, variables: {
+        const contentBlockQuery = await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
             courseUniqueName: course.uniqueName, 
             infoPageId: "abc1234", 
             content: content,
