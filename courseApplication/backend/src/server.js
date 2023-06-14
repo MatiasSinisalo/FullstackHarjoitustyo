@@ -7,6 +7,22 @@ const mongoose = require ('mongoose')
 
 
 
+const startServer = async () => {
+    const apolloServer =  new ApolloServer({
+        typeDefs,
+        resolvers,
+        context
+    })
+
+    await mongoose.connect(config.MONGODB_URI)
+    console.log("connected to database")
+
+    const {url} = await apolloServer.listen(config.PORT)
+    console.log(`server is at ${url}`)
+
+    return {apolloServer}
+}
+
 const server = {
     apolloServer: new ApolloServer({
         typeDefs,
@@ -30,4 +46,4 @@ const server = {
 
 }
 
-module.exports = {server, apolloServer: server.apolloServer}
+module.exports = {server, apolloServer: server.apolloServer, startServer}

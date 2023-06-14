@@ -1,8 +1,8 @@
 
-const {server} = require('./server')
+const {server, startServer} = require('./server')
 
 const start = () => {
-    server.start('')
+    startServer()
 }
 
 start()
