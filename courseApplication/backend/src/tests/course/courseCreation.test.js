@@ -82,15 +82,6 @@ describe('course creation tests', () => {
         expect(savedCourse.students).toEqual(correctReturnValue.students)
         expect(savedCourse.infoPages).toEqual(correctReturnValue.infoPages)
     })
-    //depricated
-    test('createCourse query returns error if teacher user does not exist', async () => {
-        const user = await helpers.logIn("does not exist", "12345")
-        const createdCourse = await helpers.makeQuery({query: createCourse, variables: {uniqueName: "uniqueName", name: "common name", teacher: "does not exist"}})
-        expect(createdCourse.data.createCourse).toEqual(null)
-        expect(createdCourse.errors[0].message).toEqual('Given username not found')
-        
-    })
-
     test('createCourse query returns error if authentication is not done and doesnt save anything to database', async () => {
         const createdCourse = await helpers.makeQuery({query: createCourse, variables: {uniqueName: "uniqueName", name: "common name", teacher: "does not exist"}})
         expect(createdCourse.data.createCourse).toEqual(null)
