@@ -25,7 +25,7 @@ const makeQuery = async (args) => {
 
 const createCourse = async (uniqueName, name, tasks, apolloServer) => {
     const course = {uniqueName: uniqueName, name: name, teacher: "", tasks: tasks}
-    const createdCourse = await apolloServer.executeOperation({query: testQueries.createCourse, variables: course})
+    const createdCourse = await makeQuery({query: testQueries.createCourse, variables: course})
     return createdCourse.data.createCourse
 }
 
@@ -35,7 +35,7 @@ const createTask = async (course, description, deadline, submissions, apolloServ
         deadline: new Date("2030-06-25"),
         submissions: []
     }
-    const createdTask = await apolloServer.executeOperation({query: testQueries.addTaskToCourse, variables: {courseUniqueName: course.uniqueName, description: task.description, deadline: task.deadline.toString()}});
+    const createdTask = await makeQuery({query: testQueries.addTaskToCourse, variables: {courseUniqueName: course.uniqueName, description: task.description, deadline: task.deadline.toString()}});
     return createdTask.data.addTaskToCourse
 }
 
@@ -45,7 +45,7 @@ const createSubmission = async (course, taskId, content, submitted, apolloServer
         submitted: submitted,
         taskId: taskId
     }
-    const submission = await apolloServer.executeOperation({query: testQueries.addSubmissionToCourseTask, 
+    const submission = await makeQuery({query: testQueries.addSubmissionToCourseTask, 
         variables: {
         courseUniqueName: course.uniqueName, 
         taskId: submissionToNotBeRemoved.taskId,
@@ -57,7 +57,7 @@ const createSubmission = async (course, taskId, content, submitted, apolloServer
 }
 
 const createInfoPage = async(course, url, apolloServer) => {
-    const infoPageQuery = await apolloServer.executeOperation({query: testQueries.addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: url}})
+    const infoPageQuery = await makeQuery({query: testQueries.addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: url}})
     const infoPage = infoPageQuery.data.addInfoPageToCourse
     return infoPage
 }
@@ -65,7 +65,7 @@ const createInfoPage = async(course, url, apolloServer) => {
 const createContentBlock = async (course, infoPage, content, position, apolloServer) => {
    
     
-    const contentBlockQuery = await apolloServer.executeOperation({query: testQueries.addContentBlockToInfoPage, variables: {
+    const contentBlockQuery = await makeQuery({query: testQueries.addContentBlockToInfoPage, variables: {
         courseUniqueName: course.uniqueName, 
         infoPageId: infoPage.id, 
         content: content,
@@ -75,7 +75,7 @@ const createContentBlock = async (course, infoPage, content, position, apolloSer
 }
 
 const createChatRoom = async (course,name , apolloServer) => {
-    const chatRoomQuery = await apolloServer.executeOperation({query: testQueries.createChatRoom, variables: {courseUniqueName: course.uniqueName, name: name}})
+    const chatRoomQuery = await makeQuery({query: testQueries.createChatRoom, variables: {courseUniqueName: course.uniqueName, name: name}})
     const chatRoom = chatRoomQuery.data.createChatRoom
     return chatRoom
 }
