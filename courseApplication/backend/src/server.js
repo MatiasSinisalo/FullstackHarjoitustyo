@@ -1,26 +1,37 @@
-const { ApolloServer } = require('apollo-server')
+const { ApolloServer } = require('@apollo/server')
 const resolvers = require('./resolvers')
 const typeDefs = require('./typedefs')
 const context = require('./context')
 const config = require('./config')
 const mongoose = require ('mongoose')
-
+const express = require('express')
+const {expressMiddleware} = require('@apollo/server/express4')
+const cors = require('cors')
+const {json} = require('body-parser')
+const http = require('http')
+const {ApolloServerPluginDrainHttpServer } = require('@apollo/server/plugin/drainHttpServer')
 
 
 const startServer = async () => {
+    const app = express()
+    const httpServer = http.createServer(app)
+   
     const apolloServer =  new ApolloServer({
         typeDefs,
         resolvers,
-        context
+        plugins: [ApolloServerPluginDrainHttpServer({httpServer})]
     })
+   
 
     await mongoose.connect(config.MONGODB_URI)
     console.log("connected to database")
 
-    const {url} = await apolloServer.listen(config.PORT)
-    console.log(`server is at ${url}`)
-
-    return {apolloServer}
+    await apolloServer.start()
+    app.use('/', cors(), json(), expressMiddleware(apolloServer, {context}));
+    await new Promise((resolve) => httpServer.listen({ port: config.PORT }, resolve));
+    console.log("server is working")
+   
+    return {apolloServer, app}
 }
 
 const server = {
