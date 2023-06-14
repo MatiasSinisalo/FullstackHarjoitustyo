@@ -1,11 +1,27 @@
 
+const request = require('supertest')
 const User = require('../models/user')
 const testQueries = require('./courseTestQueries')
-
-const logIn = async (username, apolloServer) => {
+const { userLogInQuery } = require('./userTestQueries')
+const url = "http://localhost:4000/"
+let token = null
+const logIn = async (username, password="12345", apolloServer) => {
+    
+    const tokenReq = await request(url).post("/").send({query: userLogInQuery, variables: {username: username, password: password}})
+  
+    token = tokenReq.body.data.logIn.value
+   
     const userQuery = await User.findOne({username: username})
-    apolloServer.context = {userForToken: userQuery}
     return userQuery
+}
+
+const logOut = () => {
+    token = null
+}
+const makeQuery = async (args) => {
+    console.log(token)
+    const result = await request(url).post("/").send(args).set("Authorization", "bearer " + token)
+    return result.body
 }
 
 const createCourse = async (uniqueName, name, tasks, apolloServer) => {
@@ -66,10 +82,12 @@ const createChatRoom = async (course,name , apolloServer) => {
 }
 module.exports = {
     logIn, 
+    logOut,
     createCourse, 
     createTask, 
     createSubmission, 
     createInfoPage,
     createContentBlock,
-    createChatRoom
+    createChatRoom,
+    makeQuery,
 }
