@@ -8,7 +8,7 @@ const { Task, Submission, Grade } = require('../../models/task')
 const serviceUtils = require('../serviceUtils')
 const { InfoPage, ContentBlock } = require('../../models/infoPage')
 const { ChatRoom, Message } = require('../../models/chatRoom')
-const { PubSub } = require('graphql-subscriptions')
+const { PubSub, withFilter } = require('graphql-subscriptions')
 const pubsub = new PubSub()
 
 const createChatRoom = async (courseUniqueName, name, userForToken) => {

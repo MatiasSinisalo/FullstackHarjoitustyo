@@ -198,21 +198,30 @@ const courseSubscriptionResolvers = {
     //using subscriptions with a withFilter function:
     //https://www.apollographql.com/docs/apollo-server/data/subscriptions/ 
     messageCreated: {
-        subscribe: withFilter(
-            () => pubsub.asyncIterator('MESSAGE_CREATED'), 
-
+        subscribe:async () => withFilter(
+            (root, args, context) => {
+                mustHaveToken(context)
+                console.log(root); 
+                console.log(args); 
+                console.log(context); 
+                const courseUniqueName = args.courseUniqueName
+                const chatRoomId = args.chatRoomId
+                
+                courseService.chatRooms.subscribeToCreatedMessages(courseUniqueName, chatRoomId, context.userForToken)
+               
+              
+                return pubsub.asyncIterator('MESSAGE_CREATED')
+            }, 
+    
             //this function is called when somebody calls pubsub.publish()
             async (payload, args, context) => {
                 console.log(payload)
-
                 console.log(args); 
-                const courseUniqueName = payload.information.courseUniqueName
-                const chatRoomId = payload.information.chatRoomId
-                const shouldGiveData = await courseService.chatRooms.subscribeToCreatedMessages(courseUniqueName, chatRoomId, context.userForToken)
-                console.log(shouldGiveData)
-                return Boolean(shouldGiveData)} 
+                console.log(context); 
+                return Boolean(payload.information.chatRoomId === args.chatRoomId)} 
             )
+        }
     }
-}
+
 
 module.exports = {courseQueryResolvers, courseMutationResolvers, courseSubscriptionResolvers}
