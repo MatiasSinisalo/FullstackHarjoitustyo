@@ -12,8 +12,7 @@
   },
   "jest": {
     "verbose": true,
-    "globalSetup": "./src/tests/setup.js",
-    "globalTeardown": "./src/tests/teardown.js"
+    "setupFilesAfterEnv": ["./src/tests/setup.js"]
   },
   "author": "",
   "license": "ISC",
