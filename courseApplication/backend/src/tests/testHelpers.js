@@ -5,7 +5,7 @@ const testQueries = require('./courseTestQueries')
 const { userLogInQuery } = require('./userTestQueries')
 const url = "http://localhost:4000/"
 let token = null
-const logIn = async (username, password="12345", apolloServer) => {
+const logIn = async (username, password="12345") => {
     
     const tokenReq = await request(url).post("/").send({query: userLogInQuery, variables: {username: username, password: password}})
   
@@ -23,13 +23,13 @@ const makeQuery = async (args) => {
     return result.body
 }
 
-const createCourse = async (uniqueName, name, tasks, apolloServer) => {
+const createCourse = async (uniqueName, name, tasks) => {
     const course = {uniqueName: uniqueName, name: name, teacher: "", tasks: tasks}
     const createdCourse = await makeQuery({query: testQueries.createCourse, variables: course})
     return createdCourse.data.createCourse
 }
 
-const createTask = async (course, description, deadline, submissions, apolloServer) => {
+const createTask = async (course, description, deadline, submissions) => {
     const task = {
         description:  "this is the description of a task that is about testing",
         deadline: new Date("2030-06-25"),
@@ -39,7 +39,7 @@ const createTask = async (course, description, deadline, submissions, apolloServ
     return createdTask.data.addTaskToCourse
 }
 
-const createSubmission = async (course, taskId, content, submitted, apolloServer) => {
+const createSubmission = async (course, taskId, content, submitted) => {
     const submissionToNotBeRemoved = {
         content : content,
         submitted: submitted,
@@ -56,13 +56,13 @@ const createSubmission = async (course, taskId, content, submitted, apolloServer
     return submission.data.addSubmissionToCourseTask
 }
 
-const createInfoPage = async(course, url, apolloServer) => {
+const createInfoPage = async(course, url) => {
     const infoPageQuery = await makeQuery({query: testQueries.addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: url}})
     const infoPage = infoPageQuery.data.addInfoPageToCourse
     return infoPage
 }
 
-const createContentBlock = async (course, infoPage, content, position, apolloServer) => {
+const createContentBlock = async (course, infoPage, content, position) => {
    
     
     const contentBlockQuery = await makeQuery({query: testQueries.addContentBlockToInfoPage, variables: {
@@ -74,7 +74,7 @@ const createContentBlock = async (course, infoPage, content, position, apolloSer
     return contentBlockQuery.data.addContentBlockToInfoPage
 }
 
-const createChatRoom = async (course,name , apolloServer) => {
+const createChatRoom = async (course,name ) => {
     const chatRoomQuery = await makeQuery({query: testQueries.createChatRoom, variables: {courseUniqueName: course.uniqueName, name: name}})
     const chatRoom = chatRoomQuery.data.createChatRoom
     return chatRoom
