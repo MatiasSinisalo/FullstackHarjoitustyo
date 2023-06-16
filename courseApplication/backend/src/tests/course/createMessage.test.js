@@ -8,13 +8,14 @@ const { createCourse, addTaskToCourse, removeCourse, addSubmissionToCourseTask, 
 const { query } = require('express')
 const mongoose = require('mongoose')
 const helpers = require('../testHelpers')
+const config = require('../../config')
 
 beforeAll(async () => {
     await mongoose.connect(config.MONGODB_URI)
     await Course.deleteMany({})
     await User.deleteMany({})
-    await request(url).post("/").send({query: userCreateQuery, variables: {}})
-    await request(url).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: userCreateQuery, variables: {}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
 })
 
 afterAll(async () => {
@@ -53,7 +54,7 @@ describe('createMessage tests', () => {
             sendDate: new Date(Date.now()),
             content: "hello there",
         }
-        const createMessageQuery = await apolloServer.executeOperation({query: createMessage, 
+        const createMessageQuery = await helpers.makeQuery({query: createMessage, 
             variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom.id, content: expectedMessage.content}})
         console.log(createMessageQuery)
         const message = createMessageQuery.data.createMessage
@@ -68,8 +69,8 @@ describe('createMessage tests', () => {
         const adminUser = await helpers.logIn("username", apolloServer)
         const course = await helpers.createCourse("uniqueName", "name", [], apolloServer)
         const chatRoom = await helpers.createChatRoom(course, "room name", apolloServer)
-        await apolloServer.executeOperation({query: addStudentToCourse, variables: {courseUniqueName: course.uniqueName, addStudentToCourseUsername: "students username"}})
-        await apolloServer.executeOperation({query: addUserToChatRoom, variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom.id, username: "students username"}})
+        await helpers.makeQuery({query: addStudentToCourse, variables: {courseUniqueName: course.uniqueName, addStudentToCourseUsername: "students username"}})
+        await helpers.makeQuery({query: addUserToChatRoom, variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom.id, username: "students username"}})
        
         const user =  await helpers.logIn("students username", apolloServer)
        
@@ -82,7 +83,7 @@ describe('createMessage tests', () => {
             sendDate: new Date(Date.now()),
             content: "hello there",
         }
-        const createMessageQuery = await apolloServer.executeOperation({query: createMessage, 
+        const createMessageQuery = await helpers.makeQuery({query: createMessage, 
             variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom.id, content: expectedMessage.content}})
         console.log(createMessageQuery)
         const message = createMessageQuery.data.createMessage
@@ -107,7 +108,7 @@ describe('createMessage tests', () => {
             content: "hello there",
         }
        await helpers.logIn("students username", apolloServer)
-        const createMessageQuery = await apolloServer.executeOperation({query: createMessage, 
+        const createMessageQuery = await helpers.makeQuery({query: createMessage, 
             variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom.id, content: expectedMessage.content}})
         console.log(createMessageQuery)
         const message = createMessageQuery.data.createMessage
@@ -130,7 +131,7 @@ describe('createMessage tests', () => {
             sendDate: new Date(Date.now()),
             content: "hello there",
         }
-        const createMessageQuery = await apolloServer.executeOperation({query: createMessage, 
+        const createMessageQuery = await helpers.makeQuery({query: createMessage, 
             variables: {courseUniqueName: "course-not-found", chatRoomId: chatRoom.id, content: expectedMessage.content}})
         console.log(createMessageQuery)
         const message = createMessageQuery.data.createMessage
@@ -152,7 +153,7 @@ describe('createMessage tests', () => {
             sendDate: new Date(Date.now()),
             content: "hello there",
         }
-        const createMessageQuery = await apolloServer.executeOperation({query: createMessage, 
+        const createMessageQuery = await helpers.makeQuery({query: createMessage, 
             variables: {courseUniqueName: course.uniqueName, chatRoomId: "abc1234", content: expectedMessage.content}})
         console.log(createMessageQuery)
         const message = createMessageQuery.data.createMessage
