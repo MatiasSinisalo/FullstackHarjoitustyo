@@ -87,9 +87,15 @@ const createMessage = async (courseUniqueName, chatRoomId, content, userForToken
     return messageCreated
 }
 
+const subscribeToCreatedMessages = async (courseUniqueName, chatRoomId, content, userForToken) => {
+
+    return pubsub.asyncIterator('MESSAGE_CREATED')
+}
+
 module.exports = {
     createChatRoom, 
     removeChatRoom,
     createMessage,
-    addUserToChatRoom
+    addUserToChatRoom,
+    subscribeToCreatedMessages
 }

@@ -188,7 +188,10 @@ type Mutation{
 }
 
 type Subscription {
-    messageCreated: Message!
+    messageCreated(
+        courseUniqueName: String!
+        chatRoomId: String!
+    ): Message!
 } 
 `
 

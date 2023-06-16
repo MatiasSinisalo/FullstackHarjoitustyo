@@ -195,9 +195,12 @@ const courseMutationResolvers = {
 
 const courseSubscriptionResolvers = {
     messageCreated: {
-        subscribe: (root, args, context) => {
+        subscribe: async (root, args, context) => {
             mustHaveToken(context)
-            return pubsub.asyncIterator('MESSAGE_CREATED')
+            const courseUniqueName = args.courseUniqueName
+            const chatRoomId = args.chatRoomId
+
+            return await courseService.chatRooms.subscribeToCreatedMessages(courseUniqueName, chatRoomId, context.userForToken)
         }
     }
 }
