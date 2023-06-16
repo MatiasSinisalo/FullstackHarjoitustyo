@@ -10,13 +10,14 @@ const { query } = require('express')
 const mongoose = require('mongoose')
 const course = require('../../models/course')
 const helpers = require('../testHelpers')
+const config = require('../../config')
 
 beforeAll(async () => {
     await mongoose.connect(config.MONGODB_URI)
     await Course.deleteMany({})
     await User.deleteMany({})
-    await request(url).post("/").send({query: userCreateQuery, variables: {}})
-    await request(url).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: userCreateQuery, variables: {}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
 })
 
 afterAll(async () => {
@@ -49,15 +50,15 @@ describe('removeCourse tests', () => {
             uniqueName:  "course-that-should-not-be-removed",
             name: "common name"
         }
-        const courseToRemove = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: courseToBeRemoved.uniqueName, name: courseToBeRemoved.name, teacher: ""}})
-        const courseToStay = await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: courseThatShouldNotBeRemoved.uniqueName, name: courseThatShouldNotBeRemoved.name, teacher: ""}})
+        const courseToRemove = await helpers.makeQuery({query: createCourse, variables: {uniqueName: courseToBeRemoved.uniqueName, name: courseToBeRemoved.name, teacher: ""}})
+        const courseToStay = await helpers.makeQuery({query: createCourse, variables: {uniqueName: courseThatShouldNotBeRemoved.uniqueName, name: courseThatShouldNotBeRemoved.name, teacher: ""}})
 
         const task = {
             description:  "this is the description of the course that is about testing",
             deadline: new Date("2030-06-25"),
             submissions: []
         }
-        const taskCreateQuery = await apolloServer.executeOperation({query: addTaskToCourse, variables: {
+        const taskCreateQuery = await helpers.makeQuery({query: addTaskToCourse, variables: {
             courseUniqueName: courseToBeRemoved.uniqueName, 
             description: task.description, 
             deadline: task.deadline.toString()
@@ -68,14 +69,14 @@ describe('removeCourse tests', () => {
             submitted: true,
             taskId: taskCreateQuery.data.addTaskToCourse.id
         }
-        await apolloServer.executeOperation({query: addSubmissionToCourseTask,variables: {
+        await helpers.makeQuery({query: addSubmissionToCourseTask,variables: {
             courseUniqueName: courseToBeRemoved.uniqueName, 
             taskId: submission.taskId,
             content: submission.content, 
             submitted: submission.submitted,
         }});
         
-        const courseRemoveQuery = await apolloServer.executeOperation({query: removeCourse, variables: {uniqueName: courseToBeRemoved.uniqueName}})
+        const courseRemoveQuery = await helpers.makeQuery({query: removeCourse, variables: {uniqueName: courseToBeRemoved.uniqueName}})
         expect(courseRemoveQuery.data.removeCourse).toBe(true)
 
         const coursesInDB = await Course.find({})
@@ -95,11 +96,11 @@ describe('removeCourse tests', () => {
             uniqueName:  "course-to-be-removed",
             name: "common name"
         }
-        await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: courseToNotBeRemoved.uniqueName, name: courseToNotBeRemoved.name, teacher: ""}})
+        await helpers.makeQuery({query: createCourse, variables: {uniqueName: courseToNotBeRemoved.uniqueName, name: courseToNotBeRemoved.name, teacher: ""}})
         
         await helpers.logIn("students username", apolloServer)
         
-        const courseRemoveQuery = await apolloServer.executeOperation({query: removeCourse, variables: {uniqueName: courseToNotBeRemoved.uniqueName}})
+        const courseRemoveQuery = await helpers.makeQuery({query: removeCourse, variables: {uniqueName: courseToNotBeRemoved.uniqueName}})
         expect(courseRemoveQuery.data.removeCourse).toBe(null)
         expect(courseRemoveQuery.errors[0].message).toBe("Unauthorized")
 
@@ -118,9 +119,9 @@ describe('removeCourse tests', () => {
             uniqueName:  "course-to-be-removed",
             name: "common name"
         }
-        await apolloServer.executeOperation({query: createCourse, variables: {uniqueName: courseToNotBeRemoved.uniqueName, name: courseToNotBeRemoved.name, teacher: ""}})
+        await helpers.makeQuery({query: createCourse, variables: {uniqueName: courseToNotBeRemoved.uniqueName, name: courseToNotBeRemoved.name, teacher: ""}})
         
-        const courseRemoveQuery = await apolloServer.executeOperation({query: removeCourse, variables: {uniqueName: "this course does not exist"}})
+        const courseRemoveQuery = await helpers.makeQuery({query: removeCourse, variables: {uniqueName: "this course does not exist"}})
         expect(courseRemoveQuery.data.removeCourse).toBe(null)
         expect(courseRemoveQuery.errors[0].message).toBe("Given course not found")
 
