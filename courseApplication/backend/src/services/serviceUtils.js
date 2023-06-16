@@ -89,6 +89,18 @@ const checkIsTeacher = (course, userForToken) => {
     return true
 }
 
+const checkIsAdminOrParticipant = (chatRoom, userForToken) => {
+    const isAdmin = chatRoom.admin.toString() === userForToken.id
+    const isParticipant = chatRoom.users.find((user) => user.toString() == userForToken.id) ? true : false
+
+    if(!isAdmin && !isParticipant)
+    {
+        throw new UserInputError("Unauthorized")
+    }
+
+    return true
+}
+
 const isTeacher = (course, userForToken) => {
     return course.teacher.toString() === userForToken.id
 }
@@ -109,5 +121,6 @@ module.exports= {fetchCourse,
                 findContentBlock,
                 findChatRoom,
                 isTeacher,
-                isStudent
+                isStudent,
+                checkIsAdminOrParticipant
             }

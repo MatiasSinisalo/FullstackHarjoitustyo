@@ -67,13 +67,7 @@ const createMessage = async (courseUniqueName, chatRoomId, content, userForToken
     
     const chatRoom = serviceUtils.findChatRoom(course, chatRoomId)
 
-    const isAdmin = chatRoom.admin.toString() === userForToken.id
-    const isParticipant = chatRoom.users.find((user) => user.toString() == userForToken.id) ? true : false
-
-    if(!isAdmin && !isParticipant)
-    {
-        throw new UserInputError("Unauthorized")
-    }
+    serviceUtils.checkIsAdminOrParticipant(chatRoom, userForToken)
 
     const message = {
         fromUser: userForToken.id,
@@ -87,7 +81,11 @@ const createMessage = async (courseUniqueName, chatRoomId, content, userForToken
     return messageCreated
 }
 
-const subscribeToCreatedMessages = async (courseUniqueName, chatRoomId, content, userForToken) => {
+const subscribeToCreatedMessages = async (courseUniqueName, chatRoomId, userForToken) => {
+    const course = await serviceUtils.fetchCourse(courseUniqueName)
+    const chatRoom = serviceUtils.findChatRoom(course, chatRoomId)
+
+    serviceUtils.checkIsAdminOrParticipant(chatRoom, userForToken)
 
     return pubsub.asyncIterator('MESSAGE_CREATED')
 }
