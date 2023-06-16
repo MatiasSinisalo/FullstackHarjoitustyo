@@ -8,12 +8,14 @@ const { addContentBlockToInfoPage, addInfoPageToCourse, removeContentBlockFromIn
 const { query } = require('express')
 const mongoose = require('mongoose')
 const helpers = require('../testHelpers')
+const config = require('../../config')
+
 beforeAll(async () => {
     await mongoose.connect(config.MONGODB_URI)
     await Course.deleteMany({})
     await User.deleteMany({})
-    await request(url).post("/").send({query: userCreateQuery, variables: {}})
-    await request(url).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: userCreateQuery, variables: {}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
 })
 
 afterAll(async () => {
@@ -38,13 +40,13 @@ describe('removeContentBlockFromInfoPage tests', () => {
         const course = await helpers.createCourse(coursename, "name", [], apolloServer)
         
         const allowedLocationUrl = "test123-1234abc-a1b2c"
-        const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageToCourse, 
+        const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse, 
             variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
         const infoPage = infoPageQuery.data.addInfoPageToCourse
         
       
         
-        const contentBlockThatShouldNotBeRemoved = await apolloServer.executeOperation({query: addContentBlockToInfoPage, variables: {
+        const contentBlockThatShouldNotBeRemoved = await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
             courseUniqueName: course.uniqueName, 
             infoPageId: infoPage.id, 
             content: "should not be removed",
@@ -53,7 +55,7 @@ describe('removeContentBlockFromInfoPage tests', () => {
 
         const content = "this is some info content"
         const position = 2
-        const contentBlockQuery = await apolloServer.executeOperation({query: addContentBlockToInfoPage, variables: {
+        const contentBlockQuery = await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
             courseUniqueName: course.uniqueName, 
             infoPageId: infoPage.id, 
             content: content,
@@ -61,7 +63,7 @@ describe('removeContentBlockFromInfoPage tests', () => {
         }})
         const contentBlock = contentBlockQuery.data.addContentBlockToInfoPage
         
-        const removed = await apolloServer.executeOperation({query: removeContentBlockFromInfoPage, 
+        const removed = await helpers.makeQuery({query: removeContentBlockFromInfoPage, 
             variables: {courseUniqueName: course.uniqueName, infoPageId: infoPage.id, contentBlockId: contentBlock.id}})
 
         expect(removed.data.removeContentBlockFromInfoPage).toBe(true)
@@ -85,13 +87,13 @@ describe('removeContentBlockFromInfoPage tests', () => {
         const course = await helpers.createCourse(coursename, "name", [], apolloServer)
         
         const allowedLocationUrl = "test123-1234abc-a1b2c"
-        const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageToCourse, 
+        const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse, 
             variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
         const infoPage = infoPageQuery.data.addInfoPageToCourse
               
         const content = "this is some info content"
         const position = 2
-        const contentBlockQuery = await apolloServer.executeOperation({query: addContentBlockToInfoPage, variables: {
+        const contentBlockQuery = await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
             courseUniqueName: course.uniqueName, 
             infoPageId: infoPage.id, 
             content: content,
@@ -100,7 +102,7 @@ describe('removeContentBlockFromInfoPage tests', () => {
         const contentBlock = contentBlockQuery.data.addContentBlockToInfoPage
 
         await helpers.logIn("students username", apolloServer)
-        const removed = await apolloServer.executeOperation({query: removeContentBlockFromInfoPage, 
+        const removed = await helpers.makeQuery({query: removeContentBlockFromInfoPage, 
             variables: {courseUniqueName: course.uniqueName, infoPageId: infoPage.id, contentBlockId: contentBlock.id}})
         
         expect(removed.data.removeContentBlockFromInfoPage).toBe(null)
@@ -125,13 +127,13 @@ describe('removeContentBlockFromInfoPage tests', () => {
         const course = await helpers.createCourse(coursename, "name", [], apolloServer)
         
         const allowedLocationUrl = "test123-1234abc-a1b2c"
-        const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageToCourse, 
+        const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse, 
             variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
         const infoPage = infoPageQuery.data.addInfoPageToCourse
               
         const content = "this is some info content"
         const position = 2
-        const contentBlockQuery = await apolloServer.executeOperation({query: addContentBlockToInfoPage, variables: {
+        const contentBlockQuery = await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
             courseUniqueName: course.uniqueName, 
             infoPageId: infoPage.id, 
             content: content,
@@ -139,7 +141,7 @@ describe('removeContentBlockFromInfoPage tests', () => {
         }})
         const contentBlock = contentBlockQuery.data.addContentBlockToInfoPage
 
-        const removed = await apolloServer.executeOperation({query: removeContentBlockFromInfoPage, 
+        const removed = await helpers.makeQuery({query: removeContentBlockFromInfoPage, 
             variables: {courseUniqueName: "course that does not exist", infoPageId: infoPage.id, contentBlockId: contentBlock.id}})
         
         expect(removed.data.removeContentBlockFromInfoPage).toBe(null)
@@ -164,13 +166,13 @@ describe('removeContentBlockFromInfoPage tests', () => {
         const course = await helpers.createCourse(coursename, "name", [], apolloServer)
         
         const allowedLocationUrl = "test123-1234abc-a1b2c"
-        const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageToCourse, 
+        const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse, 
             variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
         const infoPage = infoPageQuery.data.addInfoPageToCourse
               
         const content = "this is some info content"
         const position = 2
-        const contentBlockQuery = await apolloServer.executeOperation({query: addContentBlockToInfoPage, variables: {
+        const contentBlockQuery = await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
             courseUniqueName: course.uniqueName, 
             infoPageId: infoPage.id, 
             content: content,
@@ -178,7 +180,7 @@ describe('removeContentBlockFromInfoPage tests', () => {
         }})
         const contentBlock = contentBlockQuery.data.addContentBlockToInfoPage
 
-        const removed = await apolloServer.executeOperation({query: removeContentBlockFromInfoPage, 
+        const removed = await helpers.makeQuery({query: removeContentBlockFromInfoPage, 
             variables: {courseUniqueName: course.uniqueName, infoPageId: "abc1234", contentBlockId: contentBlock.id}})
         
         expect(removed.data.removeContentBlockFromInfoPage).toBe(null)
@@ -203,13 +205,13 @@ describe('removeContentBlockFromInfoPage tests', () => {
         const course = await helpers.createCourse(coursename, "name", [], apolloServer)
         
         const allowedLocationUrl = "test123-1234abc-a1b2c"
-        const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageToCourse, 
+        const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse, 
             variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
         const infoPage = infoPageQuery.data.addInfoPageToCourse
               
         const content = "this is some info content"
         const position = 2
-        const contentBlockQuery = await apolloServer.executeOperation({query: addContentBlockToInfoPage, variables: {
+        const contentBlockQuery = await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
             courseUniqueName: course.uniqueName, 
             infoPageId: infoPage.id, 
             content: content,
@@ -217,7 +219,7 @@ describe('removeContentBlockFromInfoPage tests', () => {
         }})
         const contentBlock = contentBlockQuery.data.addContentBlockToInfoPage
 
-        const removed = await apolloServer.executeOperation({query: removeContentBlockFromInfoPage, 
+        const removed = await helpers.makeQuery({query: removeContentBlockFromInfoPage, 
             variables: {courseUniqueName: course.uniqueName, infoPageId: infoPage.id, contentBlockId: "abc1234"}})
         
         expect(removed.data.removeContentBlockFromInfoPage).toBe(null)
