@@ -1,4 +1,4 @@
-const {server, apolloServer} = require('../../server')
+
 const request = require('supertest')
 const Course = require('../../models/course')
 const User = require('../../models/user')
@@ -10,34 +10,13 @@ const mongoose = require('mongoose')
 const helpers = require('../testHelpers')
 const config = require('../../config')
 
-beforeAll(async () => {
-    await mongoose.connect(config.MONGODB_URI)
-    await Course.deleteMany({})
-    await User.deleteMany({})
-    await request(config.LOCAL_SERVER_URL).post("/").send({query: userCreateQuery, variables: {}})
-    await request(config.LOCAL_SERVER_URL).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
-})
-
-afterAll(async () => {
-    
-    await Course.deleteMany({})
-    await User.deleteMany({})
-    await mongoose.connection.close()
-})
-
-beforeEach(async () => {
-    await Course.deleteMany({})
-    await Task.deleteMany({})
-    helpers.logOut()
-})
-
 
 
 describe('removeContentBlockFromInfoPage tests', () => {
     test('removeContentBlockFromInfoPage removes contentBlock correctly', async () => {
-        await helpers.logIn("username", apolloServer)
+        await helpers.logIn("username")
         const coursename = "courses-unique-name"
-        const course = await helpers.createCourse(coursename, "name", [], apolloServer)
+        const course = await helpers.createCourse(coursename, "name", [])
         
         const allowedLocationUrl = "test123-1234abc-a1b2c"
         const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse, 
@@ -82,9 +61,9 @@ describe('removeContentBlockFromInfoPage tests', () => {
     })
 
     test('removeContentBlockFromInfoPage returns Unauthorized if the user is not a teacher', async () => {
-        await helpers.logIn("username", apolloServer)
+        await helpers.logIn("username")
         const coursename = "courses-unique-name"
-        const course = await helpers.createCourse(coursename, "name", [], apolloServer)
+        const course = await helpers.createCourse(coursename, "name", [])
         
         const allowedLocationUrl = "test123-1234abc-a1b2c"
         const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse, 
@@ -101,7 +80,7 @@ describe('removeContentBlockFromInfoPage tests', () => {
         }})
         const contentBlock = contentBlockQuery.data.addContentBlockToInfoPage
 
-        await helpers.logIn("students username", apolloServer)
+        await helpers.logIn("students username")
         const removed = await helpers.makeQuery({query: removeContentBlockFromInfoPage, 
             variables: {courseUniqueName: course.uniqueName, infoPageId: infoPage.id, contentBlockId: contentBlock.id}})
         
@@ -122,9 +101,9 @@ describe('removeContentBlockFromInfoPage tests', () => {
     })
 
     test('removeContentBlockFromInfoPage returns given course not found if the course is not found', async () => {
-        await helpers.logIn("username", apolloServer)
+        await helpers.logIn("username")
         const coursename = "courses-unique-name"
-        const course = await helpers.createCourse(coursename, "name", [], apolloServer)
+        const course = await helpers.createCourse(coursename, "name", [])
         
         const allowedLocationUrl = "test123-1234abc-a1b2c"
         const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse, 
@@ -161,9 +140,9 @@ describe('removeContentBlockFromInfoPage tests', () => {
     })
 
     test('removeContentBlockFromInfoPage returns given info page not found if the infoPage is not found', async () => {
-        await helpers.logIn("username", apolloServer)
+        await helpers.logIn("username")
         const coursename = "courses-unique-name"
-        const course = await helpers.createCourse(coursename, "name", [], apolloServer)
+        const course = await helpers.createCourse(coursename, "name", [])
         
         const allowedLocationUrl = "test123-1234abc-a1b2c"
         const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse, 
@@ -200,9 +179,9 @@ describe('removeContentBlockFromInfoPage tests', () => {
     })
 
     test('removeContentBlockFromInfoPage returns given content block not found if the infoPage is not found', async () => {
-        await helpers.logIn("username", apolloServer)
+        await helpers.logIn("username")
         const coursename = "courses-unique-name"
-        const course = await helpers.createCourse(coursename, "name", [], apolloServer)
+        const course = await helpers.createCourse(coursename, "name", [])
         
         const allowedLocationUrl = "test123-1234abc-a1b2c"
         const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse, 

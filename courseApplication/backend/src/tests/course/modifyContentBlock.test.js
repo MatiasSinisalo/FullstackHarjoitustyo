@@ -1,4 +1,4 @@
-const {server, apolloServer} = require('../../server')
+
 const request = require('supertest')
 const Course = require('../../models/course')
 const User = require('../../models/user')
@@ -11,26 +11,6 @@ const course = require('../../models/course')
 const helpers = require('../testHelpers')
 const config = require('../../config')
 
-beforeAll(async () => {
-    await mongoose.connect(config.MONGODB_URI)
-    await Course.deleteMany({})
-    await User.deleteMany({})
-    await request(config.LOCAL_SERVER_URL).post("/").send({query: userCreateQuery, variables: {}})
-    await request(config.LOCAL_SERVER_URL).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
-})
-
-afterAll(async () => {
-    
-    await Course.deleteMany({})
-    await User.deleteMany({})
-    await mongoose.connection.close()
-})
-
-beforeEach(async () => {
-    await Course.deleteMany({})
-    await Task.deleteMany({})
-    helpers.logOut()
-})
 
 const checkContentBlockContent = async (content) => {
     const coursesInDB = await Course.find({})
@@ -48,10 +28,10 @@ const checkContentBlockContent = async (content) => {
 
 describe('modifyContentBlock tests', () => {
     test('modifyContentBlock modifies content block content correctly', async () => {
-        await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("unique-name", "name", [], apolloServer)
-        const infopage = await helpers.createInfoPage(course, "page-url", apolloServer)
-        const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0, apolloServer)
+        await helpers.logIn("username")
+        const course = await helpers.createCourse("unique-name", "name", [])
+        const infopage = await helpers.createInfoPage(course, "page-url")
+        const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0)
         
         const newContent = "this is modified content"
         const contentBlockEditQuery = await helpers.makeQuery({query: modifyContentBlock, 
@@ -62,13 +42,13 @@ describe('modifyContentBlock tests', () => {
     })
 
     test('modifyContentBlock modifies returns Unauthorized if user is not teacher', async () => {
-        await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("unique-name", "name", [], apolloServer)
-        const infopage = await helpers.createInfoPage(course, "page-url", apolloServer)
-        const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0, apolloServer)
+        await helpers.logIn("username")
+        const course = await helpers.createCourse("unique-name", "name", [])
+        const infopage = await helpers.createInfoPage(course, "page-url")
+        const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0)
         
         const newContent = "this is modified content"
-        await helpers.logIn("students username", apolloServer)
+        await helpers.logIn("students username")
         const contentBlockEditQuery = await helpers.makeQuery({query: modifyContentBlock, 
             variables: {courseUniqueName: course.uniqueName, infoPageId: infopage.id, contentBlockId: contentBlock.id, content: newContent}})
         expect(contentBlockEditQuery.data.modifyContentBlock).toEqual(null)
@@ -78,10 +58,10 @@ describe('modifyContentBlock tests', () => {
     })
 
     test('modifyContentBlock modifies returns Given course not found if course is not found', async () => {
-        await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("unique-name", "name", [], apolloServer)
-        const infopage = await helpers.createInfoPage(course, "page-url", apolloServer)
-        const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0, apolloServer)
+        await helpers.logIn("username")
+        const course = await helpers.createCourse("unique-name", "name", [])
+        const infopage = await helpers.createInfoPage(course, "page-url")
+        const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0)
         
         const newContent = "this is modified content"
         const contentBlockEditQuery = await helpers.makeQuery({query: modifyContentBlock, 
@@ -93,10 +73,10 @@ describe('modifyContentBlock tests', () => {
     })
 
     test('modifyContentBlock modifies returns Given info page not found if page is not found', async () => {
-        await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("unique-name", "name", [], apolloServer)
-        const infopage = await helpers.createInfoPage(course, "page-url", apolloServer)
-        const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0, apolloServer)
+        await helpers.logIn("username")
+        const course = await helpers.createCourse("unique-name", "name", [])
+        const infopage = await helpers.createInfoPage(course, "page-url")
+        const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0)
         
         const newContent = "this is modified content"
         const contentBlockEditQuery = await helpers.makeQuery({query: modifyContentBlock, 
@@ -108,10 +88,10 @@ describe('modifyContentBlock tests', () => {
     })
 
     test('modifyContentBlock modifies returns Given content block not found if content block is not found', async () => {
-        await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("unique-name", "name", [], apolloServer)
-        const infopage = await helpers.createInfoPage(course, "page-url", apolloServer)
-        const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0, apolloServer)
+        await helpers.logIn("username")
+        const course = await helpers.createCourse("unique-name", "name", [])
+        const infopage = await helpers.createInfoPage(course, "page-url")
+        const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0)
         
         const newContent = "this is modified content"
         const contentBlockEditQuery = await helpers.makeQuery({query: modifyContentBlock, 

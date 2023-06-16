@@ -1,4 +1,4 @@
-const {server, apolloServer} = require('../../server')
+
 const request = require('supertest')
 const Course = require('../../models/course')
 const User = require('../../models/user')
@@ -11,34 +11,15 @@ const course = require('../../models/course')
 const helpers = require('../testHelpers')
 const config = require('../../config')
 
-beforeAll(async () => {
-    await mongoose.connect(config.MONGODB_URI)
-    await Course.deleteMany({})
-    await User.deleteMany({})
-    await request(config.LOCAL_SERVER_URL).post("/").send({query: userCreateQuery, variables: {}})
-    await request(config.LOCAL_SERVER_URL).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
-})
 
-afterAll(async () => {
-    
-    await Course.deleteMany({})
-    await User.deleteMany({})
-    await mongoose.connection.close()
-})
-
-beforeEach(async () => {
-    await Course.deleteMany({})
-    await Task.deleteMany({})
-    helpers.logOut()
-})
 
 
 describe('modify submission tests', () => {
     test('user can modify a submission made by the user', async () => {
-        const user = await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
-        const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
-        const submission = await helpers.createSubmission(course, task.id, "this is an answer", false, apolloServer);
+        const user = await helpers.logIn("username")
+        const course = await helpers.createCourse("course-unique-name", "name of course", [])
+        const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [])
+        const submission = await helpers.createSubmission(course, task.id, "this is an answer", false);
 
 
         const newContent = "this is modified content"
@@ -66,10 +47,10 @@ describe('modify submission tests', () => {
     })
 
     test('user can not modify a returned submission', async () => {
-        const user = await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
-        const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
-        const submission = await helpers.createSubmission(course, task.id, "this is an answer", true, apolloServer);
+        const user = await helpers.logIn("username")
+        const course = await helpers.createCourse("course-unique-name", "name of course", [])
+        const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [])
+        const submission = await helpers.createSubmission(course, task.id, "this is an answer", true);
 
 
         const newContent = "this is modified content"
@@ -94,12 +75,12 @@ describe('modify submission tests', () => {
 
     })
     test('user can not modify a submission made by another user', async () => {
-        const user = await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
-        const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
-        const submission = await helpers.createSubmission(course, task.id, "this is an answer", true, apolloServer);
+        const user = await helpers.logIn("username")
+        const course = await helpers.createCourse("course-unique-name", "name of course", [])
+        const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [])
+        const submission = await helpers.createSubmission(course, task.id, "this is an answer", true);
 
-        const anotherUser = await helpers.logIn("students username", apolloServer)
+        const anotherUser = await helpers.logIn("students username")
         const newContent = "this is modified content"
         const newSubmitted = false
         const modifySubmissionQuery = await helpers.makeQuery({query: modifySubmission, 
@@ -121,10 +102,10 @@ describe('modify submission tests', () => {
 
     })
     test('user must be logged in to modify a submission', async () => {
-        const user = await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
-        const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
-        const submission = await helpers.createSubmission(course, task.id, "this is an answer", true, apolloServer);
+        const user = await helpers.logIn("username")
+        const course = await helpers.createCourse("course-unique-name", "name of course", [])
+        const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [])
+        const submission = await helpers.createSubmission(course, task.id, "this is an answer", true);
 
         helpers.logOut()
         const newContent = "this is modified content"
@@ -149,7 +130,7 @@ describe('modify submission tests', () => {
     })
 
     test('modify submission returns course not found if given course is not found', async () => {
-        const user = await helpers.logIn("username", apolloServer)
+        const user = await helpers.logIn("username")
         
         const newContent = "this is modified content"
         const newSubmitted = false
@@ -164,12 +145,12 @@ describe('modify submission tests', () => {
     })  
 
     test('modify submission returns task not found if given task is not found', async () => {
-        const user = await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
+        const user = await helpers.logIn("username")
+        const course = await helpers.createCourse("course-unique-name", "name of course", [])
 
 
-        const anotherCourse = await helpers.createCourse("second-course-unique-name", "name of course", [], apolloServer)
-        const taskOnAnotherCourse = await  helpers.createTask(anotherCourse, "this is a task in another course", new Date(Date.now()), [], apolloServer)
+        const anotherCourse = await helpers.createCourse("second-course-unique-name", "name of course", [])
+        const taskOnAnotherCourse = await  helpers.createTask(anotherCourse, "this is a task in another course", new Date(Date.now()), [])
       
 
         const newContent = "this is modified content"
@@ -191,15 +172,15 @@ describe('modify submission tests', () => {
 
 
     test('modify submission returns submission not found if given submission is not found', async () => {
-        const user = await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("course-unique-name", "name of course", [], apolloServer)
-        const task = await  helpers.createTask(course, "this is a task in course", new Date(Date.now()), [], apolloServer)
-        const wrongSubmssionOnCourse = await helpers.createSubmission(course, task.id, "this is an answer that should not be modified", true, apolloServer);
+        const user = await helpers.logIn("username")
+        const course = await helpers.createCourse("course-unique-name", "name of course", [])
+        const task = await  helpers.createTask(course, "this is a task in course", new Date(Date.now()), [])
+        const wrongSubmssionOnCourse = await helpers.createSubmission(course, task.id, "this is an answer that should not be modified", true);
 
 
-        const anotherCourse = await helpers.createCourse("second-course-unique-name", "name of course", [], apolloServer)
-        const taskOnAnotherCourse = await  helpers.createTask(anotherCourse, "this is a task in another course", new Date(Date.now()), [], apolloServer)
-        const submissionOnAnotherTask = await helpers.createSubmission(anotherCourse, taskOnAnotherCourse.id, "this is an answer", true, apolloServer);
+        const anotherCourse = await helpers.createCourse("second-course-unique-name", "name of course", [])
+        const taskOnAnotherCourse = await  helpers.createTask(anotherCourse, "this is a task in another course", new Date(Date.now()), [])
+        const submissionOnAnotherTask = await helpers.createSubmission(anotherCourse, taskOnAnotherCourse.id, "this is an answer", true);
 
 
         const newContent = "this is modified content"

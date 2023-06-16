@@ -10,19 +10,6 @@ const config = require('../config')
 const helpers = require('./testHelpers')
 const Course = require('../models/course')
 
-beforeAll(async () => {
-    await mongoose.connect(config.MONGODB_URI)
-    await Course.deleteMany({})
-    await User.deleteMany({})
-})
-
-afterAll(async () => {
-    
-    await Course.deleteMany({})
-    await User.deleteMany({})
-    await mongoose.connection.close()
-})
-
 beforeEach(async () => {
     await User.deleteMany({})
     await Course.deleteMany({})

@@ -1,4 +1,4 @@
-const {server, apolloServer} = require('../../server')
+
 const request = require('supertest')
 const Course = require('../../models/course')
 const User = require('../../models/user')
@@ -9,27 +9,6 @@ const { query } = require('express')
 const mongoose = require('mongoose')
 const helpers = require('../testHelpers')
 const config = require('../../config')
-
-beforeAll(async () => {
-    await mongoose.connect(config.MONGODB_URI)
-    await Course.deleteMany({})
-    await User.deleteMany({})
-    await request(config.LOCAL_SERVER_URL).post("/").send({query: userCreateQuery, variables: {}})
-    await request(config.LOCAL_SERVER_URL).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
-})
-
-afterAll(async () => {
-    
-    await Course.deleteMany({})
-    await User.deleteMany({})
-    await mongoose.connection.close()
-})
-
-beforeEach(async () => {
-    await Course.deleteMany({})
-    await Task.deleteMany({})
-    helpers.logOut()
-})
 
 
 
@@ -42,9 +21,9 @@ const checkCourseHasChatRoom = async (chatRoom) => {
 
 describe('removeChatRoom tests', () => {
     test('removeChatRoom removes chat room correctly', async () => {
-        await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("courseUniqueName", "name", [], apolloServer)
-        const chatRoom = await helpers.createChatRoom(course, "room", apolloServer)
+        await helpers.logIn("username")
+        const course = await helpers.createCourse("courseUniqueName", "name", [])
+        const chatRoom = await helpers.createChatRoom(course, "room")
 
         const removeChatRoomQuery = await helpers.makeQuery({query: removeChatRoom, 
             variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom.id}})
@@ -56,11 +35,11 @@ describe('removeChatRoom tests', () => {
         expect(courseInDB.chatRooms.length).toBe(0) 
     })
     test('removeChatRoom returns Unauthorized if user is not teacher', async () => {
-        await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("courseUniqueName", "name", [], apolloServer)
-        const chatRoom = await helpers.createChatRoom(course, "room", apolloServer)
+        await helpers.logIn("username")
+        const course = await helpers.createCourse("courseUniqueName", "name", [])
+        const chatRoom = await helpers.createChatRoom(course, "room")
         
-        await helpers.logIn("students username", apolloServer)
+        await helpers.logIn("students username")
         const removeChatRoomQuery = await helpers.makeQuery({query: removeChatRoom, 
             variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom.id}})
         expect(removeChatRoomQuery.data.removeChatRoom).toBe(null)
@@ -69,9 +48,9 @@ describe('removeChatRoom tests', () => {
         await checkCourseHasChatRoom(chatRoom)
     })
     test('removeChatRoom returns given course not found if course is not found', async () => {
-        await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("courseUniqueName", "name", [], apolloServer)
-        const chatRoom = await helpers.createChatRoom(course, "room", apolloServer)
+        await helpers.logIn("username")
+        const course = await helpers.createCourse("courseUniqueName", "name", [])
+        const chatRoom = await helpers.createChatRoom(course, "room")
         
         const removeChatRoomQuery = await helpers.makeQuery({query: removeChatRoom, 
             variables: {courseUniqueName: "doesNotExist", chatRoomId: chatRoom.id}})
@@ -81,9 +60,9 @@ describe('removeChatRoom tests', () => {
         await checkCourseHasChatRoom(chatRoom)
     })
     test('removeChatRoom returns given chatroom not found if chatRoom is not found', async () => {
-        await helpers.logIn("username", apolloServer)
-        const course = await helpers.createCourse("courseUniqueName", "name", [], apolloServer)
-        const chatRoom = await helpers.createChatRoom(course, "room", apolloServer)
+        await helpers.logIn("username")
+        const course = await helpers.createCourse("courseUniqueName", "name", [])
+        const chatRoom = await helpers.createChatRoom(course, "room")
         
         const removeChatRoomQuery = await helpers.makeQuery({query: removeChatRoom, 
             variables: {courseUniqueName: course.uniqueName, chatRoomId: "abd1234"}})
