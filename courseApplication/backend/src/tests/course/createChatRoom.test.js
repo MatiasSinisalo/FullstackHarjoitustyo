@@ -9,13 +9,14 @@ const { query } = require('express')
 const mongoose = require('mongoose')
 const course = require('../../models/course')
 const helpers = require('../testHelpers')
+const config = require('../../config')
 
 beforeAll(async () => {
     await mongoose.connect(config.MONGODB_URI)
     await Course.deleteMany({})
     await User.deleteMany({})
-    await request(url).post("/").send({query: userCreateQuery, variables: {}})
-    await request(url).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: userCreateQuery, variables: {}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
 })
 
 afterAll(async () => {
@@ -32,6 +33,7 @@ beforeEach(async () => {
 })
 
 
+
 const checkCourseNotChanged = async () => {
     const coursesInDB = await Course.find({})
     expect(coursesInDB.length).toBe(1)
@@ -45,7 +47,7 @@ describe("createChatRoom tests", () => {
         console.log(user._id.toString())
         const course = await helpers.createCourse("courseUniqueName", "name", [], apolloServer)
         const roomName = "name of chat room"
-        const createChatRoomQuery = await apolloServer.executeOperation({query: createChatRoom, variables: {courseUniqueName: course.uniqueName, name: roomName}})
+        const createChatRoomQuery = await helpers.makeQuery({query: createChatRoom, variables: {courseUniqueName: course.uniqueName, name: roomName}})
         delete createChatRoomQuery.data.createChatRoom.id
         
         const expectedObj = {
@@ -79,7 +81,7 @@ describe("createChatRoom tests", () => {
         
         await helpers.logIn("students username", apolloServer)
         const roomName = "name of chat room"
-        const createChatRoomQuery = await apolloServer.executeOperation({query: createChatRoom, variables: {courseUniqueName: course.uniqueName, name: roomName}})
+        const createChatRoomQuery = await helpers.makeQuery({query: createChatRoom, variables: {courseUniqueName: course.uniqueName, name: roomName}})
          
         expect(createChatRoomQuery.data.createChatRoom).toBe(null)  
         expect(createChatRoomQuery.errors[0].message).toEqual("Unauthorized")  
@@ -92,7 +94,7 @@ describe("createChatRoom tests", () => {
         const course = await helpers.createCourse("courseUniqueName", "name", [], apolloServer)
         
         const roomName = "name of chat room"
-        const createChatRoomQuery = await apolloServer.executeOperation({query: createChatRoom, 
+        const createChatRoomQuery = await helpers.makeQuery({query: createChatRoom, 
             variables: {courseUniqueName: "does-not-exist", name: roomName}})
          
         expect(createChatRoomQuery.data.createChatRoom).toBe(null)  
