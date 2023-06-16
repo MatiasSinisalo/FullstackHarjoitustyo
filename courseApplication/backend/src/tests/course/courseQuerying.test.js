@@ -1,4 +1,3 @@
-const {server, apolloServer} = require('../../server')
 const request = require('supertest')
 const Course = require('../../models/course')
 const User = require('../../models/user')
@@ -9,13 +8,14 @@ const { query } = require('express')
 const mongoose = require('mongoose')
 const course = require('../../models/course')
 const helpers = require('../testHelpers')
+const config = require('../../config')
 
 beforeAll(async () => {
     await mongoose.connect(config.MONGODB_URI)
     await Course.deleteMany({})
     await User.deleteMany({})
-    await request(url).post("/").send({query: userCreateQuery, variables: {}})
-    await request(url).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: userCreateQuery, variables: {}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
 })
 
 afterAll(async () => {
@@ -37,17 +37,16 @@ beforeEach(async () => {
 describe('course querying tests', () => {
     describe('getAllCourses query tests', () => {
         test('getAllCourses returns course public data correctly', async () => {
-            const user = await User.findOne({username: "username"})
-            apolloServer.context = {userForToken: {username: "username", name: "name", id: user._id.toString()}}
+            const user = await helpers.logIn("username")
             const courseData = {
                 uniqueName: "uniqueName", 
                 name: "common name", 
                 teacher: "username"
             }
 
-            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {...courseData}})
+            const createdCourse = await helpers.makeQuery({query: createCourse, variables: {...courseData}})
             const courseInDB = createdCourse.data.createCourse
-            const coursesQuery = await apolloServer.executeOperation({query: getAllCourses})
+            const coursesQuery = await helpers.makeQuery({query: getAllCourses})
             const courses = coursesQuery.data.allCourses
 
             expect(courses[0].uniqueName).toEqual(courseData.uniqueName)
@@ -61,17 +60,16 @@ describe('course querying tests', () => {
                 name: "common name", 
                 teacher: "username"
             }
-            const createdCourse = await apolloServer.executeOperation({query: createCourse, variables: {...courseData}})
+            const createdCourse = await helpers.makeQuery({query: createCourse, variables: {...courseData}})
             const courseInDB = createdCourse.data.createCourse
             
-            const coursesQuery = await apolloServer.executeOperation({query: getAllCourses})
+            const coursesQuery = await helpers.makeQuery({query: getAllCourses})
             expect(coursesQuery.data).toEqual(null)
             expect(coursesQuery.errors[0].message).toEqual("Unauthorized")
         })
 
         test('getAllCourses returns student info only from courses where the user is a student', async () => {
-            const user = await User.findOne({username: "username"})
-            apolloServer.context = {userForToken: {username: "username", name: "name", id: user._id.toString()}}
+            const user = await helpers.logIn("username")
             const courseData = {
                 uniqueName: "courses-name-where-the-user-is-a-student", 
                 name: "common name", 
@@ -82,18 +80,17 @@ describe('course querying tests', () => {
                 name: "common name", 
                 teacher: "username"
             }
-            await apolloServer.executeOperation({query: createCourse, variables: {...courseData}})
-            await apolloServer.executeOperation({query: createCourse, variables: {...secondCourseData}})
+            await helpers.makeQuery({query: createCourse, variables: {...courseData}})
+            await helpers.makeQuery({query: createCourse, variables: {...secondCourseData}})
 
             //lets add the teacher as a student to both of the courses, the second student should't get this info when asking for allCourses
-            await apolloServer.executeOperation({query: addStudentToCourse, variables: {courseUniqueName: "courses-name-where-the-user-is-a-student", addStudentToCourseUsername: "username"}})
-            await apolloServer.executeOperation({query: addStudentToCourse, variables: {courseUniqueName: "courses-name-where-the-user-is-not-a-student", addStudentToCourseUsername: "username"}})
+            await helpers.makeQuery({query: addStudentToCourse, variables: {courseUniqueName: "courses-name-where-the-user-is-a-student", addStudentToCourseUsername: "username"}})
+            await helpers.makeQuery({query: addStudentToCourse, variables: {courseUniqueName: "courses-name-where-the-user-is-not-a-student", addStudentToCourseUsername: "username"}})
 
-            const studentUser = await User.findOne({username: "students username"})
-            apolloServer.context = {userForToken: {username: studentUser.username, name: studentUser.name, id: studentUser._id.toString()}}
-            await apolloServer.executeOperation({query: addStudentToCourse, variables: {courseUniqueName: "courses-name-where-the-user-is-a-student", addStudentToCourseUsername: studentUser.username}})
+            const studentUser = await helpers.logIn("students username")
+            await helpers.makeQuery({query: addStudentToCourse, variables: {courseUniqueName: "courses-name-where-the-user-is-a-student", addStudentToCourseUsername: studentUser.username}})
 
-            const coursesQuery = await apolloServer.executeOperation({query: getAllCourses})
+            const coursesQuery = await helpers.makeQuery({query: getAllCourses})
             const courses = coursesQuery.data.allCourses
             
             //first lets check firstCourse, there should only be the info of our student
@@ -107,19 +104,18 @@ describe('course querying tests', () => {
             expect(returnedCourseDataWithOutStudent.students.length).toBe(0)
         })
         test('getAllCourses returns null task list', async () => {
-            const user = await User.findOne({username: "username"})
-            apolloServer.context = {userForToken: {username: "username", name: "name", id: user._id.toString()}}
+            const user = await helpers.logIn("username")
             const courseData = {
                 uniqueName: "courses-name", 
                 name: "common name", 
                 teacher: "username"
             }
           
-            await apolloServer.executeOperation({query: createCourse, variables: {...courseData}})
-            const createdTask = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: "courses-name", description: "this is a description for a task", deadline: new Date(Date.now()).toString()}})
+            await helpers.makeQuery({query: createCourse, variables: {...courseData}})
+            const createdTask = await helpers.makeQuery({query: addTaskToCourse, variables: {courseUniqueName: "courses-name", description: "this is a description for a task", deadline: new Date(Date.now()).toString()}})
             expect(createdTask.data.addTaskToCourse).toBeDefined()
 
-            const coursesQuery = await apolloServer.executeOperation({query: getAllCourses})
+            const coursesQuery = await helpers.makeQuery({query: getAllCourses})
             const courses = coursesQuery.data.allCourses
             const course = courses[0]
             expect(course.tasks).toBe(null)
@@ -127,15 +123,14 @@ describe('course querying tests', () => {
     })
     describe('getCourse query tests', () => {
         test('getCourseReturns all course data if queried by the teacher of the course', async () => {
-            const user = await User.findOne({username: "username"})
-            apolloServer.context = {userForToken: {username: "username", name: "name", id: user._id.toString()}}
+            const user = await helpers.logIn("username")
             const courseData = {
                 uniqueName: "courses-name", 
                 name: "common name", 
                 teacher: "username"
             }
-            await apolloServer.executeOperation({query: createCourse, variables: {...courseData}})
-            const createdTask = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: "courses-name", description: "this is a description for a task", deadline: new Date(Date.now()).toString()}})
+            await helpers.makeQuery({query: createCourse, variables: {...courseData}})
+            const createdTask = await helpers.makeQuery({query: addTaskToCourse, variables: {courseUniqueName: "courses-name", description: "this is a description for a task", deadline: new Date(Date.now()).toString()}})
             const taskID = createdTask.data.addTaskToCourse.id
             
             const submission = {
@@ -143,7 +138,7 @@ describe('course querying tests', () => {
                 submitted: true,
                 taskId: taskID
             }
-            await apolloServer.executeOperation({query: addSubmissionToCourseTask, 
+            await helpers.makeQuery({query: addSubmissionToCourseTask, 
                 variables: {
                 courseUniqueName: courseData.uniqueName, 
                 taskId: submission.taskId,
@@ -151,16 +146,15 @@ describe('course querying tests', () => {
                 submitted: submission.submitted,
             }});
 
-            const secondUser = await User.findOne({username: "students username"})
-            apolloServer.context = {userForToken: {username: "students username", name: "students name", id: secondUser._id.toString()}}
-            await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: courseData.uniqueName}})
+            const secondUser = await helpers.logIn("students username")
+            await helpers.makeQuery({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: courseData.uniqueName}})
        
             const secondSubmission = {
                 content : "this is the answer to a task",
                 submitted: true,
                 taskId: taskID
             }
-            const answer = await apolloServer.executeOperation({query: addSubmissionToCourseTask, 
+            const answer = await helpers.makeQuery({query: addSubmissionToCourseTask, 
                 variables: {
                 courseUniqueName: courseData.uniqueName, 
                 taskId: secondSubmission.taskId,
@@ -169,9 +163,9 @@ describe('course querying tests', () => {
             }});
        
 
-            apolloServer.context = {userForToken: {username: "username", name: "name",  id: user._id.toString()}}
+            await helpers.logIn("username")
 
-            const courseInfoQuery =  await apolloServer.executeOperation({query: getCourse, variables: {uniqueName: "courses-name"}})
+            const courseInfoQuery =  await helpers.makeQuery({query: getCourse, variables: {uniqueName: "courses-name"}})
           
             const course = courseInfoQuery.data.getCourse
           
@@ -184,15 +178,14 @@ describe('course querying tests', () => {
         })
 
         test('getCourseReturns course data but with only the submissions made by the student if queried by a student', async () => {
-            const user = await User.findOne({username: "username"})
-            apolloServer.context = {userForToken: {username: "username", name: "name", id: user._id.toString()}}
+            const user = await helpers.logIn("username")
             const courseData = {
                 uniqueName: "courses-name", 
                 name: "common name", 
                 teacher: "username"
             }
-            await apolloServer.executeOperation({query: createCourse, variables: {...courseData}})
-            const createdTask = await apolloServer.executeOperation({query: addTaskToCourse, variables: {courseUniqueName: "courses-name", description: "this is a description for a task", deadline: new Date(Date.now()).toString()}})
+            await helpers.makeQuery({query: createCourse, variables: {...courseData}})
+            const createdTask = await helpers.makeQuery({query: addTaskToCourse, variables: {courseUniqueName: "courses-name", description: "this is a description for a task", deadline: new Date(Date.now()).toString()}})
             const taskID = createdTask.data.addTaskToCourse.id
             
             const submission = {
@@ -200,7 +193,7 @@ describe('course querying tests', () => {
                 submitted: true,
                 taskId: taskID
             }
-            await apolloServer.executeOperation({query: addSubmissionToCourseTask, 
+            await helpers.makeQuery({query: addSubmissionToCourseTask, 
                 variables: {
                 courseUniqueName: courseData.uniqueName, 
                 taskId: submission.taskId,
@@ -208,16 +201,15 @@ describe('course querying tests', () => {
                 submitted: submission.submitted,
             }});
 
-            const secondUser = await User.findOne({username: "students username"})
-            apolloServer.context = {userForToken: {username: "students username", name: "students name", id: secondUser._id.toString()}}
-            await apolloServer.executeOperation({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: courseData.uniqueName}})
+            const secondUser =  await helpers.logIn("students username")
+            await helpers.makeQuery({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: courseData.uniqueName}})
        
             const secondSubmission = {
                 content : "this is the answer to a task",
                 submitted: true,
                 taskId: taskID
             }
-            const answer = await apolloServer.executeOperation({query: addSubmissionToCourseTask, 
+            const answer = await helpers.makeQuery({query: addSubmissionToCourseTask, 
                 variables: {
                 courseUniqueName: courseData.uniqueName, 
                 taskId: secondSubmission.taskId,
@@ -226,7 +218,7 @@ describe('course querying tests', () => {
             }});
          
             
-            const courseInfoQuery =  await apolloServer.executeOperation({query: getCourse, variables: {uniqueName: "courses-name"}})
+            const courseInfoQuery =  await helpers.makeQuery({query: getCourse, variables: {uniqueName: "courses-name"}})
            
             const course = courseInfoQuery.data.getCourse
           
