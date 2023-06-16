@@ -198,29 +198,28 @@ const courseSubscriptionResolvers = {
     //using subscriptions with a withFilter function:
     //https://www.apollographql.com/docs/apollo-server/data/subscriptions/ 
     messageCreated: {
-        subscribe:withFilter(
-            (root, args, context) => {
-                mustHaveToken(context)
-                console.log(root); 
-                console.log(args); 
-                console.log(context); 
-                const courseUniqueName = args.courseUniqueName
-                const chatRoomId = args.chatRoomId
-                
-                courseService.chatRooms.subscribeToCreatedMessages(courseUniqueName, chatRoomId, context.userForToken)
-                return pubsub.asyncIterator('MESSAGE_CREATED')
-            }
-            , 
-    
-            //this function is called when somebody calls pubsub.publish()
-            async (payload, args, context) => {
-                console.log(payload)
-                console.log(args); 
-                console.log(context); 
-                return Boolean(payload.information.chatRoomId === args.chatRoomId)} 
-            )
-        }
+        async subscribe(root, args, context) {
+            console.log(args)
+            console.log(context)
+            mustHaveToken(context)
+            const courseUniqueName = args.courseUniqueName
+            const chatRoomId = args.chatRoomId
+            await courseService.chatRooms.subscribeToCreatedMessages(courseUniqueName, chatRoomId, context.userForToken);
+
+            //very important, Do not forget to return withFilter(...)(root, args, context) because otherwise it will give the folowwing error:
+            //Error: Subscription field must return Async Iterable
+            //credits: https://github.com/apollographql/graphql-subscriptions/issues/161
+            return withFilter(
+                () => pubsub.asyncIterator('MESSAGE_CREATED'), 
+                async (payload, args, context) => {
+                    console.log(payload)
+                    console.log(args); 
+                    console.log(context); 
+                    return Boolean(payload.information.chatRoomId === args.chatRoomId)
+                }
+                )(root, args, context);
+          },
     }
 
-
+}
 module.exports = {courseQueryResolvers, courseMutationResolvers, courseSubscriptionResolvers}
