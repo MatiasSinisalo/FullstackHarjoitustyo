@@ -9,13 +9,14 @@ const { query } = require('express')
 const mongoose = require('mongoose')
 const course = require('../../models/course')
 const helpers = require('../testHelpers')
+const config = require('../../config')
 
 beforeAll(async () => {
     await mongoose.connect(config.MONGODB_URI)
     await Course.deleteMany({})
     await User.deleteMany({})
-    await request(url).post("/").send({query: userCreateQuery, variables: {}})
-    await request(url).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: userCreateQuery, variables: {}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
 })
 
 afterAll(async () => {
@@ -32,7 +33,6 @@ beforeEach(async () => {
 })
 
 
-
 describe('modify submission tests', () => {
     test('user can modify a submission made by the user', async () => {
         const user = await helpers.logIn("username", apolloServer)
@@ -43,7 +43,7 @@ describe('modify submission tests', () => {
 
         const newContent = "this is modified content"
         const newSubmitted = true
-        const modifySubmissionQuery = await apolloServer.executeOperation({query: modifySubmission, 
+        const modifySubmissionQuery = await helpers.makeQuery({query: modifySubmission, 
             variables: 
             {courseUniqueName: course.uniqueName, taskId: task.id, submissionId: submission.id, content: newContent, submitted: newSubmitted}})
      
@@ -74,7 +74,7 @@ describe('modify submission tests', () => {
 
         const newContent = "this is modified content"
         const newSubmitted = false
-        const modifySubmissionQuery = await apolloServer.executeOperation({query: modifySubmission, 
+        const modifySubmissionQuery = await helpers.makeQuery({query: modifySubmission, 
             variables: 
             {courseUniqueName: course.uniqueName, taskId: task.id, submissionId: submission.id, content: newContent, submitted: newSubmitted}})
      
@@ -102,7 +102,7 @@ describe('modify submission tests', () => {
         const anotherUser = await helpers.logIn("students username", apolloServer)
         const newContent = "this is modified content"
         const newSubmitted = false
-        const modifySubmissionQuery = await apolloServer.executeOperation({query: modifySubmission, 
+        const modifySubmissionQuery = await helpers.makeQuery({query: modifySubmission, 
             variables: 
             {courseUniqueName: course.uniqueName, taskId: task.id, submissionId: submission.id, content: newContent, submitted: newSubmitted}})
         expect(modifySubmissionQuery.errors[0].message).toEqual("Unauthorized")
@@ -126,10 +126,10 @@ describe('modify submission tests', () => {
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [], apolloServer)
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", true, apolloServer);
 
-        apolloServer.context = {userForToken: null}
+        helpers.logOut()
         const newContent = "this is modified content"
         const newSubmitted = false
-        const modifySubmissionQuery = await apolloServer.executeOperation({query: modifySubmission, 
+        const modifySubmissionQuery = await helpers.makeQuery({query: modifySubmission, 
             variables: 
             {courseUniqueName: course.uniqueName, taskId: task.id, submissionId: submission.id, content: newContent, submitted: newSubmitted}})
         expect(modifySubmissionQuery.errors[0].message).toEqual("Unauthorized")
@@ -153,7 +153,7 @@ describe('modify submission tests', () => {
         
         const newContent = "this is modified content"
         const newSubmitted = false
-        const modifySubmissionQuery = await apolloServer.executeOperation({query: modifySubmission, 
+        const modifySubmissionQuery = await helpers.makeQuery({query: modifySubmission, 
             variables: 
             {courseUniqueName: "course does not exist", taskId: "abc1234", submissionId: "abc43231", content: newContent, submitted: newSubmitted}})
         
@@ -174,7 +174,7 @@ describe('modify submission tests', () => {
 
         const newContent = "this is modified content"
         const newSubmitted = false
-        const modifySubmissionQuery = await apolloServer.executeOperation({query: modifySubmission, 
+        const modifySubmissionQuery = await helpers.makeQuery({query: modifySubmission, 
             variables: 
             {courseUniqueName: course.uniqueName, taskId: taskOnAnotherCourse.id, submissionId: "abc43231", content: newContent, submitted: newSubmitted}})
         
@@ -204,7 +204,7 @@ describe('modify submission tests', () => {
 
         const newContent = "this is modified content"
         const newSubmitted = false
-        const modifySubmissionQuery = await apolloServer.executeOperation({query: modifySubmission, 
+        const modifySubmissionQuery = await helpers.makeQuery({query: modifySubmission, 
             variables: 
             {courseUniqueName: course.uniqueName, taskId: task.id, submissionId: submissionOnAnotherTask.id, content: newContent, submitted: newSubmitted}})
         
