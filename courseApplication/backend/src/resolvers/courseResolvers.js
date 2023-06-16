@@ -198,7 +198,7 @@ const courseSubscriptionResolvers = {
     //using subscriptions with a withFilter function:
     //https://www.apollographql.com/docs/apollo-server/data/subscriptions/ 
     messageCreated: {
-        subscribe:async () => withFilter(
+        subscribe:withFilter(
             (root, args, context) => {
                 mustHaveToken(context)
                 console.log(root); 
@@ -208,10 +208,9 @@ const courseSubscriptionResolvers = {
                 const chatRoomId = args.chatRoomId
                 
                 courseService.chatRooms.subscribeToCreatedMessages(courseUniqueName, chatRoomId, context.userForToken)
-               
-              
                 return pubsub.asyncIterator('MESSAGE_CREATED')
-            }, 
+            }
+            , 
     
             //this function is called when somebody calls pubsub.publish()
             async (payload, args, context) => {
