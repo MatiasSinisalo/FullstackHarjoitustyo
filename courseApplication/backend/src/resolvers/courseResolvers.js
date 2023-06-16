@@ -195,7 +195,10 @@ const courseMutationResolvers = {
 
 const courseSubscriptionResolvers = {
     messageCreated: {
-        subscribe: () => pubsub.asyncIterator('MESSAGE_CREATED')
+        subscribe: (root, args, context) => {
+            mustHaveToken(context)
+            return pubsub.asyncIterator('MESSAGE_CREATED')
+        }
     }
 }
 

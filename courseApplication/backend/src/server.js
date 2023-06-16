@@ -1,7 +1,7 @@
 const { ApolloServer } = require('@apollo/server')
 const resolvers = require('./resolvers')
 const typeDefs = require('./typedefs')
-const context = require('./context')
+const {normalContext, subscriptionContext} = require('./context')
 const config = require('./config')
 const mongoose = require ('mongoose')
 const express = require('express')
@@ -23,7 +23,9 @@ const startServer = async () => {
       })
 
     const schema =  makeExecutableSchema({ typeDefs, resolvers })
-    const serverCleanUp = useServer({schema}, wsServer)
+    const serverCleanUp = useServer({schema, 
+        context: subscriptionContext
+    }, wsServer)
 
     const apolloServer =  new ApolloServer({
         schema,
@@ -46,7 +48,7 @@ const startServer = async () => {
     console.log("connected to database")
 
     await apolloServer.start()
-    app.use('/', cors(), express.json(), expressMiddleware(apolloServer, {context}));
+    app.use('/', cors(), express.json(), expressMiddleware(apolloServer, {context: normalContext}));
     httpServer.listen({ port: config.PORT });
     console.log("server is working")
    
@@ -57,7 +59,6 @@ const server = {
     apolloServer: new ApolloServer({
         typeDefs,
         resolvers,
-        context
     }),
     mongoose: mongoose,
     start: async function(readyMsg) {

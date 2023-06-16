@@ -12,12 +12,13 @@
   },
   "jest": {
     "verbose": true,
-    "setupFilesAfterEnv": ["./src/tests/setup.js"]
+    "setupFilesAfterEnv": [
+      "./src/tests/setup.js"
+    ]
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@apollo/client": "^3.7.2",
     "@apollo/server": "^4.7.3",
     "@graphql-tools/schema": "^9.0.19",
     "apollo-link-context": "^1.0.20",
