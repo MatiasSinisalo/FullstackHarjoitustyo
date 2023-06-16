@@ -8,13 +8,14 @@ const { addContentBlockToInfoPage, addInfoPageToCourse, removeContentBlockFromIn
 const { query } = require('express')
 const mongoose = require('mongoose')
 const helpers = require('../testHelpers')
+const config = require('../../config')
 
 beforeAll(async () => {
     await mongoose.connect(config.MONGODB_URI)
     await Course.deleteMany({})
     await User.deleteMany({})
-    await request(url).post("/").send({query: userCreateQuery, variables: {}})
-    await request(url).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: userCreateQuery, variables: {}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
 })
 
 afterAll(async () => {
@@ -45,7 +46,7 @@ describe('removeChatRoom tests', () => {
         const course = await helpers.createCourse("courseUniqueName", "name", [], apolloServer)
         const chatRoom = await helpers.createChatRoom(course, "room", apolloServer)
 
-        const removeChatRoomQuery = await apolloServer.executeOperation({query: removeChatRoom, 
+        const removeChatRoomQuery = await helpers.makeQuery({query: removeChatRoom, 
             variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom.id}})
         expect(removeChatRoomQuery.data.removeChatRoom).toBe(true)
 
@@ -60,7 +61,7 @@ describe('removeChatRoom tests', () => {
         const chatRoom = await helpers.createChatRoom(course, "room", apolloServer)
         
         await helpers.logIn("students username", apolloServer)
-        const removeChatRoomQuery = await apolloServer.executeOperation({query: removeChatRoom, 
+        const removeChatRoomQuery = await helpers.makeQuery({query: removeChatRoom, 
             variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom.id}})
         expect(removeChatRoomQuery.data.removeChatRoom).toBe(null)
         expect(removeChatRoomQuery.errors[0].message).toBe("Unauthorized")
@@ -72,7 +73,7 @@ describe('removeChatRoom tests', () => {
         const course = await helpers.createCourse("courseUniqueName", "name", [], apolloServer)
         const chatRoom = await helpers.createChatRoom(course, "room", apolloServer)
         
-        const removeChatRoomQuery = await apolloServer.executeOperation({query: removeChatRoom, 
+        const removeChatRoomQuery = await helpers.makeQuery({query: removeChatRoom, 
             variables: {courseUniqueName: "doesNotExist", chatRoomId: chatRoom.id}})
         expect(removeChatRoomQuery.data.removeChatRoom).toBe(null)
         expect(removeChatRoomQuery.errors[0].message).toBe("Given course not found")
@@ -84,7 +85,7 @@ describe('removeChatRoom tests', () => {
         const course = await helpers.createCourse("courseUniqueName", "name", [], apolloServer)
         const chatRoom = await helpers.createChatRoom(course, "room", apolloServer)
         
-        const removeChatRoomQuery = await apolloServer.executeOperation({query: removeChatRoom, 
+        const removeChatRoomQuery = await helpers.makeQuery({query: removeChatRoom, 
             variables: {courseUniqueName: course.uniqueName, chatRoomId: "abd1234"}})
         expect(removeChatRoomQuery.data.removeChatRoom).toBe(null)
         expect(removeChatRoomQuery.errors[0].message).toBe("Given chatroom not found")
