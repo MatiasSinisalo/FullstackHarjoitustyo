@@ -9,13 +9,14 @@ const { query } = require('express')
 const mongoose = require('mongoose')
 const course = require('../../models/course')
 const helpers = require('../testHelpers')
+const config = require('../../config')
 
 beforeAll(async () => {
     await mongoose.connect(config.MONGODB_URI)
     await Course.deleteMany({})
     await User.deleteMany({})
-    await request(url).post("/").send({query: userCreateQuery, variables: {}})
-    await request(url).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: userCreateQuery, variables: {}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
 })
 
 afterAll(async () => {
@@ -42,7 +43,7 @@ describe('grade submission tests', () => {
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", false, apolloServer)
 
         const points = 10
-        const gradeSubmissionQuery = await apolloServer.executeOperation({query: gradeSubmission, variables: {courseUniqueName: course.uniqueName, taskId: task.id, submissionId: submission.id, points: points}})
+        const gradeSubmissionQuery = await helpers.makeQuery({query: gradeSubmission, variables: {courseUniqueName: course.uniqueName, taskId: task.id, submissionId: submission.id, points: points}})
         console.log(gradeSubmissionQuery)
         const gradedSubmission = gradeSubmissionQuery.data.gradeSubmission
         expect(gradedSubmission.grade.points).toBe(10)
@@ -71,7 +72,7 @@ describe('grade submission tests', () => {
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", false, apolloServer)
 
         const points = 10
-        const gradeSubmissionQuery = await apolloServer.executeOperation({query: gradeSubmission, variables: {courseUniqueName:"this course wont exist", taskId: task.id, submissionId: submission.id, points: points}})
+        const gradeSubmissionQuery = await helpers.makeQuery({query: gradeSubmission, variables: {courseUniqueName:"this course wont exist", taskId: task.id, submissionId: submission.id, points: points}})
         expect(gradeSubmissionQuery.errors[0].message).toEqual("Given course not found")
         console.log(gradeSubmissionQuery)
         const gradedSubmission = gradeSubmissionQuery.data.gradeSubmission
@@ -97,7 +98,7 @@ describe('grade submission tests', () => {
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", false, apolloServer)
 
         const points = 10
-        const gradeSubmissionQuery = await apolloServer.executeOperation({query: gradeSubmission, variables: {courseUniqueName: course.uniqueName, taskId: "incorrectTaskId", submissionId: submission.id, points: points}})
+        const gradeSubmissionQuery = await helpers.makeQuery({query: gradeSubmission, variables: {courseUniqueName: course.uniqueName, taskId: "incorrectTaskId", submissionId: submission.id, points: points}})
         expect(gradeSubmissionQuery.errors[0].message).toEqual("Given task not found")
         console.log(gradeSubmissionQuery)
         const gradedSubmission = gradeSubmissionQuery.data.gradeSubmission
@@ -123,7 +124,7 @@ describe('grade submission tests', () => {
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", false, apolloServer)
 
         const points = 10
-        const gradeSubmissionQuery = await apolloServer.executeOperation({query: gradeSubmission, variables: {courseUniqueName: course.uniqueName, taskId: task.id, submissionId: "incorrectSubmissionId", points: points}})
+        const gradeSubmissionQuery = await helpers.makeQuery({query: gradeSubmission, variables: {courseUniqueName: course.uniqueName, taskId: task.id, submissionId: "incorrectSubmissionId", points: points}})
         expect(gradeSubmissionQuery.errors[0].message).toEqual("Given submission not found")
         console.log(gradeSubmissionQuery)
         const gradedSubmission = gradeSubmissionQuery.data.gradeSubmission
@@ -149,10 +150,10 @@ describe('grade submission tests', () => {
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", false, apolloServer)
 
         const anotherUser = await helpers.logIn("students username", apolloServer)
-        await apolloServer.executeOperation({query: addStudentToCourse, variables: {courseUniqueName: "course-unique-name", addStudentToCourseUsername: "students username"}})
+        await helpers.makeQuery({query: addStudentToCourse, variables: {courseUniqueName: "course-unique-name", addStudentToCourseUsername: "students username"}})
 
         const points = 10
-        const gradeSubmissionQuery = await apolloServer.executeOperation({query: gradeSubmission, variables: {courseUniqueName: course.uniqueName, taskId: task.id, submissionId: submission.id, points: points}})
+        const gradeSubmissionQuery = await helpers.makeQuery({query: gradeSubmission, variables: {courseUniqueName: course.uniqueName, taskId: task.id, submissionId: submission.id, points: points}})
         expect(gradeSubmissionQuery.errors[0].message).toEqual("Unauthorized")
         console.log(gradeSubmissionQuery)
         const gradedSubmission = gradeSubmissionQuery.data.gradeSubmission
