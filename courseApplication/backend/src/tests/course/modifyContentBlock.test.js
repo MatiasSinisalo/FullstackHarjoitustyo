@@ -9,13 +9,14 @@ const { query } = require('express')
 const mongoose = require('mongoose')
 const course = require('../../models/course')
 const helpers = require('../testHelpers')
+const config = require('../../config')
 
 beforeAll(async () => {
     await mongoose.connect(config.MONGODB_URI)
     await Course.deleteMany({})
     await User.deleteMany({})
-    await request(url).post("/").send({query: userCreateQuery, variables: {}})
-    await request(url).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: userCreateQuery, variables: {}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
 })
 
 afterAll(async () => {
@@ -53,7 +54,7 @@ describe('modifyContentBlock tests', () => {
         const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0, apolloServer)
         
         const newContent = "this is modified content"
-        const contentBlockEditQuery = await apolloServer.executeOperation({query: modifyContentBlock, 
+        const contentBlockEditQuery = await helpers.makeQuery({query: modifyContentBlock, 
             variables: {courseUniqueName: course.uniqueName, infoPageId: infopage.id, contentBlockId: contentBlock.id, content: newContent}})
         expect(contentBlockEditQuery.data.modifyContentBlock.content).toEqual(newContent)
 
@@ -68,7 +69,7 @@ describe('modifyContentBlock tests', () => {
         
         const newContent = "this is modified content"
         await helpers.logIn("students username", apolloServer)
-        const contentBlockEditQuery = await apolloServer.executeOperation({query: modifyContentBlock, 
+        const contentBlockEditQuery = await helpers.makeQuery({query: modifyContentBlock, 
             variables: {courseUniqueName: course.uniqueName, infoPageId: infopage.id, contentBlockId: contentBlock.id, content: newContent}})
         expect(contentBlockEditQuery.data.modifyContentBlock).toEqual(null)
         expect(contentBlockEditQuery.errors[0].message).toEqual("Unauthorized")
@@ -83,7 +84,7 @@ describe('modifyContentBlock tests', () => {
         const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0, apolloServer)
         
         const newContent = "this is modified content"
-        const contentBlockEditQuery = await apolloServer.executeOperation({query: modifyContentBlock, 
+        const contentBlockEditQuery = await helpers.makeQuery({query: modifyContentBlock, 
             variables: {courseUniqueName: "does not exist", infoPageId: infopage.id, contentBlockId: contentBlock.id, content: newContent}})
         expect(contentBlockEditQuery.data.modifyContentBlock).toEqual(null)
         expect(contentBlockEditQuery.errors[0].message).toEqual("Given course not found")
@@ -98,7 +99,7 @@ describe('modifyContentBlock tests', () => {
         const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0, apolloServer)
         
         const newContent = "this is modified content"
-        const contentBlockEditQuery = await apolloServer.executeOperation({query: modifyContentBlock, 
+        const contentBlockEditQuery = await helpers.makeQuery({query: modifyContentBlock, 
             variables: {courseUniqueName: course.uniqueName, infoPageId:"abc1234", contentBlockId: contentBlock.id, content: newContent}})
         expect(contentBlockEditQuery.data.modifyContentBlock).toEqual(null)
         expect(contentBlockEditQuery.errors[0].message).toEqual("Given info page not found")
@@ -113,7 +114,7 @@ describe('modifyContentBlock tests', () => {
         const contentBlock = await helpers.createContentBlock(course, infopage, "this is some text", 0, apolloServer)
         
         const newContent = "this is modified content"
-        const contentBlockEditQuery = await apolloServer.executeOperation({query: modifyContentBlock, 
+        const contentBlockEditQuery = await helpers.makeQuery({query: modifyContentBlock, 
             variables: {courseUniqueName: course.uniqueName, infoPageId:infopage.id, contentBlockId: "abc1234", content: newContent}})
         expect(contentBlockEditQuery.data.modifyContentBlock).toEqual(null)
         expect(contentBlockEditQuery.errors[0].message).toEqual("Given content block not found")
