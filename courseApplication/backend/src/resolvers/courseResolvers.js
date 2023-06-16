@@ -3,6 +3,7 @@ const courseService = require('../services/courseService')
 const Course = require('../models/course')
 const { mustHaveToken } = require('./resolverUtils')
 const  {pubsub} = require('../publisher')
+const { withFilter } = require('graphql-subscriptions')
 
 const courseQueryResolvers = {
     allCourses: async (root, args, context) => {
@@ -188,20 +189,29 @@ const courseMutationResolvers = {
         const chatRoomId = args.chatRoomId
         const content = args.content
         const newMessage = await courseService.chatRooms.createMessage(courseUniqueName, chatRoomId, content, context.userForToken)
-        pubsub.publish('MESSAGE_CREATED', { messageCreated: newMessage })
+        pubsub.publish('MESSAGE_CREATED', { messageCreated: newMessage, information: {courseUniqueName, chatRoomId} })
         return newMessage
     }
 }
 
 const courseSubscriptionResolvers = {
+    //using subscriptions with a withFilter function:
+    //https://www.apollographql.com/docs/apollo-server/data/subscriptions/ 
     messageCreated: {
-        subscribe: async (root, args, context) => {
-            mustHaveToken(context)
-            const courseUniqueName = args.courseUniqueName
-            const chatRoomId = args.chatRoomId
+        subscribe: withFilter(
+            () => pubsub.asyncIterator('MESSAGE_CREATED'), 
 
-            return await courseService.chatRooms.subscribeToCreatedMessages(courseUniqueName, chatRoomId, context.userForToken)
-        }
+            //this function is called when somebody calls pubsub.publish()
+            async (payload, args, context) => {
+                console.log(payload)
+
+                console.log(args); 
+                const courseUniqueName = payload.information.courseUniqueName
+                const chatRoomId = payload.information.chatRoomId
+                const shouldGiveData = await courseService.chatRooms.subscribeToCreatedMessages(courseUniqueName, chatRoomId, context.userForToken)
+                console.log(shouldGiveData)
+                return Boolean(shouldGiveData)} 
+            )
     }
 }
 

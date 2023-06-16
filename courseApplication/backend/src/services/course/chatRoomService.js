@@ -87,7 +87,7 @@ const subscribeToCreatedMessages = async (courseUniqueName, chatRoomId, userForT
 
     serviceUtils.checkIsAdminOrParticipant(chatRoom, userForToken)
 
-    return pubsub.asyncIterator('MESSAGE_CREATED')
+    return true
 }
 
 module.exports = {
