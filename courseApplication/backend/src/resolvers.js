@@ -29,9 +29,7 @@ const resolvers  = {
         },
     },
     Subscription: {
-        messageCreated: {
-            subscribe: () => pubsub.asyncIterator('MESSAGE_CREATED')
-        }
+        ...courseResolvers.courseSubscriptionResolvers
     }
 }
 

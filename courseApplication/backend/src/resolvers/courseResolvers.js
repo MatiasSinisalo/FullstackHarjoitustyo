@@ -193,4 +193,10 @@ const courseMutationResolvers = {
     }
 }
 
-module.exports = {courseQueryResolvers, courseMutationResolvers}
+const courseSubscriptionResolvers = {
+    messageCreated: {
+        subscribe: () => pubsub.asyncIterator('MESSAGE_CREATED')
+    }
+}
+
+module.exports = {courseQueryResolvers, courseMutationResolvers, courseSubscriptionResolvers}
