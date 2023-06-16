@@ -9,13 +9,14 @@ const { query } = require('express')
 const mongoose = require('mongoose')
 const course = require('../../models/course')
 const helpers = require('../testHelpers')
+const config = require('../../config')
 
 beforeAll(async () => {
     await mongoose.connect(config.MONGODB_URI)
     await Course.deleteMany({})
     await User.deleteMany({})
-    await request(url).post("/").send({query: userCreateQuery, variables: {}})
-    await request(url).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: userCreateQuery, variables: {}})
+    await request(config.LOCAL_SERVER_URL).post("/").send({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
 })
 
 afterAll(async () => {
@@ -46,12 +47,12 @@ describe('removeInfoPageFromCourse tests', () => {
 
 
         const course = await helpers.createCourse("courses-unique-name", "name", [], apolloServer)
-        const infoPageThatShouldNotBeRemoved = await apolloServer.executeOperation({
+        const infoPageThatShouldNotBeRemoved = await helpers.makeQuery({
             query: addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "this-is-not-to-be-removed"}})
 
-        const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "this-is-url"}})
+        const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "this-is-url"}})
         const infoPage = infoPageQuery.data.addInfoPageToCourse
-        const infoPageRemoveQuery = await apolloServer.executeOperation({query: removeInfoPageFromCourse, variables: {courseUniqueName: course.uniqueName, infoPageId: infoPage.id}})
+        const infoPageRemoveQuery = await helpers.makeQuery({query: removeInfoPageFromCourse, variables: {courseUniqueName: course.uniqueName, infoPageId: infoPage.id}})
         
         expect(infoPageRemoveQuery.data.removeInfoPageFromCourse).toBe(true)
 
@@ -61,10 +62,10 @@ describe('removeInfoPageFromCourse tests', () => {
     test('remove info page returns Unauthorized if the user is not a teacher', async () => {
         await helpers.logIn("username", apolloServer)
         const course = await helpers.createCourse("courses-unique-name", "name", [], apolloServer)
-        const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "this-is-url"}})
+        const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "this-is-url"}})
         const infoPage = infoPageQuery.data.addInfoPageToCourse
         await helpers.logIn("students username", apolloServer)
-        const infoPageRemoveQuery = await apolloServer.executeOperation({query: removeInfoPageFromCourse, variables: {courseUniqueName: course.uniqueName, infoPageId: infoPage.id}})
+        const infoPageRemoveQuery = await helpers.makeQuery({query: removeInfoPageFromCourse, variables: {courseUniqueName: course.uniqueName, infoPageId: infoPage.id}})
         
         expect(infoPageRemoveQuery.errors[0].message).toBe("Unauthorized")
         expect(infoPageRemoveQuery.data.removeInfoPageFromCourse).toBe(null)
@@ -75,9 +76,9 @@ describe('removeInfoPageFromCourse tests', () => {
     test('removeInfoPageFromCourse returns given course not found if the course is not found', async () => {
         await helpers.logIn("username", apolloServer)
         const course = await helpers.createCourse("courses-unique-name", "name", [], apolloServer)
-        const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "this-is-url"}})
+        const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "this-is-url"}})
         const infoPage = infoPageQuery.data.addInfoPageToCourse
-        const infoPageRemoveQuery = await apolloServer.executeOperation({query: removeInfoPageFromCourse, variables: {courseUniqueName: "course does not exist", infoPageId: infoPage.id}})
+        const infoPageRemoveQuery = await helpers.makeQuery({query: removeInfoPageFromCourse, variables: {courseUniqueName: "course does not exist", infoPageId: infoPage.id}})
         
         expect(infoPageRemoveQuery.errors[0].message).toBe("Given course not found")
         expect(infoPageRemoveQuery.data.removeInfoPageFromCourse).toBe(null)
@@ -88,9 +89,9 @@ describe('removeInfoPageFromCourse tests', () => {
     test('removeInfoPageFromCourse returns given page not found if the page is not found', async () => {
         await helpers.logIn("username", apolloServer)
         const course = await helpers.createCourse("courses-unique-name", "name", [], apolloServer)
-        const infoPageQuery = await apolloServer.executeOperation({query: addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "this-is-url"}})
+        const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse, variables: {courseUniqueName: course.uniqueName, locationUrl: "this-is-url"}})
         const infoPage = infoPageQuery.data.addInfoPageToCourse
-        const infoPageRemoveQuery = await apolloServer.executeOperation({query: removeInfoPageFromCourse, variables: {courseUniqueName: course.uniqueName, infoPageId: "abc1234"}})
+        const infoPageRemoveQuery = await helpers.makeQuery({query: removeInfoPageFromCourse, variables: {courseUniqueName: course.uniqueName, infoPageId: "abc1234"}})
         
         expect(infoPageRemoveQuery.errors[0].message).toBe("Given info page not found")
         expect(infoPageRemoveQuery.data.removeInfoPageFromCourse).toBe(null)
