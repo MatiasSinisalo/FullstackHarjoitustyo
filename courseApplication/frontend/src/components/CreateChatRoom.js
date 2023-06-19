@@ -1,12 +1,17 @@
-
+import { useDispatch } from "react-redux"
+import { createChatRoom } from "../reducers/courseReducer"
+import { useApolloClient } from "@apollo/client"
 
 const CreateChatRoom = ({course}) => {
-    const createChatRoom = (event) => {
+    const dispatch = useDispatch()
+    const client = useApolloClient()
+    const newChatRoom = (event) => {
         event.preventDefault()
-        console.log(event.target.chatRoomName.value)
+        const chatRoomName = event.target.chatRoomName.value
+        dispatch(createChatRoom(course, chatRoomName, client))
     }
     return (
-        <form onSubmit={createChatRoom}>
+        <form onSubmit={newChatRoom}>
             <input type="text" name="chatRoomName"></input>
             <input type="submit" value="create new chat room"></input>
         </form>
