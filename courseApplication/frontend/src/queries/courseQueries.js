@@ -258,3 +258,32 @@ mutation ModifyContentBlock($courseUniqueName: String!, $infoPageId: String!, $c
   }
 }
 `
+
+export const CREATE_CHAT_ROOM = gql`
+mutation CreateChatRoom($courseUniqueName: String!, $name: String!) {
+  createChatRoom(courseUniqueName: $courseUniqueName, name: $name) {
+    admin {
+      name
+      id
+      username
+    }
+    id
+    messages {
+      content
+      fromUser {
+        name
+        id
+        username
+      }
+      sendDate
+      id
+    }
+    name
+    users {
+      id
+      name
+      username
+    }
+  }
+}
+`
