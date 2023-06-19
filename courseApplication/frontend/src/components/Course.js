@@ -19,6 +19,7 @@ import CourseParticipants from "./CourseParticipants"
 import CreateInfoPage from "./CreateInfoPage"
 import InfoPage from "./InfoPage"
 import CreateChatRoom from "./CreateChatRoom"
+import ChatRoom from "./ChatRoom"
 
 
 
@@ -61,6 +62,10 @@ const Course = () =>{
         <p>courses info pages</p>
         {course.infoPages.map((page) => <Link key={page.locationUrl} to={`page/${page.locationUrl}`}>{page.locationUrl}</Link>)}
       </div>
+
+      <div className="blueBox chatRoomListing">
+          {course.chatRooms.map((room) => <Link key={room.id} to={`chatRoom/${room.id}`}>{room.name}</Link>)}
+      </div>
     </div>
 
    
@@ -75,6 +80,7 @@ const Course = () =>{
       <Route path="tasks" element={<TaskListings course={course}></TaskListings>}/>
       <Route path="task/:taskId/*" element={<Task course={course}/>}/>  
       <Route path="page/:infoPageUrl" element={<InfoPage course={course} user={user}></InfoPage>}/>
+      <Route path="chatRoom/:chatRoomId/" element={<ChatRoom course={course}/>}/>  
     </Routes>
     
     </div>
