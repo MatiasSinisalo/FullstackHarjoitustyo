@@ -82,6 +82,8 @@ const TeachersCourse = ({course}) =>{
       <Link to="newTask">create new task</Link>
       <br></br>
       <Link to="newInfoPage">create new info page</Link>
+      <br></br>
+      <Link to="newChatRoom">create new chat room</Link>
     </div>
     <Outlet></Outlet>
     </div>
