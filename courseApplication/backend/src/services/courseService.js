@@ -18,7 +18,8 @@ const getCourse = async(courseUniqueName, userForToken) => {
     const course = await Course.findOne({uniqueName: courseUniqueName}).populate(["teacher"])
     if(course.teacher.username === userForToken.username)
     {
-        const courseToReturn = await course.populate(["students", "tasks.submissions.fromUser"])
+        const courseToReturn = await course.populate(["students", "tasks.submissions.fromUser", "chatRooms.messages.fromUser", "chatRooms.admin", "chatRooms.users"])
+        console.log(courseToReturn)
         return courseToReturn
     }
     else
@@ -28,7 +29,7 @@ const getCourse = async(courseUniqueName, userForToken) => {
             return {...task, submissions: task.submissions.filter((submission) => submission.fromUser == userForToken.id)}
         })
         
-        const courseToReturn = await courseFiltered.populate("tasks.submissions.fromUser")
+        const courseToReturn = await courseFiltered.populate(["tasks.submissions.fromUser", "chatRooms.messages.fromUser", "chatRooms.admin", "chatRooms.users"])
         return courseToReturn
     }
 

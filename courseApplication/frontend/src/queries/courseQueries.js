@@ -88,6 +88,24 @@ query GetCourse($uniqueName: String!) {
         position
       }
     }
+    chatRooms {
+      admin {
+        username
+      }
+      id
+      messages {
+        content
+        fromUser {
+          username
+        }
+        id
+        sendDate
+      }
+      name
+      users {
+        username
+      }
+    }
   }
 }
 `
