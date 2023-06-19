@@ -199,12 +199,11 @@ const courseSubscriptionResolvers = {
     //https://www.apollographql.com/docs/apollo-server/data/subscriptions/ 
     messageCreated: {
         async subscribe(root, args, context) {
-            console.log(args)
-            console.log(context)
+           
             mustHaveToken(context)
             const courseUniqueName = args.courseUniqueName
             const chatRoomId = args.chatRoomId
-            await courseService.chatRooms.subscribeToCreatedMessages(courseUniqueName, chatRoomId, context.userForToken);
+            await courseService.chatRooms.checkCanSubscribeToMessageCreated(courseUniqueName, chatRoomId, context.userForToken);
 
             //very important, Do not forget to return withFilter(...)(root, args, context) because otherwise it will give the folowwing error:
             //Error: Subscription field must return Async Iterable
@@ -212,9 +211,6 @@ const courseSubscriptionResolvers = {
             return withFilter(
                 () => pubsub.asyncIterator('MESSAGE_CREATED'), 
                 async (payload, args, context) => {
-                    console.log(payload)
-                    console.log(args); 
-                    console.log(context); 
                     return Boolean(payload.information.chatRoomId === args.chatRoomId)
                 }
                 )(root, args, context);

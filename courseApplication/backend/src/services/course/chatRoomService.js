@@ -81,7 +81,7 @@ const createMessage = async (courseUniqueName, chatRoomId, content, userForToken
     return messageCreated
 }
 
-const subscribeToCreatedMessages = async (courseUniqueName, chatRoomId, userForToken) => {
+const checkCanSubscribeToMessageCreated = async (courseUniqueName, chatRoomId, userForToken) => {
     const course = await serviceUtils.fetchCourse(courseUniqueName)
     const chatRoom = serviceUtils.findChatRoom(course, chatRoomId)
 
@@ -95,5 +95,5 @@ module.exports = {
     removeChatRoom,
     createMessage,
     addUserToChatRoom,
-    subscribeToCreatedMessages
+    checkCanSubscribeToMessageCreated
 }
