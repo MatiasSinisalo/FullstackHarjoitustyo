@@ -19,7 +19,6 @@ const getCourse = async(courseUniqueName, userForToken) => {
     if(course.teacher.username === userForToken.username)
     {
         const courseToReturn = await course.populate(["students", "tasks.submissions.fromUser", "chatRooms.messages.fromUser", "chatRooms.admin", "chatRooms.users"])
-        console.log(courseToReturn)
         return courseToReturn
     }
     else
