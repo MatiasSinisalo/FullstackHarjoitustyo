@@ -4,7 +4,7 @@ import courseService from "../services/courseService";
 import { Notify } from "./notificationReducer";
 import { useNavigate } from "react-router-dom";
 
-export const createNewCourse = (courseUniqueName, courseName, client) => {
+const createNewCourse = (courseUniqueName, courseName, client) => {
     return async function (dispatch, getState){
         const createdCourseQuery = await courseService.createCourse(courseUniqueName, courseName, "", client)
         if(!createdCourseQuery.error)
@@ -21,13 +21,13 @@ export const createNewCourse = (courseUniqueName, courseName, client) => {
     }
 }
 
-export const addStudentToCourse = (courseUniqueName, username, client) => {
+ const addStudentToCourse = (courseUniqueName, username, client) => {
     return async dispatch => {
         const courseWithAddedStudent = await courseService.addUserToCourse(courseUniqueName, username, client)
     }
 }
 
-export const removeStudentFromCourse = (courseUniqueName, username, client) => {
+ const removeStudentFromCourse = (courseUniqueName, username, client) => {
     return async dispatch => {
 
         const prompt = window.prompt(`type ${username} to confirm removal`)
@@ -50,12 +50,12 @@ export const removeStudentFromCourse = (courseUniqueName, username, client) => {
     }
 }
 
-export const courseHasStudent = (course, studentsUsername) => {
+ const courseHasStudent = (course, studentsUsername) => {
     const hasStudent = course.students.find((user) => user.username === studentsUsername)
     return hasStudent
 }
 
-export const removeSubmissionFromTask = (course, task, submission, client) => {
+ const removeSubmissionFromTask = (course, task, submission, client) => {
     return async function(dispatch){
         const removed = await courseService.removeSubmissionFromCourseTask(course.uniqueName, task.id, submission.id, client)
         if(!removed.error){
@@ -69,7 +69,7 @@ export const removeSubmissionFromTask = (course, task, submission, client) => {
     }
 }
 
-export const createNewTaskOnCourse = (uniqueName, description, deadline, maxGrade, client) => {
+ const createNewTaskOnCourse = (uniqueName, description, deadline, maxGrade, client) => {
     return async function (dispatch){
       const addedTask = await courseService.addTaskToCourse(uniqueName, description, deadline, maxGrade, client)
       if(!addedTask.error){
@@ -83,7 +83,7 @@ export const createNewTaskOnCourse = (uniqueName, description, deadline, maxGrad
     }
 }
 
-export const addSubmissionToTask = (course, task, content, client) => {
+ const addSubmissionToTask = (course, task, content, client) => {
     return async function(dispatch){
         const createdSolutionQuery = await courseService.addSubmissionToCourseTask(course.uniqueName, task.id, content, false, client)
         if(!createdSolutionQuery.error){
@@ -97,7 +97,7 @@ export const addSubmissionToTask = (course, task, content, client) => {
     }
 }
 
-export const editTaskSubmission = (course, taskId, submissionId, content, submitted, client) => {
+ const editTaskSubmission = (course, taskId, submissionId, content, submitted, client) => {
     return async function(dispatch){
         const modifiedSubmission = await courseService.modifySubmission(course.uniqueName, taskId, submissionId, content, submitted, client)
         if(!modifiedSubmission.error){
@@ -117,7 +117,7 @@ export const editTaskSubmission = (course, taskId, submissionId, content, submit
     }
 }
 
-export const gradeSubmission = (courseUniqueName, taskId, submissionId, grade, client) => {
+ const gradeSubmission = (courseUniqueName, taskId, submissionId, grade, client) => {
     return async function(dispatch){
         const gradedSubmission = await courseService.gradeSubmission(courseUniqueName, taskId, submissionId, grade, client) 
         if(!gradedSubmission.error){
@@ -132,7 +132,7 @@ export const gradeSubmission = (courseUniqueName, taskId, submissionId, grade, c
 }
 
 
-export const removeTaskFromCourse = (course, task, client) => {
+ const removeTaskFromCourse = (course, task, client) => {
     return async function(dispatch){
         const removed = await courseService.removeTaskFromCourse(course.uniqueName, task.id, client);
         if(!removed.error)
@@ -147,7 +147,7 @@ export const removeTaskFromCourse = (course, task, client) => {
     }
 }
 
-export const removeCourse = (course, client, navigate) => {
+ const removeCourse = (course, client, navigate) => {
     return async function(dispatch)
     {
         const prompt = window.prompt(`type ${course.uniqueName} to confirm removal`)
@@ -169,7 +169,7 @@ export const removeCourse = (course, client, navigate) => {
     }
 }
 
-export const createInfoPageOnCourse = (course, pageUrl, client) => {
+ const createInfoPageOnCourse = (course, pageUrl, client) => {
     return async function(dispatch)
     {
         console.log(pageUrl)
@@ -186,7 +186,7 @@ export const createInfoPageOnCourse = (course, pageUrl, client) => {
     }
 }
 
-export const removeInfoPageFromCourse = (course, infoPage, client) => {
+ const removeInfoPageFromCourse = (course, infoPage, client) => {
     return async function(dispatch)
     {
         const prompt = window.prompt(`type ${infoPage.locationUrl} to confirm removal`)
@@ -206,7 +206,7 @@ export const removeInfoPageFromCourse = (course, infoPage, client) => {
     }
 }
 
-export const createContentBlockOnInfoPage = (course, pageId, content, position, client) => {
+ const createContentBlockOnInfoPage = (course, pageId, content, position, client) => {
     return async function(dispatch)
     {
         const contentBlock = await courseService.createContentBlock(course.uniqueName, pageId, content, position, client)
@@ -222,7 +222,7 @@ export const createContentBlockOnInfoPage = (course, pageId, content, position, 
     }
 }
 
-export const modifyContentBlock = (course, pageId, contentBlockId, newContent, client) => {
+ const modifyContentBlock = (course, pageId, contentBlockId, newContent, client) => {
     return async function(dispatch)
     {
         const modifiedContentBlock = await courseService.modifyContentBlock(course.uniqueName, pageId, contentBlockId, newContent, client)
@@ -238,7 +238,7 @@ export const modifyContentBlock = (course, pageId, contentBlockId, newContent, c
     }
 }
 
-export const removeContentBlockFromInfoPage = (course, pageId, contentBlockId, client) => {
+ const removeContentBlockFromInfoPage = (course, pageId, contentBlockId, client) => {
     return async function(dispatch)
     {
         const removed = await courseService.removeContentBlock(course.uniqueName, pageId, contentBlockId, client)
@@ -252,4 +252,23 @@ export const removeContentBlockFromInfoPage = (course, pageId, contentBlockId, c
             return false
         }
     }
+}
+
+export {
+    createNewCourse,
+    addStudentToCourse,
+    removeStudentFromCourse,
+    courseHasStudent,
+    removeSubmissionFromTask,
+    createNewTaskOnCourse,
+    addSubmissionToTask,
+    editTaskSubmission,
+    gradeSubmission,
+    removeTaskFromCourse,
+    removeCourse,
+    createInfoPageOnCourse,
+    removeInfoPageFromCourse,
+    createContentBlockOnInfoPage,
+    modifyContentBlock,
+    removeContentBlockFromInfoPage
 }
