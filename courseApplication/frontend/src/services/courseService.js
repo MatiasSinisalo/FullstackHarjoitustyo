@@ -350,7 +350,18 @@ const addUserToChatRoom = async (course, chatRoomId, username, client) => {
         const result = await client.mutate({mutation: ADD_USER_TO_CHAT_ROOM, variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoomId, username: username}})
         if(result.data.addUserToChatRoom)
         {
-            return result.data.addUserToChatRoom
+            const user = result.data.addUserToChatRoom
+            client.cache.modify(
+                {
+                    id: `ChatRoom:${chatRoomId}`,
+                    fields: {
+                        users(currentMessages){
+                            return currentMessages.concat(user)
+                        }
+                    }
+                }
+            )
+            return user
         }
     }
     catch(err)
