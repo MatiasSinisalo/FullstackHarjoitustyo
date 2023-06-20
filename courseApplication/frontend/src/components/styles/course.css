@@ -24,3 +24,8 @@
     margin-left: 0px;
     padding: 2%;
 }
+
+.chatRoomListing{
+    display: flex;
+    flex-direction: column;
+}
