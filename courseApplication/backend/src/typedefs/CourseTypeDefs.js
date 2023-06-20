@@ -177,6 +177,12 @@ type Mutation{
         chatRoomId: String!
         username: String!
     ):User
+    
+    removeUserFromChatRoom(
+        courseUniqueName: String!
+        chatRoomId: String!
+        username: String!
+    ):Boolean
 
     createMessage(
         courseUniqueName: String!
