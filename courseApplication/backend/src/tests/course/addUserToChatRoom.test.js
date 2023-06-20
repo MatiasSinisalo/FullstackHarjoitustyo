@@ -120,4 +120,21 @@ describe('addUserToChatRoom tests', () => {
         await checkCourseNotChanged()
     })
 
+    test('addUserToChatRoom returns given student is already in chat room if trying to add a student that already is added', async () => {
+        const user = await helpers.logIn("username")
+        const course = await helpers.createCourse("uniqueName", "name", [])
+        const chatRoom = await helpers.createChatRoom(course, "room name")
+        await helpers.makeQuery({query: addStudentToCourse, variables: {courseUniqueName: course.uniqueName, addStudentToCourseUsername: "students username"}})
+        
+        await helpers.makeQuery({query: addUserToChatRoom, 
+            variables: {courseUniqueName: course.uniqueName, chatRoomId:  chatRoom.id, username: "students username"}})
+        
+        const addUserToChatRoomQuery = await helpers.makeQuery({query: addUserToChatRoom, 
+            variables: {courseUniqueName: course.uniqueName, chatRoomId:  chatRoom.id, username: "students username"}})
+        
+        expect(addUserToChatRoomQuery.data.addUserToChatRoom).toBe(null)
+        expect(addUserToChatRoomQuery.errors[0].message).toBe("Given student is already in chat room")
+      
+        await checkCourseNotChanged()
+    })
 })
