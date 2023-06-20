@@ -303,6 +303,22 @@ const addUserToChatRoom = (course, chatRoomId, username, client) => {
     }
 }
 
+const removeUserFromChatRoom = (course, chatRoomId, username, client) => {
+    return async function(dispatch)
+    {
+        const removed = {error: {message: "not implemented"}}
+        if(!removed.error)
+        {
+            dispatch(Notify("successfully removed user from chatroom", "successNotification", 3))
+            return true
+        }
+        else{
+            dispatch(Notify(removed.error.message, "errorNotification", 3))
+            return false
+        }
+    }
+}
+
 export {
     createNewCourse,
     addStudentToCourse,
@@ -322,5 +338,6 @@ export {
     removeContentBlockFromInfoPage,
     createChatRoom,
     createMessage,
-    addUserToChatRoom
+    addUserToChatRoom,
+    removeUserFromChatRoom
 }
