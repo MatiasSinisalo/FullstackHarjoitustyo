@@ -80,7 +80,7 @@ const Course = () =>{
       <Route path="tasks" element={<TaskListings course={course}></TaskListings>}/>
       <Route path="task/:taskId/*" element={<Task course={course}/>}/>  
       <Route path="page/:infoPageUrl" element={<InfoPage course={course} user={user}></InfoPage>}/>
-      <Route path="chatRoom/:chatRoomId/" element={<ChatRoom course={course}/>}/>  
+      <Route path="chatRoom/:chatRoomId/" element={<ChatRoom course={course} user={user}/>}/>  
     </Routes>
     
     </div>
