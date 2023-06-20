@@ -65,6 +65,30 @@ const addUserToChatRoom = async (courseUniqueName, chatRoomId, username, userFor
     return user
 }
 
+const removeUserFromChatRoom = async (courseUniqueName, chatRoomId, username, userForToken) => {
+    const course = await serviceUtils.fetchCourse(courseUniqueName)
+    const userToRemove = await serviceUtils.fetchUser(username)
+    const chatRoom = await serviceUtils.findChatRoom(course, chatRoomId)
+    
+    //admin can remove anybody, user can remove only itself
+    if(chatRoom.admin.toString() !== userForToken.id && userForToken.username !== userToRemove.username)
+    {
+        throw new UserInputError("Unauthorized")
+    }
+    
+    if(!serviceUtils.isStudent(course, userToRemove.id))
+    {
+        throw new UserInputError("Given user is not participating in the course")
+    }
+
+    serviceUtils.checkIsParticipant(chatRoom, userToRemove)
+
+    const filteredUsers =  chatRoom.users.filter((roomUser) => roomUser.toString() !== userToRemove.id)
+    chatRoom.users = filteredUsers
+    await course.save()
+    return true
+}
+
 const createMessage = async (courseUniqueName, chatRoomId, content, userForToken) => {
     const course = await serviceUtils.fetchCourse(courseUniqueName)
     
@@ -98,5 +122,6 @@ module.exports = {
     removeChatRoom,
     createMessage,
     addUserToChatRoom,
-    checkCanSubscribeToMessageCreated
+    checkCanSubscribeToMessageCreated,
+    removeUserFromChatRoom
 }

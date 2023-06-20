@@ -89,6 +89,15 @@ const checkIsTeacher = (course, userForToken) => {
     return true
 }
 
+const checkIsParticipant = (chatRoom, userToFind) => {
+    const isParticipant = chatRoom.users.find((user) => user.toString() == userToFind.id) ? true : false
+    if(!isParticipant)
+    {
+        throw new UserInputError("Given user is not in chatroom")
+    }
+    return true
+}
+
 const checkIsAdminOrParticipant = (chatRoom, userForToken) => {
     const isAdmin = chatRoom.admin.toString() === userForToken.id
     const isParticipant = chatRoom.users.find((user) => user.toString() == userForToken.id) ? true : false
@@ -109,6 +118,7 @@ const isStudent = (course, userId) => {
     const student = course.students.find(((student) => student.toString() === userId))
     return student ? true : false
 }
+
 
 const checkUserNotInChatRoom = (chatRoom, userId) => {
     const userInRoom = chatRoom.users.find((user) => user.toString() === userId)
@@ -131,5 +141,6 @@ module.exports= {fetchCourse,
                 isTeacher,
                 isStudent,
                 checkIsAdminOrParticipant,
-                checkUserNotInChatRoom
+                checkUserNotInChatRoom,
+                checkIsParticipant
             }
