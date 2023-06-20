@@ -90,6 +90,7 @@ query GetCourse($uniqueName: String!) {
     }
     chatRooms {
       admin {
+        id
         username
       }
       id
@@ -103,6 +104,7 @@ query GetCourse($uniqueName: String!) {
       }
       name
       users {
+        id
         username
       }
     }

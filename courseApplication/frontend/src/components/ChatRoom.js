@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom"
 import Messages from "./Messages"
 import CreateMessage from "./CreateMessage"
 import AddUsersToChatRoom from "./AddUsersToChatRoom"
+import ChatRoomUsers from "./ChatRoomUsers"
 
 const ChatRoom = ({course, user}) => {
     const chatRoomId = useParams().chatRoomId
@@ -13,7 +14,9 @@ const ChatRoom = ({course, user}) => {
         <p> this is a chat room page </p>
         <Messages course={course} chatRoom={chatRoom}></Messages>
         <CreateMessage course={course} chatRoom={chatRoom}></CreateMessage>
+        <ChatRoomUsers course={course} chatRoom={chatRoom} user={user}/>
         {chatRoom.admin.username === user.username ? <AddUsersToChatRoom course={course} chatRoom={chatRoom}/> : <></>}
+        
         </>
     )
 }
