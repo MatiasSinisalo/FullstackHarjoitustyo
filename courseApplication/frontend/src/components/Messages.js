@@ -1,7 +1,8 @@
-const Messages = () =>{
+const Messages = ({course, chatRoom}) =>{
     return(
       <>
-      <p>messages page</p>
+      <p>messages: </p>
+      {chatRoom.messages.map((msg) => <p key={msg.id}>{msg.content} by: {msg.fromUser.username}</p>)}
       </>
   
     )

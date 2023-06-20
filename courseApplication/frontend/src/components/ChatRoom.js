@@ -10,6 +10,7 @@ const ChatRoom = ({course}) => {
         <>
         <h1>{chatRoom.name}</h1>
         <p> this is a chat room page </p>
+        <Messages course={course} chatRoom={chatRoom}></Messages>
         <CreateMessage course={course} chatRoom={chatRoom}></CreateMessage>
         </>
     )
