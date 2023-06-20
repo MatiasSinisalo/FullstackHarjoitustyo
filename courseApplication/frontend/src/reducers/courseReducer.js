@@ -270,7 +270,7 @@ const createChatRoom = (course, chatRoomName, client) => {
     }
 }
 
-const createMessage = (course, chatRoomId, client) => {
+const createMessage = (course, chatRoomId, content, client) => {
     return async function(dispatch)
     {
         const newMessage = {error: {message: "not implemented"}}

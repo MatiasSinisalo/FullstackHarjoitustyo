@@ -9,7 +9,8 @@ const CreateMessage = ({course, chatRoom}) => {
     const newMessage = (event) => {
         event.preventDefault()
         console.log(event.target.content.value)
-        dispatch(createMessage(course, chatRoom.id, client))
+        const content = event.target.content.value
+        dispatch(createMessage(course, chatRoom.id, content, client))
     }
 
     return(
