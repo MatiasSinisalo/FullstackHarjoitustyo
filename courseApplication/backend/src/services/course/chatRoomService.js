@@ -61,7 +61,8 @@ const addUserToChatRoom = async (courseUniqueName, chatRoomId, username, userFor
 
     chatRoom.users.push(user.id)
     await course.save()
-    return true
+    delete user.passwordHash
+    return user
 }
 
 const createMessage = async (courseUniqueName, chatRoomId, content, userForToken) => {

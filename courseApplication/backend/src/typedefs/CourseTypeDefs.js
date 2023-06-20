@@ -176,7 +176,7 @@ type Mutation{
         courseUniqueName: String!
         chatRoomId: String!
         username: String!
-    ):Boolean
+    ):User
 
     createMessage(
         courseUniqueName: String!
