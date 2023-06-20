@@ -1,9 +1,15 @@
+import { useApolloClient } from "@apollo/client"
+import { useDispatch } from "react-redux"
+import { createMessage } from "../reducers/courseReducer"
 
 
 const CreateMessage = ({course, chatRoom}) => {
+    const dispatch = useDispatch()
+    const client = useApolloClient()
     const newMessage = (event) => {
         event.preventDefault()
         console.log(event.target.content.value)
+        dispatch(createMessage(course, chatRoom.id, client))
     }
 
     return(
