@@ -287,6 +287,22 @@ const createMessage = (course, chatRoomId, content, client) => {
 
 }
 
+const addUserToChatRoom = (course, chatRoomId, username, client) => {
+    return async function(dispatch)
+    {
+        const addedUser = {error: {message: "not implemented"}}
+        if(!addedUser.error)
+        {
+            dispatch(Notify("successfully added user", "successNotification", 3))
+            return true
+        }
+        else{
+            dispatch(Notify(addedUser.error.message, "errorNotification", 3))
+            return false
+        }
+    }
+}
+
 export {
     createNewCourse,
     addStudentToCourse,
@@ -305,5 +321,6 @@ export {
     modifyContentBlock,
     removeContentBlockFromInfoPage,
     createChatRoom,
-    createMessage
+    createMessage,
+    addUserToChatRoom
 }
