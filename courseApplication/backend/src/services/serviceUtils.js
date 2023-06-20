@@ -110,6 +110,14 @@ const isStudent = (course, userId) => {
     return student ? true : false
 }
 
+const checkUserNotInChatRoom = (chatRoom, userId) => {
+    const userInRoom = chatRoom.users.find((user) => user.toString() === userId)
+    if(userInRoom)
+    {
+        throw new UserInputError("Given user is already in chatroom")
+    }
+}
+
 
 module.exports= {fetchCourse,
                 fetchUser, 
@@ -122,5 +130,6 @@ module.exports= {fetchCourse,
                 findChatRoom,
                 isTeacher,
                 isStudent,
-                checkIsAdminOrParticipant
+                checkIsAdminOrParticipant,
+                checkUserNotInChatRoom
             }

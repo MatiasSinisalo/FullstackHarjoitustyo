@@ -57,6 +57,8 @@ const addUserToChatRoom = async (courseUniqueName, chatRoomId, username, userFor
         throw new UserInputError("Given user is not participating in the course")
     }
 
+    serviceUtils.checkUserNotInChatRoom(chatRoom, user.id)
+
     chatRoom.users.push(user.id)
     await course.save()
     return true

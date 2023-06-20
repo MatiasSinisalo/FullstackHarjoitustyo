@@ -11,7 +11,7 @@ const helpers = require('../testHelpers')
 const config = require('../../config')
 
 
-const checkCourseNotChanged = async () => {
+const checkCourseNotChanged = async (expectedUserCount=0) => {
     const coursesInDB = await Course.find({}).populate("chatRooms.users")
     expect(coursesInDB.length).toBe(1)
 
@@ -19,7 +19,7 @@ const checkCourseNotChanged = async () => {
     expect(courseInDB.chatRooms.length).toBe(1)
 
     const chatRoomInDB = courseInDB.chatRooms[0]
-    expect(chatRoomInDB.users.length).toBe(0)
+    expect(chatRoomInDB.users.length).toBe(expectedUserCount)
 }
 
 describe('addUserToChatRoom tests', () => {
@@ -120,7 +120,7 @@ describe('addUserToChatRoom tests', () => {
         await checkCourseNotChanged()
     })
 
-    test('addUserToChatRoom returns given student is already in chat room if trying to add a student that already is added', async () => {
+    test('addUserToChatRoom returns given user is already in chat room if trying to add a user that already is added', async () => {
         const user = await helpers.logIn("username")
         const course = await helpers.createCourse("uniqueName", "name", [])
         const chatRoom = await helpers.createChatRoom(course, "room name")
@@ -133,8 +133,8 @@ describe('addUserToChatRoom tests', () => {
             variables: {courseUniqueName: course.uniqueName, chatRoomId:  chatRoom.id, username: "students username"}})
         
         expect(addUserToChatRoomQuery.data.addUserToChatRoom).toBe(null)
-        expect(addUserToChatRoomQuery.errors[0].message).toBe("Given student is already in chat room")
+        expect(addUserToChatRoomQuery.errors[0].message).toBe("Given user is already in chatroom")
       
-        await checkCourseNotChanged()
+        await checkCourseNotChanged(1)
     })
 })
