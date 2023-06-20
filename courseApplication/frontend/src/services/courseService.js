@@ -324,7 +324,18 @@ const createMessage = async(courseUniqueName, chatRoomId, content, client) => {
         const result = await client.mutate({mutation: CREATE_MESSAGE, variables: {courseUniqueName, chatRoomId: chatRoomId, content: content}})
         if(result.data.createMessage)
         {
-            return result.data.createMessage
+            const message = result.data.createMessage
+            client.cache.modify(
+                {
+                    id: `ChatRoom:${chatRoomId}`,
+                    fields: {
+                        messages(currentMessages){
+                            return currentMessages.concat({__ref: `Message:${message.id}`})
+                        }
+                    }
+                }
+            )
+            return message
         }
     }
     catch(err)
