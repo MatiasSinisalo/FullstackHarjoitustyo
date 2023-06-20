@@ -273,7 +273,7 @@ const createChatRoom = (course, chatRoomName, client) => {
 const createMessage = (course, chatRoomId, content, client) => {
     return async function(dispatch)
     {
-        const newMessage = {error: {message: "not implemented"}}
+        const newMessage = await courseService.createMessage(course.uniqueName, chatRoomId, content, client)
         if(!newMessage.error)
         {
             dispatch(Notify("successfully created message", "successNotification", 3))

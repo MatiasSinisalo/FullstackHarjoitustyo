@@ -305,3 +305,16 @@ mutation CreateChatRoom($courseUniqueName: String!, $name: String!) {
   }
 }
 `
+
+export const CREATE_MESSAGE = gql`
+mutation Mutation($courseUniqueName: String!, $chatRoomId: String!, $content: String!) {
+  createMessage(courseUniqueName: $courseUniqueName, chatRoomId: $chatRoomId, content: $content) {
+    content
+    fromUser {
+      username
+    }
+    id
+    sendDate
+  }
+}
+`
