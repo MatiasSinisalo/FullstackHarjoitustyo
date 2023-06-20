@@ -31,7 +31,10 @@ describe('addUserToChatRoom tests', () => {
         
         const addUserToChatRoomQuery = await helpers.makeQuery({query: addUserToChatRoom, 
             variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom.id, username: "students username"}})
-        expect(addUserToChatRoomQuery.data.addUserToChatRoom).toBe(true)
+        
+        const newUser = addUserToChatRoomQuery.data.addUserToChatRoom
+        delete newUser.id
+        expect(newUser).toEqual({username: "students username", name: "students name"})
 
         const coursesInDB = await Course.find({}).populate("chatRooms.users")
         expect(coursesInDB.length).toBe(1)
