@@ -306,26 +306,40 @@ const addUserToChatRoom = (course, chatRoomId, username, client) => {
 const removeUserFromChatRoom = (course, chatRoomId, userToRemove, client) => {
     return async function(dispatch)
     {
-        const prompt = window.prompt(`type ${userToRemove.username} to confirm removal`)
-        if(prompt === userToRemove.username)
-        {
-            const removed = await courseService.removeUserFromChatRoom(course, chatRoomId, userToRemove, client)
-            if(!removed.error)
-            {
-                dispatch(Notify("successfully removed user from chatroom", "successNotification", 3))
-                return true
-            }
-            else{
-                dispatch(Notify(removed.error.message, "errorNotification", 3))
-                return false
-            }
+       return await promterFunc(
+        {course, chatRoomId, userToRemove, client},
+        dispatch,
+        "successfully removed user from chatroom",
+        `type ${userToRemove.username} to confirm removal`,
+        "removal cancelled",
+        (promt, args) => {
+            return promt === args.userToRemove.username
+        },
+        async (args) => {
+            return await courseService.removeUserFromChatRoom(args.course, args.chatRoomId, args.userToRemove, args.client)
         }
-        else{
-            dispatch(Notify("removal cancelled", "errorNotification", 3))
-        }
+       )
     }
 }
 
+const leaveChatRoom = (course, chatRoomId, userToRemove, client) => {
+    return async function(dispatch)
+    {
+        return await promterFunc({course, chatRoomId, userToRemove, client},
+            dispatch,
+            "successfully left course", 
+            `type ${userToRemove.username} to confirm leaving`,
+            "leaving calcelled",
+            (promt, args) => {
+                return promt === args.userToRemove.username
+            },
+            async (args) => {
+                const removedUser = await courseService.removeUserFromChatRoom(args.course, args.chatRoomId, args.userToRemove, args.client)
+                return removedUser
+            }
+        ) 
+    }   
+}
 
 const promterFunc = async (args, dispatch, successMsg, promtMsg, whenFailPromtMsg, promtCheckFunc, reducerAsyncFunc) => {
    
@@ -349,25 +363,7 @@ const promterFunc = async (args, dispatch, successMsg, promtMsg, whenFailPromtMs
     
 }
 
-const leaveChatRoom = (course, chatRoomId, userToRemove, client) => {
-    return async function(dispatch)
-    {
-        return await promterFunc({course, chatRoomId, userToRemove, client},
-            dispatch,
-            "successfully left course", 
-            `type ${userToRemove.username} to confirm leaving`,
-            "leaving calcelled",
-            (promt, args) => {
-                return promt === args.userToRemove.username
-            },
-            async (args) => {
-                const removedUser = await courseService.removeUserFromChatRoom(args.course, args.chatRoomId, args.userToRemove, args.client)
-                return removedUser
-            }
-        ) 
-    }
-    
-}
+
 
 
 
