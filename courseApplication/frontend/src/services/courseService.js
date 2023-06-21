@@ -355,8 +355,8 @@ const addUserToChatRoom = async (course, chatRoomId, username, client) => {
                 {
                     id: `ChatRoom:${chatRoomId}`,
                     fields: {
-                        users(currentMessages){
-                            return currentMessages.concat(user)
+                        users(currentUsers){
+                            return currentUsers.concat(user)
                         }
                     }
                 }
