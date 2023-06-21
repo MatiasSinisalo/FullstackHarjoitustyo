@@ -326,6 +326,51 @@ const removeUserFromChatRoom = (course, chatRoomId, userToRemove, client) => {
     }
 }
 
+
+const promterFunc = async (args, dispatch, successMsg, promtMsg, whenFailPromtMsg, promtCheckFunc, reducerAsyncFunc) => {
+   
+    const prompt = window.prompt(`${promtMsg}`)
+    if(promtCheckFunc(prompt, args))
+    {
+        const result = await reducerAsyncFunc(args)
+        if(!result.error)
+        {
+            dispatch(Notify(`${successMsg}`, "successNotification", 3))
+            return true
+        }
+        else{
+            dispatch(Notify(result.error.message, "errorNotification", 3))
+            return false
+        }
+    }
+    else{
+        dispatch(Notify(`${whenFailPromtMsg}`), "errorNotification", 3)
+    }
+    
+}
+
+const leaveChatRoom = (course, chatRoomId, userToRemove, client) => {
+    return async function(dispatch)
+    {
+        return await promterFunc({course, chatRoomId, userToRemove, client},
+            dispatch,
+            "successfully left course", 
+            `type ${userToRemove.username} to confirm leaving`,
+            "leaving calcelled",
+            (promt, args) => {
+                return promt === args.userToRemove.username
+            },
+            async (args) => {
+                const removedUser = await courseService.removeUserFromChatRoom(args.course, args.chatRoomId, args.userToRemove, args.client)
+                return removedUser
+            }
+        ) 
+    }
+    
+}
+
+
+
 export {
     createNewCourse,
     addStudentToCourse,
@@ -346,5 +391,6 @@ export {
     createChatRoom,
     createMessage,
     addUserToChatRoom,
-    removeUserFromChatRoom
+    removeUserFromChatRoom,
+    leaveChatRoom
 }

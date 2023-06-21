@@ -1,11 +1,19 @@
 import { useDispatch } from "react-redux"
-import { removeUserFromChatRoom } from "../reducers/courseReducer"
+import { removeUserFromChatRoom, leaveChatRoom } from "../reducers/courseReducer"
 import { useApolloClient } from "@apollo/client"
 
 const ChatRoomUsers = ({course, chatRoom, user}) => {
+    const dispatch = useDispatch()
+    const client = useApolloClient()
+    console.log(user.id)
+    const canLeaveRoom = chatRoom.users.find((otherUser) => otherUser.username === user.username) ? true : false
+    const leaveRoom = () => {
+        dispatch(leaveChatRoom(course, chatRoom.id, user, client))
+    }
     return(
         <>
         <h3>students in room: </h3>
+        {canLeaveRoom ? <button onClick={leaveRoom}>leave chat room</button> : <></>}
         <table>
             <thead>
                 <tr>

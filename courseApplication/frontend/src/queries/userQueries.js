@@ -22,6 +22,7 @@ mutation Mutation($username: String!, $name: String!, $password: String!) {
 export const ME = gql`
 query Me {
   me {
+    id
     name
     username
   }
