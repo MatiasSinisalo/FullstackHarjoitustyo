@@ -358,7 +358,7 @@ const promterFunc = async (args, dispatch, successMsg, promtMsg, whenFailPromtMs
         }
     }
     else{
-        dispatch(Notify(`${whenFailPromtMsg}`), "errorNotification", 3)
+        dispatch(Notify(`${whenFailPromtMsg}`, "errorNotification", 3))
     }
     
 }
