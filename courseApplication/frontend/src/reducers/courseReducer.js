@@ -303,18 +303,25 @@ const addUserToChatRoom = (course, chatRoomId, username, client) => {
     }
 }
 
-const removeUserFromChatRoom = (course, chatRoomId, username, client) => {
+const removeUserFromChatRoom = (course, chatRoomId, userToRemove, client) => {
     return async function(dispatch)
     {
-        const removed = {error: {message: "not implemented"}}
-        if(!removed.error)
+        const prompt = window.prompt(`type ${userToRemove.username} to confirm removal`)
+        if(prompt === userToRemove.username)
         {
-            dispatch(Notify("successfully removed user from chatroom", "successNotification", 3))
-            return true
+            const removed = await courseService.removeUserFromChatRoom(course, chatRoomId, userToRemove, client)
+            if(!removed.error)
+            {
+                dispatch(Notify("successfully removed user from chatroom", "successNotification", 3))
+                return true
+            }
+            else{
+                dispatch(Notify(removed.error.message, "errorNotification", 3))
+                return false
+            }
         }
         else{
-            dispatch(Notify(removed.error.message, "errorNotification", 3))
-            return false
+            dispatch(Notify("removal cancelled", "errorNotification", 3))
         }
     }
 }

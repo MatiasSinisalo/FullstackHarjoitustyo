@@ -25,7 +25,7 @@ const ChatRoomUser = ({course, chatRoom, roomUser, user}) => {
     const dispatch = useDispatch()
     const client = useApolloClient()
     const removeFromRoom = () => {
-        dispatch(removeUserFromChatRoom(course, chatRoom.id, roomUser))
+        dispatch(removeUserFromChatRoom(course, chatRoom.id, roomUser, client))
     }
     return(
         <tr>

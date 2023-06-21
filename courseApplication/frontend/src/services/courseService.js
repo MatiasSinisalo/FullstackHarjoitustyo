@@ -1,4 +1,4 @@
-import { ADD_CONTENT_BLOCK_TO_INFO_PAGE, ADD_INFO_PAGE_TO_COURSE, ADD_STUDENT_TO_COURSE, ADD_SUBMISSION_TO_COURSE, ADD_TASK_TO_COURSE, ADD_USER_TO_CHAT_ROOM, CREATE_CHAT_ROOM, CREATE_COURSE, CREATE_MESSAGE, GET_ALL_COURSES, GET_COURSE, GRADE_SUBMISSION, MODIFY_CONTENT_BLOCK, MODIFY_SUBMISSION, REMOVE_CONTENT_BLOCK_FROM_INFO_PAGE, REMOVE_COURSE, REMOVE_INFO_PAGE_FROM_COURSE, REMOVE_STUDENT_FROM_COURSE, REMOVE_SUBMISSION_FROM_COURSE_TASK, REMOVE_TASK_FROM_COURSE } from "../queries/courseQueries"
+import { ADD_CONTENT_BLOCK_TO_INFO_PAGE, ADD_INFO_PAGE_TO_COURSE, ADD_STUDENT_TO_COURSE, ADD_SUBMISSION_TO_COURSE, ADD_TASK_TO_COURSE, ADD_USER_TO_CHAT_ROOM, CREATE_CHAT_ROOM, CREATE_COURSE, CREATE_MESSAGE, GET_ALL_COURSES, GET_COURSE, GRADE_SUBMISSION, MODIFY_CONTENT_BLOCK, MODIFY_SUBMISSION, REMOVE_CONTENT_BLOCK_FROM_INFO_PAGE, REMOVE_COURSE, REMOVE_INFO_PAGE_FROM_COURSE, REMOVE_STUDENT_FROM_COURSE, REMOVE_SUBMISSION_FROM_COURSE_TASK, REMOVE_TASK_FROM_COURSE, REMOVE_USER_FROM_CHAT_ROOM } from "../queries/courseQueries"
 //teacher field is not currently being used on the backend at all when creating a course
 
 export const getAllCourses = async (apolloClient) => {
@@ -370,6 +370,32 @@ const addUserToChatRoom = async (course, chatRoomId, username, client) => {
     }
 }
 
+const removeUserFromChatRoom = async (course, chatRoomId, userToRemove, client) => {
+    try{
+        const result = await client.mutate({mutation: REMOVE_USER_FROM_CHAT_ROOM, 
+            variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoomId, username: userToRemove.username}})
+        
+        if(result.data.removeUserFromChatRoom){
+            const removed = result.data.removeUserFromChatRoom
+            client.cache.modify(
+                {
+                    id: `ChatRoom:${chatRoomId}`,
+                    fields: {
+                        users(currentUsers){
+                            return currentUsers.filter((user) => user.id !== userToRemove.id)
+                        }
+                    }
+                }
+            )
+            return removed
+        }
+    }
+    catch(err)
+    {
+        return {error: err}
+    }
+}
+
 export default {getAllCourses, 
     createCourse, 
     removeCourse, 
@@ -389,5 +415,6 @@ export default {getAllCourses,
     removeContentBlock,
     createChatRoom,
     createMessage,
-    addUserToChatRoom
+    addUserToChatRoom,
+    removeUserFromChatRoom
 }

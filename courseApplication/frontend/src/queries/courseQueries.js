@@ -330,3 +330,9 @@ mutation AddUserToChatRoom($courseUniqueName: String!, $chatRoomId: String!, $us
   }
 }
 `
+
+export const REMOVE_USER_FROM_CHAT_ROOM = gql`
+mutation Mutation($courseUniqueName: String!, $chatRoomId: String!, $username: String!) {
+  removeUserFromChatRoom(courseUniqueName: $courseUniqueName, chatRoomId: $chatRoomId, username: $username)
+}
+`
