@@ -356,7 +356,7 @@ const addUserToChatRoom = async (course, chatRoomId, username, client) => {
                     id: `ChatRoom:${chatRoomId}`,
                     fields: {
                         users(currentUsers){
-                            return currentUsers.concat(user)
+                            return currentUsers.concat({__ref: `User:${user.id}`})
                         }
                     }
                 }
@@ -382,7 +382,7 @@ const removeUserFromChatRoom = async (course, chatRoomId, userToRemove, client) 
                     id: `ChatRoom:${chatRoomId}`,
                     fields: {
                         users(currentUsers){
-                            return currentUsers.filter((user) => user.id !== userToRemove.id)
+                            return currentUsers.filter((userRef) => userRef.__ref !== `User:${userToRemove.id}`)
                         }
                     }
                 }
