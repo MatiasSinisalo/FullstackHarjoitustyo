@@ -22,7 +22,6 @@ const createChatRoom = async (courseUniqueName, name, userForToken) => {
         users: [],
     }
     const chatRoomObj = new ChatRoom(chatRoom)
-    console.log(chatRoomObj)
     course.chatRooms.push(chatRoomObj)
     await course.save()
 
