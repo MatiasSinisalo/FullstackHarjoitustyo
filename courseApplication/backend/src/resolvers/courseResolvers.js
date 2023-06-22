@@ -197,7 +197,7 @@ const courseMutationResolvers = {
         const chatRoomId = args.chatRoomId
         const content = args.content
         const newMessage = await courseService.chatRooms.createMessage(courseUniqueName, chatRoomId, content, context.userForToken)
-        pubsub.publish('MESSAGE_CREATED', { messageCreated: newMessage, information: {courseUniqueName, chatRoomId} })
+        pubsub.publish('MESSAGE_CREATED', { messageCreated: {...newMessage, sendDate: newMessage.sendDate.getTime().toString()}, information: {courseUniqueName, chatRoomId} })
         return newMessage
     }
 }
