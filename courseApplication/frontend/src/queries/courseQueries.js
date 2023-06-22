@@ -337,7 +337,7 @@ mutation Mutation($courseUniqueName: String!, $chatRoomId: String!, $username: S
 }
 `
 
-export const SUBSRIBE_TO_MESSAGE_CREATED = gql`
+export const SUBSCRIBE_TO_MESSAGE_CREATED = gql`
 subscription Subscription($courseUniqueName: String!, $chatRoomId: String!) {
   messageCreated(courseUniqueName: $courseUniqueName, chatRoomId: $chatRoomId) {
     content

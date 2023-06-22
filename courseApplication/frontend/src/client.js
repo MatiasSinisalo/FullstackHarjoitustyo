@@ -37,15 +37,15 @@ const tokenHeader = setContext((_, { headers }) => {
     }
 })
 
-const splitLink = new split((query) => {
+const splitLink = new split(({query}) => {
     const def = getMainDefinition(query)
     return(
         def.kind === "OperationDefinition" &&
         def.operation === "subscription"
     )
-},
-wsLink,
-tokenHeader.concat(httpLink)
+    },
+    wsLink,
+    tokenHeader.concat(httpLink),
 )
 
 //backend returns tasks: null when making getAllCourses query, in case tasks are null replace them with empty array
