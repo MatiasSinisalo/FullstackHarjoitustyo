@@ -12,10 +12,12 @@ describe('messageCreated subscription tests', () => {
         
         const returnValue = result.next()
         console.log(returnValue)
-        returnValue.then((data) => {
-            console.log(data)
-        })
+       
         const message = await helpers.makeQuery({query: createMessage, variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom.id, content: "hello there"}})
-        
+        returnValue.then((data) => {
+            const msg = data.value.messageCreated
+            delete msg._id
+            expect(data.value.messageCreated).toEqual(message.data.createMessage)
+        }) 
     })
 })
