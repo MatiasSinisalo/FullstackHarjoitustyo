@@ -336,3 +336,18 @@ mutation Mutation($courseUniqueName: String!, $chatRoomId: String!, $username: S
   removeUserFromChatRoom(courseUniqueName: $courseUniqueName, chatRoomId: $chatRoomId, username: $username)
 }
 `
+
+export const SUBSRIBE_TO_MESSAGE_CREATED = gql`
+subscription Subscription($courseUniqueName: String!, $chatRoomId: String!) {
+  messageCreated(courseUniqueName: $courseUniqueName, chatRoomId: $chatRoomId) {
+    content
+    fromUser {
+      id
+      name
+      username
+    }
+    id
+    sendDate
+  }
+}
+`
