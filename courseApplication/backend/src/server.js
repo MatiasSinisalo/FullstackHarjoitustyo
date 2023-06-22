@@ -23,8 +23,23 @@ const startServer = async () => {
       })
 
     const schema =  makeExecutableSchema({ typeDefs, resolvers })
-    const serverCleanUp = useServer({schema, 
-        context: subscriptionContext
+    const serverCleanUp = useServer({
+        schema, 
+        context: subscriptionContext,
+        onConnect: async (ctx) => {
+            // Check authentication every time a client connects.
+            console.log("connected")
+            console.log(ctx)
+           
+            
+          },
+        onDisconnect(ctx, code, reason) {
+            console.log("disconnected")
+            console.log(ctx)
+            console.log(reason)
+         
+    
+          },
     }, wsServer)
 
     const apolloServer =  new ApolloServer({

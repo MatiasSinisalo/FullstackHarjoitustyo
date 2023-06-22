@@ -1,5 +1,6 @@
 import {
     ApolloClient,
+    ApolloLink,
     HttpLink,
     InMemoryCache,
     split,
@@ -18,14 +19,29 @@ const httpLink = new HttpLink({
     uri: backEndURI,
 })
 
-const wsLink = new GraphQLWsLink(createClient({
-    url: backEndWsURL
+const getWsLinkToken = () => {
+    const token = localStorage.getItem('courseApplicationUserToken')
+    if(token)
+    {
+        return {authorization: `bearer ${token}`}
+    }
+    else{
+        return  {authorization:null}
+    }
 }
-))
+
+const wsLink = new GraphQLWsLink(createClient({
+        url: backEndWsURL,
+        connectionParams: getWsLinkToken()
+    })
+)
 
 
 
-const tokenHeader = setContext((_, { headers }) => {
+const tokenHeader = setContext((a, b) => {
+    console.log(a)
+    console.log(b)
+    const headers = b.headers
     const token = localStorage.getItem('courseApplicationUserToken')
     if(token)
     {
@@ -43,7 +59,7 @@ const splitLink = new split(({query}) => {
         def.kind === "OperationDefinition" &&
         def.operation === "subscription"
     )
-    },
+    },   
     wsLink,
     tokenHeader.concat(httpLink),
 )

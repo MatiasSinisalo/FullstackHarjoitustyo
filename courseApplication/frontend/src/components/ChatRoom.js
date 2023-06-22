@@ -11,10 +11,11 @@ const ChatRoom = ({course, user}) => {
     const chatRoom = course.chatRooms.find((room) => room.id === chatRoomId)
     useSubscription(SUBSCRIBE_TO_MESSAGE_CREATED, {
         variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom?.id},
-        onData: ({msg}) => {
-            console.log(msg)
+        onData({data}){
+            console.log(data)
         }
     })
+  
     return (
         <>
         <h1>{chatRoom.name}</h1>
