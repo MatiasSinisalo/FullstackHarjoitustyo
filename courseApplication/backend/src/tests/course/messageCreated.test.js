@@ -1,4 +1,5 @@
 const { courseSubscriptionResolvers } = require("../../resolvers/courseResolvers")
+const { createMessage } = require("../courseTestQueries")
 const helpers = require('../testHelpers')
 
 describe('messageCreated subscription tests', () => {
@@ -11,6 +12,10 @@ describe('messageCreated subscription tests', () => {
         
         const returnValue = result.next()
         console.log(returnValue)
+        returnValue.then((data) => {
+            console.log(data)
+        })
+        const message = await helpers.makeQuery({query: createMessage, variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom.id, content: "hello there"}})
         
     })
 })
