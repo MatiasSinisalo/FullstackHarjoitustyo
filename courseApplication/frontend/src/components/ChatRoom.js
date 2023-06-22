@@ -13,19 +13,26 @@ const ChatRoom = ({course, user}) => {
     useSubscription(SUBSCRIBE_TO_MESSAGE_CREATED, {
         variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom?.id},
         onData({data}){
-            console.log(data)
+            
             const messageCreated = data.data.messageCreated
+           
+            //no need to update if its our own message
+            if(messageCreated.fromUser.username === user.username)
+            {
+                return
+            }
+
             //TODO: maybe sort messages to avoid wrong order?
             client.cache.modify(
             {
                 id: `ChatRoom:${chatRoom.id}`,
                 fields: {
                     messages(currentMessages){
-                        console.log(messageCreated)
-                        return currentMessages.concat(messageCreated)
+                        return currentMessages.concat({__ref: `Message:${messageCreated.id}`})
                     }
                 }
             })
+            
         }
     })
   
