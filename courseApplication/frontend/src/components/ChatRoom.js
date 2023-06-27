@@ -36,6 +36,10 @@ const ChatRoom = ({course, user}) => {
         }
     })
   
+    const removeRoom = () => {
+        console.log("removing room")
+    }
+    
     if(!chatRoom)
     {
         return(
@@ -48,6 +52,7 @@ const ChatRoom = ({course, user}) => {
         <>
         <h1>{chatRoom.name}</h1>
         <p> this is a chat room page </p>
+        {chatRoom.admin.username === user.username ? <button onClick={removeRoom}>remove chatRoom</button> : <></>}
         <Messages course={course} chatRoom={chatRoom}></Messages>
         <CreateMessage course={course} chatRoom={chatRoom}></CreateMessage>
         <ChatRoomUsers course={course} chatRoom={chatRoom} user={user}/>
