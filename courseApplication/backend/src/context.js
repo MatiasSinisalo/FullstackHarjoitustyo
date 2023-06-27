@@ -14,8 +14,6 @@ const normalContext = async ({ req }) => {
 }
 
 const subscriptionContext = async (ctx, msg, args) => {
-    console.log("---finding token----")
-    console.log(ctx)
     const auth = ctx?.connectionParams?.Authorization
     const context = await verifyUserFromToken(auth) 
     return context
