@@ -10,7 +10,7 @@ const infoPageService = require('./course/infoPageService')
 const chatRoomService = require('./course/chatRoomService')
 const chatRoom = require('../models/chatRoom')
 const getAllCourses = async (userForToken) => {
-    const courses = await Course.find({}, {tasks: 0}).populate(["teacher"]).populate("students", null, {username: userForToken.username})
+    const courses = await Course.find({}, {tasks: 0, chatRooms: 0}).populate(["teacher"]).populate("students", null, {username: userForToken.username})
     return courses
 }
 
