@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import Messages from "./Messages"
 import CreateMessage from "./CreateMessage"
 import AddUsersToChatRoom from "./AddUsersToChatRoom"
@@ -36,6 +36,14 @@ const ChatRoom = ({course, user}) => {
         }
     })
   
+    if(!chatRoom)
+    {
+        return(
+            <Link to={`/course/${course.uniqueName}`}>it seems this chatRoom does not exist, click here to go to course page</Link>
+        )
+        
+    }
+
     return (
         <>
         <h1>{chatRoom.name}</h1>
