@@ -282,7 +282,7 @@ const removeChatRoom = (course, chatRoom, client) => {
                 return promt === args.chatRoom.name
             },
             async (args) => {
-                return {error: {message: "not implemented yet"}}
+                return await courseService.removeChatRoom(args.course.uniqueName, args.chatRoom.id, args.client)
             }
         )
     }
