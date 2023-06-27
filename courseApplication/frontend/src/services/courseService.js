@@ -324,6 +324,8 @@ const removeChatRoom = async (courseUniqueName, chatRoomId, client) => {
         const result = await client.mutate({mutation: REMOVE_CHAT_ROOM, variables: {courseUniqueName, chatRoomId}})
         if(result.data.removeChatRoom)
         {
+            client.cache.evict({id: `ChatRoom:${chatRoomId}`})
+            client.cache.gc()
             return result.data.removeChatRoom
         }
     }
