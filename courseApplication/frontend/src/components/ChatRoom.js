@@ -5,11 +5,14 @@ import AddUsersToChatRoom from "./AddUsersToChatRoom"
 import ChatRoomUsers from "./ChatRoomUsers"
 import { useApolloClient, useSubscription } from "@apollo/client"
 import { SUBSCRIBE_TO_MESSAGE_CREATED } from "../queries/courseQueries"
+import { useDispatch } from "react-redux"
+import { removeChatRoom } from "../reducers/courseReducer"
 
 const ChatRoom = ({course, user}) => {
     const chatRoomId = useParams().chatRoomId
     const chatRoom = course.chatRooms.find((room) => room.id === chatRoomId)
     const client = useApolloClient()
+    const dispatch = useDispatch()
     useSubscription(SUBSCRIBE_TO_MESSAGE_CREATED, {
         variables: {courseUniqueName: course.uniqueName, chatRoomId: chatRoom?.id},
         onData({data}){
@@ -38,8 +41,9 @@ const ChatRoom = ({course, user}) => {
   
     const removeRoom = () => {
         console.log("removing room")
+        dispatch(removeChatRoom(course, chatRoom, client))
     }
-    
+
     if(!chatRoom)
     {
         return(

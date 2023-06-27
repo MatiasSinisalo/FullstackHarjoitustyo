@@ -270,6 +270,24 @@ const createChatRoom = (course, chatRoomName, client) => {
     }
 }
 
+const removeChatRoom = (course, chatRoom, client) => {
+    return async function(dispatch){
+        return await promterFunc(
+            {course, chatRoom, client},
+            dispatch,
+            "Successfully removed chatroom",
+            `type ${chatRoom.name} to confirm removal`,
+            "removal cancelled",
+            (promt, args) => {
+                return promt === args.chatRoom.name
+            },
+            async (args) => {
+                return {error: {message: "not implemented yet"}}
+            }
+        )
+    }
+}   
+
 const createMessage = (course, chatRoomId, content, client) => {
     return async function(dispatch)
     {
@@ -388,5 +406,6 @@ export {
     createMessage,
     addUserToChatRoom,
     removeUserFromChatRoom,
-    leaveChatRoom
+    leaveChatRoom,
+    removeChatRoom
 }
