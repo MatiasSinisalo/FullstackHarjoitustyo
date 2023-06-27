@@ -16,7 +16,7 @@ https://studastudy.onrender.com/
 - teacher of a course can grade an answer
 - user can remove a student from the users course
 - tasks have a deadline
-- teacher can create an chatroom to course and add/remove students in chatroom
+- teacher can create/remove chatroom on course and add/remove students in chatroom
 - user can send messages to chatroom
 ------------ 
 [Spent hours](https://docs.google.com/spreadsheets/d/1K9DqX2p2_PtSLL4t0_WbcCw9u_i5VYedNC6exk37Pj4/edit?usp=sharing)
