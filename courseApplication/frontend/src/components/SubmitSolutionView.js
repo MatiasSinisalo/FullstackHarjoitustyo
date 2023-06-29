@@ -14,10 +14,10 @@ const SubmitSolutionView = ({course, task}) => {
         await dispatch(addSubmissionToTask(course, task, content, apolloClient))
     }
     return (
-        <div>
+        <div className="container primary">
             <p>please answer below:</p>
             <form onSubmit={submitSolution}>
-                <input type="submit" value="create new solution"></input>
+                <input className="action-button" type="submit" value="create new solution"></input>
             </form>
         </div>
     )

@@ -5,7 +5,7 @@ import "./styles/course.css"
 
 const AnswersView = ({course, task}) => {
     return (
-        <div className="submissionsListing box">
+        <div className="container primary submissions-listing">
         <p>answers: </p>
         <table>
             <thead>

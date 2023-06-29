@@ -60,19 +60,19 @@ const Submission = ({course, task}) => {
             )
     }
     return(
-        <div className={`submission:${submission.id}`}>
-        {isLate(task, submission) ? <p className="lateMessage">this submission was returned late</p> : <></>}
-        {user.username === submission.fromUser.username ? 
-            <ContentEditView submitted={submission.submitted} submissionContent={submissionContent} editSubmission={editSubmission} returnSubmission={returnSubmission} onContentChange={updateSubmissionContent}></ContentEditView>
-             :
-             <textarea name="content" cols="100" rows="20" value={submissionContent} placeholder="this is an empty answer" readOnly></textarea> 
-        } 
-       
-        <p>submitted: {submission.submitted ? <>true</> : <>false</>}</p>
+        <div className={`submission:${submission.id} container primary`}>
+            {isLate(task, submission) ? <p className="lateMessage">this submission was returned late</p> : <></>}
+            {user.username === submission.fromUser.username ? 
+                <ContentEditView submitted={submission.submitted} submissionContent={submissionContent} editSubmission={editSubmission} returnSubmission={returnSubmission} onContentChange={updateSubmissionContent}></ContentEditView>
+                :
+                <textarea name="content" cols="100" rows="20" value={submissionContent} placeholder="this is an empty answer" readOnly></textarea> 
+            } 
         
-        <button onClick={removeSubmission}>remove</button>
-        {(submission.submitted  && user.username ===  course.teacher.username) ? <SubmissionGradeForm course={course} task={task} submission={submission}></SubmissionGradeForm> : <></>}
-        {submission?.grade ? <SubmissionGradeDisplay points={submission?.grade.points} date={submission?.grade.date} maxGrade={task?.maxGrade}></SubmissionGradeDisplay> : <></>}
+            <p>submitted: {submission.submitted ? <>true</> : <>false</>}</p>
+            
+            <button className="dangerous-button" onClick={removeSubmission}>remove</button>
+            {(submission.submitted  && user.username ===  course.teacher.username) ? <SubmissionGradeForm course={course} task={task} submission={submission}></SubmissionGradeForm> : <></>}
+            {submission?.grade ? <SubmissionGradeDisplay points={submission?.grade.points} date={submission?.grade.date} maxGrade={task?.maxGrade}></SubmissionGradeDisplay> : <></>}
         </div>
     )
 }
@@ -102,7 +102,7 @@ const SubmissionGradeForm = ({course, task, submission}) => {
         <p>this task can be graded: </p>
         <form onSubmit={submitGrade}>
             <input type="number" name="points"></input>
-            <input type="submit" value="submit grade"></input>
+            <input className="action-button" type="submit" value="submit grade"></input>
         </form>
         </>
     )
@@ -122,8 +122,8 @@ const ContentEditView = ({submitted, submissionContent, editSubmission, returnSu
         {
             !submitted?
             <>
-                <button onClick={editSubmission}>save</button>
-                <button onClick={returnSubmission}>return task</button>
+                <button className="action-button" onClick={editSubmission}>save</button>
+                <button className="action-button" onClick={returnSubmission}>return task</button>
             </>
             :
             <></>

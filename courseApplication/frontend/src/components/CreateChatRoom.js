@@ -11,11 +11,14 @@ const CreateChatRoom = ({course}) => {
         dispatch(createChatRoom(course, chatRoomName, client))
     }
     return (
+        <>
+        <h3>create new chatroom</h3>
         <form onSubmit={newChatRoom}>
+            <label htmlFor="charRoomName">chatroom name: </label>
             <input type="text" name="chatRoomName"></input>
-            <input type="submit" value="create new chat room"></input>
+            <input className="action-button" type="submit" value="create new chatroom"></input>
         </form>
-        
+        </>
     )
 }
 

@@ -15,11 +15,12 @@ const CreateInfoPage = ({course}) => {
     }
     return(
        <div>
-       <form onSubmit={createInfoPage}>
-        <label htmlFor="locationUrl">page location: </label>
-        <input type="text" name="locationUrl"></input>
-        <input type="submit" value="create new info page"></input>
-       </form>
+        <h3>create new info page</h3>
+        <form onSubmit={createInfoPage}>
+            <label htmlFor="locationUrl">page location: </label>
+            <input type="text" name="locationUrl"></input>
+            <input className="action-button" type="submit" value="create new info page"></input>
+        </form>
        </div>
       
     )

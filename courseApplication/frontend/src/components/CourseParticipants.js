@@ -24,14 +24,14 @@ const StudentListing = ({student, course}) => {
   return (
     <tr>
         <td>{student.username}</td>
-        <td><button onClick={() => removeStudent()}>remove from course</button></td>
+        <td><button className="dangerous-button" onClick={() => removeStudent()}>remove from course</button></td>
     </tr>
   )
 }
 
 const CourseParticipants = ({course}) => {
   return (
-    <div className="blueBox">
+    <div className="primary">
       <h3>participating students</h3>
       <table>
         <thead>

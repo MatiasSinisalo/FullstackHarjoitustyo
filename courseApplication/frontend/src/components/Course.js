@@ -48,40 +48,45 @@ const Course = () =>{
   const user = userQuery.data.me
   
   return(
-    <div className="course">
-    <h1>{course.uniqueName}</h1>
-    <h2>{course.name}</h2>
-    <p>single course page</p>
-    <div className="blueBox">
-      <p>course navigation</p>
-      {user.username === course.teacher.username ? <Link to="teacher">teachers view</Link> : <></>}
-      <br></br>
-      <Link to="tasks">tasks</Link>
+    <div className="course container background">
+      <div className="container secondary">
+        <h1>{course.uniqueName}</h1>
+        <h2>{course.name}</h2>
+      </div>
+      <div className="container secondary">
+        <div className="container primary course-navigation">
+          <h3>course navigation</h3>
+          {user.username === course.teacher.username ? <Link className="course-link" to="teacher">teachers view</Link> : <></>}
+          <Link className="course-link" to="tasks">tasks</Link>
+        </div>
+        
+       
 
-      <div className="blueBox infoPageListing">
-        <p>courses info pages</p>
-        {course.infoPages.map((page) => <Link key={page.locationUrl} to={`page/${page.locationUrl}`}>{page.locationUrl}</Link>)}
+        <div className="container primary info-page-listing">
+          <h3>courses info pages</h3>
+          {course.infoPages.map((page) => <Link className="course-link" key={page.locationUrl} to={`page/${page.locationUrl}`}>{page.locationUrl}</Link>)}
+        </div>
+
+        <div className="container primary chatroom-listing">
+            <h3>chatrooms: </h3>
+            {course.chatRooms.map((room) => <Link className="course-link" key={room.id} to={`chatRoom/${room.id}`}>{room.name}</Link>)}
+        </div>
       </div>
 
-      <div className="blueBox chatRoomListing">
-          {course.chatRooms.map((room) => <Link key={room.id} to={`chatRoom/${room.id}`}>{room.name}</Link>)}
-      </div>
-    </div>
-
-   
     
-    <Routes>
-      <Route path="teacher" element={<TeachersCourse course={course}/>}>
-          <Route path="participants" element={<CourseParticipants course={course}></CourseParticipants>}/>
-          <Route path="newTask" element={<TaskCreationForm course={course}></TaskCreationForm>}/>
-          <Route path="newInfoPage" element={<CreateInfoPage course={course}></CreateInfoPage>}/>
-          <Route path="newChatRoom" element={<CreateChatRoom course={course}></CreateChatRoom>}/>
-        </Route>
-      <Route path="tasks" element={<TaskListings course={course}></TaskListings>}/>
-      <Route path="task/:taskId/*" element={<Task course={course}/>}/>  
-      <Route path="page/:infoPageUrl" element={<InfoPage course={course} user={user}></InfoPage>}/>
-      <Route path="chatRoom/:chatRoomId/" element={<ChatRoom course={course} user={user}/>}/>  
-    </Routes>
+      
+      <Routes>
+        <Route path="teacher" element={<TeachersCourse course={course}/>}>
+            <Route path="participants" element={<CourseParticipants course={course}></CourseParticipants>}/>
+            <Route path="newTask" element={<TaskCreationForm course={course}></TaskCreationForm>}/>
+            <Route path="newInfoPage" element={<CreateInfoPage course={course}></CreateInfoPage>}/>
+            <Route path="newChatRoom" element={<CreateChatRoom course={course}></CreateChatRoom>}/>
+          </Route>
+        <Route path="tasks" element={<TaskListings course={course}></TaskListings>}/>
+        <Route path="task/:taskId/*" element={<Task course={course}/>}/>  
+        <Route path="page/:infoPageUrl" element={<InfoPage course={course} user={user}></InfoPage>}/>
+        <Route path="chatRoom/:chatRoomId/" element={<ChatRoom course={course} user={user}/>}/>  
+      </Routes>
     
     </div>
 

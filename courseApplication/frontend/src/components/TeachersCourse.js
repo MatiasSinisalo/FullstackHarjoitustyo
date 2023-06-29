@@ -34,7 +34,7 @@ export const TaskCreationForm = ({course}) => {
 }
 
   return (
-    <div className="blueBox">
+    <div className="primary">
       <h3>create a new task on the course</h3>
       <form onSubmit={createTaskOnThisCourse}>
         <p>description</p>
@@ -46,7 +46,7 @@ export const TaskCreationForm = ({course}) => {
         <p>max grade</p>
         <input type="number" name="taskMaxGrade"></input>
         <p></p>
-        <input type="submit" value="create task"></input>
+        <input className="action-button" type="submit" value="create task"></input>
       </form>
     </div>
   )
@@ -73,19 +73,22 @@ const TeachersCourse = ({course}) =>{
   }
 
   return(
-    <div className="course">
-    <h1>this is the teachers view</h1>
-    <h2><button className="removeCourseButton" onClick={removeThisCourse}>remove course</button></h2>
-    <div className="blueBox">
-      <Link to="participants">see course participants</Link>
-      <br></br>
-      <Link to="newTask">create new task</Link>
-      <br></br>
-      <Link to="newInfoPage">create new info page</Link>
-      <br></br>
-      <Link to="newChatRoom">create new chat room</Link>
+    <div className="container secondary course">
+    <h1>course actions</h1>
+    
+    <div className="container primary course-teacher-actions">
+      <button className="dangerous-button removeCourseButton" onClick={removeThisCourse}>remove course</button>
+      <Link className="course-link" to="participants">see course participants</Link>
+      
+      <Link className="course-link" to="newTask">create new task</Link>
+      
+      <Link className="course-link" to="newInfoPage">create new info page</Link>
+      
+      <Link className="course-link" to="newChatRoom">create new chat room</Link>
     </div>
-    <Outlet></Outlet>
+    <div className="container primary course-teacher-content">
+      <Outlet></Outlet>
+    </div>
     </div>
     
   )

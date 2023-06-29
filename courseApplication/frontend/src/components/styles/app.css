@@ -52,6 +52,7 @@ body{
     border-color: #030303;
     padding: 0.25rem;
     text-decoration: none;
+    margin-right: 1.0rem;
 }
 
 .dangerous-button{
@@ -61,9 +62,10 @@ body{
     border-width: 1px;
     border-color: #000000;
     padding: 0.25rem;
-    margin: 1rem;
+    margin-right: 1.0rem;
 }
 
 .container{
     padding: 1rem;
+    margin: 0.5rem;
 }

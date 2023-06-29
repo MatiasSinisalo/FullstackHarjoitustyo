@@ -46,17 +46,25 @@ const Task = ({course}) => {
     }
 
     return (
-        <div className={`task:${task.id} task`}>
-            <Link to={`/course/${course.uniqueName}/tasks`}>back to tasks</Link> 
-            <p>{task.description}</p>
-            <p>deadline: {deadline}</p>
-            {task?.maxGrade ? <p>max grade: {task?.maxGrade}</p> : <></>}
-            {user.username === course.teacher.username ? <button onClick={removeTask}>remove task</button> : <></>}
+        <div className={`task:${task.id} container secondary task`}>
+            <Link className="course-link" to={`/course/${course.uniqueName}/tasks`}>back to tasks</Link> 
+           
+            <div className="container primary task-information">
+                <p className="course-task-description">{task.description}</p>
+                <p className="course-task-deadline">deadline: {deadline}</p>
+                {task?.maxGrade ? <p className="course-task-grade">max grade: {task?.maxGrade}</p> : <></>}
+            </div>
             <SubmitSolutionView course={course} task={task}></SubmitSolutionView>
             <Routes>
                 <Route path="/" element={<AnswersView course={course} task={task}/>}/>
                 <Route path="submission/:submissionId" element={<Submission course={course} task={task}/>}/>
             </Routes>
+
+            <div className="task-other-actions container primary">
+            <h3>other actions: </h3>
+            {user.username === course.teacher.username ? <button className="dangerous-button" onClick={removeTask}>remove task</button> : <></>}
+            </div>
+            
         </div>
     )
 }

@@ -8,7 +8,7 @@ import { GET_COURSE } from "../queries/courseQueries"
 const TaskShowCase = ({course, task}) => {
   const deadline = new Date(parseInt(task.deadline)).toISOString().split('T')[0]
   return(
-    <div className={`task:${task.id} taskShowcase`}>
+    <div className={`task:${task.id} container primary task-showcase`}>
               <p>{task.description}</p>
               <p>deadline: {deadline}</p>
               <Link to={`/course/${course.uniqueName}/task/${task.id}`}>view</Link>
@@ -36,16 +36,17 @@ const TaskListings = ({course}) => {
   
   return(
     
-    <div className="taskListing blueBox">
+    <div className="container secondary">
     
     <h2>tasks of the course: </h2>
     
-    <label htmlFor="task-select">Show task: </label>
-    <select name="taskSelect" id="task-select" onChange={updateDisplay}>
-        <option value={displayModes.future}>future</option>
-        <option value={displayModes.past}>past</option>
-    </select> 
-    
+    <div className="container primary task-type-select">
+      <label htmlFor="task-select">Show task: </label>
+      <select name="taskSelect" id="task-select" onChange={updateDisplay}>
+          <option value={displayModes.future}>future</option>
+          <option value={displayModes.past}>past</option>
+      </select> 
+    </div>
     {
       displayMode == displayModes.future 
       ?
