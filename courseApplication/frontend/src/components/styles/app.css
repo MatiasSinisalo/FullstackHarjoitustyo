@@ -1,6 +1,9 @@
-#appContent{
-    margin-left: 20vw;
-    margin-right: 20vw;
+#app-content{
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .seperator-large{
@@ -25,23 +28,38 @@ body{
     background-color: #3C6255;
 }
 
-/*
-backround: color for objects not in focus, 
-secondary: color for objects that should grab attention but not the main point of the page
-primary: color for objects of interest where the user can do something, such as navigate, or type/read important information
-*/
+
 body{
-    background-color: #2f4940;
+    background-color: #ffffff;
 }
 
 .background{
-    background-color: #35574b;
+    background-color: #70a6f7;
 }    
 
 .secondary{
-    background-color: #567c64;
+    background-color: #d5e1fa;
 }
 
 .primary{
-    background-color: #a3bb85;
+    background-color: #ffffff;
+}
+
+.action-button{
+    background-color: #03fc03;
+    border: solid;
+    border-width: 1px;
+    border-color: #030303;
+    padding: 0.25rem;
+    text-decoration: none;
+}
+
+.dangerous-button{
+    background-color: #f56565;
+    color: white;
+    border: solid;
+    border-width: 1px;
+    border-color: #000000;
+    padding: 0.25rem;
+    margin: 1rem;
 }

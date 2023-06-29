@@ -7,10 +7,10 @@ const NavBar = ({logOut}) => {
     {
         return (
             <div className="navbar background">
-                <div className="navbar-content secondary">
-                    <button onClick={logOut}>Log Out</button>
-                    <Link className="navBarLink" to="/dashboard">dashboard</Link>
-                    <Link className="navBarLink" to="/CourseBrowser">Courses</Link>
+                <div className="navbar-content primary">
+                    <button className="action-button" onClick={logOut}>Log Out</button>
+                    <Link className="navbar-link" to="/dashboard">dashboard</Link>
+                    <Link className="navbar-link" to="/CourseBrowser">Courses</Link>
                 </div>
             </div>
         )
@@ -19,8 +19,8 @@ const NavBar = ({logOut}) => {
     {
         return (
             <div className="navbar background">
-                <div className="navbar-content secondary">
-                    <p>please log in <Link to="/">here</Link></p>
+                <div className="navbar-content primary">
+                    <Link to="/">please log in here</Link>
                 </div>
             </div>
         )

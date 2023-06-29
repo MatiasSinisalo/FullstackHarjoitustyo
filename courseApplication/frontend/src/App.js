@@ -73,8 +73,10 @@ const App = () =>{
   }
  
   return (
-    <div id="appContent">
-      <NavBar logOut={handleLogOut}></NavBar>
+    <>
+    <NavBar logOut={handleLogOut}></NavBar>
+    <div id="app-content">
+      
       <Notification></Notification>
       <Routes>
         <Route path="/" element={<LogIn handleLogIn={handleLogIn}/>}/>
@@ -89,6 +91,7 @@ const App = () =>{
       
       </Routes>
     </div>
+    </>
   );
 }
 

@@ -20,34 +20,40 @@ const Dashboard = () =>{
   const usersCourses = allCourses.filter((course) => courseHasStudent(course, user.username))
   const coursesWhereUserTeaches = allCourses.filter((course) => course.teacher.username === user.username)
     return(
-    <div className="dashBoard">
-      <h1>dashboard page</h1>
-      <h2>Hello {user.username}</h2>
     
-
-      <Link to="/CreateCourse">Create new Course</Link>
-      <div className="dashBoardCourses blueBox">
-        <h2>
-          Your courses
-        </h2>
-
-        {
-        usersCourses != undefined ? usersCourses.map((course) => <CourseShowCase key={course.uniqueName} course={course}></CourseShowCase>) : <></>
-        }
-    
-        <hr className="seperatorLarge"></hr>
-     
-        <h2>
-          Your courses where you are a teacher
-        </h2>
-
-        
-        {
-          coursesWhereUserTeaches != undefined ? coursesWhereUserTeaches.map((course) => <CourseShowCase key={course.uniqueName} course={course}></CourseShowCase>) : <></>
-        }
+    <div className="dashboard-courses background">
       
+      <div className="dashboard-greetings secondary">
+        <h1>Dashboard</h1>
+        <h2>Hello {user.username}</h2>
       </div>
+
+      
+      
+      <div className="dashboard-courses secondary">
+          
+          <h2>
+            Your courses
+          </h2>
+          
+
+          {
+          usersCourses != undefined ? usersCourses.map((course) => <CourseShowCase key={course.uniqueName} course={course}></CourseShowCase>) : <></>
+          }
+      
+          <h2>
+            Your courses where you are a teacher
+          </h2>
+          <div className="dashboard-create-course primary">
+              <Link className="action-button" to="/CreateCourse">Create new Course</Link>
+          </div>
+          {
+            coursesWhereUserTeaches != undefined ? coursesWhereUserTeaches.map((course) => <CourseShowCase key={course.uniqueName} course={course}></CourseShowCase>) : <></>
+          }
+        
+        </div>
     </div>
+    
     )
   }
   

@@ -30,18 +30,18 @@ const CourseShowCase = ({course}) => {
     }
 
     return (
-        <div className={`course:${course.id} courseShowCase`}>
+        <div className={`course:${course.id} course-showcase primary`}>
             <h2>{course.uniqueName}</h2>
             <h3>{course.name}</h3>
             {thisUserIsTeaching ? 
             
             <>
-                <button onClick={seeCourseAsTeacher}>See Teachers Course Page</button>
+                <button className="action-button" onClick={seeCourseAsTeacher}>See Teachers Course Page</button>
             </>
             :
                 <>
-                    {thisUserIsParticipating? <button onClick={seeCourse}>See Course Page</button> : <></>}
-                    {thisUserIsParticipating ?  <button onClick={leaveFromCourse}>Leave course</button> : <button onClick={joinToCourse}>Join</button>}
+                    {thisUserIsParticipating? <button className="action-button" onClick={seeCourse}>See Course Page</button> : <></>}
+                    {thisUserIsParticipating ?  <button className="dangerous-button" onClick={leaveFromCourse}>Leave course</button> : <button onClick={joinToCourse}>Join</button>}
                 </>
             }
         </div>
