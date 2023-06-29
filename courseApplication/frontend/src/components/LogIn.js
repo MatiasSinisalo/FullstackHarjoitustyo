@@ -10,19 +10,20 @@ const LogIn = ({handleLogIn}) =>{
 
 
     return(
-    <div className="loginSection blueBox">
-      <p>Log in page</p>
+    <div className="login-section secondary">
+      <div className="login-block primary">
+      <h1 className="login-header">Log in page</h1>
   
 
-      <form className="loginForm" onSubmit={submitLogInForm}>
-        <input placeholder="username" id="usernameInputField" type = "text" name = "username"></input>
+      <form className="login-form" onSubmit={submitLogInForm}>
+        <input className="important" placeholder="username" type = "text" name = "username"></input>
         <br></br>
-        <input placeholder="password" id="passwordInputField" type="password" name="password"></input>
+        <input  className="important" placeholder="password" type="password" name="password"></input>
         <br></br>
-        <input type = "submit" value="LogIn"></input>
+        <input className="important" type = "submit" value="LogIn"></input>
       </form>
-      <p className="createUserPromt">dont have an account? create one <Link to="/createAccount">here</Link></p>
-
+      <p className="create-user-promt">dont have an account? create one <Link to="/createAccount">here</Link></p>
+      </div>
     </div>
     )
   }

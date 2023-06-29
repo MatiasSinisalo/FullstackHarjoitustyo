@@ -20,3 +20,28 @@
 .notification{
     min-height: 1rem;
 }
+
+body{
+    background-color: #3C6255;
+}
+
+/*
+backround: color for objects not in focus, 
+secondary: color for objects that should grab attention but not the main point of the page
+primary: color for objects of interest where the user can do something, such as navigate, or type/read important information
+*/
+body{
+    background-color: #2f4940;
+}
+
+.background{
+    background-color: #35574b;
+}    
+
+.secondary{
+    background-color: #567c64;
+}
+
+.primary{
+    background-color: #a3bb85;
+}

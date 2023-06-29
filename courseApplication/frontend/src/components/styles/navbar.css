@@ -1,8 +1,13 @@
-.navBar{
-    background-color: lightblue;
-    padding: 10px;
+.navbar{
+  
+    padding: 1rem;
 }
 
-.navBarLink{
+.navbar-content{
+   
+    padding: 0.5rem;
+}
+
+.navbar-link{
     margin-left: 10px;
 }

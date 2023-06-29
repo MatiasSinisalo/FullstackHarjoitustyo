@@ -20,10 +20,10 @@ describe('LogIn Component tests', () => {
                 </Router>
             </ApolloProvider>
         )
-        const usernameField = containter.container.querySelector("#usernameInputField")
+        const usernameField = containter.container.querySelector('input[name="username"]')
         expect(usernameField).not.toBeNull()
         
-        const passwordField = containter.container.querySelector("#passwordInputField")
+        const passwordField = containter.container.querySelector('input[name="password"]')
         expect(passwordField).not.toBeNull()
     
         const formSubmitButton = screen.getByText("LogIn")

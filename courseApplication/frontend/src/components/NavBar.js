@@ -6,18 +6,22 @@ const NavBar = ({logOut}) => {
     if(user.username)
     {
         return (
-            <div className="navBar">
-                <button onClick={logOut}>Log Out</button>
-                <Link className="navBarLink" to="/dashboard">dashboard</Link>
-                <Link className="navBarLink" to="/CourseBrowser">Courses</Link>
+            <div className="navbar background">
+                <div className="navbar-content secondary">
+                    <button onClick={logOut}>Log Out</button>
+                    <Link className="navBarLink" to="/dashboard">dashboard</Link>
+                    <Link className="navBarLink" to="/CourseBrowser">Courses</Link>
+                </div>
             </div>
         )
     }
     else
     {
         return (
-            <div className="navBar">
-                <p>please log in <Link to="/">here</Link></p>
+            <div className="navbar background">
+                <div className="navbar-content secondary">
+                    <p>please log in <Link to="/">here</Link></p>
+                </div>
             </div>
         )
     }

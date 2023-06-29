@@ -1,20 +1,32 @@
 
+.login-header{
+    
+}
 
-.loginSection{
+
+
+.login-block{
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+}
+
+.login-section{
+    display: block;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: auto;
-    height: auto;
+    padding: 1rem;
 }
 
-.loginForm{
+.login-form{
     align-items: center;
     display: flex;
     flex-direction: column;
+    padding: 1rem;
 }
 
-.createUserPromt{
-
+.create-user-promt{
+    
 }
