@@ -17,10 +17,11 @@ const CourseBrowser = () =>{
    
     
     return(
-      <div className="background">
-        <h1>Course Browser page</h1>
-        <div className="secondary">
-        {courses.map((course) => <CourseShowCase key={course.uniqueName} course={course}></CourseShowCase>)}
+      <div className="container background">
+        
+        <div className="container secondary">
+          <h1>Course Browser page</h1>
+          {courses.map((course) => <CourseShowCase key={course.uniqueName} course={course}></CourseShowCase>)}
         </div>
       </div>
   

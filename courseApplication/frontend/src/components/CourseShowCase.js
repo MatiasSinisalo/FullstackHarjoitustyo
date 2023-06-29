@@ -30,7 +30,7 @@ const CourseShowCase = ({course}) => {
     }
 
     return (
-        <div className={`course:${course.id} course-showcase primary`}>
+        <div className={`course:${course.id} container primary course-showcase`}>
             <h2>{course.uniqueName}</h2>
             <h3>{course.name}</h3>
             {thisUserIsTeaching ? 
