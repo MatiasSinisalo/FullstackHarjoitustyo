@@ -24,13 +24,19 @@
     min-height: 1rem;
 }
 
-body{
-    background-color: #3C6255;
-}
 
 
 body{
     background-color: #ffffff;
+    background-image: url(../../images/cc0/StockSnap_SIHGH0ASFN.jpg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat; 
+    background-attachment: fixed;
+    width: 100vw;
+    height: 100vh;
+
+
 }
 
 .background{
