@@ -2,6 +2,7 @@
 .notification{
     position: absolute;
     top: 100%;
+    overflow: hidden;
 }
 
 .successNotification{
@@ -13,6 +14,9 @@
     border: solid;
     border-width: 1px;
     border-color: green;
+    animation-name: dropdown;
+    animation-duration: 0.1s;
+    animation-timing-function: linear;
 }
 
 .errorNotification{
@@ -24,4 +28,16 @@
     border: solid;
     border-width: 1px;
     border-color: red;
+    animation-name: dropdown;
+    animation-duration: 0.1s;
+    animation-timing-function: linear;
 }
+
+@keyframes dropdown {
+    0%   {height: 0px;}
+    10%  {height: 0.1rem;}
+    25%  {height: 0.25rem;}
+    50%  {height: 0.50rem;}
+    75%  {height: 0.75rem;}
+    100% {height: auto}
+  }
