@@ -56,24 +56,47 @@ body{
     background-color: #1d947c;
     color: white;
     border: solid;
-    border-width: 1px;
+    border-width: 2px;
     border-color: #030303;
     padding: 0.25rem;
     text-decoration: none;
     margin-right: 1.0rem;
+    box-shadow: 2px 2px #000000;
+}
+
+.action-button:active{
+    animation: clicked;
+    animation-duration: 100ms;
+    transform: translate(2px, 2px);
 }
 
 .dangerous-button{
     background-color: #ce6e5b;
     color: white;
     border: solid;
-    border-width: 1px;
+    border-width: 2px;
     border-color: #000000;
     padding: 0.25rem;
     margin-right: 1.0rem;
+    box-shadow: 2px 2px #000000;
+}
+
+.dangerous-button:active{
+    animation: clicked;
+    animation-duration: 100ms;
+    transform: translate(2px, 2px);
 }
 
 .container{
     padding: 1rem;
     margin: 0.5rem;
+}
+
+@keyframes clicked{
+    from{
+        box-shadow: 2px 2px #000000;
+    }
+    to{
+        box-shadow: 0px 0px #000000;
+    }
 }
