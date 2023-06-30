@@ -40,11 +40,11 @@ body{
 }
 
 .background{
-    background-color: #70a6f7;
+    background-color: #ebcfae;
 }    
 
 .secondary{
-    background-color: #d5e1fa;
+    background-color: #ececec;
 }
 
 .primary{
@@ -52,7 +52,8 @@ body{
 }
 
 .action-button{
-    background-color: #03fc03;
+    background-color: #1d947c;
+    color: white;
     border: solid;
     border-width: 1px;
     border-color: #030303;
@@ -62,7 +63,7 @@ body{
 }
 
 .dangerous-button{
-    background-color: #f56565;
+    background-color: #ce6e5b;
     color: white;
     border: solid;
     border-width: 1px;
