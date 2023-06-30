@@ -7,9 +7,9 @@ const Notification = () => {
     const notification = useSelector((state) => {return state.notification})
     console.log(notification)
     return(
-        <>
-            <p className={`primary notification ${notification.style}`}>{notification.message}</p>
-        </>
+        <div className="notification">
+            <p className={`primary ${notification.style}`}>{notification.message}</p>
+        </div>
     )
 }
 

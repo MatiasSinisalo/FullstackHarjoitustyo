@@ -1,9 +1,7 @@
 
 .notification{
-    height: 0px;
-    width: 0px;
-    margin: 0px;
-    padding: 0px;
+    position: absolute;
+    top: 100%;
 }
 
 .successNotification{
@@ -11,7 +9,10 @@
     height: auto;
     width: auto;
     margin: 1rem;
-    padding: 0.5rem;
+    padding: 1rem;
+    border: solid;
+    border-width: 1px;
+    border-color: green;
 }
 
 .errorNotification{
@@ -19,5 +20,8 @@
     height: auto;
     width: auto;
     margin: 1rem;
-    padding: 0.5rem;
+    padding: 1rem;
+    border: solid;
+    border-width: 1px;
+    border-color: red;
 }
