@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import "./styles/navbar.css"
+import Notification from "./Notification"
 const NavBar = ({logOut}) => {
     const user = useSelector((store) => {return store.user})
     if(user.username)
@@ -12,6 +13,7 @@ const NavBar = ({logOut}) => {
                     <Link className="navbar-link" to="/dashboard">dashboard</Link>
                     <Link className="navbar-link" to="/CourseBrowser">Courses</Link>
                 </div>
+                <Notification></Notification>
             </div>
         )
     }
@@ -22,6 +24,7 @@ const NavBar = ({logOut}) => {
                 <div className="navbar-content primary">
                     <Link to="/">please log in here</Link>
                 </div>
+                <Notification></Notification>
             </div>
         )
     }

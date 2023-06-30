@@ -77,7 +77,7 @@ const App = () =>{
     <NavBar logOut={handleLogOut}></NavBar>
     <div id="app-content">
       
-      <Notification></Notification>
+      
       <Routes>
         <Route path="/" element={<LogIn handleLogIn={handleLogIn}/>}/>
         <Route path="/createAccount" element={<CreateAccount></CreateAccount>}/>

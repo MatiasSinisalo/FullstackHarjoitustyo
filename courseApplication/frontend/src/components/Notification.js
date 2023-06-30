@@ -8,7 +8,7 @@ const Notification = () => {
     console.log(notification)
     return(
         <>
-            <p className={`notification ${notification.style}`}>{notification.message}</p>
+            <p className={`primary notification ${notification.style}`}>{notification.message}</p>
         </>
     )
 }

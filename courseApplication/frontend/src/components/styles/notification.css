@@ -1,9 +1,23 @@
 
+.notification{
+    height: 0px;
+    width: 0px;
+    margin: 0px;
+    padding: 0px;
+}
 
 .successNotification{
     color: green;
+    height: auto;
+    width: auto;
+    margin: 1rem;
+    padding: 0.5rem;
 }
 
 .errorNotification{
     color: red;
+    height: auto;
+    width: auto;
+    margin: 1rem;
+    padding: 0.5rem;
 }
