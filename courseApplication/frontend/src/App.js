@@ -45,6 +45,9 @@ const App = () =>{
           const userdata = await getUserData(client)
           dispatch(updateUser(userdata))
         }
+        else{
+          navigate("/")
+        }
     }
     prepApp()
   }, [])
