@@ -54,14 +54,15 @@ const ChatRoom = ({course, user}) => {
 
     return (
         <>
-        <h1>{chatRoom.name}</h1>
-        <p> this is a chat room page </p>
-        {chatRoom.admin.username === user.username ? <button onClick={removeRoom}>remove chatRoom</button> : <></>}
-        <Messages course={course} chatRoom={chatRoom}></Messages>
-        <CreateMessage course={course} chatRoom={chatRoom}></CreateMessage>
-        <ChatRoomUsers course={course} chatRoom={chatRoom} user={user}/>
-        {chatRoom.admin.username === user.username ? <AddUsersToChatRoom course={course} chatRoom={chatRoom}/> : <></>}
-        
+        <div className="container primary">
+            <h1>{chatRoom.name}</h1>
+            <p> this is a chat room page </p>
+            {chatRoom.admin.username === user.username ? <button onClick={removeRoom}>remove chatRoom</button> : <></>}
+            <Messages course={course} chatRoom={chatRoom}></Messages>
+            <CreateMessage course={course} chatRoom={chatRoom}></CreateMessage>
+            <ChatRoomUsers course={course} chatRoom={chatRoom} user={user}/>
+            {chatRoom.admin.username === user.username ? <AddUsersToChatRoom course={course} chatRoom={chatRoom}/> : <></>}
+        </div>
         </>
     )
 }

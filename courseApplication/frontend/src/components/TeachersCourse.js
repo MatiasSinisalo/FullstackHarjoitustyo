@@ -73,7 +73,7 @@ const TeachersCourse = ({course}) =>{
   }
 
   return(
-    <div className="container secondary course">
+    <div className="container  course">
     <h1>course actions</h1>
     
     <div className="container primary course-teacher-actions">

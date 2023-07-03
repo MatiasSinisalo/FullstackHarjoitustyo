@@ -25,8 +25,8 @@ const CreateAccount = () => {
     }
 
     return  (
-        <div className="accountCreationSection background">
-            <div className="container secondary">
+        <div className="accountCreationSection">
+            <div className="container ">
             <Link to="/">Back to Log In page</Link>
             <h1>Create a new account</h1>
             <form  className="accountCreationForm container primary" onSubmit={createNewAccount}>

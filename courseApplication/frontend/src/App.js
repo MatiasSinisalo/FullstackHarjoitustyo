@@ -75,7 +75,7 @@ const App = () =>{
   return (
     <>
     <NavBar logOut={handleLogOut}></NavBar>
-    <div id="app-content">
+    <div id="app-content" className="background">
       
       
       <Routes>

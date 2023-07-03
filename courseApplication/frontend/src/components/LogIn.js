@@ -10,8 +10,8 @@ const LogIn = ({handleLogIn}) =>{
 
 
     return(
-    <div className="login-section background">
-      <div className="login-block secondary">
+    <div className="login-section">
+      <div className="login-block ">
       <h1 className="login-header">Log in page</h1>
   
       <div className="container primary">

@@ -18,9 +18,9 @@ const CreateCourse = () =>{
     return(
     <>
     
-    <div className="container background">
+    <div className="container">
     
-    <div className="container secondary">
+    <div className="container ">
       <h1>Create course page</h1>
       <form className="app-form container primary" onSubmit={submitCreateCourseForm}>
           <input placeholder="Course unique name" type="text" name="courseUniqueName"></input>

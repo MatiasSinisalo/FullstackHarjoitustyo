@@ -49,11 +49,11 @@ const Course = () =>{
   
   return(
     <div className="course container background">
-      <div className="container secondary">
+      <div className="container ">
         <h1>{course.uniqueName}</h1>
         <h2>{course.name}</h2>
       </div>
-      <div className="container secondary">
+      <div className="container ">
         <div className="container primary course-navigation">
           <h3>course navigation</h3>
           {user.username === course.teacher.username ? <Link className="course-link" to="teacher">teachers view</Link> : <></>}

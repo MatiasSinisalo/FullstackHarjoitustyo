@@ -46,7 +46,7 @@ const Task = ({course}) => {
     }
 
     return (
-        <div className={`task:${task.id} container secondary task`}>
+        <div className={`task:${task.id} container  task`}>
             <Link className="course-link" to={`/course/${course.uniqueName}/tasks`}>back to tasks</Link> 
            
             <div className="container primary task-information">

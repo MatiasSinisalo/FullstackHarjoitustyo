@@ -41,12 +41,8 @@ body{
 }
 
 .background{
-    background-color: #ebcfae;
-}    
-
-.secondary{
     background-color: #ececec;
-}
+}    
 
 .primary{
     background-color: #ffffff;

@@ -21,16 +21,16 @@ const Dashboard = () =>{
   const coursesWhereUserTeaches = allCourses.filter((course) => course.teacher.username === user.username)
     return(
     
-    <div className="dashboard-courses background">
+    <div className="dashboard-courses">
       
-      <div className="dashboard-greetings secondary">
+      <div className="dashboard-greetings ">
         <h1>Dashboard</h1>
         <h2>Hello {user.username}</h2>
       </div>
 
       
       
-      <div className="dashboard-courses secondary">
+      <div className="dashboard-courses ">
           
           <h2>
             Your courses

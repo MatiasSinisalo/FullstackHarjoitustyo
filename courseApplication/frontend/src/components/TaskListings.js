@@ -36,7 +36,7 @@ const TaskListings = ({course}) => {
   
   return(
     
-    <div className="container secondary">
+    <div className="container ">
     
     <h2>tasks of the course: </h2>
     
