@@ -57,7 +57,7 @@ const ChatRoom = ({course, user}) => {
         <div className="container primary">
             <h1>{chatRoom.name}</h1>
             <p> this is a chat room page </p>
-            {chatRoom.admin.username === user.username ? <button onClick={removeRoom}>remove chatRoom</button> : <></>}
+            {chatRoom.admin.username === user.username ? <button className="dangerous-button" onClick={removeRoom}>remove chatRoom</button> : <></>}
             <Messages course={course} chatRoom={chatRoom}></Messages>
             <CreateMessage course={course} chatRoom={chatRoom}></CreateMessage>
             <ChatRoomUsers course={course} chatRoom={chatRoom} user={user}/>

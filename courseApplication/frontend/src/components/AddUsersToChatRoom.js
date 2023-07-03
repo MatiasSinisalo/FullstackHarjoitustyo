@@ -17,7 +17,7 @@ const AddUsersToChatRoom = ({course, chatRoom}) => {
     return (
        <form onSubmit={addUser}>
         <input type="text" name="username"></input>
-        <input type="submit" value="add user"></input>
+        <input className="action-button" type="submit" value="add user"></input>
 
        </form>
     )

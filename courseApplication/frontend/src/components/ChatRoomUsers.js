@@ -38,7 +38,7 @@ const ChatRoomUser = ({course, chatRoom, roomUser, user}) => {
     return(
         <tr>
             <th>{roomUser.username}</th>
-            {chatRoom.admin.username === user.username ? <th><button onClick={removeFromRoom}>remove</button></th> : <></>}
+            {chatRoom.admin.username === user.username ? <th><button className="dangerous-button" onClick={removeFromRoom}>remove</button></th> : <></>}
         </tr>
     )
 }

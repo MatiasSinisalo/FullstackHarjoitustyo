@@ -16,7 +16,7 @@ const CreateMessage = ({course, chatRoom}) => {
     return(
         <form onSubmit={newMessage}>
             <input type="test" name="content"></input>
-            <input type="submit" value="send"></input>
+            <input className="action-button" type="submit" value="send"></input>
         </form>
     )
 }
