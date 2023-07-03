@@ -58,13 +58,23 @@ const Task = ({course}) => {
                 <Route path="/" element={<SubmitSolutionView course={course} task={task} user={user}></SubmitSolutionView>}/>
                 <Route path="submission/:submissionId" element={<Submission course={course} task={task}/>}/>
             </Routes>
-            <AnswersView course={course} task={task}/>
-            <div className="task-other-actions container primary">
-            <h3>other actions: </h3>
-            {user.username === course.teacher.username ? <button className="dangerous-button" onClick={removeTask}>remove task</button> : <></>}
-            </div>
             
+            {user.username === course.teacher.username ? <TeacherTaskActions course={course} task={task} user={user} removeTask={removeTask}></TeacherTaskActions> : <></>}
         </div>
+    )
+}
+
+const TeacherTaskActions = ({course, task, user, removeTask}) => {
+    return(
+    <div className="task-teacher-actions container primary">
+        <h3>other actions: </h3>
+        
+        <h3>view answers: </h3>
+        <AnswersView course={course} task={task}/>
+
+        <h3>remove this task: </h3>
+        {user.username === course.teacher.username ? <button className="dangerous-button" onClick={removeTask}>remove task</button> : <></>}
+    </div>
     )
 }
 
