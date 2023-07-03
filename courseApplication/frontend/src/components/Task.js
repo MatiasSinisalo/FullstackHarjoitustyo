@@ -54,12 +54,11 @@ const Task = ({course}) => {
                 <p className="course-task-deadline">deadline: {deadline}</p>
                 {task?.maxGrade ? <p className="course-task-grade">max grade: {task?.maxGrade}</p> : <></>}
             </div>
-            <SubmitSolutionView course={course} task={task}></SubmitSolutionView>
             <Routes>
-                <Route path="/" element={<AnswersView course={course} task={task}/>}/>
+                <Route path="/" element={<SubmitSolutionView course={course} task={task} user={user}></SubmitSolutionView>}/>
                 <Route path="submission/:submissionId" element={<Submission course={course} task={task}/>}/>
             </Routes>
-
+            <AnswersView course={course} task={task}/>
             <div className="task-other-actions container primary">
             <h3>other actions: </h3>
             {user.username === course.teacher.username ? <button className="dangerous-button" onClick={removeTask}>remove task</button> : <></>}

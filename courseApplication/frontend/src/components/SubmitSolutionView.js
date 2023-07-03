@@ -6,10 +6,11 @@ import { addSubmissionToTask } from "../reducers/courseReducer"
 import { useNavigate } from "react-router-dom"
 
 
-const SubmitSolutionView = ({course, task}) => {
+const SubmitSolutionView = ({course, task, user}) => {
     const apolloClient = useApolloClient()
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const usersAnswer = task.submissions.find((sub) => sub.fromUser.username === user.username)
     const submitSolution = async (event) => {
         event.preventDefault()
         const content = ""
@@ -19,14 +20,24 @@ const SubmitSolutionView = ({course, task}) => {
             navigate(`submission/${submission.id}`)
         }
     }
-    return (
-        <div className="container primary">
-            <p>please answer below:</p>
-            <form onSubmit={submitSolution}>
-                <input className="action-button" type="submit" value="create new solution"></input>
-            </form>
-        </div>
-    )
+    if(!usersAnswer)
+    {
+        return (
+            <div className="container primary">
+                <p>please answer below:</p>
+                <form onSubmit={submitSolution}>
+                    <input className="action-button" type="submit" value="create new solution"></input>
+                </form>
+            </div>
+        )
+    }
+    else{
+        return(
+                <div className="container primary">
+                    <button className="action-button" onClick={() => navigate(`submission/${usersAnswer.id}`)}>view answer</button>
+                </div>
+        )
+    }
 }
 
 
