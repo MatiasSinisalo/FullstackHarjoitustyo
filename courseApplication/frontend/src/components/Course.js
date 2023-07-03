@@ -59,13 +59,7 @@ const Course = () =>{
           {user.username === course.teacher.username ? <Link className="course-link" to="teacher">teachers view</Link> : <></>}
           <Link className="course-link" to="tasks">tasks</Link>
           <Link className="course-link" to="chatRooms">chatRooms</Link>
-        </div>
-        
-       
-
-        <div className="container primary info-page-listing">
-          <h3>courses info pages</h3>
-          {course.infoPages.map((page) => <Link className="course-link" key={page.locationUrl} to={`page/${page.locationUrl}`}>{page.locationUrl}</Link>)}
+          <Link className="course-link" to="infoPages">info pages</Link>
         </div>
       </div>
 
@@ -79,6 +73,7 @@ const Course = () =>{
             <Route path="newChatRoom" element={<CreateChatRoom course={course}></CreateChatRoom>}/>
           </Route>
         <Route path="chatRooms" element={<ChatRoomsList course={course}></ChatRoomsList>}></Route>
+        <Route path="infoPages" element={<InfoPagesList course={course}></InfoPagesList>}></Route>
         <Route path="tasks" element={<TaskListings course={course}></TaskListings>}/>
         <Route path="task/:taskId/*" element={<Task course={course}/>}/>  
         <Route path="page/:infoPageUrl" element={<InfoPage course={course} user={user}></InfoPage>}/>
@@ -98,6 +93,15 @@ const ChatRoomsList = ({course}) => {
     <h3>chatrooms: </h3>
     {course.chatRooms.map((room) => <Link className="course-link" key={room.id} to={`chatRoom/${room.id}`}>{room.name}</Link>)}
   </div>
+  )
+}
+
+const InfoPagesList = ({course}) => {
+  return(
+    <div className="container primary info-page-listing">
+      <h3>courses info pages</h3>
+      {course.infoPages.map((page) => <Link className="course-link" key={page.locationUrl} to={`page/${page.locationUrl}`}>{page.locationUrl}</Link>)}
+    </div>
   )
 }
 
