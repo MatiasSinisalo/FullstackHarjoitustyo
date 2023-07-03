@@ -102,7 +102,7 @@ const InfoPagesList = ({course}) => {
   return(
     <div className="container primary info-page-listing">
       <h3>courses info pages</h3>
-      {course.infoPages.map((page) => <Link className="course-link" key={page.locationUrl} to={`page/${page.locationUrl}`}>{page.locationUrl}</Link>)}
+      {course.infoPages.map((page) => <Link className="course-link" key={page.locationUrl} to={`/course/${course.uniqueName}/page/${page.locationUrl}`}>{page.locationUrl}</Link>)}
     </div>
   )
 }
