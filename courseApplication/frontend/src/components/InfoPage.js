@@ -26,7 +26,7 @@ const InfoPage = ({course, user}) => {
         dispatch(removeInfoPageFromCourse(course, infoPage, client))
     }
     return (
-        <>
+        <div className="container primary">
         <h1>{infoPage.locationUrl}</h1>
         {course.teacher.username === user.username ? <button className="dangerous-button"  onClick={removePage}>remove page</button> : <></>}
         <br/>
@@ -37,7 +37,7 @@ const InfoPage = ({course, user}) => {
         <></>
         }
         
-        </>
+        </div>
     )
 } 
 
