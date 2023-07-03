@@ -88,11 +88,11 @@ const createNewCourse = (courseUniqueName, courseName, client) => {
         const createdSolutionQuery = await courseService.addSubmissionToCourseTask(course.uniqueName, task.id, content, false, client)
         if(!createdSolutionQuery.error){
             dispatch(Notify(`successfully answered to task`, "successNotification", 5))
-            return true
+            return createdSolutionQuery
         }
         else{
             dispatch(Notify(`${createdSolutionQuery.error.message}`, "errorNotification", 5))
-            return false
+            return null
         }
     }
 }

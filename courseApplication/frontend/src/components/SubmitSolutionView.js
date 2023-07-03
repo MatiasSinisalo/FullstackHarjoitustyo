@@ -3,15 +3,21 @@ import courseService from "../services/courseService"
 import { useDispatch } from "react-redux"
 import { Notify } from "../reducers/notificationReducer"
 import { addSubmissionToTask } from "../reducers/courseReducer"
+import { useNavigate } from "react-router-dom"
 
 
 const SubmitSolutionView = ({course, task}) => {
     const apolloClient = useApolloClient()
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const submitSolution = async (event) => {
         event.preventDefault()
         const content = ""
-        await dispatch(addSubmissionToTask(course, task, content, apolloClient))
+        const submission = await dispatch(addSubmissionToTask(course, task, content, apolloClient))
+        if(submission)
+        {
+            navigate(`submission/${submission.id}`)
+        }
     }
     return (
         <div className="container primary">
