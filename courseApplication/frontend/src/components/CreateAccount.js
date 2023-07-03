@@ -25,10 +25,11 @@ const CreateAccount = () => {
     }
 
     return  (
-        <div className="accountCreationSection blueBox">
+        <div className="accountCreationSection background">
+            <div className="container secondary">
             <Link to="/">Back to Log In page</Link>
             <h1>Create a new account</h1>
-            <form  className="accountCreationForm" onSubmit={createNewAccount}>
+            <form  className="accountCreationForm container primary" onSubmit={createNewAccount}>
                
                 <input placeholder="username" type="text" name="username"></input>
                 <br></br>
@@ -38,8 +39,9 @@ const CreateAccount = () => {
                
                 <input placeholder="password" type="password" name="password"></input>
                 <br></br>
-                <input type="submit" value="create new account"></input>
+                <input type="submit" className="action-button" value="create new account"></input>
             </form>
+            </div>
         </div>
     )
 }
