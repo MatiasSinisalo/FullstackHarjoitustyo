@@ -30,9 +30,9 @@ const ToggleEditButton = ({editing, setEditing}) => {
         <>
         {
             editing ? 
-            <button onClick={() => setEditing(false)}>cancel</button>
+            <button className="action-button" onClick={() => setEditing(false)}>cancel</button>
             :
-            <button onClick={() => setEditing(true)}>edit</button>
+            <button className="action-button" onClick={() => setEditing(true)}>edit</button>
         }
         </>
     )

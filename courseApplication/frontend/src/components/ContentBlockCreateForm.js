@@ -26,7 +26,7 @@ const ContentBlockCreateForm = ({blocks, course, infoPage}) => {
             
             <textarea type="textField" name="newBlockContent" value={content} onChange={whenChanged}></textarea>
             <br/>
-            <button type="button" onClick={createNewBlock}>new block</button>
+            <button className="action-button" type="button" onClick={createNewBlock}>new block</button>
           
         </>
     )

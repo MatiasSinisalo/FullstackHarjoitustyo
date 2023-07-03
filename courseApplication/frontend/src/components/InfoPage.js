@@ -28,7 +28,7 @@ const InfoPage = ({course, user}) => {
     return (
         <>
         <h1>{infoPage.locationUrl}</h1>
-        {course.teacher.username === user.username ? <button onClick={removePage}>remove page</button> : <></>}
+        {course.teacher.username === user.username ? <button className="dangerous-button"  onClick={removePage}>remove page</button> : <></>}
         <br/>
         {blocks.map((block) => <ContentBlock key={block.id} block={block} user={user} course={course} page={infoPage}></ContentBlock>)}
         {course.teacher.username === user.username ? 

@@ -39,8 +39,8 @@ const EditableBlock = ({course, page, block}) => {
 const EditButtons = ({deleteBlock, saveBlock}) => {
     return (
         <>
-            <button onClick={deleteBlock}>delete</button>
-            <button onClick={saveBlock}>save</button>
+            <button className="dangerous-button" onClick={deleteBlock}>delete</button>
+            <button className="action-button"    onClick={saveBlock}>save</button>
         </>
     )
 }
