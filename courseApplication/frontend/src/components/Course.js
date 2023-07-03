@@ -93,7 +93,7 @@ const ChatRoomsList = ({course}) => {
   return(
   <div className="container primary chatroom-listing">
     <h3>chatrooms: </h3>
-    {course.chatRooms.map((room) => <Link className="course-link" key={room.id} to={`chatRoom/${room.id}`}>{room.name}</Link>)}
+    {course.chatRooms.map((room) => <Link className="course-link" key={room.id} to={`/course/${course.uniqueName}/chatRoom/${room.id}`}>{room.name}</Link>)}
   </div>
   )
 }
