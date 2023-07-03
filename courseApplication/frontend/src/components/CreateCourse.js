@@ -17,17 +17,19 @@ const CreateCourse = () =>{
     }
     return(
     <>
-    <h1>Create course page</h1>
-    <div class="blueBox">
-   
-     <form onSubmit={submitCreateCourseForm}>
-      
-        <input placeholder="Course unique name" type="text" name="courseUniqueName"></input>
-        <br></br>
-        <input  placeholder="Course name" type="text" name="courseName"></input>
-        <br></br>
-        <input type="submit" value="submit"></input>
-     </form>
+    
+    <div className="container background">
+    
+    <div className="container secondary">
+      <h1>Create course page</h1>
+      <form className="app-form container primary" onSubmit={submitCreateCourseForm}>
+          <input placeholder="Course unique name" type="text" name="courseUniqueName"></input>
+          <br></br>
+          <input  placeholder="Course name" type="text" name="courseName"></input>
+          <br></br>
+          <input type="submit" value="submit"></input>
+      </form>
+     </div>
      </div>
      </>
    )
