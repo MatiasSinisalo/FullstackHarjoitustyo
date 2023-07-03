@@ -88,4 +88,12 @@
     border: solid 1px;
     padding-left: 1rem;
     margin: 0.5rem;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.course-messages-content{
+    position: sticky;
+    bottom: 2rem;
+    
 }
