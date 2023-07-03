@@ -82,3 +82,10 @@
     font-size: 1rem;
     justify-self: end;
 }
+
+.course-messages{
+    max-height: 50vh;
+    border: solid 1px;
+    padding-left: 1rem;
+    margin: 0.5rem;
+}

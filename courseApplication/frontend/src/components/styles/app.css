@@ -88,11 +88,17 @@ body{
     margin: 0.5rem;
 }
 
+.scrollable{
+    overflow: auto;
+}
+
 .app-form{
     display: flex;
     flex-direction: column;
     align-items: start;
 }
+
+
 
 @keyframes clicked{
     from{
