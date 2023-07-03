@@ -14,15 +14,16 @@ const LogIn = ({handleLogIn}) =>{
       <div className="login-block secondary">
       <h1 className="login-header">Log in page</h1>
   
-
-      <form className="login-form primary" onSubmit={submitLogInForm}>
-        <input className="important" placeholder="username" type = "text" name = "username"></input>
-        <br></br>
-        <input  className="important" placeholder="password" type="password" name="password"></input>
-        <br></br>
-        <input className="important action-button" type = "submit" value="LogIn"></input>
-      </form>
-      <p className="create-user-promt primary">dont have an account? create one <Link to="/createAccount">here</Link></p>
+      <div className="container primary">
+        <form className="login-form" onSubmit={submitLogInForm}>
+          <input className="important" placeholder="username" type = "text" name = "username"></input>
+          <br></br>
+          <input  className="important" placeholder="password" type="password" name="password"></input>
+          <br></br>
+          <input className="important action-button" type = "submit" value="LogIn"></input>
+        </form>
+        <p className="create-user-promt">dont have an account? create one <Link to="/createAccount">here</Link></p>
+      </div>
       </div>
     </div>
     )
