@@ -1,4 +1,8 @@
 
+.course{
+    min-height: 100vh;
+}
+
 .course-showcase{
     margin-top: 1.0rem;
     margin-bottom: 1.0rem;
