@@ -30,7 +30,7 @@ const SubmissionShowCase = ({course, task, submission}) => {
         <tr className={`submissionShowCase:${submission.id}`}>
             <td>{submission.fromUser.username}</td>
             <td>{submittedDate}</td>
-            <td><button onClick={() => {navigate(`submission/${submission.id}`)}}>view</button></td>
+            <td><button className="action-button" onClick={() => {navigate(`submission/${submission.id}`)}}>view</button></td>
         </tr>
     )
 }
