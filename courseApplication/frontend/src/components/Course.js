@@ -48,23 +48,14 @@ const Course = () =>{
   const user = userQuery.data.me
   
   return(
-    <div className="course container background">
-      <div className="container ">
-        <h1>{course.uniqueName}</h1>
-        <h2>{course.name}</h2>
+    <div className="course container">
+      <div className="container">
+        <h1>{course.name}</h1>
+        <h2>{course.uniqueName}</h2>
       </div>
-      <div className="container ">
-        <div className="container primary course-navigation">
-          <h3>course navigation</h3>
-          {user.username === course.teacher.username ? <Link className="course-link" to="teacher">teachers view</Link> : <></>}
-          <Link className="course-link" to="tasks">tasks</Link>
-          <Link className="course-link" to="chatRooms">chatRooms</Link>
-          <Link className="course-link" to="infoPages">info pages</Link>
-        </div>
-      </div>
+     
+      <CourseNavigation course={course} user={user}/>
 
-    
-      
       <Routes>
         <Route path="teacher" element={<TeachersCourse course={course}/>}>
             <Route path="participants" element={<CourseParticipants course={course}></CourseParticipants>}/>
@@ -85,7 +76,18 @@ const Course = () =>{
   )
   
 }
-  
+
+const CourseNavigation = ({course, user}) => {
+  return(
+    <div className="container primary course-navigation">
+        <h3>course navigation</h3>
+        {user.username === course.teacher.username ? <Link className="course-link" to="teacher">teachers view</Link> : <></>}
+        <Link className="course-link" to="tasks">tasks</Link>
+        <Link className="course-link" to="chatRooms">chatRooms</Link>
+        <Link className="course-link" to="infoPages">info pages</Link>
+      </div>
+  )
+}
 
 const ChatRoomsList = ({course}) => {
   return(
