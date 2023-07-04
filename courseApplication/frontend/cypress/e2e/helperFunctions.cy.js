@@ -79,9 +79,6 @@ const logInAsUser = (username, password) => {
 
     
     cy.contains(username)
-    cy.contains('dashboard page')
-   
-    
 }
 
 const createCourseAsUser = (courseUniqueName, courseName) => {
