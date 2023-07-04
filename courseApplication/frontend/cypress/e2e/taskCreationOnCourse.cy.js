@@ -51,9 +51,9 @@ describe('task creation on course tests', () => {
 
         })
         visitTaskView(newTask.description)
-        cy.contains(newTask.description).parent().as("task")
-        cy.get("@task").contains(`deadline: ${deadlineString}`)
-        cy.get("@task").contains(`create new solution`)
+        cy.contains(newTask.description)
+        cy.contains(`deadline: ${deadlineString}`)
+        cy.contains(`create new solution`)
 
     })
 
@@ -100,10 +100,10 @@ describe('task creation on course tests', () => {
 
         })
         visitTaskView(newTask.description)
-        cy.contains(newTask.description).parent().as("task")
-        cy.get("@task").contains(`deadline: ${deadlineString}`)
-        cy.get("@task").contains(`max grade: ${newTask.maxGrade}`)
-        cy.get("@task").contains(`create new solution`)
+        cy.contains(newTask.description)
+        cy.contains(`deadline: ${deadlineString}`)
+        cy.contains(`max grade: ${newTask.maxGrade}`)
+        cy.contains(`create new solution`)
 
     })
 
@@ -134,10 +134,10 @@ describe('task creation on course tests', () => {
         const taskShowCase = cy.contains(task.description).parent()
         taskShowCase.contains("view").click()
 
-        cy.contains(task.description).parent().as('taskComponent')
-        cy.get('@taskComponent').contains(task.description)
-        cy.get('@taskComponent').contains(task.deadline.toISOString().split('T')[0])
-        cy.get('@taskComponent').contains("create new solution")
+        cy.contains(task.description)
+        cy.contains(task.description)
+        cy.contains(task.deadline.toISOString().split('T')[0])
+        cy.contains("create new solution")
         
     })
 })
