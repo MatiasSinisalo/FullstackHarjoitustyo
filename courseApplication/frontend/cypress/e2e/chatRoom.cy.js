@@ -39,6 +39,7 @@ const visitChatRoom = (name, isTeacher=true) => {
     else{
         cy.contains("See Course Page").click()
     }
+    cy.contains("chatRooms").click()
     cy.get("a").contains(name).click()
 }
 
@@ -59,6 +60,9 @@ const sendMessage = (content) => {
     cy.get('input[name="content"]').type(content)
     cy.get('input[value="send"]').click()
 }
+
+
+
 describe('chatroom tests', () => {
     it('room can be created by teacher', function() {
         logInAsUser("username", "password1234")
@@ -73,8 +77,7 @@ describe('chatroom tests', () => {
             const variables = comms.request.body.variables
             expect(variables.courseUniqueName).to.equal("courseUniqueName")
         })
-
-        cy.get("a").contains("chatRoomName").click()
+        visitChatRoom("chatRoomName")
         cy.get("h1").contains("chatRoomName")
     })
     it('room can be removed by teacher', function() {
