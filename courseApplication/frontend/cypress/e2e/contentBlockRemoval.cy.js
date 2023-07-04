@@ -1,4 +1,4 @@
-import { prepareTests, endTests, logInAsUser, createCourseAsUser, joinCourseAsUser, createInfoPage, visitCoursePageAsStudentFromDashboard, createContentBlock } from "./helperFunctions.cy"
+import { visitInfoPage,  prepareTests, endTests, logInAsUser, createCourseAsUser, joinCourseAsUser, createInfoPage, visitCoursePageAsStudentFromDashboard, createContentBlock } from "./helperFunctions.cy"
 
 
 beforeEach(function () {
@@ -10,14 +10,17 @@ after(function (){
 })
 
 describe('content blocks removal tests', () => {
+    const pageUrl = "test-url"
     it('teacher can remove content block from info page view', () => {
         logInAsUser("username", "password1234")
         createCourseAsUser("courses-unique-name", "username")
         
         cy.contains("dashboard").click()
         cy.contains("See Teachers Course Page").click()
-        createInfoPage("test-url")
-        cy.contains("courses info pages").parent().contains("test-url").click()
+        
+        createInfoPage(pageUrl)
+        visitInfoPage(pageUrl)
+
         createContentBlock("this is a sample content block")
         cy.get('div[class*="contentBlock:"]').contains("edit").click()
         cy.intercept("POST", "http://localhost:4000/", (request) => {
@@ -40,15 +43,19 @@ describe('content blocks removal tests', () => {
         
         cy.contains("dashboard").click()
         cy.contains("See Teachers Course Page").click()
-        createInfoPage("test-url")
-        cy.contains("courses info pages").parent().contains("test-url").click()
+        
+        createInfoPage(pageUrl)
+        visitInfoPage(pageUrl)
+
         createContentBlock("this is a sample content block")
 
         cy.contains("Log Out").click()
         logInAsUser("second username", "password1234")
         joinCourseAsUser("courses-unique-name", "second username")
         visitCoursePageAsStudentFromDashboard("courses-unique-name")
-        cy.contains("courses info pages").parent().contains("test-url").click()
+        
+        visitInfoPage(pageUrl)
+
         cy.get('div[class*="contentBlock:"]').contains("edit").should('not.exist')
         cy.get('div[class*="contentBlock:"]').contains("delete").should('not.exist')
        
