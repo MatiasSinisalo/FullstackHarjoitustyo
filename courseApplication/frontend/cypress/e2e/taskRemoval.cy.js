@@ -47,6 +47,7 @@ describe('task removal tests', () => {
         cy.reload(true)
         logInAsUser("username", "password1234")
         cy.contains("See Teachers Course Page").click()
+        cy.contains("tasks").click()
         cy.get('[class*="Task:"]').should('not.exist');
         
     })
