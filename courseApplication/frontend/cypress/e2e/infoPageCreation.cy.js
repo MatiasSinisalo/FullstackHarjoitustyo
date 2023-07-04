@@ -1,4 +1,4 @@
-import { prepareTests, endTests, logInAsUser, createCourseAsUser, joinCourseAsUser, createInfoPage, visitCoursePageAsStudentFromDashboard } from "./helperFunctions.cy"
+import { visitInfoPage, prepareTests, endTests, logInAsUser, createCourseAsUser, joinCourseAsUser, createInfoPage, visitCoursePageAsStudentFromDashboard } from "./helperFunctions.cy"
 
 
 beforeEach(function () {
@@ -34,7 +34,7 @@ describe('Info page creation tests', () => {
             expect(createInfoPageArgs).to.eql(expectedArgs)
         })
        
-        cy.contains("courses info pages").parent().contains(pageurl).click()
+        visitInfoPage(pageurl)
         cy.get(`h1`).contains(pageurl)
     })
 
@@ -50,7 +50,7 @@ describe('Info page creation tests', () => {
         logInAsUser("second username", "password1234")
         joinCourseAsUser("courses-uniquename", "second username")
         visitCoursePageAsStudentFromDashboard("courses-uniquename")
-        cy.contains("courses info pages").parent().contains(pageurl).click()
+        visitInfoPage(pageurl)
         cy.get(`h1`).contains(pageurl)
     })
 })
