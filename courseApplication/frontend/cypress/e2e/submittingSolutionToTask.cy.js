@@ -1,5 +1,5 @@
 
-import { prepareTests, endTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser, joinCourseAsUser, visitCoursePageAsStudentFromDashboard, createSubmissionToATask, visitTaskView} from "./helperFunctions.cy";
+import { prepareTests, endTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser, joinCourseAsUser, visitCoursePageAsStudentFromDashboard, createSubmissionToATask, visitTaskView, visitSubmissionView} from "./helperFunctions.cy";
 
 beforeEach(function(){
     prepareTests()
@@ -43,8 +43,6 @@ describe('submitting a solution to a task test', () => {
         cy.contains(task.deadline.toISOString().split('T')[0])
         cy.contains("create new solution").click()
         
-        cy.get('[class*="submissionShowCase:"]').contains("view").click()
-
         const submissionContentField = cy.get('[class*="submission:"]').get('[name="content"]')
         const submissionSubmitButton = cy.get('[class*="submission:"]').contains('return task')
         submissionContentField.type("this is a solution to a task")
@@ -87,7 +85,7 @@ describe('submitting a solution to a task test', () => {
 
         visitTaskView(task.description)
         cy.contains("create new solution").click()
-        cy.get('[class*="submissionShowCase:"]').contains("view").click()
+        
         const submissionContentField = cy.get('[name="content"]')
         const submissionSubmitButton = cy.contains('return task')
         const submissionContent = "this is a second solution to a task"
