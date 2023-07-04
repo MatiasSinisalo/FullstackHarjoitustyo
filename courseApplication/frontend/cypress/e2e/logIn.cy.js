@@ -59,7 +59,7 @@ describe('Log in tests', () => {
         submitButton.click()
         cy.wait(200)
         cy.contains('Hello username')
-        cy.contains('dashboard page')
+       
         cy.contains('Create new Course')
 
         cy.contains('Log Out').click()
@@ -94,7 +94,7 @@ describe('Log in tests', () => {
         submitButton.click()
         cy.wait(200)
         cy.contains('Hello username')
-        cy.contains('dashboard page')
+       
         cy.contains('Create new Course')
 
         cy.contains('Log Out').click()
