@@ -1,4 +1,4 @@
-import { prepareTests, endTests, logInAsUser, createCourseAsUser, joinCourseAsUser, createTaskOnCourseAsUser, createSubmissionToATask, visitCoursePageAsStudentFromDashboard, tomorrow, visitTaskView } from "./helperFunctions.cy"
+import { visitSubmissionView, prepareTests, endTests, logInAsUser, createCourseAsUser, joinCourseAsUser, createTaskOnCourseAsUser, createSubmissionToATask, visitCoursePageAsStudentFromDashboard, tomorrow, visitTaskView } from "./helperFunctions.cy"
 
 
 beforeEach(function () {
@@ -64,7 +64,7 @@ describe('submission removal tests teacher', () => {
         logInAsUser("username", "password1234")
         cy.contains("See Teachers Course Page").click()
         visitTaskView("this is a task")
-        cy.get('[class*="submissionsListing"').contains("view").click()
+        visitSubmissionView("second username")
         
         cy.get(`[class*="submission:"]`).contains("remove").click()
         cy.get(`[class*="submission:"]`).should("not.exist")
