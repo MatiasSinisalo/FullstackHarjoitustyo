@@ -10,6 +10,11 @@ after(function (){
 })
 
 
+const visitInfoPage = (pageurl) => {
+    cy.contains("info pages").click()
+    cy.contains(pageurl).click()
+}
+
 describe('Content block creation tests', () => {
     it('user can create an content block on info page', () => {
         logInAsUser("username", "password1234")
@@ -18,7 +23,7 @@ describe('Content block creation tests', () => {
         cy.contains("See Teachers Course Page").click()
         const pageurl = "this-is-a-test"
         createInfoPage(pageurl)
-        cy.contains("courses info pages").parent().contains(pageurl).click()
+        visitInfoPage(pageurl)
         cy.get(`h1`).contains(pageurl)
 
         cy.get(`textarea[name="newBlockContent"]`).type("this is a new block")
@@ -45,7 +50,7 @@ describe('Content block creation tests', () => {
         cy.contains("See Teachers Course Page").click()
         const pageurl = "this-is-a-test"
         createInfoPage(pageurl)
-        cy.contains("courses info pages").parent().contains(pageurl).click()
+        visitInfoPage(pageurl)
         cy.get(`h1`).contains(pageurl)
         const content = "this is a content block"
         createContentBlock(content)
@@ -54,7 +59,7 @@ describe('Content block creation tests', () => {
         logInAsUser("second username", "password1234")
         joinCourseAsUser("courses-uniquename", "second username")
         visitCoursePageAsStudentFromDashboard("courses-uniquename")
-        cy.contains("courses info pages").parent().contains(pageurl).click()
+        visitInfoPage(pageurl)
         cy.get(`h1`).contains(pageurl)
         cy.get('p').contains(content)
     })
