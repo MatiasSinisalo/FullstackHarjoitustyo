@@ -8,6 +8,11 @@ after(function(){
     endTests()
 })
 
+const visitSubmissionView = (fromUsername) => {
+    const row = cy.get('[class*="submissions-listing"]').contains(fromUsername).parent()
+    row.contains("view").click()
+}
+
 describe('grading a submission tests', () => {
     it('teacher can grade an returned submission created by a student', () => {
         logInAsUser("username", "password1234")
@@ -32,7 +37,8 @@ describe('grading a submission tests', () => {
         
         cy.contains("See Teachers Course Page").click()
         visitTaskView(task.description)
-        cy.get('[class*="submissionsListing"]').contains("view").click()
+        
+        visitSubmissionView("second username")
 
         cy.get(`input[name="points"]`).type("1")
 
@@ -78,7 +84,7 @@ describe('grading a submission tests', () => {
         
         cy.contains("See Teachers Course Page").click()
         visitTaskView(task.description)
-        cy.get('[class*="submissionsListing"]').contains("view").click()
+        visitSubmissionView("second username")
         
         cy.get(`input[name="points"]`).type("5")
         cy.get('input[value="submit grade"]').click()
