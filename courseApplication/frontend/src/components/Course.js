@@ -83,7 +83,7 @@ const CourseNavigation = ({course, user}) => {
         <h3>course navigation</h3>
         {user.username === course.teacher.username ? <Link className="course-link" to="teacher">teachers view</Link> : <></>}
         <Link className="course-link" to="tasks">tasks</Link>
-        <Link className="course-link" to="chatRooms">chatRooms</Link>
+        <Link className="course-link" to="chatRooms">chatrooms</Link>
         <Link className="course-link" to="infoPages">info pages</Link>
       </div>
   )

@@ -39,7 +39,7 @@ const visitChatRoom = (name, isTeacher=true) => {
     else{
         cy.contains("See Course Page").click()
     }
-    cy.contains("chatRooms").click()
+    cy.contains("chatrooms").click()
     cy.get("a").contains(name).click()
 }
 
