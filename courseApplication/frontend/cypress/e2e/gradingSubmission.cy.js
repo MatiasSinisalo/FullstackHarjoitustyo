@@ -1,4 +1,4 @@
-import { prepareTests, endTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser, joinCourseAsUser, visitCoursePageAsStudentFromDashboard, createSubmissionToATask, visitTaskView, tomorrow} from "./helperFunctions.cy";
+import { visitSubmissionView, prepareTests, endTests, logInAsUser, createCourseAsUser, createTaskOnCourseAsUser, joinCourseAsUser, visitCoursePageAsStudentFromDashboard, createSubmissionToATask, visitTaskView, tomorrow} from "./helperFunctions.cy";
 
 beforeEach(function(){
     prepareTests()
@@ -8,10 +8,7 @@ after(function(){
     endTests()
 })
 
-const visitSubmissionView = (fromUsername) => {
-    const row = cy.get('[class*="submissions-listing"]').contains(fromUsername).parent()
-    row.contains("view").click()
-}
+
 
 describe('grading a submission tests', () => {
     it('teacher can grade an returned submission created by a student', () => {

@@ -203,6 +203,11 @@ const visitInfoPage = (pageurl) => {
     cy.contains(pageurl).click()
 }
 
+const visitSubmissionView = (fromUsername) => {
+    const row = cy.get('[class*="submissions-listing"]').contains(fromUsername).parent()
+    row.contains("view").click()
+}
+
 export {prepareTests, 
     logInAsUser, 
     createCourseAsUser, 
@@ -215,5 +220,6 @@ export {prepareTests,
     visitTaskView,
     createInfoPage,
     createContentBlock,
-    visitInfoPage
+    visitInfoPage,
+    visitSubmissionView
 }
