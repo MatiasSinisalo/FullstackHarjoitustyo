@@ -136,13 +136,10 @@ describe('submitting a solution to a task test', () => {
         
         visitTaskView(task.description)
        
-
-        cy.contains(task.description).parent().as('taskComponent')
-        cy.get('@taskComponent').contains(task.description)
-        cy.get('@taskComponent').contains(task.deadline.toISOString().split('T')[0])
-        cy.get('@taskComponent').contains("create new solution").click()
+        cy.contains(task.description)
+        cy.contains(task.deadline.toISOString().split('T')[0])
+        cy.contains("create new solution").click()
        
-        cy.get('[class*="submissionShowCase:"]').contains("view").click()
         const submissionContentField = cy.get('[class*="submission:"]').get('[name="content"]')
         const submissionSubmitButton = cy.get('[class*="submission:"]').contains('save')
         submissionContentField.type("this is a solution to a task")
