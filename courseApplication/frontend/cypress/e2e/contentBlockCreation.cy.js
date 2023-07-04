@@ -1,4 +1,4 @@
-import { prepareTests, endTests, logInAsUser, createCourseAsUser, joinCourseAsUser, createInfoPage, visitCoursePageAsStudentFromDashboard, createContentBlock } from "./helperFunctions.cy"
+import { visitInfoPage, prepareTests, endTests, logInAsUser, createCourseAsUser, joinCourseAsUser, createInfoPage, visitCoursePageAsStudentFromDashboard, createContentBlock } from "./helperFunctions.cy"
 
 
 beforeEach(function () {
@@ -10,10 +10,7 @@ after(function (){
 })
 
 
-const visitInfoPage = (pageurl) => {
-    cy.contains("info pages").click()
-    cy.contains(pageurl).click()
-}
+
 
 describe('Content block creation tests', () => {
     it('user can create an content block on info page', () => {

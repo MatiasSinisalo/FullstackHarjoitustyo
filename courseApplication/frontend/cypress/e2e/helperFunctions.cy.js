@@ -197,6 +197,12 @@ const createContentBlock = (content) => {
     cy.get(`textarea[name="newBlockContent"]`).type(content)
     cy.get(`button`).contains("new block").click()
 }
+
+const visitInfoPage = (pageurl) => {
+    cy.contains("info pages").click()
+    cy.contains(pageurl).click()
+}
+
 export {prepareTests, 
     logInAsUser, 
     createCourseAsUser, 
@@ -208,5 +214,6 @@ export {prepareTests,
     tomorrow, 
     visitTaskView,
     createInfoPage,
-    createContentBlock
+    createContentBlock,
+    visitInfoPage
 }
