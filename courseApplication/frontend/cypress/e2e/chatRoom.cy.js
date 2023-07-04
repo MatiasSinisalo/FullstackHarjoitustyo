@@ -11,14 +11,14 @@ after(function(){
 const visitCreateChatRoom = () => {
     cy.contains("dashboard").click()
     cy.contains("See Teachers Course Page").click()
-    cy.contains("create new chat room").click()
+    cy.contains("create new chatroom").click()
 }
 
 const createChatRoom = (name) => {
     visitCreateChatRoom()
 
     cy.get('input[name="chatRoomName"]').type(name)
-    cy.get('input[value="create new chat room"]').click()
+    cy.get('input[value="create new chatroom"]').click()
 }
 
 const catchRequestAs = (requestQueryContains) => {
@@ -68,7 +68,7 @@ describe('chatroom tests', () => {
 
         catchRequestAs("CreateChatRoom")
         cy.get('input[name="chatRoomName"]').type("chatRoomName")
-        cy.get('input[value="create new chat room"]').click()
+        cy.get('input[value="create new chatroom"]').click()
         cy.wait("@CreateChatRoom").then((comms) => {
             const variables = comms.request.body.variables
             expect(variables.courseUniqueName).to.equal("courseUniqueName")
