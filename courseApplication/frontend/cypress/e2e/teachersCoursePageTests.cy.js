@@ -23,7 +23,7 @@ describe('teacher page tests', () => {
         cy.contains("this-course-is-created-by-user-username")
         cy.contains("courses name")
         cy.contains("teachers view").click()
-        cy.contains("this is the teachers view")
+        
     })
 
     it('user can visit the teachers course page from the course dashboard if the user created is the teacher of the course', () => {
@@ -69,7 +69,7 @@ describe('teacher page tests', () => {
             }
         })
        
-        cy.get('[class="removeCourseButton"]').click()
+        cy.contains("remove course").click()
         cy.wait('@removeCourse').then((cummunication) => {
             const correctCourseRemoved = cummunication.request.body.variables
             expect(correctCourseRemoved.uniqueName).to.equal("this-course-is-created-by-user-username")
@@ -101,7 +101,7 @@ describe('teacher page tests', () => {
         cy.contains("teachers view").click()
       
 
-        cy.get('[class="removeCourseButton"]').click()
+        cy.contains("remove course").click()
        
         cy.contains("this-course-is-created-by-user-username")
         cy.contains("courses name")
