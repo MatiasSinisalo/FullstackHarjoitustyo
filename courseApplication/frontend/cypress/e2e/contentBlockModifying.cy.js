@@ -1,4 +1,4 @@
-import { prepareTests, endTests, logInAsUser, createCourseAsUser, joinCourseAsUser, createInfoPage, visitCoursePageAsStudentFromDashboard, createContentBlock } from "./helperFunctions.cy"
+import { visitInfoPage, prepareTests, endTests, logInAsUser, createCourseAsUser, joinCourseAsUser, createInfoPage, visitCoursePageAsStudentFromDashboard, createContentBlock } from "./helperFunctions.cy"
 
 
 beforeEach(function () {
@@ -10,14 +10,16 @@ after(function (){
 })
 
 describe('content blocks removal tests', () => {
+    const pageUrl = "test-url"
     it('teacher can edit content block from info page view', () => {
         logInAsUser("username", "password1234")
         createCourseAsUser("courses-unique-name", "username")
         
         cy.contains("dashboard").click()
         cy.contains("See Teachers Course Page").click()
-        createInfoPage("test-url")
-        cy.contains("courses info pages").parent().contains("test-url").click()
+      
+        createInfoPage(pageUrl)
+        visitInfoPage(pageUrl)
         const originalContent = "this is a sample content block"
         createContentBlock(originalContent)
         cy.get('div[class*="contentBlock:"]').contains("edit").click()
