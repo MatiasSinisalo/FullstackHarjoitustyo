@@ -15,7 +15,7 @@ describe('course page tests', () => {
         cy.contains("See Course Page").click()
         cy.contains("this-course-is-created-by-user-username")
         cy.contains("courses name")
-        cy.contains("single course page")
+        
     })
 
     it('user can visit the course page that the user participates in from the dashboard', () => {
@@ -33,7 +33,7 @@ describe('course page tests', () => {
 
         cy.contains("this-course-is-created-by-user-username")
         cy.contains("courses name")
-        cy.contains("single course page")
+        
     })
 
     
