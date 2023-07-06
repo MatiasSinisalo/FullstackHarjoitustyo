@@ -14,7 +14,19 @@ const userSchema = new mongoose.Schema({
     passwordHash: {
         type: String,
         required: true
-    }
+    },
+    teachesCourses: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'courseApplicationCourse'
+        }]
+    },
+    attendsCourses: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'courseApplicationCourse'
+        }]
+    },
 })
 
 
