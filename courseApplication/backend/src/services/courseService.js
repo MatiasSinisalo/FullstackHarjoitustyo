@@ -134,6 +134,11 @@ const removeStudentFromCourse = async (studentUsername, courseUniqueName, userFo
     
     const newStudentList = course.students.filter((studentId) => studentId.toString() !== studentUser.id)
     const updatedCourse = await Course.findByIdAndUpdate(course.id, {students: newStudentList}, {new: true}).populate(['teacher', 'students'])
+
+    const filteredCourses = studentUser.attendsCourses.filter((ref) => ref.toString() !== course.id)
+    studentUser.attendsCourses = filteredCourses
+    await studentUser.save()
+
     return updatedCourse
 }
 

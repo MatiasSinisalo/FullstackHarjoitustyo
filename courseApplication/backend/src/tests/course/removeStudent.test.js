@@ -44,6 +44,33 @@ describe('removeStudentFromCourse query tests', () => {
         expect(course.teacher.name).toBe("name")
     })
 
+    test('removeStudentFromCourse updates the students attendsCourse list', async () => {
+        await helpers.logIn("username")
+        const createdCourse = await helpers.makeQuery({query: createCourse, variables: {uniqueName: "course-owned-by-username", name: "common name", teacher: "username"}})
+        const courseWithAddedStudent = await helpers.makeQuery({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "course-owned-by-username"}})
+       
+        const courseAfterRemoval = await helpers.makeQuery({query: removeStudentFromCourse, variables: {username: "students username", courseUniqueName: "course-owned-by-username"}})
+        expect(courseAfterRemoval.data.removeStudentFromCourse).toEqual(
+            {
+                uniqueName: "course-owned-by-username", 
+                name: "common name", 
+                teacher: {
+                    username: "username",
+                    name: "name"
+                },
+                students: []
+            }
+        )
+
+        const teacher = await User.findOne({username: "username"})
+        expect(teacher.teachesCourses.length).toBe(1)
+        expect(teacher.attendsCourses.length).toBe(0)
+
+        const student = await User.findOne({username: "students username"})
+        expect(student.teachesCourses.length).toBe(0)
+        expect(student.attendsCourses.length).toBe(0)
+    })
+
     test('removeStudentFromCourse query allows student to remove themselves from the course', async () => {
         await helpers.logIn("username")
         const createdCourse = await helpers.makeQuery({query: createCourse, variables: {uniqueName: "course-owned-by-username", name: "common name", teacher: "username"}})
