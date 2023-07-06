@@ -41,7 +41,7 @@ const CourseShowCase = ({course}) => {
             :
                 <>
                     {thisUserIsParticipating? <button className="action-button" onClick={seeCourse}>See Course Page</button> : <></>}
-                    {thisUserIsParticipating ?  <button className="dangerous-button" onClick={leaveFromCourse}>Leave course</button> : <button onClick={joinToCourse}>Join</button>}
+                    {thisUserIsParticipating ?  <button className="dangerous-button" onClick={leaveFromCourse}>Leave course</button> : <button className="action-button" onClick={joinToCourse}>Join</button>}
                 </>
             }
         </div>
