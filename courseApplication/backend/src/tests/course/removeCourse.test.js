@@ -12,7 +12,11 @@ const helpers = require('../testHelpers')
 const config = require('../../config')
 
 
-
+beforeEach(async () => {
+    await User.deleteMany({})
+    await helpers.makeQuery({query: userCreateQuery, variables: {}})
+    await helpers.makeQuery({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
+})
 
 
 describe('removeCourse tests', () => {
@@ -67,6 +71,30 @@ describe('removeCourse tests', () => {
         expect(tasksInDB.length).toBe(0)
     })
 
+    test('removeCourse removes reference to it from teachers teachesCourses ref array', async ()=>{
+        const user = await helpers.logIn("username")
+
+        const courseToBeRemoved = {
+            uniqueName:  "course-to-be-removed",
+            name: "common name"
+        }
+
+        const courseThatShouldNotBeRemoved = {
+            uniqueName:  "course-that-should-not-be-removed",
+            name: "common name"
+        }
+        const courseToRemove = await helpers.makeQuery({query: createCourse, variables: {uniqueName: courseToBeRemoved.uniqueName, name: courseToBeRemoved.name, teacher: ""}})
+        
+        const courseRemoveQuery = await helpers.makeQuery({query: removeCourse, variables: {uniqueName: courseToBeRemoved.uniqueName}})
+        expect(courseRemoveQuery.data.removeCourse).toBe(true)
+
+        const coursesInDB = await Course.find({})
+        expect(coursesInDB.length).toBe(0)
+
+        const userInDB = await User.findOne({username: "username"})
+        expect(userInDB.teachesCourses.length).toBe(0)
+
+    })
     test('removeCourse query returns Unauthorized if user that is not a teacher tries to remove the course', async () => {
         await helpers.logIn("username")
 

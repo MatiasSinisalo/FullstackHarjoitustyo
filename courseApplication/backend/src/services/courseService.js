@@ -69,10 +69,17 @@ const createCourse = async (uniqueName, name, teacherUsername) => {
 
 const removeCourse = async(courseUniqueName, userForToken)=>{
     const courseToRemove = await serviceUtils.fetchCourse(courseUniqueName)
-
+    
+    
     serviceUtils.checkIsTeacher(courseToRemove, userForToken)
+    const user = await serviceUtils.fetchUser(userForToken.username)
     try{
         const removedCourse = await Course.findByIdAndDelete(courseToRemove.id)
+        
+        const filteredCourses = user.teachesCourses.filter((ref) => ref.toString() !== removedCourse.id)
+        user.teachesCourses = filteredCourses
+        await user.save()
+       
         return true
     }
     catch(error)
