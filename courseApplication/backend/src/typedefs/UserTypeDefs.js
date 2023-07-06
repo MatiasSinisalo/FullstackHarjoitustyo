@@ -4,6 +4,8 @@ type User{
     id: ID!
     username: String!
     name: String!
+    teachesCourses: [Course!]
+    attendsCourses: [Course!]
 }
 
 type Token{
