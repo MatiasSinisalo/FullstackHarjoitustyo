@@ -108,7 +108,10 @@ const addStudentToCourse = async (studentUsername, courseUniqueName, userForToke
     
     const newStudentList = course.students.concat(studentUser.id)
     const updatedCourse = await Course.findByIdAndUpdate(course.id, {students: newStudentList}, {new: true}).populate(['teacher', 'students', 'tasks'])
-  
+   
+    studentUser.attendsCourses.push(course.id)
+    await studentUser.save()
+
     return updatedCourse
     
     

@@ -46,6 +46,21 @@ describe('Course add student tests', () => {
 
     })
 
+
+    test('addStudentToCourse query adds reference to attendedCourses correctly', async () => {
+        await helpers.logIn("username")
+        const createdCourse = await helpers.makeQuery({query: createCourse, variables: {uniqueName: "course-owned-by-username", name: "common name", teacher: "username"}})
+        const courseWithAddedStudent = await helpers.makeQuery({query: addStudentToCourse, variables: {addStudentToCourseUsername: "students username", courseUniqueName: "course-owned-by-username"}})
+        
+        const teacher = await User.findOne({username: "username"})
+        expect(teacher.teachesCourses.length).toBe(1)
+        expect(teacher.attendsCourses.length).toBe(0)
+
+        const student = await User.findOne({username: "students username"})
+        expect(student.teachesCourses.length).toBe(0)
+        expect(student.attendsCourses.length).toBe(1)
+    })
+
     test('addStudentToCourse query returns error given username not found if trying to add a student that does not exist, and does not modifyi database', async () => {
         await helpers.logIn("username")
         

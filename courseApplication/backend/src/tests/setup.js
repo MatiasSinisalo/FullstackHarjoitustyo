@@ -9,12 +9,7 @@ const { userCreateQuery, createSpesificUserQuery } = require('./userTestQueries'
 let server = null
 beforeAll(async () => {
     server = await startServer()
-    
     await mongoose.connect(config.MONGODB_URI)
-    await Course.deleteMany({})
-    await User.deleteMany({})
-    await helpers.makeQuery({query: userCreateQuery, variables: {}})
-    await helpers.makeQuery({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
 })
 
 afterAll(async () => {
@@ -28,6 +23,11 @@ afterAll(async () => {
 beforeEach(async () => {
     await Course.deleteMany({})
     await Task.deleteMany({})
+
+    await User.deleteMany({})
+    await helpers.makeQuery({query: userCreateQuery, variables: {}})
+    await helpers.makeQuery({query: createSpesificUserQuery, variables:{username: "students username", name: "students name", password: "12345"}})
+    
     helpers.logOut()
 })
 
