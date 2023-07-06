@@ -1,6 +1,6 @@
 
 const User = require('./models/user')
-const Course = require('./models/course')
+const {Course} = require('./models/course')
 const config = require('./config')
 const userResolvers = require('./resolvers/userResolvers')
 const courseResolvers = require('./resolvers/courseResolvers')

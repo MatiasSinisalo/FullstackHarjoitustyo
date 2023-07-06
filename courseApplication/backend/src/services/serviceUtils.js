@@ -2,7 +2,7 @@ const { default: mongoose } = require('mongoose')
 const { Task, Submission, Grade } = require('../models/task')
 const { UserInputError } = require('apollo-server-core')
 const User = require('../models/user')
-const Course = require('../models/course')
+const {Course} = require('../models/course')
 
 
 const fetchCourse = async (courseUniqueName, populateCommand) => {

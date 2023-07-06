@@ -8,7 +8,7 @@ const mongoose = require('mongoose')
 const {Task} = require('../models/task')
 const config = require('../config')
 const helpers = require('./testHelpers')
-const Course = require('../models/course')
+const {Course} = require('../models/course')
 
 beforeEach(async () => {
     await User.deleteMany({})

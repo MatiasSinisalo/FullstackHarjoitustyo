@@ -1,5 +1,5 @@
 const request = require('supertest')
-const Course = require('../../models/course')
+const {Course} = require('../../models/course')
 const User = require('../../models/user')
 const {Task} = require('../../models/task')
 const { userCreateQuery, userLogInQuery, createSpesificUserQuery } = require('../userTestQueries')

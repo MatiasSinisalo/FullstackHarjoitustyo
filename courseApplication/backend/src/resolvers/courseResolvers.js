@@ -1,6 +1,6 @@
 const { UserInputError } = require('apollo-server-core')
 const courseService = require('../services/courseService')
-const Course = require('../models/course')
+const {Course} = require('../models/course')
 const { mustHaveToken } = require('./resolverUtils')
 const  {pubsub} = require('../publisher')
 const { withFilter } = require('graphql-subscriptions')

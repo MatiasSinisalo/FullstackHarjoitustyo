@@ -1,6 +1,6 @@
 const { addStudentToCourse, addUserToChatRoom, removeUserFromChatRoom } = require('../courseTestQueries')
 const helpers = require('../testHelpers')
-const Course = require('../../models/course')
+const {Course} = require('../../models/course')
 
 const checkNothingChanged = async (expectedUserCount=1) => {
     const coursesInDB = await Course.find({})

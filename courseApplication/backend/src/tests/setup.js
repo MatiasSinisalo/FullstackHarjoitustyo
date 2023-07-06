@@ -1,6 +1,6 @@
 const {startServer} = require('../server')
 const mongoose = require('mongoose')
-const Course = require('../models/course')
+const {Course} = require('../models/course')
 const User = require('../models/user')
 const {Task} = require('../models/task')
 const helpers = require('./testHelpers')

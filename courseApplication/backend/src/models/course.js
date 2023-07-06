@@ -36,5 +36,5 @@ const courseSchema = new mongoose.Schema({
     chatRooms: [chatRoomSchema]
 })
 
-module.exports = mongoose.model('courseApplicationCourse', courseSchema)
+module.exports = {Course: mongoose.model('courseApplicationCourse', courseSchema), courseSchema}
 

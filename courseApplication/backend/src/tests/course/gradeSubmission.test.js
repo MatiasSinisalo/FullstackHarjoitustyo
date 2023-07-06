@@ -1,13 +1,12 @@
 
 const request = require('supertest')
-const Course = require('../../models/course')
+const {Course} = require('../../models/course')
 const User = require('../../models/user')
 const {Task} = require('../../models/task')
 const { userCreateQuery, userLogInQuery, createSpesificUserQuery } = require('../userTestQueries')
 const { createCourse, addTaskToCourse, addStudentToCourse, gradeSubmission} = require('../courseTestQueries')
 const { query } = require('express')
 const mongoose = require('mongoose')
-const course = require('../../models/course')
 const helpers = require('../testHelpers')
 const config = require('../../config')
 
