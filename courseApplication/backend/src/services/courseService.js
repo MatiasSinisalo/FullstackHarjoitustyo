@@ -74,10 +74,19 @@ const removeCourse = async(courseUniqueName, userForToken)=>{
     serviceUtils.checkIsTeacher(courseToRemove, userForToken)
     const user = await serviceUtils.fetchUser(userForToken.username)
     try{
+       
+
         const removedCourse = await Course.findByIdAndDelete(courseToRemove.id)
         
         const filteredCourses = user.teachesCourses.filter((ref) => ref.toString() !== removedCourse.id)
         user.teachesCourses = filteredCourses
+
+        //remove reference to the removed course from all of the students attendsCourses ref lists
+        courseToRemove.students.forEach(async (student) => {
+            const result = await User.findByIdAndUpdate(student, {$pull: {attendsCourses: {$in: courseToRemove.id}}}, {new: true})
+            console.log(result)
+        })
+
         await user.save()
        
         return true
