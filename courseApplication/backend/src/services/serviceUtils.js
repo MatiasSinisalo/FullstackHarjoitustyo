@@ -15,8 +15,10 @@ const fetchCourse = async (courseUniqueName, populateCommand) => {
     return course;
 }
 
-const fetchUser = async (username) => {
-    const user = await User.findOne({username: username})
+const fetchUser = async (username, populateCommand) => {
+    const user = populateCommand ? 
+                    await User.findOne({username: username}).populate(populateCommand): 
+                    await User.findOne({username: username})
     if(!user)
     {
         throw new UserInputError("Given username not found")
