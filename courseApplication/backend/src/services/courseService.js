@@ -35,7 +35,7 @@ const getCourse = async(courseUniqueName, userForToken) => {
 }
 
 const createCourse = async (uniqueName, name, teacherUsername) => {
-    const teacherUser = await serviceUtils.fetchUser(teacherUsername)
+    const teacherUser = await serviceUtils.fetchUser(teacherUsername, "teachesCourses")
 
     const teacherID = teacherUser.id
     
@@ -50,6 +50,8 @@ const createCourse = async (uniqueName, name, teacherUsername) => {
         const courseModel = new Course(course)
         const savedCourse = await courseModel.save()
         const returnCourse = {...savedCourse._doc, teacher: {username: teacherUser.username, name: teacherUser.name}, id: savedCourse._id.toString()}
+        teacherUser.teachesCourses.push(savedCourse.id)
+        await teacherUser.save()
         return  returnCourse
     }
     catch(error)

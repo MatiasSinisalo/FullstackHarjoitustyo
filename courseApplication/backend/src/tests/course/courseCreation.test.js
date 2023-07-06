@@ -61,6 +61,35 @@ describe('course creation tests', () => {
         expect(savedCourse.students).toEqual(correctReturnValue.students)
         expect(savedCourse.infoPages).toEqual(correctReturnValue.infoPages)
     })
+    test('createCourse query saves course reference to user correctly', async () => {
+        const user = await helpers.logIn("username", "12345")
+        const createdCourse = await helpers.makeQuery({query: createCourse, variables: {uniqueName: "uniqueName", name: "common name", teacher: "username"}})
+        
+        const correctReturnValue = {
+            uniqueName: 'uniqueName',
+            name: 'common name',
+            teacher: {
+                username: 'username',
+                name: 'name'
+            },
+            students: [],
+            infoPages: []
+        }
+
+      
+        const savedCourses = await Course.find({}).populate('teacher')
+        expect(savedCourses.length).toBe(1)
+        const savedCourse = savedCourses[0]
+
+
+        const savedUsers = await User.find({username: "username"}).populate(['teachesCourses', 'attendsCourses'])
+        expect(savedUsers.length).toBe(1)
+        const userInDB = savedUsers[0] 
+        expect(userInDB.attendsCourses.length).toBe(0)
+        expect(userInDB.teachesCourses.length).toBe(1)
+        expect(userInDB.teachesCourses[0].id).toEqual(savedCourse.id)
+        
+    })
     test('createCourse query returns error if authentication is not done and doesnt save anything to database', async () => {
         const createdCourse = await helpers.makeQuery({query: createCourse, variables: {uniqueName: "uniqueName", name: "common name", teacher: "does not exist"}})
         expect(createdCourse.data.createCourse).toEqual(null)
