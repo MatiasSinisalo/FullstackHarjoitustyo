@@ -5,7 +5,6 @@ import notificationReducer from "./reducers/notificationReducer";
 
 const store = configureStore({
     reducer: {
-        user: userReducer,
         notification: notificationReducer
     }
 })
