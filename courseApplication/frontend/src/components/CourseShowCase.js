@@ -4,10 +4,9 @@ import { useNavigate } from "react-router-dom"
 import { addStudentToCourse, removeStudentFromCourse } from "../reducers/courseReducer"
 import './styles/course.css'
 
-const CourseShowCase = ({course}) => {
-    const currentUser = useSelector((store) => store.user)
-    const thisUserIsParticipating = course.students.find((student) => student.username === currentUser.username)
-    const thisUserIsTeaching = course.teacher.username == currentUser.username
+const CourseShowCase = ({course, currentUser}) => {
+    const thisUserIsParticipating = currentUser.attendsCourses.find((other) => other.id == course.id)
+    const thisUserIsTeaching = currentUser.teachesCourses.find((other) => other.id == course.id)
     const client = useApolloClient()
     const dispatch = useDispatch()
     const navigate = useNavigate()

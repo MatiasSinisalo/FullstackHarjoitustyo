@@ -10,15 +10,14 @@ const Dashboard = () =>{
   const userQuery = useQuery(ME)//useSelector((store) => {return store.user})
   const client = useApolloClient()
   
-  const allCoursesQuery = useQuery(GET_ALL_COURSES)
-  if(allCoursesQuery.loading || userQuery.loading)
+  if(userQuery.loading)
   {
     return (<p>loading...</p>)
   }
+
   const user = userQuery.data.me
-  const allCourses = allCoursesQuery.data.allCourses
-  const usersCourses = allCourses.filter((course) => courseHasStudent(course, user.username))
-  const coursesWhereUserTeaches = allCourses.filter((course) => course.teacher.username === user.username)
+  const usersCourses = user.attendsCourses
+  const coursesWhereUserTeaches = user.teachesCourses
     return(
     
     <div className="dashboard-courses">
@@ -38,7 +37,7 @@ const Dashboard = () =>{
           
 
           {
-          usersCourses != undefined ? usersCourses.map((course) => <CourseShowCase key={course.uniqueName} course={course}></CourseShowCase>) : <></>
+          usersCourses != undefined ? usersCourses.map((course) => <CourseShowCase currentUser={user} key={course.uniqueName} course={course}></CourseShowCase>) : <></>
           }
       
           <h2>
@@ -48,7 +47,7 @@ const Dashboard = () =>{
               <Link className="action-button" to="/CreateCourse">Create new Course</Link>
           </div>
           {
-            coursesWhereUserTeaches != undefined ? coursesWhereUserTeaches.map((course) => <CourseShowCase key={course.uniqueName} course={course}></CourseShowCase>) : <></>
+            coursesWhereUserTeaches != undefined ? coursesWhereUserTeaches.map((course) => <CourseShowCase currentUser={user} key={course.uniqueName} course={course}></CourseShowCase>) : <></>
           }
         
         </div>
