@@ -1,7 +1,10 @@
 import {
   BrowserRouter as Router,
   Routes, Route, Link,
-  useParams
+  useParams,
+  useMatches,
+  useMatch,
+  useLocation
 } from "react-router-dom"
 import { useEffect, useState } from "react";
 import Calendar from "./components/Calendar";
@@ -38,7 +41,15 @@ const App = () =>{
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const userQuery = useQuery(ME)
-  
+
+  useEffect(() => {
+    const token = localStorage.getItem("courseApplicationUserToken")
+    if(!token)
+    {
+      navigate("/")
+    }
+  }, [userQuery])
+
   const handleLogIn = async (username, password) => {
     const userInfo = await LogInAsUser(username, password, client)
     console.log(userInfo)
@@ -67,11 +78,8 @@ const App = () =>{
     <p>loading...</p>
     )
   }
-  const user = userQuery?.data?.me
-  if(!user){
-    navigate("/")
-  }
 
+  const user = userQuery?.data?.me
   return (
     <>
     <NavBar user={user} logOut={handleLogOut}></NavBar>
@@ -87,7 +95,7 @@ const App = () =>{
         <Route path="/CourseBrowser" element={<CourseBrowser/>}/>
         <Route path="/CreateCourse" element={<CreateCourse/>}/>
         <Route path="/course/:uniqueName/*" element={<Course/>}>
-        </Route>
+      </Route>
       
       </Routes>
     </div>
