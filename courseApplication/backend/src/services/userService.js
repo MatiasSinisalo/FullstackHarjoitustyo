@@ -30,7 +30,7 @@ const createNewUser = async (username, name, password) => {
 }
 
 const getUser = async (userId) => {
-    const user = await User.findById(userId)
+    const user = await User.findById(userId).populate(["teachesCourses", "attendsCourses"])
     return user
 }
 
