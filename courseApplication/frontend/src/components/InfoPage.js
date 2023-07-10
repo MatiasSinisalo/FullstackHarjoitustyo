@@ -22,8 +22,8 @@ const InfoPage = ({course, user}) => {
         )
     }
 
-    const removePage = () => {
-        dispatch(removeInfoPageFromCourse(course, infoPage, client))
+    const removePage = async () => {
+       await removeInfoPageFromCourse(course, infoPage, client)
     }
     return (
         <div className="container primary">

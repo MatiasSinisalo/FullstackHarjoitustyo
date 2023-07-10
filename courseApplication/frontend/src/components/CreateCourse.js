@@ -12,7 +12,7 @@ const CreateCourse = () =>{
         console.log("creating a new course")
         const courseUniqueName = event.target.courseUniqueName.value
         const courseName = event.target.courseName.value
-        await dispatch(createNewCourse(courseUniqueName, courseName, client))
+        await createNewCourse(courseUniqueName, courseName, client)
      
     }
     return(

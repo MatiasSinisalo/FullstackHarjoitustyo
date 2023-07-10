@@ -7,8 +7,8 @@ const ChatRoomUsers = ({course, chatRoom, user}) => {
     const client = useApolloClient()
     console.log(user.id)
     const canLeaveRoom = chatRoom.users.find((otherUser) => otherUser.username === user.username) ? true : false
-    const leaveRoom = () => {
-        dispatch(leaveChatRoom(course, chatRoom.id, user, client))
+    const leaveRoom = async () => {
+        await leaveChatRoom(course, chatRoom.id, user, client)
     }
     return(
         <>
@@ -32,8 +32,8 @@ const ChatRoomUsers = ({course, chatRoom, user}) => {
 const ChatRoomUser = ({course, chatRoom, roomUser, user}) => {
     const dispatch = useDispatch()
     const client = useApolloClient()
-    const removeFromRoom = () => {
-        dispatch(removeUserFromChatRoom(course, chatRoom.id, roomUser, client))
+    const removeFromRoom = async () => {
+       await removeUserFromChatRoom(course, chatRoom.id, roomUser, client)
     }
     return(
         <tr>

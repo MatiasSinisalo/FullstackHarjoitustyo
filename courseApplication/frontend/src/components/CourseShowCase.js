@@ -10,14 +10,14 @@ const CourseShowCase = ({course, currentUser}) => {
     const client = useApolloClient()
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const joinToCourse = () => {
+    const joinToCourse = async () => {
         console.log(`Joining course ${course.uniqueName}`)
-        dispatch(addStudentToCourse(course.uniqueName, currentUser.username, client))
+        await addStudentToCourse(course.uniqueName, currentUser.username, client)
     }
     
 
-    const leaveFromCourse = () => {
-        dispatch(removeStudentFromCourse(course.uniqueName, currentUser.username, client))
+    const leaveFromCourse = async () => {
+        await removeStudentFromCourse(course.uniqueName, currentUser.username, client)
     }
 
     const seeCourse = () => {

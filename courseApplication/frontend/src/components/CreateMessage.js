@@ -6,11 +6,11 @@ import { createMessage } from "../reducers/courseReducer"
 const CreateMessage = ({course, chatRoom}) => {
     const dispatch = useDispatch()
     const client = useApolloClient()
-    const newMessage = (event) => {
+    const newMessage = async (event) => {
         event.preventDefault()
         console.log(event.target.content.value)
         const content = event.target.content.value
-        dispatch(createMessage(course, chatRoom.id, content, client))
+        await createMessage(course, chatRoom.id, content, client)
     }
 
     return(

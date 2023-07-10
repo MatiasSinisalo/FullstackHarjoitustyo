@@ -42,7 +42,7 @@ const Task = ({course}) => {
     
   
     const removeTask = async () => {
-        await dispatch(removeTaskFromCourse(course, task, client))
+        await removeTaskFromCourse(course, task, client)
     }
 
     return (

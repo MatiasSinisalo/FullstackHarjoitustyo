@@ -8,10 +8,10 @@ import { createInfoPageOnCourse } from "../reducers/courseReducer"
 const CreateInfoPage = ({course}) => {
     const dispatch = useDispatch()
     const client = useApolloClient()
-    const createInfoPage = (event) => {
+    const createInfoPage = async (event) => {
         event.preventDefault()
         const pageUrl = event.target.locationUrl.value
-        dispatch(createInfoPageOnCourse(course, pageUrl, client))
+        await createInfoPageOnCourse(course, pageUrl, client)
     }
     return(
        <div>

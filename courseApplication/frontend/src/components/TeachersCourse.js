@@ -30,7 +30,7 @@ export const TaskCreationForm = ({course}) => {
     const deadline = event.target.taskDeadLine.value
     const maxGrade = Number(event.target.taskMaxGrade?.value)
     console.log(maxGrade)
-    await dispatch(createNewTaskOnCourse(course.uniqueName, description, deadline, maxGrade, client))
+    await createNewTaskOnCourse(course.uniqueName, description, deadline, maxGrade, client)
 }
 
   return (
@@ -69,7 +69,7 @@ const TeachersCourse = ({course}) =>{
   }
   
   const removeThisCourse = async() =>{
-    await dispatch(removeCourse(course, client, navigate))
+    await removeCourse(course, client, navigate)
   }
 
   return(

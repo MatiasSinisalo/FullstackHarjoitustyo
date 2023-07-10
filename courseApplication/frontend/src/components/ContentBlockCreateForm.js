@@ -16,9 +16,9 @@ const ContentBlockCreateForm = ({blocks, course, infoPage}) => {
         setContent(event.target.value)
     }
 
-    const createNewBlock = () => {
+    const createNewBlock = async () => {
         console.log(content)
-        dispatch(createContentBlockOnInfoPage(course, infoPage.id, content, blocks.length, client))
+        await createContentBlockOnInfoPage(course, infoPage.id, content, blocks.length, client)
     }
 
     return (

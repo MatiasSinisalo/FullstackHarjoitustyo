@@ -19,7 +19,7 @@ const StudentListing = ({student, course}) => {
   const client = useApolloClient()
   const dispatch = useDispatch()
   const removeStudent = async () => {
-    await dispatch(removeStudentFromCourse(course.uniqueName, student.username, client))
+    await removeStudentFromCourse(course.uniqueName, student.username, client)
   }
   return (
     <tr>

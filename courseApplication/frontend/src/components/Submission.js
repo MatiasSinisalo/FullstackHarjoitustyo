@@ -23,17 +23,17 @@ const Submission = ({course, task}) => {
     const user = userData.me
     
     const removeSubmission = async () => {
-        await dispatch(removeSubmissionFromTask(course, task, submission, client))
+        await removeSubmissionFromTask(course, task, submission, client)
     }
 
     const editSubmission = async () => {
       
-        await dispatch(editTaskSubmission(course, task.id, submission.id, submissionContent, false, client))
+        await editTaskSubmission(course, task.id, submission.id, submissionContent, false, client)
     }
 
     const returnSubmission = async () =>{
      
-        await dispatch(editTaskSubmission(course, task.id, submission.id, submissionContent, true, client))
+        await editTaskSubmission(course, task.id, submission.id, submissionContent, true, client)
     }
 
     const updateSubmissionContent = (event) => {
@@ -94,7 +94,7 @@ const SubmissionGradeForm = ({course, task, submission}) => {
         event.preventDefault()
        
         const grade = event.target.points.value
-        await dispatch(gradeSubmission(course.uniqueName, task.id, submission.id, Number(grade), client))
+        await gradeSubmission(course.uniqueName, task.id, submission.id, Number(grade), client)
     }
 
     return(

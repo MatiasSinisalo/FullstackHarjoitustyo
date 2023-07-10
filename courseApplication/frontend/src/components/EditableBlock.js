@@ -7,7 +7,7 @@ const EditableBlock = ({course, page, block}) => {
     const client = useApolloClient()
     const dispatch = useDispatch()
     const [content, setContent] = useState(block.content)
-    const whenChanged = (event) => {
+    const whenChanged = async (event) => {
         if(event.nativeEvent.inputType === "insertLineBreak")
         {
             return
@@ -15,15 +15,15 @@ const EditableBlock = ({course, page, block}) => {
         setContent(event.target.value)
     }
 
-    const deleteBlock = () => {
-        dispatch(removeContentBlockFromInfoPage(course, page.id, block.id, client))
+    const deleteBlock = async () => {
+        await removeContentBlockFromInfoPage(course, page.id, block.id, client)
         console.log("deleting block")
     }
 
 
-    const modifyBlock = () => {
+    const modifyBlock = async () => {
         console.log("saving changes to block!")
-        dispatch(modifyContentBlock(course, page.id, block.id, content, client))
+        await modifyContentBlock(course, page.id, block.id, content, client)
     }
 
     return(

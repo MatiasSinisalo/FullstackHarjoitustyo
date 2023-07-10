@@ -5,10 +5,10 @@ import { useApolloClient } from "@apollo/client"
 const CreateChatRoom = ({course}) => {
     const dispatch = useDispatch()
     const client = useApolloClient()
-    const newChatRoom = (event) => {
+    const newChatRoom = async (event) => {
         event.preventDefault()
         const chatRoomName = event.target.chatRoomName.value
-        dispatch(createChatRoom(course, chatRoomName, client))
+        await createChatRoom(course, chatRoomName, client)
     }
     return (
         <>

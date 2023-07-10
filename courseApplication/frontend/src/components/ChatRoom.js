@@ -39,9 +39,9 @@ const ChatRoom = ({course, user}) => {
         }
     })
   
-    const removeRoom = () => {
+    const removeRoom = async () => {
         console.log("removing room")
-        dispatch(removeChatRoom(course, chatRoom, client))
+        await removeChatRoom(course, chatRoom, client)
     }
 
     if(!chatRoom)

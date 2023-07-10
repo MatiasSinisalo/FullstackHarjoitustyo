@@ -14,7 +14,7 @@ const SubmitSolutionView = ({course, task, user}) => {
     const submitSolution = async (event) => {
         event.preventDefault()
         const content = ""
-        const submission = await dispatch(addSubmissionToTask(course, task, content, apolloClient))
+        const submission = await addSubmissionToTask(course, task, content, apolloClient)
         if(submission)
         {
             navigate(`submission/${submission.id}`)
