@@ -46,12 +46,23 @@ export const getCourse = async (uniqueName, apolloClient) => {
     return course.data.getCourse
 }
 
+const addUserToUserAttendsListCache = (username, course, apolloClient) => {
+    const currentUser = apolloClient.readQuery({query: ME})?.me
+    if(currentUser?.username === username)
+    {
+        apolloClient.cache.updateQuery({query: ME}, (data) => {
+            return {me: {...data.me, attendsCourses: data.me.attendsCourses.concat(course)}}
+        })
+    }
+}
+
 export const addUserToCourse = async (uniqueName, username, apolloClient) => {
     try{
         const courseWithAddedStudent = await apolloClient.mutate({mutation: ADD_STUDENT_TO_COURSE, variables: {courseUniqueName: uniqueName, username: username}})
-        
-        if(courseWithAddedStudent?.data?.addStudentToCourse)
+        const course = courseWithAddedStudent?.data?.addStudentToCourse
+        if(course)
         {
+            addUserToUserAttendsListCache(username, course, apolloClient)
             return courseWithAddedStudent.data.addStudentToCourse
         }
         
@@ -64,12 +75,23 @@ export const addUserToCourse = async (uniqueName, username, apolloClient) => {
     }
 }
 
+const removeCourseFromUserAttendsListCache = (uniqueName, username, apolloClient) => {
+    const currentUser = apolloClient.readQuery({query: ME})?.me
+    if(currentUser?.username === username)
+    {
+        apolloClient.cache.updateQuery({query: ME}, (data) => {
+            return {me: {...data.me, attendsCourses: data.me.attendsCourses.filter((course) => course.uniqueName != uniqueName)}}
+        })
+    }
+}
 
 export const removeUserFromCourse = async (uniqueName, username, apolloClient) => {
     try{
         const updatedCourse = await apolloClient.mutate({mutation: REMOVE_STUDENT_FROM_COURSE, variables: {courseUniqueName: uniqueName, username: username}})
-        if(updatedCourse?.data?.removeStudentFromCourse)
+        const course = updatedCourse?.data?.removeStudentFromCourse
+        if(course)
         {
+            removeCourseFromUserAttendsListCache(uniqueName, username, apolloClient)
             return updatedCourse.data.removeStudentFromCourse
         }
     }
