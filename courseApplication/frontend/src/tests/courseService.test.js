@@ -65,8 +65,12 @@ describe('courseService tests', () => {
         const data = {
             addStudentToCourse: {uniqueName: 'courses unique name', students: [{username: 'users username', name: 'users name 4321'}]}
         }
+        const me = {
+            username: "users username"
+        }
         test('addUserToCourse calls backend with correct data and returns correctly', async () => {
             mockClient.mutate = jest.fn(() => {return {data}})
+            mockClient.readQuery = jest.fn(() => {return {me}})
             const correctCourse = data.addStudentToCourse
             const courseWithAddedStudent = await addUserToCourse(correctCourse.uniqueName, correctCourse.students[0].username, mockClient)
            
