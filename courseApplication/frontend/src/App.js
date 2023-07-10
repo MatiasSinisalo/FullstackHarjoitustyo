@@ -17,7 +17,6 @@ import {useNavigate} from 'react-router-dom'
 import { useApolloClient, useQuery} from "@apollo/client";
 import NavBar from "./components/NavBar";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUser, userLogIn } from "./reducers/userReducer";
 import { setCourses } from "./reducers/courseReducer";
 import { GET_ALL_COURSES } from "./queries/courseQueries";
 import TeachersCourse, { TaskCreationForm } from "./components/TeachersCourse";
@@ -43,7 +42,7 @@ const App = () =>{
         if(token)
         {
           const userdata = await getUserData(client)
-          dispatch(updateUser(userdata))
+         
         }
         else{
           navigate("/")
@@ -57,7 +56,7 @@ const App = () =>{
     console.log(userInfo)
     if(!userInfo.error)
     {
-      dispatch(updateUser(userInfo))
+      
       navigate('/dashboard')
       dispatch(Notify("Logged In Successfully", "successNotification", 5))
     }
@@ -69,7 +68,7 @@ const App = () =>{
   const handleLogOut = async () => {
     console.log("logging out")
     localStorage.removeItem('courseApplicationUserToken')
-    dispatch(updateUser({username: null, name: null, token: null}))
+    
     client.clearStore()
     navigate('/')
     dispatch(Notify("Logged Out Successfully", "successNotification", 5))
