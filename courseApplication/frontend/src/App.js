@@ -28,6 +28,7 @@ import Task from "./components/Task";
 import TaskListings from "./components/TaskListings";
 import CourseParticipants from "./components/CourseParticipants";
 import Submission from "./components/Submission";
+import { ME } from "./queries/userQueries";
 
 
 const App = () =>{
@@ -36,6 +37,7 @@ const App = () =>{
   const client = useApolloClient()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const userQuery = useQuery(ME)
   useEffect(() => {
       async function prepApp(){ 
         const token = localStorage.getItem('courseApplicationUserToken')
@@ -74,9 +76,16 @@ const App = () =>{
     dispatch(Notify("Logged Out Successfully", "successNotification", 5))
   }
  
+  if(userQuery.loading){
+    return(
+    <p>loading...</p>
+    )
+  }
+  const user = userQuery?.data?.me
+  
   return (
     <>
-    <NavBar logOut={handleLogOut}></NavBar>
+    <NavBar user={user} logOut={handleLogOut}></NavBar>
     <div id="app-content" className="background">
       
       
