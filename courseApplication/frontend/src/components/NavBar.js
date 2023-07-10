@@ -2,9 +2,8 @@ import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import "./styles/navbar.css"
 import Notification from "./Notification"
-const NavBar = ({logOut}) => {
-    const user = useSelector((store) => {return store.user})
-    if(user.username)
+const NavBar = ({logOut, user}) => {
+    if(user?.username)
     {
         return (
             <div className="navbar background">
