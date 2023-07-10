@@ -2,7 +2,11 @@ import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import "./styles/navbar.css"
 import Notification from "./Notification"
-const NavBar = ({logOut, user}) => {
+import { useApolloClient } from "@apollo/client"
+import { ME } from "../queries/userQueries"
+const NavBar = ({logOut}) => {
+    const client = useApolloClient()
+    const user = client.readQuery({query: ME})?.me
     if(user?.username)
     {
         return (

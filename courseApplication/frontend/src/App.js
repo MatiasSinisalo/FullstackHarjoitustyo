@@ -79,10 +79,9 @@ const App = () =>{
     )
   }
 
-  const user = userQuery?.data?.me
   return (
     <>
-    <NavBar user={user} logOut={handleLogOut}></NavBar>
+    <NavBar logOut={handleLogOut}></NavBar>
     <div id="app-content" className="background">
       
       
