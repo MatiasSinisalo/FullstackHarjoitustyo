@@ -38,7 +38,7 @@ const App = () =>{
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const userQuery = useQuery(ME)
-   
+  
   const handleLogIn = async (username, password) => {
     const userInfo = await LogInAsUser(username, password, client)
     console.log(userInfo)
@@ -68,7 +68,10 @@ const App = () =>{
     )
   }
   const user = userQuery?.data?.me
-  
+  if(!user){
+    navigate("/")
+  }
+
   return (
     <>
     <NavBar user={user} logOut={handleLogOut}></NavBar>
