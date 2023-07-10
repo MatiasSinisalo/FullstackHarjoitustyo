@@ -1,4 +1,5 @@
 import { ADD_CONTENT_BLOCK_TO_INFO_PAGE, ADD_INFO_PAGE_TO_COURSE, ADD_STUDENT_TO_COURSE, ADD_SUBMISSION_TO_COURSE, ADD_TASK_TO_COURSE, ADD_USER_TO_CHAT_ROOM, CREATE_CHAT_ROOM, CREATE_COURSE, CREATE_MESSAGE, GET_ALL_COURSES, GET_COURSE, GRADE_SUBMISSION, MODIFY_CONTENT_BLOCK, MODIFY_SUBMISSION, REMOVE_CHAT_ROOM, REMOVE_CONTENT_BLOCK_FROM_INFO_PAGE, REMOVE_COURSE, REMOVE_INFO_PAGE_FROM_COURSE, REMOVE_STUDENT_FROM_COURSE, REMOVE_SUBMISSION_FROM_COURSE_TASK, REMOVE_TASK_FROM_COURSE, REMOVE_USER_FROM_CHAT_ROOM } from "../queries/courseQueries"
+import { ME } from "../queries/userQueries"
 //teacher field is not currently being used on the backend at all when creating a course
 
 export const getAllCourses = async (apolloClient) => {
@@ -10,12 +11,13 @@ export const getAllCourses = async (apolloClient) => {
 export const createCourse = async (uniqueName, name, teacher, apolloClient) => {    
     try{
         const createdCourse = await apolloClient.mutate({mutation: CREATE_COURSE, variables: {uniqueName, name, teacher: ""}})
-        apolloClient.cache.updateQuery({query: GET_ALL_COURSES}, (data) => ({
-            allCourses:  data?.allCourses ? data.allCourses.concat(createdCourse.data.createCourse) : [createdCourse.data.createCourse]
-        }))
-        if(createdCourse.data?.createCourse)
+        const course = createdCourse.data?.createCourse
+        if(course)
         {
-            return createdCourse.data.createCourse
+            apolloClient.cache.updateQuery({query: ME}, (data) => {
+                return {me: {...data.me, teachesCourses: data.me.teachesCourses.concat(course)}}
+            })
+            return course
         }
     }
     catch(err){
