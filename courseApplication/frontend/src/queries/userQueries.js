@@ -25,6 +25,16 @@ query Me {
     id
     name
     username
+    teachesCourses{
+      id
+      uniqueName
+      name
+    }
+    attendsCourses{
+      id
+      uniqueName
+      name
+    }
   }
 }
 `
