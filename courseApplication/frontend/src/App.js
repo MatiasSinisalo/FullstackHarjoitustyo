@@ -38,21 +38,7 @@ const App = () =>{
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const userQuery = useQuery(ME)
-  useEffect(() => {
-      async function prepApp(){ 
-        const token = localStorage.getItem('courseApplicationUserToken')
-        if(token)
-        {
-          const userdata = await getUserData(client)
-         
-        }
-        else{
-          navigate("/")
-        }
-    }
-    prepApp()
-  }, [])
-  
+   
   const handleLogIn = async (username, password) => {
     const userInfo = await LogInAsUser(username, password, client)
     console.log(userInfo)
