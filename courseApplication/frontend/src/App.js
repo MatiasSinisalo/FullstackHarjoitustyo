@@ -48,7 +48,7 @@ const App = () =>{
     {
       navigate("/")
     }
-  }, [userQuery])
+  }, [])
 
   const handleLogIn = async (username, password) => {
     const userInfo = await LogInAsUser(username, password, client)
