@@ -35,6 +35,8 @@ query Me {
       uniqueName
       name
       tasks{
+        id
+        description
         deadline
       }
     }

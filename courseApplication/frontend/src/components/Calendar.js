@@ -1,5 +1,8 @@
 import { eachDayOfInterval, eachMonthOfInterval, getDaysInMonth, getWeeksInMonth  } from 'date-fns'
 import "./styles/month.css"
+import { useApolloClient } from '@apollo/client'
+import { ME } from '../queries/userQueries'
+import { Link } from 'react-router-dom'
 const Day = ({day}) => {
     const weekDay = day.getDay()
     const date = day.getDate()
@@ -50,22 +53,29 @@ const Month = ({year, month}) => {
 */
 
 const Calendar = () =>{
+    const client = useApolloClient()
+    const user = client.readQuery({query: ME})?.me
+    
     const currentDate = new Date()
     const currentYear = currentDate.getFullYear()
-    console.log(currentDate.getFullYear())
-    console.log(currentDate.getMonth())
-    console.log(currentDate.getDate())
+   
   
     const months = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
   
     return(
-      <>
+    <div>
       <p>calendar page</p>
-   
-      {months.map(month => <Month year={currentYear} month={month} key={`${month}${currentYear}`}/>)}
-      
-      </>
-  
+       
+      {
+        user.attendsCourses.map((course) => {
+            return course.tasks.map((task) => <p key={task.id}>{task.description}, deadline: {Date(task.deadline)}</p>)
+        })
+      }
+
+        {months.map(month => <Month year={currentYear} month={month} key={`${month}${currentYear}`}/>)}
+    </div>
+    
+    
     )
 }
 
