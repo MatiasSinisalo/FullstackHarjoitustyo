@@ -39,13 +39,6 @@ const Month = ({user, year, month}) => {
     return(
         <>
         <h1>{month + 1} {year}</h1>
-        {courseTasksThisMonth.map((course) => {
-           
-           return course.tasks.map((task) => {
-                const deadline = new Date(parseInt(task.deadline)).toDateString()
-                return <p key={task.id}>course: {course.uniqueName} {task.description}{deadline}</p>
-            })
-        })}
         <div className={"month"}>
             
             <p className="day0">Mon</p>
