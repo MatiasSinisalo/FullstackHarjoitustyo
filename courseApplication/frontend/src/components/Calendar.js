@@ -86,9 +86,20 @@ const Calendar = () =>{
             setDisplayMonth(displayMonth + 1)
         }
     }
+
+    const prevMonth = () => {
+        if(displayMonth - 1 < 0){
+            setDisplayMonth(12)
+            setDisplayYear(displayYear - 1)
+        }
+        else{
+            setDisplayMonth(displayMonth - 1)
+        }
+    }
     return(
     <div>
       <p>calendar page</p>
+        <button onClick={prevMonth}>prev month</button>
         <button onClick={nextMonth}>next month</button>
        <Month user={user} year={displayYear} month={displayMonth} key={`${displayMonth}${displayYear}`}/>
     </div>
