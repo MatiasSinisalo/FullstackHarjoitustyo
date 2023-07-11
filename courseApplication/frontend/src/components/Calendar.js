@@ -64,6 +64,8 @@ const Calendar = () =>{
     const client = useApolloClient()
     const user = client.readQuery({query: ME})?.me
     
+    const currentDate = new Date()
+   
     const [displayDate, setCurrentDate] = useState(new Date())
     const displayMonth = displayDate.getMonth()
     const displayYear = displayDate.getFullYear()
@@ -82,10 +84,15 @@ const Calendar = () =>{
         const newDate = new Date(displayDate.setMonth(prevMonth))
         setCurrentDate(newDate)
     }
+
+    const currentMonth = () => {
+        setCurrentDate(currentDate)
+    }
     return(
     <div>
       <p>calendar page</p>
         <button onClick={prevMonth}>prev month</button>
+        <button onClick={currentMonth}>this month</button>
         <button onClick={nextMonth}>next month</button>
        <Month user={user} year={displayYear} month={displayMonth} key={`${displayMonth}${displayYear}`}/>
     </div>
