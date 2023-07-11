@@ -3,6 +3,7 @@ import "./styles/month.css"
 import { useApolloClient } from '@apollo/client'
 import { ME } from '../queries/userQueries'
 import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 const Day = ({day, courseTasks}) => {
     const weekDay = day.getDay()
     const date = day.getDate()
@@ -11,7 +12,6 @@ const Day = ({day, courseTasks}) => {
     const tasksThisDay = courseTasks.map((course) => {
         return {uniqueName: course.uniqueName, tasks: course.tasks.filter((task) => new Date(parseInt(task.deadline)).getDate() === day.getDate())}
     })
-    console.log(tasksThisDay)
     return(
         <div className={`day${weekDay - 1}`}>
         <p>{date}</p>
@@ -65,15 +65,32 @@ const Calendar = () =>{
     const user = client.readQuery({query: ME})?.me
     
     const currentDate = new Date()
+    const currentMonth = currentDate.getMonth()
     const currentYear = currentDate.getFullYear()
+    console.log(currentMonth)
+
+    const [displayMonth, setDisplayMonth] = useState(currentMonth)
+    useEffect(() => {
+        console.log(displayMonth)
+    }, [displayMonth])
+    const [displayYear, setDisplayYear] = useState(currentYear)
    
-  
     const months = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-  
+    
+    const nextMonth = () => {
+        if(displayMonth + 1 > 11){
+            setDisplayMonth(0)
+            setDisplayYear(displayYear + 1)
+        }
+        else{
+            setDisplayMonth(displayMonth + 1)
+        }
+    }
     return(
     <div>
       <p>calendar page</p>
-      {months.map((month) => <Month user={user} year={currentYear} month={month} key={`${month}${currentYear}`}/>)}
+        <button onClick={nextMonth}>next month</button>
+       <Month user={user} year={displayYear} month={displayMonth} key={`${displayMonth}${displayYear}`}/>
     </div>
     
     
