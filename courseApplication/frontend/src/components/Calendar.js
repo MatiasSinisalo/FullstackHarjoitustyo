@@ -19,7 +19,7 @@ const Day = ({currentDate, day, courseTasks}) => {
 
     const currentDayStyle = isCurrentDay() ? " current-date" : ""
     return(
-        <div className={`day${weekDay - 1}${currentDayStyle}`}>
+        <div className={`day day${weekDay - 1}${currentDayStyle}`}>
         <p>{date}</p>
         {tasksThisDay.map((course) => {
            return course.tasks.map((task) => <p key={task.id}>course: {course.uniqueName}  description: {task.description}</p>)

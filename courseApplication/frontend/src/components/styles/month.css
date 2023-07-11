@@ -1,10 +1,17 @@
 .month{
     display: grid;
-    grid-template-areas: 'mon tue wed thur fri sat sun'
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-areas: 'mon tue wed thur fri sat sun';
 }
 
 .current-date{
     border: solid 1px black;
+}
+
+.day{
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .day0{
