@@ -3,16 +3,22 @@ import "./styles/month.css"
 import { useApolloClient } from '@apollo/client'
 import { ME } from '../queries/userQueries'
 import { Link } from 'react-router-dom'
-const Day = ({day}) => {
+const Day = ({day, courseTasks}) => {
     const weekDay = day.getDay()
     const date = day.getDate()
     const month = day.getMonth()
     const year = day.getFullYear()
-    
+    const tasksThisDay = courseTasks.map((course) => {
+        return {uniqueName: course.uniqueName, tasks: course.tasks.filter((task) => new Date(parseInt(task.deadline)).getDate() === day.getDate())}
+    })
+    console.log(tasksThisDay)
     return(
-        <>
-        <p className={`day${weekDay - 1}`}>{date}</p>
-        </>
+        <div className={`day${weekDay - 1}`}>
+        <p>{date}</p>
+        {tasksThisDay.map((course) => {
+           return course.tasks.map((task) => <p key={task.id}>course: {course.uniqueName}  description: {task.description}</p>)
+        })}
+        </div>
     )
 }
 
@@ -25,17 +31,20 @@ const Month = ({user, year, month}) => {
     //constains weeks in this way:
     //const week= {weekNumber, {dates}}
     const courseTasksThisMonth = user.attendsCourses.map((course) => {
-        return { courseUniqueName: course.uniqueName, tasks: course.tasks.filter((task) => new Date(parseInt(task.deadline)).getMonth() == month)}
+        return { uniqueName: course.uniqueName, tasks: course.tasks.filter((task) => new Date(parseInt(task.deadline)).getMonth() == month)}
     })
-    console.log(courseTasksThisMonth)
+   
     const daysInMonth = getDaysInMonth(new Date(year, month))
     const days = eachDayOfInterval({start: new Date(year, month, 1), end: new Date(year, month, daysInMonth)})
-    
     return(
         <>
         <h1>{month + 1} {year}</h1>
         {courseTasksThisMonth.map((course) => {
-           return course.tasks.map((task) => <p key={task.id}>{task.description}</p>)
+           
+           return course.tasks.map((task) => {
+                const deadline = new Date(parseInt(task.deadline)).toDateString()
+                return <p key={task.id}>course: {course.uniqueName} {task.description}{deadline}</p>
+            })
         })}
         <div className={"month"}>
             
