@@ -25,11 +25,10 @@ jobs:
         working-directory: ./courseApplication/backend
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-      - name: Install backend
+      - name: Install
       - run: npm install 
       - name: Run local tests 
       - run: npm run test:local
