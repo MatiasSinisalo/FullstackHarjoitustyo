@@ -66,7 +66,7 @@ const Calendar = () =>{
     
     const currentDate = new Date()
    
-    const [displayDate, setCurrentDate] = useState(new Date())
+    const [displayDate, setDisplayDate] = useState(new Date())
     const displayMonth = displayDate.getMonth()
     const displayYear = displayDate.getFullYear()
     
@@ -76,17 +76,17 @@ const Calendar = () =>{
         const nextMonth = displayDate.getMonth() + 1
         const newDate = new Date(displayDate.setMonth(nextMonth))
         console.log(newDate)
-        setCurrentDate(newDate)
+        setDisplayDate(newDate)
     }
 
     const prevMonth = () => {
         const prevMonth = displayDate.getMonth() - 1;
         const newDate = new Date(displayDate.setMonth(prevMonth))
-        setCurrentDate(newDate)
+        setDisplayDate(newDate)
     }
 
     const currentMonth = () => {
-        setCurrentDate(currentDate)
+        setDisplayDate(currentDate)
     }
     return(
     <div>
