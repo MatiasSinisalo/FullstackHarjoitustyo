@@ -4,7 +4,6 @@ on: [push]
 
 jobs:
   buildAndTestFrontEnd:
-     
     runs-on: ubuntu-latest
     defaults:
        run: 
@@ -18,10 +17,14 @@ jobs:
       - run: ls
       - run: npm install 
       - run: npm run test -- --watchAll=false
-      
+  
   buildAndTestBackEnd:
-     
     runs-on: ubuntu-latest
+    services:
+      mongo:
+        image: mongodb/mongodb-community-server
+        ports:
+          - 8000:27017
     defaults:
        run: 
         working-directory: ./courseApplication/backend
@@ -31,11 +34,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-      - name: Launch MongoDB container
-        uses: supercharge/mongodb-github-action@1.9.0
-        with:
-         mongodb-port: 8000
-         mongodb-username: localuser
-         mongodb-password: localpass
+      - name: Install backend
       - run: npm install 
+      - name: Run local tests 
       - run: npm run test:local
