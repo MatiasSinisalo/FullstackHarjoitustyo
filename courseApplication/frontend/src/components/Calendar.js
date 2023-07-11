@@ -64,37 +64,23 @@ const Calendar = () =>{
     const client = useApolloClient()
     const user = client.readQuery({query: ME})?.me
     
-    const currentDate = new Date()
-    const currentMonth = currentDate.getMonth()
-    const currentYear = currentDate.getFullYear()
-    console.log(currentMonth)
-
-    const [displayMonth, setDisplayMonth] = useState(currentMonth)
-    useEffect(() => {
-        console.log(displayMonth)
-    }, [displayMonth])
-    const [displayYear, setDisplayYear] = useState(currentYear)
-   
+    const [displayDate, setCurrentDate] = useState(new Date())
+    const displayMonth = displayDate.getMonth()
+    const displayYear = displayDate.getFullYear()
+    
     const months = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     
     const nextMonth = () => {
-        if(displayMonth + 1 > 11){
-            setDisplayMonth(0)
-            setDisplayYear(displayYear + 1)
-        }
-        else{
-            setDisplayMonth(displayMonth + 1)
-        }
+        const nextMonth = displayDate.getMonth() + 1
+        const newDate = new Date(displayDate.setMonth(nextMonth))
+        console.log(newDate)
+        setCurrentDate(newDate)
     }
 
     const prevMonth = () => {
-        if(displayMonth - 1 < 0){
-            setDisplayMonth(12)
-            setDisplayYear(displayYear - 1)
-        }
-        else{
-            setDisplayMonth(displayMonth - 1)
-        }
+        const prevMonth = displayDate.getMonth() - 1;
+        const newDate = new Date(displayDate.setMonth(prevMonth))
+        setCurrentDate(newDate)
     }
     return(
     <div>
