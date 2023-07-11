@@ -4,7 +4,7 @@ import { useApolloClient } from '@apollo/client'
 import { ME } from '../queries/userQueries'
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-const Day = ({day, courseTasks}) => {
+const Day = ({currentDate, day, courseTasks}) => {
     const weekDay = day.getDay()
     const date = day.getDate()
     const month = day.getMonth()
@@ -12,8 +12,14 @@ const Day = ({day, courseTasks}) => {
     const tasksThisDay = courseTasks.map((course) => {
         return {uniqueName: course.uniqueName, tasks: course.tasks.filter((task) => new Date(parseInt(task.deadline)).getDate() === day.getDate())}
     })
+
+    const isCurrentDay = () => {
+        return date === currentDate.getDate() && month === currentDate.getMonth() && year == currentDate.getFullYear()
+    }
+
+    const currentDayStyle = isCurrentDay() ? " current-date" : ""
     return(
-        <div className={`day${weekDay - 1}`}>
+        <div className={`day${weekDay - 1}${currentDayStyle}`}>
         <p>{date}</p>
         {tasksThisDay.map((course) => {
            return course.tasks.map((task) => <p key={task.id}>course: {course.uniqueName}  description: {task.description}</p>)
@@ -26,7 +32,7 @@ const Week = (year, month, week) => {
 
 }
 
-const Month = ({user, year, month}) => {
+const Month = ({currentDate, user, year, month}) => {
     
     //constains weeks in this way:
     //const week= {weekNumber, {dates}}
@@ -50,7 +56,7 @@ const Month = ({user, year, month}) => {
             <p className="day6">Sun</p>
            
             
-            {days.map(day => <Day courseTasks={courseTasksThisMonth} day={day} key={`${day.getDate()}${day.getMonth()}${day.getFullYear()}`}/>)}
+            {days.map(day => <Day  currentDate={currentDate} courseTasks={courseTasksThisMonth} day={day} key={`${day.getDate()}${day.getMonth()}${day.getFullYear()}`}/>)}
         </div>
         </>
     )
@@ -94,7 +100,7 @@ const Calendar = () =>{
         <button onClick={prevMonth}>prev month</button>
         <button onClick={currentMonth}>this month</button>
         <button onClick={nextMonth}>next month</button>
-       <Month user={user} year={displayYear} month={displayMonth} key={`${displayMonth}${displayYear}`}/>
+       <Month currentDate={currentDate} user={user} year={displayYear} month={displayMonth} key={`${displayMonth}${displayYear}`}/>
     </div>
     
     

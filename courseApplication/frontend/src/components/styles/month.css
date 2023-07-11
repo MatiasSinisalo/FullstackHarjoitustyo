@@ -3,6 +3,10 @@
     grid-template-areas: 'mon tue wed thur fri sat sun'
 }
 
+.current-date{
+    border: solid 1px black;
+}
+
 .day0{
     grid-column: 1;
 }
