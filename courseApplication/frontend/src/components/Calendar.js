@@ -20,17 +20,23 @@ const Week = (year, month, week) => {
 
 }
 
-const Month = ({year, month}) => {
+const Month = ({user, year, month}) => {
     
     //constains weeks in this way:
     //const week= {weekNumber, {dates}}
-    
+    const courseTasksThisMonth = user.attendsCourses.map((course) => {
+        return { courseUniqueName: course.uniqueName, tasks: course.tasks.filter((task) => new Date(parseInt(task.deadline)).getMonth() == month)}
+    })
+    console.log(courseTasksThisMonth)
     const daysInMonth = getDaysInMonth(new Date(year, month))
     const days = eachDayOfInterval({start: new Date(year, month, 1), end: new Date(year, month, daysInMonth)})
-    console.log(days)
+    
     return(
         <>
         <h1>{month + 1} {year}</h1>
+        {courseTasksThisMonth.map((course) => {
+           return course.tasks.map((task) => <p key={task.id}>{task.description}</p>)
+        })}
         <div className={"month"}>
             
             <p className="day0">Mon</p>
@@ -42,7 +48,7 @@ const Month = ({year, month}) => {
             <p className="day6">Sun</p>
            
             
-            {days.map(day => <Day day={day} key={`${day.getDate()}${day.getMonth()}${day.getFullYear()}`}/>)}
+            {days.map(day => <Day courseTasks={courseTasksThisMonth} day={day} key={`${day.getDate()}${day.getMonth()}${day.getFullYear()}`}/>)}
         </div>
         </>
     )
@@ -65,14 +71,7 @@ const Calendar = () =>{
     return(
     <div>
       <p>calendar page</p>
-       
-      {
-        user.attendsCourses.map((course) => {
-            return course.tasks.map((task) => <p key={task.id}>{task.description}, deadline: {Date(task.deadline)}</p>)
-        })
-      }
-
-        {months.map(month => <Month year={currentYear} month={month} key={`${month}${currentYear}`}/>)}
+      {months.map((month) => <Month user={user} year={currentYear} month={month} key={`${month}${currentYear}`}/>)}
     </div>
     
     
