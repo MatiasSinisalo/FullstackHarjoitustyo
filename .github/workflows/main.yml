@@ -20,11 +20,6 @@ jobs:
   
   buildAndTestBackEnd:
     runs-on: ubuntu-latest
-    services:
-      mongo:
-        image: mongodb/mongodb-community-server
-        ports:
-          - 8000:27017
     defaults:
        run: 
         working-directory: ./courseApplication/backend
