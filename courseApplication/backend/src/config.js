@@ -14,7 +14,6 @@ const getCurrentUrlForEnvironment = () => {
         case 'test':
             return process.env.MONGODB_URI_TEST
         case 'test:local':
-            //only for connecting to localhost only mongodb server, this server MUST NOT be exposed to the internet
             return 'mongodb://0.0.0.0:8000'
     }
 }
