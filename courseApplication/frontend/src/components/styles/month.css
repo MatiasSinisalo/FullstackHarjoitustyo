@@ -21,6 +21,9 @@
     background-color: lightblue;
 }
 
+.course-tasks-day-showcase:hover{
+    cursor: pointer;
+}
 
 .course-tasks-dropdown{
     background-color: white;
