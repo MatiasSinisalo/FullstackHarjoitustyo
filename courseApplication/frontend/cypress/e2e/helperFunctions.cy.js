@@ -136,9 +136,9 @@ const joinCourseAsUser= (courseUniqueName, usernameToJoinTheCourse) => {
     const courseShowCase = cy.get('div[class*="course:"]').contains(`${courseUniqueName}`).parent()
     const joinButton = courseShowCase.contains("button","Join")
    
-    cy.intercept('POST', 'http://localhost:4000').as('serverResponse')
+    cy.intercept('POST', 'http://localhost:4000').as(`serverResponse${courseUniqueName}`)
     joinButton.click()
-    cy.wait('@serverResponse').then((response) => {
+    cy.wait(`@serverResponse${courseUniqueName}`).then((response) => {
         const receivedResponse = response.response.body.data.addStudentToCourse
         expect(receivedResponse.uniqueName).to.equal(courseUniqueName)
         expect(receivedResponse.students.find((student) => student.username === usernameToJoinTheCourse).username).to.equal(usernameToJoinTheCourse)

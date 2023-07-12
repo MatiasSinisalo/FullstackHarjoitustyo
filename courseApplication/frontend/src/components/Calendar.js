@@ -132,7 +132,7 @@ const Calendar = () =>{
     }
     return(
     <div>
-      <p>calendar page</p>
+        <h1>Calendar</h1>
         <button onClick={prevMonth}>prev month</button>
         <button onClick={currentMonth}>this month</button>
         <button onClick={nextMonth}>next month</button>
