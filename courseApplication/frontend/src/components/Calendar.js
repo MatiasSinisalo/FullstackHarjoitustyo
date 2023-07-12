@@ -10,7 +10,7 @@ const Day = ({currentDate, day, courseTasks}) => {
     const month = day.getMonth()
     const year = day.getFullYear()
     const tasksThisDay = courseTasks.map((course) => {
-        const tasks = course.tasks.filter((task) => new Date(parseInt(task.deadline)).getDate() === day.getDate())
+        const tasks = course.tasks.filter((task) => new Date(parseInt(task.deadline)).getDate() === day.getDate() && year == currentDate.getFullYear())
         return {uniqueName: course.uniqueName, tasks: tasks}
     }).filter((course) => course.tasks.length > 0)
 
