@@ -10,8 +10,11 @@ const Day = ({currentDate, day, courseTasks}) => {
     const month = day.getMonth()
     const year = day.getFullYear()
     const tasksThisDay = courseTasks.map((course) => {
-        return {uniqueName: course.uniqueName, tasks: course.tasks.filter((task) => new Date(parseInt(task.deadline)).getDate() === day.getDate())}
-    })
+        const tasks = course.tasks.filter((task) => new Date(parseInt(task.deadline)).getDate() === day.getDate())
+        return {uniqueName: course.uniqueName, tasks: tasks}
+    }).filter((course) => course.tasks.length > 0)
+
+    console.log(tasksThisDay)
 
     const isCurrentDay = () => {
         return date === currentDate.getDate() && month === currentDate.getMonth() && year == currentDate.getFullYear()
@@ -58,7 +61,7 @@ const Month = ({currentDate, user, year, month}) => {
     //const week= {weekNumber, {dates}}
     const courseTasksThisMonth = user.attendsCourses.map((course) => {
         return { uniqueName: course.uniqueName, tasks: course.tasks.filter((task) => new Date(parseInt(task.deadline)).getMonth() == month)}
-    })
+    }).filter((course) => course.tasks.length > 0)
    
     const daysInMonth = getDaysInMonth(new Date(year, month))
     const days = eachDayOfInterval({start: new Date(year, month, 1), end: new Date(year, month, daysInMonth)})
