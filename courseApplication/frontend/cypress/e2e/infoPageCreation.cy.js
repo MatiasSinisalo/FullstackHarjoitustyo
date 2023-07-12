@@ -14,7 +14,7 @@ describe('Info page creation tests', () => {
     it('user can create an info page', () => {
         logInAsUser("username", "password1234")
         createCourseAsUser("courses-uniquename", "course name")
-        cy.contains("dashboard").click()
+        cy.contains("Dashboard").click()
         cy.contains("See Teachers Course Page").click()
         cy.contains("create new info page").click()
         
@@ -41,7 +41,7 @@ describe('Info page creation tests', () => {
     it('student can visit created info page', () => {
         logInAsUser("username", "password1234")
         createCourseAsUser("courses-uniquename", "course name")
-        cy.contains("dashboard").click()
+        cy.contains("Dashboard").click()
         cy.contains("See Teachers Course Page").click()
         const pageurl = "this-is-a-info-page-1"
         createInfoPage(pageurl)

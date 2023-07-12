@@ -16,7 +16,7 @@ describe('Content block creation tests', () => {
     it('user can create an content block on info page', () => {
         logInAsUser("username", "password1234")
         createCourseAsUser("courses-uniquename", "course name")
-        cy.contains("dashboard").click()
+        cy.contains("Dashboard").click()
         cy.contains("See Teachers Course Page").click()
         const pageurl = "this-is-a-test"
         createInfoPage(pageurl)
@@ -43,7 +43,7 @@ describe('Content block creation tests', () => {
     it('student can see an content block on info page', () => {
         logInAsUser("username", "password1234")
         createCourseAsUser("courses-uniquename", "course name")
-        cy.contains("dashboard").click()
+        cy.contains("Dashboard").click()
         cy.contains("See Teachers Course Page").click()
         const pageurl = "this-is-a-test"
         createInfoPage(pageurl)

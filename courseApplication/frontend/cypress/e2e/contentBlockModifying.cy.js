@@ -15,7 +15,7 @@ describe('content blocks removal tests', () => {
         logInAsUser("username", "password1234")
         createCourseAsUser("courses-unique-name", "username")
         
-        cy.contains("dashboard").click()
+        cy.contains("Dashboard").click()
         cy.contains("See Teachers Course Page").click()
       
         createInfoPage(pageUrl)

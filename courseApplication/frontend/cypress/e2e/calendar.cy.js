@@ -24,7 +24,7 @@ describe('Calendar tests', () => {
         createCourseAsUser(courseUniqueName, "name")
         createTaskOnCourseAsUser(courseUniqueName, task1Description, tomorrow(), 5);
 
-        cy.contains("dashboard").click()
+        cy.contains("Dashboard").click()
 
         createCourseAsUser(secondCourseUniqueName, "name")
         createTaskOnCourseAsUser(secondCourseUniqueName, task2Description, tomorrow(), 5);

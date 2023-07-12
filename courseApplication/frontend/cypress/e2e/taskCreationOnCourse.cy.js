@@ -16,7 +16,7 @@ describe('task creation on course tests', () => {
         logInAsUser("username", "password1234")
         createCourseAsUser("course-created-for-task-testing", "testing for tasks")
         
-        cy.contains("dashboard").click()
+        cy.contains("Dashboard").click()
         cy.wait(100)
 
         cy.contains("See Teachers Course Page").click()
@@ -61,7 +61,7 @@ describe('task creation on course tests', () => {
         logInAsUser("username", "password1234")
         createCourseAsUser("course-created-for-task-testing", "testing for tasks")
         
-        cy.contains("dashboard").click()
+        cy.contains("Dashboard").click()
         cy.wait(100)
 
         cy.contains("See Teachers Course Page").click()

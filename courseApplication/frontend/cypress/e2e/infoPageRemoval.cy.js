@@ -17,7 +17,7 @@ describe('info page removal tests', () => {
         
         const courseName = "coursesUniqueName"
         createCourseAsUser(courseName, "courses name")
-        cy.contains("dashboard").click()
+        cy.contains("Dashboard").click()
         cy.contains("See Teachers Course Page").click()
         
         createInfoPage(url)
@@ -48,7 +48,7 @@ describe('info page removal tests', () => {
         
         const courseName = "coursesUniqueName"
         createCourseAsUser(courseName, "courses name")
-        cy.contains("dashboard").click()
+        cy.contains("Dashboard").click()
         cy.contains("See Teachers Course Page").click()
         
         createInfoPage(url)

@@ -9,7 +9,7 @@ after(function(){
 })
 
 const visitCreateChatRoom = () => {
-    cy.contains("dashboard").click()
+    cy.contains("Dashboard").click()
     cy.contains("See Teachers Course Page").click()
     cy.contains("create new chatroom").click()
 }
@@ -31,7 +31,7 @@ const catchRequestAs = (requestQueryContains) => {
 }
 
 const visitChatRoom = (name, isTeacher=true) => {
-    cy.contains("dashboard").click()
+    cy.contains("Dashboard").click()
     if(isTeacher)
     {
         cy.contains("See Teachers Course Page").click()
@@ -100,7 +100,7 @@ describe('chatroom tests', () => {
 
         cy.reload()
         logInAsUser("username", "password1234")
-        cy.contains("dashboard").click()
+        cy.contains("Dashboard").click()
         cy.contains("See Teachers Course Page").click()
         cy.get("a").contains("chatRoomName").should("not.exist")
     })

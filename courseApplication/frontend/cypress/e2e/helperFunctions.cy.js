@@ -97,7 +97,7 @@ const createCourseAsUser = (courseUniqueName, courseName) => {
 }
 
 const createTaskOnCourseAsUser = (courseUniqueName, description, deadline, maxGrade) => {
-    cy.contains("dashboard").click()
+    cy.contains("Dashboard").click()
    
 
     const course = cy.get('div[class*="course:"]').contains(`${courseUniqueName}`).parent()
@@ -147,7 +147,7 @@ const joinCourseAsUser= (courseUniqueName, usernameToJoinTheCourse) => {
 } 
 
 const visitCoursePageAsStudentFromDashboard = (courseUniqueName) => {
-    cy.contains("dashboard").click()
+    cy.contains("Dashboard").click()
     
     const course = cy.contains(courseUniqueName).parent()
     course.contains("See Course Page").click()

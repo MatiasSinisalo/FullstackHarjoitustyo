@@ -25,7 +25,7 @@ describe('course page tests', () => {
         logInAsUser("second username", "password1234")
         joinCourseAsUser("this-course-is-created-by-user-username", "second username");
         
-        cy.contains("dashboard").click()
+        cy.contains("Dashboard").click()
         cy.contains("this-course-is-created-by-user-username")
         cy.contains("courses name")
         

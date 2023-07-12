@@ -30,7 +30,7 @@ describe('teacher page tests', () => {
         logInAsUser("username", "password1234")
         createCourseAsUser("this-course-is-created-by-user-username", "courses name")
      
-        cy.contains("dashboard").click()
+        cy.contains("Dashboard").click()
         
         cy.contains("this-course-is-created-by-user-username")
         cy.contains("courses name")
