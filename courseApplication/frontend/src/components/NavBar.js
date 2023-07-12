@@ -13,7 +13,7 @@ const NavBar = ({logOut}) => {
             <div className="navbar background">
                 <div className="navbar-content primary">
                     <button className="action-button" onClick={logOut}>Log Out</button>
-                    <Link className="navbar-link" to="/dashboard">dashboard</Link>
+                    <Link className="navbar-link" to="/dashboard">Dashboard</Link>
                     <Link className="navbar-link" to="/CourseBrowser">Courses</Link>
                     <Link className="navbar-link" to="/Calendar">Calendar</Link>
                 </div>
