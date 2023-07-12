@@ -14,19 +14,19 @@ const Day = ({currentDate, day, courseTasks}) => {
         return {uniqueName: course.uniqueName, tasks: tasks}
     }).filter((course) => course.tasks.length > 0)
 
-    console.log(tasksThisDay)
-
     const isCurrentDay = () => {
         return date === currentDate.getDate() && month === currentDate.getMonth() && year == currentDate.getFullYear()
     }
-
+   
     const currentDayStyle = isCurrentDay() ? " current-date" : ""
     return(
-        <div className={`day day${weekDay - 1}${currentDayStyle}`}>
-        <p>{date}</p>
-        {tasksThisDay.map((course) => {
-           return <CourseTasksDayShowCase key={course.uniqueName} course={course}></CourseTasksDayShowCase>
-        })}
+        <div className={`day day${weekDay}${currentDayStyle} primary`}>
+            <p>{day.toDateString()}</p>
+            <div className='course-day-showcases'>
+                {tasksThisDay.map((course) => {
+                    return <CourseTasksDayShowCase key={course.uniqueName} course={course}></CourseTasksDayShowCase>
+                })}
+            </div>
         </div>
     )
 }
@@ -35,9 +35,9 @@ const Day = ({currentDate, day, courseTasks}) => {
 const CourseTasksDayShowCase = ({course}) => {
     return (
     
-        <div>
+        <div className='course-tasks-day-showcase'>
             <p>{course.uniqueName}</p>
-            {course.tasks.map((task) => <TaskDayShowCase course={course} task={task}></TaskDayShowCase>)}
+            {course.tasks.map((task) => <TaskDayShowCase key={task.id} course={course} task={task}></TaskDayShowCase>)}
         </div>
    
     )
@@ -70,14 +70,14 @@ const Month = ({currentDate, user, year, month}) => {
         <h1>{month + 1} {year}</h1>
         <div className={"month"}>
             
-            <p className="day0">Mon</p>
-            <p className="day1">Tue</p>
-            <p className="day2">Wed</p>
-            <p className="day3">Thur</p>
-            <p className="day4">Fri</p>
-            <p className="day5">Sat</p>
-            <p className="day6">Sun</p>
-           
+            
+            <p className="day1">Mon</p>
+            <p className="day2">Tue</p>
+            <p className="day3">Wed</p>
+            <p className="day4">Thu</p>
+            <p className="day5">Fri</p>
+            <p className="day6">Sat</p>
+            <p className="day0">Sun</p>
             
             {days.map(day => <Day  currentDate={currentDate} courseTasks={courseTasksThisMonth} day={day} key={`${day.getDate()}${day.getMonth()}${day.getFullYear()}`}/>)}
         </div>
