@@ -21,6 +21,14 @@
     background-color: lightblue;
 }
 
+
+.course-tasks-dropdown{
+    background-color: white;
+    position: absolute;
+    padding: 1rem;
+    border: solid 1px black;
+    
+}
 /*sun*/
 .day0{
     grid-column: 7;
