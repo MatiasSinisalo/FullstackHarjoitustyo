@@ -38,7 +38,7 @@ const CourseTasksDayShowCase = ({course}) => {
     return (
         <>
         <div onClick={() => setDropDown(!showDropDown)} className='course-tasks-day-showcase'>
-            <p>{course.uniqueName}: {course.tasks.length}</p>
+            <p>tasks: {course.tasks.length}, {course.uniqueName}</p>
         </div>
 
        {showDropDown ? <CourseTasksDropDown course={course}></CourseTasksDropDown> : <></>}
