@@ -1,11 +1,9 @@
 .month{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
     grid-template-areas: 'sun mon tue wed thur fri sat';
     grid-gap: 0.5rem;
     padding: 1rem;
-   
 }
 
 .current-date{
@@ -14,14 +12,13 @@
 
 .day{
   display: flex;
-  flex-direction: row;
-  overflow: hidden;
-  min-height: 1fr;
+  flex-direction: column;
+  padding: 1rem;
 }
-.course-day-showcases{
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
+
+
+.course-tasks-day-showcase{
+    background-color: lightblue;
 }
 
 /*sun*/

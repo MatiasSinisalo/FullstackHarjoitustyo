@@ -33,16 +33,29 @@ const Day = ({currentDate, day, courseTasks}) => {
 
 
 const CourseTasksDayShowCase = ({course}) => {
-    return (
+    const [showPopUp, setShowPopUp] = useState(false)
     
-        <div className='course-tasks-day-showcase'>
-            <p>{course.uniqueName}</p>
-            {course.tasks.map((task) => <TaskDayShowCase key={task.id} course={course} task={task}></TaskDayShowCase>)}
+    return (
+        <>
+        <div onClick={() => setShowPopUp(!showPopUp)} className='course-tasks-day-showcase'>
+            <p>{course.uniqueName}: {course.tasks.length}</p>
         </div>
-   
+
+       {showPopUp ? <CourseTasksPopUp course={course}></CourseTasksPopUp> : <></>}
+         
+        </>
     )
 }
 
+const CourseTasksPopUp = ({course}) => {
+    return (
+        <div className='course-tasks-popup'>
+        {
+            course.tasks.map((task) => <TaskDayShowCase course={course} task={task}></TaskDayShowCase>)
+        }
+    </div>
+    )
+}
 const TaskDayShowCase = ({course, task}) => {
     return(
         <Link to={`/course/${course.uniqueName}/task/${task.id}`}>
