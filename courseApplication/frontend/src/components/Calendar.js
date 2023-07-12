@@ -22,21 +22,29 @@ const Day = ({currentDate, day, courseTasks}) => {
         <div className={`day day${weekDay - 1}${currentDayStyle}`}>
         <p>{date}</p>
         {tasksThisDay.map((course) => {
-           return course.tasks.map((task) => <TaskDayShowCase key={task.id} course={course} task={task}></TaskDayShowCase>)
+           return <CourseTasksDayShowCase key={course.uniqueName} course={course}></CourseTasksDayShowCase>
         })}
         </div>
     )
 }
 
 
-const TaskDayShowCase = ({course, task}) => {
+const CourseTasksDayShowCase = ({course}) => {
     return (
-    <Link to={`/course/${course.uniqueName}/task/${task.id}`}>
+    
         <div>
             <p>{course.uniqueName}</p>
-            <p>{task.description}</p>
+            {course.tasks.map((task) => <TaskDayShowCase course={course} task={task}></TaskDayShowCase>)}
         </div>
-    </Link>
+   
+    )
+}
+
+const TaskDayShowCase = ({course, task}) => {
+    return(
+        <Link to={`/course/${course.uniqueName}/task/${task.id}`}>
+            <p>{task.description}</p>
+        </Link>
     )
 }
 
