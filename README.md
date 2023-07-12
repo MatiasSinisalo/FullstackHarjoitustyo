@@ -18,5 +18,6 @@ https://studastudy.onrender.com/
 - tasks have a deadline
 - teacher can create/remove chatroom on course and add/remove students in chatroom
 - user can send messages to chatroom
+- user can see tasks from all of the attended courses in calendar
 ------------ 
 [Spent hours](https://docs.google.com/spreadsheets/d/1K9DqX2p2_PtSLL4t0_WbcCw9u_i5VYedNC6exk37Pj4/edit?usp=sharing)
