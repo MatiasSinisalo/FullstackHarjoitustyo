@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux"
-import { createChatRoom } from "../reducers/courseReducer"
+import { createChatRoom } from "../../reducers/courseReducer"
 import { useApolloClient } from "@apollo/client"
 
 const CreateChatRoom = ({course}) => {

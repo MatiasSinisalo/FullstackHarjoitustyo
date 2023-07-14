@@ -3,7 +3,7 @@ import ContentBlockCreateForm from "./ContentBlockCreateForm"
 import { useState } from "react"
 import ContentBlock from "./ContentBlock"
 import { useDispatch } from "react-redux"
-import { removeInfoPageFromCourse } from "../reducers/courseReducer"
+import { removeInfoPageFromCourse } from "../../reducers/courseReducer"
 import { useApolloClient } from "@apollo/client"
 
 

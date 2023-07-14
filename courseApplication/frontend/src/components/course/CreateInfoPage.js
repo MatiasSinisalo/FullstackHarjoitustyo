@@ -1,7 +1,7 @@
 import { useApolloClient } from "@apollo/client"
 import { useState } from "react"
 import { useDispatch } from "react-redux"
-import { createInfoPageOnCourse } from "../reducers/courseReducer"
+import { createInfoPageOnCourse } from "../../reducers/courseReducer"
 
 
 

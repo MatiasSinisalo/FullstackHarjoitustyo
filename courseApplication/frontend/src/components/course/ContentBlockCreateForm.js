@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useDispatch } from "react-redux"
-import { createContentBlockOnInfoPage } from "../reducers/courseReducer"
+import { createContentBlockOnInfoPage } from "../../reducers/courseReducer"
 import { useApolloClient } from "@apollo/client"
 
 

@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import { useApolloClient, useQuery } from "@apollo/client"
 import { GET_ALL_COURSES } from "../queries/courseQueries"
-import CourseShowCase from "./CourseShowCase"
+import CourseShowCase from "./course/CourseShowCase"
 import { getAllCourses, setCourses } from "../reducers/courseReducer"
 import { useEffect } from "react"
 import { ME } from "../queries/userQueries"

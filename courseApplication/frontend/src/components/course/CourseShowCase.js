@@ -1,8 +1,8 @@
 import { useApolloClient } from "@apollo/client"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { addStudentToCourse, removeStudentFromCourse } from "../reducers/courseReducer"
-import './styles/course.css'
+import { addStudentToCourse, removeStudentFromCourse } from "../../reducers/courseReducer"
+import '../styles/course.css'
 
 const CourseShowCase = ({course, currentUser}) => {
     const thisUserIsParticipating = currentUser.attendsCourses.find((other) => other.id == course.id)

@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client"
 import { useDispatch } from "react-redux"
-import { addUserToChatRoom } from "../reducers/courseReducer"
+import { addUserToChatRoom } from "../../reducers/courseReducer"
 
 
 

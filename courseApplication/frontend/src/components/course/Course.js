@@ -8,12 +8,12 @@ import {
     Routes,
     useParams
 } from "react-router-dom"
-import { GET_COURSE } from "../queries/courseQueries"
-import { getCourseWithUniqueName } from "../reducers/courseReducer"
+import { GET_COURSE } from "../../queries/courseQueries"
+import { getCourseWithUniqueName } from "../../reducers/courseReducer"
 import Task from "./Task"
 import TaskListings from "./TaskListings"
-import "./styles/course.css"
-import { ME } from "../queries/userQueries"
+import "../styles/course.css"
+import { ME } from "../../queries/userQueries"
 import TeachersCourse, { TaskCreationForm } from "./TeachersCourse"
 import CourseParticipants from "./CourseParticipants"
 import CreateInfoPage from "./CreateInfoPage"

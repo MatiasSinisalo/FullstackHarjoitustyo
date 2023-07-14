@@ -1,8 +1,8 @@
 import { useApolloClient } from "@apollo/client"
-import courseService from "../services/courseService"
+import courseService from "../../services/courseService"
 import { useDispatch } from "react-redux"
-import { Notify } from "../reducers/notificationReducer"
-import { addSubmissionToTask } from "../reducers/courseReducer"
+import { Notify } from "../../reducers/notificationReducer"
+import { addSubmissionToTask } from "../../reducers/courseReducer"
 import { useNavigate } from "react-router-dom"
 
 

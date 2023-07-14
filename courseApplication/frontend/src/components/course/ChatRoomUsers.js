@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux"
-import { removeUserFromChatRoom, leaveChatRoom } from "../reducers/courseReducer"
+import { removeUserFromChatRoom, leaveChatRoom } from "../../reducers/courseReducer"
 import { useApolloClient } from "@apollo/client"
 
 const ChatRoomUsers = ({course, chatRoom, user}) => {

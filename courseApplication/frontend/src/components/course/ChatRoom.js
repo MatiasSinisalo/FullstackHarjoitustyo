@@ -4,9 +4,9 @@ import CreateMessage from "./CreateMessage"
 import AddUsersToChatRoom from "./AddUsersToChatRoom"
 import ChatRoomUsers from "./ChatRoomUsers"
 import { useApolloClient, useSubscription } from "@apollo/client"
-import { SUBSCRIBE_TO_MESSAGE_CREATED } from "../queries/courseQueries"
+import { SUBSCRIBE_TO_MESSAGE_CREATED } from "../../queries/courseQueries"
 import { useDispatch } from "react-redux"
-import { removeChatRoom } from "../reducers/courseReducer"
+import { removeChatRoom } from "../../reducers/courseReducer"
 
 const ChatRoom = ({course, user}) => {
     const chatRoomId = useParams().chatRoomId

@@ -1,13 +1,13 @@
 import SubmitSolutionView from "./SubmitSolutionView"
 import AnswersView from "./AnswersView"
-import './styles/course.css'
+import '../styles/course.css'
 import { useApolloClient, useQuery } from "@apollo/client"
-import {ME} from '../queries/userQueries'
+import {ME} from '../../queries/userQueries'
 
 import { useDispatch } from "react-redux"
-import { Notify } from "../reducers/notificationReducer"
-import { removeTaskFromCourse } from "../reducers/courseReducer"
-import { GET_COURSE } from "../queries/courseQueries"
+import { Notify } from "../../reducers/notificationReducer"
+import { removeTaskFromCourse } from "../../reducers/courseReducer"
+import { GET_COURSE } from "../../queries/courseQueries"
 import {
       Link,
       Outlet,

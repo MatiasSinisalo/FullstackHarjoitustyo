@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import Task from "./Task"
-import './styles/course.css'
+import '../styles/course.css'
 import { Link, Route, Routes, useNavigate, useParams } from "react-router-dom"
 import { useQuery } from "@apollo/client"
-import { GET_COURSE } from "../queries/courseQueries"
+import { GET_COURSE } from "../../queries/courseQueries"
 
 const TaskShowCase = ({course, task}) => {
   const deadline = new Date(parseInt(task.deadline)).toISOString().split('T')[0]

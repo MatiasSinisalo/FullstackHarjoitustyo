@@ -1,4 +1,4 @@
-import "./styles/course.css"
+import "../styles/course.css"
 const Messages = ({course, chatRoom}) =>{
     console.log("re rendered messages!")
     return(

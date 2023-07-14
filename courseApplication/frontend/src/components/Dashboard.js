@@ -1,6 +1,6 @@
 import { useApolloClient, useQuery } from "@apollo/client"
 import { Link } from "react-router-dom"
-import CourseShowCase from "../components/CourseShowCase"
+import CourseShowCase from "./course/CourseShowCase"
 import { GET_ALL_COURSES } from "../queries/courseQueries"
 import { ME } from "../queries/userQueries"
 import { courseHasStudent } from '../reducers/courseReducer'

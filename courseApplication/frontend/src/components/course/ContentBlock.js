@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { removeContentBlockFromInfoPage } from "../reducers/courseReducer"
+import { removeContentBlockFromInfoPage } from "../../reducers/courseReducer"
 import { useApolloClient } from "@apollo/client"
 import { useDispatch } from "react-redux"
 import EditableBlock from "./EditableBlock"

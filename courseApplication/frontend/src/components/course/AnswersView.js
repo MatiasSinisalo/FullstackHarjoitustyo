@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import Submission from "./Submission"
-import "./styles/course.css"
+import "../styles/course.css"
 
 
 const AnswersView = ({course, task}) => {

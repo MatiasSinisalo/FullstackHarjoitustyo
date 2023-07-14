@@ -1,10 +1,10 @@
 import { useApolloClient, useQuery } from "@apollo/client"
-import courseService from "../services/courseService"
+import courseService from "../../services/courseService"
 import { useDispatch } from "react-redux"
-import { Notify } from "../reducers/notificationReducer"
-import { editTaskSubmission, gradeSubmission, removeSubmissionFromTask } from "../reducers/courseReducer"
+import { Notify } from "../../reducers/notificationReducer"
+import { editTaskSubmission, gradeSubmission, removeSubmissionFromTask } from "../../reducers/courseReducer"
 import { useState } from "react"
-import { ME } from "../queries/userQueries"
+import { ME } from "../../queries/userQueries"
 import { Link, useNavigate, useParams } from "react-router-dom"
 
 

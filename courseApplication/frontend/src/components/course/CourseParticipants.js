@@ -6,13 +6,13 @@ import {
   useNavigate,
     useParams
 } from "react-router-dom"
-import { GET_COURSE } from "../queries/courseQueries"
-import courseService from "../services/courseService"
+import { GET_COURSE } from "../../queries/courseQueries"
+import courseService from "../../services/courseService"
 import Task from "./Task"
-import { Notify } from "../reducers/notificationReducer"
+import { Notify } from "../../reducers/notificationReducer"
 import TaskListings from "./TaskListings"
-import "./styles/course.css"
-import { createNewTaskOnCourse, removeCourse, removeStudentFromCourse } from "../reducers/courseReducer"
+import "../styles/course.css"
+import { createNewTaskOnCourse, removeCourse, removeStudentFromCourse } from "../../reducers/courseReducer"
 
 
 const StudentListing = ({student, course}) => {

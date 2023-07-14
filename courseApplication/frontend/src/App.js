@@ -8,11 +8,11 @@ import {
 } from "react-router-dom"
 import { useEffect, useState } from "react";
 import Calendar from "./components/calendar/Calendar";
-import Course from "./components/Course";
+import Course from "./components/course/Course";
 import CreateCourse from "./components/CreateCourse";
 import CourseBrowser from "./components/CourseBrowser";
 import Dashboard from "./components/Dashboard";
-import Messages from "./components/Messages";
+import Messages from "./components/course/Messages";
 import LogIn from "./components/LogIn";
 import { getUserData, LogInAsUser } from './services/logInService'
 import {useNavigate} from 'react-router-dom'
@@ -22,15 +22,15 @@ import NavBar from "./components/NavBar";
 import { useDispatch, useSelector } from "react-redux";
 import { setCourses } from "./reducers/courseReducer";
 import { GET_ALL_COURSES } from "./queries/courseQueries";
-import TeachersCourse, { TaskCreationForm } from "./components/TeachersCourse";
+import TeachersCourse, { TaskCreationForm } from "./components/course/TeachersCourse";
 import CreateAccount from "./components/CreateAccount";
 import Notification from "./components/Notification";
 import { Notify } from "./reducers/notificationReducer";
 import "./components/styles/app.css"
-import Task from "./components/Task";
-import TaskListings from "./components/TaskListings";
-import CourseParticipants from "./components/CourseParticipants";
-import Submission from "./components/Submission";
+import Task from "./components/course/Task";
+import TaskListings from "./components/course/TaskListings";
+import CourseParticipants from "./components/course/CourseParticipants";
+import Submission from "./components/course/Submission";
 import { ME } from "./queries/userQueries";
 
 
