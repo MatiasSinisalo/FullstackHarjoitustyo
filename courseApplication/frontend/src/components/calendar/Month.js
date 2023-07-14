@@ -17,7 +17,7 @@ const Month = ({currentDate, user, year, month}) => {
         }).filter((course) => course.tasks.length > 0)
     }
     
-    const courseTasksThisMonth = getCoursesWithTasksForMonth(user.attendsCourses, month)
+    const coursesWithTasksThisMonth = getCoursesWithTasksForMonth(user.attendsCourses, month)
 
     const daysInMonth = getDaysInMonth(new Date(year, month))
     const days = eachDayOfInterval({start: new Date(year, month, 1), end: new Date(year, month, daysInMonth)})
@@ -35,7 +35,7 @@ const Month = ({currentDate, user, year, month}) => {
             <p className="day6">Sat</p>
             <p className="day0">Sun</p>
             
-            {days.map(day => <Day  currentDate={currentDate} courseTasks={courseTasksThisMonth} day={day} key={`${day.getDate()}${day.getMonth()}${day.getFullYear()}`}/>)}
+            {days.map(day => <Day  currentDate={currentDate} courses={coursesWithTasksThisMonth} day={day} key={`${day.getDate()}${day.getMonth()}${day.getFullYear()}`}/>)}
         </div>
         </>
     )
