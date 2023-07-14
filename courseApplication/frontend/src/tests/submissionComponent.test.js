@@ -4,7 +4,7 @@ import { renderer, render, screen } from '@testing-library/react'
 import client from '../client'
 import { ApolloProvider } from '@apollo/client'
 import { MockedProvider } from "@apollo/client/testing";
-import Submission from '../components/Submission' 
+import Submission from '../components/course/Submission' 
 import store from '../store';
 import { Provider } from 'react-redux';
 import { ME } from '../queries/userQueries'
