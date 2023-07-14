@@ -1,5 +1,5 @@
 import { useApolloClient } from '@apollo/client'
-import { ME } from '../queries/userQueries'
+import { ME } from '../../queries/userQueries'
 import { useState } from 'react'
 import Month from './Month'
 

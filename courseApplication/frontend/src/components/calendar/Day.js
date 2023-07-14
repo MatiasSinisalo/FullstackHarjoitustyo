@@ -1,7 +1,7 @@
 import { eachDayOfInterval, eachMonthOfInterval, getDaysInMonth, getWeeksInMonth  } from 'date-fns'
-import "./styles/month.css"
+import "../styles/month.css"
 import { useApolloClient } from '@apollo/client'
-import { ME } from '../queries/userQueries'
+import { ME } from '../../queries/userQueries'
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 

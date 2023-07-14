@@ -7,7 +7,7 @@ import {
   useLocation
 } from "react-router-dom"
 import { useEffect, useState } from "react";
-import Calendar from "./components/Calendar";
+import Calendar from "./components/calendar/Calendar";
 import Course from "./components/Course";
 import CreateCourse from "./components/CreateCourse";
 import CourseBrowser from "./components/CourseBrowser";
