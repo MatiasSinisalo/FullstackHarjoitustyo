@@ -10,14 +10,17 @@ const Month = ({currentDate, user, year, month}) => {
     //constains weeks in this way:
     //const week= {weekNumber, {dates}}
    
+    const sameDate = (dateA, dateB) => {
+        const sameDay = dateA.getDate() === dateB.getDate()
+        const sameMonth = dateA.getMonth() === dateB.getMonth()
+        const sameYear = dateA.getFullYear() === dateB.getFullYear()
+        return sameDay && sameMonth && sameYear
+    }
     const getCoursesWithTasksForDay = (courses, day) => {
         return courses.map((course) => {
             const tasks = course.tasks.filter((task) => {
                 const deadlineDate = new Date(parseInt(task.deadline))
-                const sameDay = deadlineDate.getDate() === day.getDate()
-                const sameMonth = deadlineDate.getMonth() === day.getMonth()
-                const sameYear = deadlineDate.getFullYear() === day.getFullYear()
-                return sameDay && sameMonth && sameYear
+                return sameDate(deadlineDate, day)
             })
             return {uniqueName: course.uniqueName, tasks: tasks}
         }).filter((course) => course.tasks.length > 0)
