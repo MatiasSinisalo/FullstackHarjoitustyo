@@ -13,15 +13,6 @@ const Day = ({currentDate, day, courses}) => {
     const month = day.getMonth()
     const year = day.getFullYear()
 
-    const getCoursesWithTasksForDay = (course, day) => {
-        return course.map((course) => {
-            const tasks = course.tasks.filter((task) => new Date(parseInt(task.deadline)).getDate() === day.getDate() && year == currentDate.getFullYear())
-            return {uniqueName: course.uniqueName, tasks: tasks}
-        }).filter((course) => course.tasks.length > 0)
-    }
-
-    const coursesWithTasksThisDay = getCoursesWithTasksForDay(courses, day)
-
     const isCurrentDay = () => {
         return date === currentDate.getDate() && month === currentDate.getMonth() && year == currentDate.getFullYear()
     }
@@ -31,7 +22,7 @@ const Day = ({currentDate, day, courses}) => {
         <div className={`day day${weekDay}${currentDayStyle} primary`}>
             <p>{day.toDateString()}</p>
             <div className='course-day-showcases'>
-                {coursesWithTasksThisDay.map((course) => {
+                {courses.map((course) => {
                     return <CourseTasksDayShowCase key={course.uniqueName} course={course}></CourseTasksDayShowCase>
                 })}
             </div>
