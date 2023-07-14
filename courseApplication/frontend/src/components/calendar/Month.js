@@ -10,13 +10,6 @@ const Month = ({currentDate, user, year, month}) => {
     //constains weeks in this way:
     //const week= {weekNumber, {dates}}
    
-   
-    const getCoursesWithTasksForMonth = (courses, month) => {
-        return courses.map((course) => {
-            return { uniqueName: course.uniqueName, tasks: course.tasks.filter((task) => new Date(parseInt(task.deadline)).getMonth() == month)}
-        }).filter((course) => course.tasks.length > 0)
-    }
-
     const getCoursesWithTasksForDay = (courses, day) => {
         return courses.map((course) => {
             const tasks = course.tasks.filter((task) => {
@@ -30,10 +23,6 @@ const Month = ({currentDate, user, year, month}) => {
         }).filter((course) => course.tasks.length > 0)
     }
     
-    const coursesWithTasksThisMonth = getCoursesWithTasksForMonth(user.attendsCourses, month)
-
-   
-
     const daysInMonth = getDaysInMonth(new Date(year, month))
     const days = eachDayOfInterval({start: new Date(year, month, 1), end: new Date(year, month, daysInMonth)})
 
