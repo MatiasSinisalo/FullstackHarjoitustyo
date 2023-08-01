@@ -294,8 +294,8 @@ const removeChatRoom = async (courseUniqueName, chatRoomId, client) => {
         const result = await client.mutate({mutation: REMOVE_CHAT_ROOM, variables: {courseUniqueName, chatRoomId}})
         if(result.data.removeChatRoom)
         {
-            client.cache.evict({id: `ChatRoom:${chatRoomId}`})
-            client.cache.gc()
+            
+            freeChatRoomFromCache(client, chatRoomId)
             return result.data.removeChatRoom
         }
     }
@@ -310,16 +310,7 @@ const createMessage = async(courseUniqueName, chatRoomId, content, client) => {
         if(result.data.createMessage)
         {
             const message = result.data.createMessage
-            client.cache.modify(
-                {
-                    id: `ChatRoom:${chatRoomId}`,
-                    fields: {
-                        messages(currentMessages){
-                            return currentMessages.concat({__ref: `Message:${message.id}`})
-                        }
-                    }
-                }
-            )
+            addMessageRefToChatRoomCache(client, chatRoomId, message)
             return message
         }
     }
@@ -405,6 +396,24 @@ export default {getAllCourses,
     removeChatRoom
 }
 
+
+function addMessageRefToChatRoomCache(client, chatRoomId, message) {
+    client.cache.modify(
+        {
+            id: `ChatRoom:${chatRoomId}`,
+            fields: {
+                messages(currentMessages) {
+                    return currentMessages.concat({ __ref: `Message:${message.id}` })
+                }
+            }
+        }
+    )
+}
+
+function freeChatRoomFromCache(client, chatRoomId) {
+    client.cache.evict({ id: `ChatRoom:${chatRoomId}` })
+    client.cache.gc()
+}
 
 function addChatRoomRefToCourseCache(client, courseUniqueName, result) {
     const course = client.readQuery({ query: GET_COURSE, variables: { uniqueName: courseUniqueName } }).getCourse
