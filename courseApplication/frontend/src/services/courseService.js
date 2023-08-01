@@ -327,16 +327,7 @@ const addUserToChatRoom = async (course, chatRoomId, username, client) => {
         if(result.data.addUserToChatRoom)
         {
             const user = result.data.addUserToChatRoom
-            client.cache.modify(
-                {
-                    id: `ChatRoom:${chatRoomId}`,
-                    fields: {
-                        users(currentUsers){
-                            return currentUsers.concat({__ref: `User:${user.id}`})
-                        }
-                    }
-                }
-            )
+            addUserRefToChatRoomCache(client, chatRoomId, user)
             return user
         }
     }
@@ -396,6 +387,19 @@ export default {getAllCourses,
     removeChatRoom
 }
 
+
+function addUserRefToChatRoomCache(client, chatRoomId, user) {
+    client.cache.modify(
+        {
+            id: `ChatRoom:${chatRoomId}`,
+            fields: {
+                users(currentUsers) {
+                    return currentUsers.concat({ __ref: `User:${user.id}` })
+                }
+            }
+        }
+    )
+}
 
 function addMessageRefToChatRoomCache(client, chatRoomId, message) {
     client.cache.modify(
