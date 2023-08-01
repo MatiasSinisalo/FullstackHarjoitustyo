@@ -13,9 +13,7 @@ export const createCourse = async (uniqueName, name, teacher, apolloClient) => {
         const course = createdCourse.data?.createCourse
         if(course)
         {
-            apolloClient.cache.updateQuery({query: ME}, (data) => {
-                return {me: {...data.me, teachesCourses: data.me.teachesCourses.concat(course)}}
-            })
+            addTeachesCourseRefToUser(apolloClient, course)
             return course
         }
     }
@@ -456,4 +454,10 @@ export default {getAllCourses,
     addUserToChatRoom,
     removeUserFromChatRoom,
     removeChatRoom
+}
+
+function addTeachesCourseRefToUser(apolloClient, course) {
+    apolloClient.cache.updateQuery({ query: ME }, (data) => {
+        return { me: { ...data.me, teachesCourses: data.me.teachesCourses.concat(course) } }
+    })
 }
