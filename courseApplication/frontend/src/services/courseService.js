@@ -213,8 +213,7 @@ const removeInfoPage = async (courseUniqueName, infoPageId, client) => {
         })
         if(result.data.removeInfoPageFromCourse)
         {
-            client.cache.evict({id: `InfoPage:${infoPageId}`})
-            client.cache.gc()
+            freeInfoPageFromCache(client, infoPageId)
             return result.data.removeInfoPageFromCourse
         }
     }
@@ -425,6 +424,11 @@ export default {getAllCourses,
     removeChatRoom
 }
 
+
+function freeInfoPageFromCache(client, infoPageId) {
+    client.cache.evict({ id: `InfoPage:${infoPageId}` })
+    client.cache.gc()
+}
 
 function addInfoPageRefToCourseCache(client, courseUniqueName, result) {
     const course = client.readQuery({ query: GET_COURSE, variables: { uniqueName: courseUniqueName } }).getCourse
