@@ -1,6 +1,6 @@
 import { ADD_CONTENT_BLOCK_TO_INFO_PAGE, ADD_INFO_PAGE_TO_COURSE, ADD_STUDENT_TO_COURSE, ADD_SUBMISSION_TO_COURSE, ADD_TASK_TO_COURSE, ADD_USER_TO_CHAT_ROOM, CREATE_CHAT_ROOM, CREATE_COURSE, CREATE_MESSAGE, GET_ALL_COURSES, GET_COURSE, GRADE_SUBMISSION, MODIFY_CONTENT_BLOCK, MODIFY_SUBMISSION, REMOVE_CHAT_ROOM, REMOVE_CONTENT_BLOCK_FROM_INFO_PAGE, REMOVE_COURSE, REMOVE_INFO_PAGE_FROM_COURSE, REMOVE_STUDENT_FROM_COURSE, REMOVE_SUBMISSION_FROM_COURSE_TASK, REMOVE_TASK_FROM_COURSE, REMOVE_USER_FROM_CHAT_ROOM } from "../queries/courseQueries"
 import { ME } from "../queries/userQueries"
-
+import apolloCache from "../caching/apolloCache"
 export const getAllCourses = async (apolloClient) => {
     const allCourses = await apolloClient.query({query: GET_ALL_COURSES})
     return allCourses.data.allCourses
@@ -13,7 +13,7 @@ export const createCourse = async (uniqueName, name, teacher, apolloClient) => {
         const course = createdCourse.data?.createCourse
         if(course)
         {
-            addTeachesCourseRefToUser(apolloClient, course)
+            apolloCache.addTeachesCourseRefToUser(apolloClient, course)
             return course
         }
     }
@@ -27,7 +27,7 @@ export const removeCourse = async(course, apolloClient)=>{
       const removed = await apolloClient.mutate({mutation: REMOVE_COURSE, variables: {uniqueName: course.uniqueName}})
 
       if(removed.data.removeCourse){
-           freeCourseFromCache(apolloClient, course)
+        apolloCache.freeCourseFromCache(apolloClient, course)
       }
       return removed.data.removeCourse
     }
@@ -42,13 +42,7 @@ export const getCourse = async (uniqueName, apolloClient) => {
     return course.data.getCourse
 }
 
-const addUserToUserAttendsListCache = (username, course, apolloClient) => {
-    const currentUser = apolloClient.readQuery({query: ME})?.me
-    if(currentUser?.username === username)
-    {
-        addAttendsCourseRefToUser(apolloClient, course)
-    }
-}
+
 
 export const addUserToCourse = async (uniqueName, username, apolloClient) => {
     try{
@@ -56,7 +50,7 @@ export const addUserToCourse = async (uniqueName, username, apolloClient) => {
         const course = courseWithAddedStudent?.data?.addStudentToCourse
         if(course)
         {
-            addUserToUserAttendsListCache(username, course, apolloClient)
+            apolloCache.addUserToUserAttendsListCache(username, course, apolloClient)
             return courseWithAddedStudent.data.addStudentToCourse
         }
         
@@ -69,13 +63,6 @@ export const addUserToCourse = async (uniqueName, username, apolloClient) => {
     }
 }
 
-const removeCourseFromUserAttendsListCache = (uniqueName, username, apolloClient) => {
-    const currentUser = apolloClient.readQuery({query: ME})?.me
-    if(currentUser?.username === username)
-    {
-        removeAttendsCourseRef(apolloClient, uniqueName)
-    }
-}
 
 export const removeUserFromCourse = async (uniqueName, username, apolloClient) => {
     try{
@@ -83,7 +70,7 @@ export const removeUserFromCourse = async (uniqueName, username, apolloClient) =
         const course = updatedCourse?.data?.removeStudentFromCourse
         if(course)
         {
-            removeCourseFromUserAttendsListCache(uniqueName, username, apolloClient)
+            apolloCache.removeCourseFromUserAttendsListCache(uniqueName, username, apolloClient)
             return updatedCourse.data.removeStudentFromCourse
         }
     }
@@ -102,7 +89,7 @@ try{
     
     if(result.data?.addTaskToCourse){
        
-        addTaskToCourseCache(apolloClient, uniqueName, result)
+        apolloCache.addTaskToCourseCache(apolloClient, uniqueName, result)
 
         return result.data.addTaskToCourse
     }
@@ -125,7 +112,7 @@ export const addSubmissionToCourseTask = async (courseUniqueName, taskId, conten
     const newSubmission = result.data.addSubmissionToCourseTask
     if(newSubmission)
     {
-        addSubmissionToCourseTaskCache(client, taskId, newSubmission)
+        apolloCache.addSubmissionToCourseTaskCache(client, taskId, newSubmission)
         return newSubmission
     }
     }
@@ -138,7 +125,7 @@ export const removeTaskFromCourse = async (courseUniqueName, taskId, client) => 
     try{
         const result = await client.mutate({mutation: REMOVE_TASK_FROM_COURSE, variables: {courseUniqueName, taskId}})
         if(result.data.removeTaskFromCourse){
-            freeTaskFromCache(client, taskId)
+            apolloCache.freeTaskFromCache(client, taskId)
             return true
         }
     }
@@ -153,7 +140,7 @@ export const removeSubmissionFromCourseTask = async (courseUniqueName, taskId, s
         const result = await client.mutate({mutation: REMOVE_SUBMISSION_FROM_COURSE_TASK, variables: {courseUniqueName, taskId, submissionId}})
         if(result.data.removeSubmissionFromCourseTask)
         {
-            freeSubmissionFromCache(client, submissionId)
+            apolloCache.freeSubmissionFromCache(client, submissionId)
             return result.data.removeSubmissionFromCourseTask
         }
     }
@@ -196,7 +183,7 @@ const createInfoPage = async (courseUniqueName, locationUrl, client) => {
         const result = await client.mutate({mutation: ADD_INFO_PAGE_TO_COURSE, variables: {courseUniqueName, locationUrl}})
         if(result.data.addInfoPageToCourse)
         {
-            addInfoPageRefToCourseCache(client, courseUniqueName, result)
+            apolloCache.addInfoPageRefToCourseCache(client, courseUniqueName, result)
             return result.data.addInfoPageToCourse
         }
     }
@@ -213,7 +200,7 @@ const removeInfoPage = async (courseUniqueName, infoPageId, client) => {
         })
         if(result.data.removeInfoPageFromCourse)
         {
-            freeInfoPageFromCache(client, infoPageId)
+            apolloCache.freeInfoPageFromCache(client, infoPageId)
             return result.data.removeInfoPageFromCourse
         }
     }
@@ -231,7 +218,7 @@ const createContentBlock = async (courseUniqueName, pageId, content, position, c
         })
         if(result.data.addContentBlockToInfoPage)
         {
-            addContentBlockToInfoPageCache(result, client, pageId)
+            apolloCache.addContentBlockToInfoPageCache(result, client, pageId)
             return result.data.addContentBlockToInfoPage
         }
     }
@@ -265,7 +252,7 @@ const removeContentBlock = async(courseUniqueName, pageId, contentBlockId, clien
         })
         if(result.data.removeContentBlockFromInfoPage)
         {
-            freeContentBlockFromCache(client, contentBlockId)
+            apolloCache.freeContentBlockFromCache(client, contentBlockId)
             return result.data.removeContentBlockFromInfoPage
         }
     }
@@ -280,7 +267,7 @@ const createChatRoom = async (courseUniqueName, chatRoomName, client) => {
         const result = await client.mutate({mutation: CREATE_CHAT_ROOM, variables: {courseUniqueName, name: chatRoomName}})
         if(result.data.createChatRoom)
         {
-            addChatRoomRefToCourseCache(client, courseUniqueName, result)
+            apolloCache.addChatRoomRefToCourseCache(client, courseUniqueName, result)
             return result.data.createChatRoom
         }
     }
@@ -295,7 +282,7 @@ const removeChatRoom = async (courseUniqueName, chatRoomId, client) => {
         if(result.data.removeChatRoom)
         {
             
-            freeChatRoomFromCache(client, chatRoomId)
+            apolloCache.freeChatRoomFromCache(client, chatRoomId)
             return result.data.removeChatRoom
         }
     }
@@ -310,7 +297,7 @@ const createMessage = async(courseUniqueName, chatRoomId, content, client) => {
         if(result.data.createMessage)
         {
             const message = result.data.createMessage
-            addMessageRefToChatRoomCache(client, chatRoomId, message)
+            apolloCache.addMessageRefToChatRoomCache(client, chatRoomId, message)
             return message
         }
     }
@@ -327,7 +314,7 @@ const addUserToChatRoom = async (course, chatRoomId, username, client) => {
         if(result.data.addUserToChatRoom)
         {
             const user = result.data.addUserToChatRoom
-            addUserRefToChatRoomCache(client, chatRoomId, user)
+            apolloCache.addUserRefToChatRoomCache(client, chatRoomId, user)
             return user
         }
     }
@@ -344,7 +331,7 @@ const removeUserFromChatRoom = async (course, chatRoomId, userToRemove, client) 
         
         if(result.data.removeUserFromChatRoom){
             const removed = result.data.removeUserFromChatRoom
-            removeUserRefFromChatRoomCache(client, chatRoomId, userToRemove)
+            apolloCache.removeUserRefFromChatRoomCache(client, chatRoomId, userToRemove)
             return removed
         }
     }
@@ -379,150 +366,3 @@ export default {getAllCourses,
 }
 
 
-function removeUserRefFromChatRoomCache(client, chatRoomId, userToRemove) {
-    client.cache.modify(
-        {
-            id: `ChatRoom:${chatRoomId}`,
-            fields: {
-                users(currentUsers) {
-                    return currentUsers.filter((userRef) => userRef.__ref !== `User:${userToRemove.id}`)
-                }
-            }
-        }
-    )
-}
-
-function addUserRefToChatRoomCache(client, chatRoomId, user) {
-    client.cache.modify(
-        {
-            id: `ChatRoom:${chatRoomId}`,
-            fields: {
-                users(currentUsers) {
-                    return currentUsers.concat({ __ref: `User:${user.id}` })
-                }
-            }
-        }
-    )
-}
-
-function addMessageRefToChatRoomCache(client, chatRoomId, message) {
-    client.cache.modify(
-        {
-            id: `ChatRoom:${chatRoomId}`,
-            fields: {
-                messages(currentMessages) {
-                    return currentMessages.concat({ __ref: `Message:${message.id}` })
-                }
-            }
-        }
-    )
-}
-
-function freeChatRoomFromCache(client, chatRoomId) {
-    client.cache.evict({ id: `ChatRoom:${chatRoomId}` })
-    client.cache.gc()
-}
-
-function addChatRoomRefToCourseCache(client, courseUniqueName, result) {
-    const course = client.readQuery({ query: GET_COURSE, variables: { uniqueName: courseUniqueName } }).getCourse
-    const chatRoom = result.data.createChatRoom
-    client.cache.modify({
-        id: `Course:${course.id}`,
-        fields: {
-            chatRooms(currentRooms) {
-                return currentRooms.concat({ __ref: `ChatRoom:${chatRoom.id}` })
-            }
-        }
-    })
-}
-
-function freeContentBlockFromCache(client, contentBlockId) {
-    client.cache.evict({ id: `ContentBlock:${contentBlockId}` })
-    client.cache.gc()
-}
-
-function addContentBlockToInfoPageCache(result, client, pageId) {
-    const contentBlock = result.data.addContentBlockToInfoPage
-    client.cache.modify({
-        id: `InfoPage:${pageId}`,
-        fields: {
-            contentBlocks(cachedContentBlocks) {
-                return cachedContentBlocks.concat({ __ref: `ContentBlock:${contentBlock.id}` })
-            }
-        }
-    })
-}
-
-function freeInfoPageFromCache(client, infoPageId) {
-    client.cache.evict({ id: `InfoPage:${infoPageId}` })
-    client.cache.gc()
-}
-
-function addInfoPageRefToCourseCache(client, courseUniqueName, result) {
-    const course = client.readQuery({ query: GET_COURSE, variables: { uniqueName: courseUniqueName } }).getCourse
-    client.cache.modify({
-        id: client.cache.identify(course),
-        fields: {
-            infoPages(pages) {
-                return pages.concat({ __ref: `InfoPage:${result.data.addInfoPageToCourse.id}` })
-            }
-        }
-    })
-}
-
-function freeSubmissionFromCache(client, submissionId) {
-    client.cache.evict({ id: `Submission:${submissionId}` })
-    client.cache.gc()
-}
-
-function freeTaskFromCache(client, taskId) {
-    client.cache.evict({ id: `Task:${taskId}` })
-    client.cache.gc()
-}
-
-function addSubmissionToCourseTaskCache(client, taskId, newSubmission) {
-    client.cache.modify({
-        id: `Task:${taskId}`,
-        fields: {
-            submissions(cachedSubmissions) {
-                return cachedSubmissions.concat({ __ref: `Submission:${newSubmission.id}` })
-            }
-        }
-    })
-}
-
-function addTaskToCourseCache(apolloClient, uniqueName, result) {
-    const course = apolloClient.readQuery({ query: GET_COURSE, variables: { uniqueName: uniqueName } }).getCourse
-    apolloClient.cache.modify({
-        id: apolloClient.cache.identify(course),
-        fields: {
-            tasks(cachedTasks) {
-                console.log(cachedTasks)
-                return cachedTasks.concat({ __ref: `Task:${result.data.addTaskToCourse.id}` })
-            }
-        }
-    })
-}
-
-function removeAttendsCourseRef(apolloClient, uniqueName) {
-    apolloClient.cache.updateQuery({ query: ME }, (data) => {
-        return { me: { ...data.me, attendsCourses: data.me.attendsCourses.filter((course) => course.uniqueName != uniqueName) } }
-    })
-}
-
-function addAttendsCourseRefToUser(apolloClient, course) {
-    apolloClient.cache.updateQuery({ query: ME }, (data) => {
-        return { me: { ...data.me, attendsCourses: data.me.attendsCourses.concat(course) } }
-    })
-}
-
-function freeCourseFromCache(apolloClient, course) {
-    apolloClient.cache.evict({ id: `Course:${course.id}` })
-    apolloClient.cache.gc()
-}
-
-function addTeachesCourseRefToUser(apolloClient, course) {
-    apolloClient.cache.updateQuery({ query: ME }, (data) => {
-        return { me: { ...data.me, teachesCourses: data.me.teachesCourses.concat(course) } }
-    })
-}
