@@ -265,8 +265,7 @@ const removeContentBlock = async(courseUniqueName, pageId, contentBlockId, clien
         })
         if(result.data.removeContentBlockFromInfoPage)
         {
-            client.cache.evict({id: `ContentBlock:${contentBlockId}`})
-            client.cache.gc()
+            freeContentBlockFromCache(client, contentBlockId)
             return result.data.removeContentBlockFromInfoPage
         }
     }
@@ -416,6 +415,11 @@ export default {getAllCourses,
     removeChatRoom
 }
 
+
+function freeContentBlockFromCache(client, contentBlockId) {
+    client.cache.evict({ id: `ContentBlock:${contentBlockId}` })
+    client.cache.gc()
+}
 
 function addContentBlockToInfoPageCache(result, client, pageId) {
     const contentBlock = result.data.addContentBlockToInfoPage
