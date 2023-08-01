@@ -196,15 +196,7 @@ const createInfoPage = async (courseUniqueName, locationUrl, client) => {
         const result = await client.mutate({mutation: ADD_INFO_PAGE_TO_COURSE, variables: {courseUniqueName, locationUrl}})
         if(result.data.addInfoPageToCourse)
         {
-            const course = client.readQuery({query: GET_COURSE, variables: {uniqueName: courseUniqueName}}).getCourse
-            client.cache.modify({
-                id: client.cache.identify(course),
-                fields: {
-                    infoPages(pages){
-                        return pages.concat({__ref: `InfoPage:${result.data.addInfoPageToCourse.id}`})
-                    }
-                }
-            })
+            addInfoPageRefToCourseCache(client, courseUniqueName, result)
             return result.data.addInfoPageToCourse
         }
     }
@@ -433,6 +425,18 @@ export default {getAllCourses,
     removeChatRoom
 }
 
+
+function addInfoPageRefToCourseCache(client, courseUniqueName, result) {
+    const course = client.readQuery({ query: GET_COURSE, variables: { uniqueName: courseUniqueName } }).getCourse
+    client.cache.modify({
+        id: client.cache.identify(course),
+        fields: {
+            infoPages(pages) {
+                return pages.concat({ __ref: `InfoPage:${result.data.addInfoPageToCourse.id}` })
+            }
+        }
+    })
+}
 
 function freeSubmissionFromCache(client, submissionId) {
     client.cache.evict({ id: `Submission:${submissionId}` })
