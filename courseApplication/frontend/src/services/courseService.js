@@ -27,8 +27,7 @@ export const removeCourse = async(course, apolloClient)=>{
       const removed = await apolloClient.mutate({mutation: REMOVE_COURSE, variables: {uniqueName: course.uniqueName}})
 
       if(removed.data.removeCourse){
-           apolloClient.cache.evict({id: `Course:${course.id}`})
-           apolloClient.cache.gc()
+           freeCourseFromCache(apolloClient, course)
       }
       return removed.data.removeCourse
     }
@@ -454,6 +453,11 @@ export default {getAllCourses,
     addUserToChatRoom,
     removeUserFromChatRoom,
     removeChatRoom
+}
+
+function freeCourseFromCache(apolloClient, course) {
+    apolloClient.cache.evict({ id: `Course:${course.id}` })
+    apolloClient.cache.gc()
 }
 
 function addTeachesCourseRefToUser(apolloClient, course) {
