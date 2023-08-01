@@ -344,16 +344,7 @@ const removeUserFromChatRoom = async (course, chatRoomId, userToRemove, client) 
         
         if(result.data.removeUserFromChatRoom){
             const removed = result.data.removeUserFromChatRoom
-            client.cache.modify(
-                {
-                    id: `ChatRoom:${chatRoomId}`,
-                    fields: {
-                        users(currentUsers){
-                            return currentUsers.filter((userRef) => userRef.__ref !== `User:${userToRemove.id}`)
-                        }
-                    }
-                }
-            )
+            removeUserRefFromChatRoomCache(client, chatRoomId, userToRemove)
             return removed
         }
     }
@@ -387,6 +378,19 @@ export default {getAllCourses,
     removeChatRoom
 }
 
+
+function removeUserRefFromChatRoomCache(client, chatRoomId, userToRemove) {
+    client.cache.modify(
+        {
+            id: `ChatRoom:${chatRoomId}`,
+            fields: {
+                users(currentUsers) {
+                    return currentUsers.filter((userRef) => userRef.__ref !== `User:${userToRemove.id}`)
+                }
+            }
+        }
+    )
+}
 
 function addUserRefToChatRoomCache(client, chatRoomId, user) {
     client.cache.modify(
