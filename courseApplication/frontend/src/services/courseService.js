@@ -101,17 +101,8 @@ try{
     const result = await apolloClient.mutate({mutation: ADD_TASK_TO_COURSE, variables: {courseUniqueName: uniqueName, description: description, deadline: deadline, maxGrade: maxGrade}})
     
     if(result.data?.addTaskToCourse){
-        //update course tasks in in cache to include the reference to the added task
-        const course = apolloClient.readQuery({query: GET_COURSE, variables: {uniqueName: uniqueName}}).getCourse
-        apolloClient.cache.modify({
-            id: apolloClient.cache.identify(course),
-            fields: {
-                tasks(cachedTasks){
-                    console.log(cachedTasks)
-                    return cachedTasks.concat({__ref: `Task:${result.data.addTaskToCourse.id}`})
-                }
-            }
-        })
+       
+        addTaskToCourseCache(apolloClient, uniqueName, result)
 
         return result.data.addTaskToCourse
     }
@@ -449,6 +440,20 @@ export default {getAllCourses,
     addUserToChatRoom,
     removeUserFromChatRoom,
     removeChatRoom
+}
+
+
+function addTaskToCourseCache(apolloClient, uniqueName, result) {
+    const course = apolloClient.readQuery({ query: GET_COURSE, variables: { uniqueName: uniqueName } }).getCourse
+    apolloClient.cache.modify({
+        id: apolloClient.cache.identify(course),
+        fields: {
+            tasks(cachedTasks) {
+                console.log(cachedTasks)
+                return cachedTasks.concat({ __ref: `Task:${result.data.addTaskToCourse.id}` })
+            }
+        }
+    })
 }
 
 function removeAttendsCourseRef(apolloClient, uniqueName) {
