@@ -73,9 +73,7 @@ const removeCourseFromUserAttendsListCache = (uniqueName, username, apolloClient
     const currentUser = apolloClient.readQuery({query: ME})?.me
     if(currentUser?.username === username)
     {
-        apolloClient.cache.updateQuery({query: ME}, (data) => {
-            return {me: {...data.me, attendsCourses: data.me.attendsCourses.filter((course) => course.uniqueName != uniqueName)}}
-        })
+        removeAttendsCourseRef(apolloClient, uniqueName)
     }
 }
 
@@ -451,6 +449,12 @@ export default {getAllCourses,
     addUserToChatRoom,
     removeUserFromChatRoom,
     removeChatRoom
+}
+
+function removeAttendsCourseRef(apolloClient, uniqueName) {
+    apolloClient.cache.updateQuery({ query: ME }, (data) => {
+        return { me: { ...data.me, attendsCourses: data.me.attendsCourses.filter((course) => course.uniqueName != uniqueName) } }
+    })
 }
 
 function addAttendsCourseRefToUser(apolloClient, course) {
