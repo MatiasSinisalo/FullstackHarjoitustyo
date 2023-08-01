@@ -231,15 +231,7 @@ const createContentBlock = async (courseUniqueName, pageId, content, position, c
         })
         if(result.data.addContentBlockToInfoPage)
         {
-            const contentBlock = result.data.addContentBlockToInfoPage
-            client.cache.modify({
-                id: `InfoPage:${pageId}`,
-                fields: {
-                    contentBlocks(cachedContentBlocks){
-                        return cachedContentBlocks.concat({__ref: `ContentBlock:${contentBlock.id}`})
-                    }
-                }
-            })
+            addContentBlockToInfoPageCache(result, client, pageId)
             return result.data.addContentBlockToInfoPage
         }
     }
@@ -424,6 +416,18 @@ export default {getAllCourses,
     removeChatRoom
 }
 
+
+function addContentBlockToInfoPageCache(result, client, pageId) {
+    const contentBlock = result.data.addContentBlockToInfoPage
+    client.cache.modify({
+        id: `InfoPage:${pageId}`,
+        fields: {
+            contentBlocks(cachedContentBlocks) {
+                return cachedContentBlocks.concat({ __ref: `ContentBlock:${contentBlock.id}` })
+            }
+        }
+    })
+}
 
 function freeInfoPageFromCache(client, infoPageId) {
     client.cache.evict({ id: `InfoPage:${infoPageId}` })
