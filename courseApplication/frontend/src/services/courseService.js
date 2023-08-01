@@ -125,14 +125,7 @@ export const addSubmissionToCourseTask = async (courseUniqueName, taskId, conten
     const newSubmission = result.data.addSubmissionToCourseTask
     if(newSubmission)
     {
-        client.cache.modify({
-                id: `Task:${taskId}`,
-                fields: {
-                    submissions(cachedSubmissions){
-                        return cachedSubmissions.concat({__ref: `Submission:${newSubmission.id}`})
-                    }
-                }
-        })
+        addSubmissionToCourseTaskCache(client, taskId, newSubmission)
         return newSubmission
     }
     }
@@ -442,6 +435,17 @@ export default {getAllCourses,
     removeChatRoom
 }
 
+
+function addSubmissionToCourseTaskCache(client, taskId, newSubmission) {
+    client.cache.modify({
+        id: `Task:${taskId}`,
+        fields: {
+            submissions(cachedSubmissions) {
+                return cachedSubmissions.concat({ __ref: `Submission:${newSubmission.id}` })
+            }
+        }
+    })
+}
 
 function addTaskToCourseCache(apolloClient, uniqueName, result) {
     const course = apolloClient.readQuery({ query: GET_COURSE, variables: { uniqueName: uniqueName } }).getCourse
