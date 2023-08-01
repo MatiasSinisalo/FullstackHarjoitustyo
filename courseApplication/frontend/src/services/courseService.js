@@ -153,8 +153,7 @@ export const removeSubmissionFromCourseTask = async (courseUniqueName, taskId, s
         const result = await client.mutate({mutation: REMOVE_SUBMISSION_FROM_COURSE_TASK, variables: {courseUniqueName, taskId, submissionId}})
         if(result.data.removeSubmissionFromCourseTask)
         {
-            client.cache.evict({id: `Submission:${submissionId}`})
-            client.cache.gc()
+            freeSubmissionFromCache(client, submissionId)
             return result.data.removeSubmissionFromCourseTask
         }
     }
@@ -434,6 +433,11 @@ export default {getAllCourses,
     removeChatRoom
 }
 
+
+function freeSubmissionFromCache(client, submissionId) {
+    client.cache.evict({ id: `Submission:${submissionId}` })
+    client.cache.gc()
+}
 
 function freeTaskFromCache(client, taskId) {
     client.cache.evict({ id: `Task:${taskId}` })
