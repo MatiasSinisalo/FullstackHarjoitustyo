@@ -46,9 +46,7 @@ const addUserToUserAttendsListCache = (username, course, apolloClient) => {
     const currentUser = apolloClient.readQuery({query: ME})?.me
     if(currentUser?.username === username)
     {
-        apolloClient.cache.updateQuery({query: ME}, (data) => {
-            return {me: {...data.me, attendsCourses: data.me.attendsCourses.concat(course)}}
-        })
+        addAttendsCourseRefToUser(apolloClient, course)
     }
 }
 
@@ -453,6 +451,12 @@ export default {getAllCourses,
     addUserToChatRoom,
     removeUserFromChatRoom,
     removeChatRoom
+}
+
+function addAttendsCourseRefToUser(apolloClient, course) {
+    apolloClient.cache.updateQuery({ query: ME }, (data) => {
+        return { me: { ...data.me, attendsCourses: data.me.attendsCourses.concat(course) } }
+    })
 }
 
 function freeCourseFromCache(apolloClient, course) {
