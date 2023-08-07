@@ -161,7 +161,7 @@ const removeCourseFromUserAttendsListCache = (uniqueName, username, apolloClient
     const currentUser = apolloClient.readQuery({query: ME})?.me
     if(currentUser?.username === username)
     {
-        apolloCache.removeAttendsCourseRef(apolloClient, uniqueName)
+        removeAttendsCourseRef(apolloClient, uniqueName)
     }
 }
 
