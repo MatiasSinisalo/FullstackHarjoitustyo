@@ -15,7 +15,7 @@ describe('courseService tests', () => {
        
         test('createCourse function calls backend correctly and returns correct parameters', async () => {
             mockClient.mutate = jest.fn(() => {return {data}})
-            const createdCourse = await createCourse('unique name', 'name', '', mockClient)
+            const createdCourse = await createCourse('unique name', 'name', mockClient)
             expect(mockClient.mutate.mock.calls).toHaveLength(1);
             
             const variables = mockClient.mutate.mock.calls[0][0].variables
@@ -28,7 +28,7 @@ describe('courseService tests', () => {
         })
         test('createCourse function returns correctly with incorrect parameters', async () => {
             mockClient.mutate = jest.fn(() => {throw new Error("this is some kind of an error")})
-            const createdCourse = await createCourse('', '', '', mockClient)
+            const createdCourse = await createCourse('', '', mockClient)
             expect(createdCourse.error.message).toEqual("this is some kind of an error")
         })
     })
