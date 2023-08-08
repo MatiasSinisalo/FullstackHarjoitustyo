@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client"
 import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { addStudentToCourse, removeStudentFromCourse } from "../../reducers/courseReducer"
 import '../styles/course.css'
 
@@ -30,8 +30,8 @@ const CourseShowCase = ({course, currentUser}) => {
 
     return (
         <div className={`course:${course.id} container primary course-showcase`}>
-            <h2>{course.uniqueName}</h2>
-            <h3>{course.name}</h3>
+            <h2>{course.name}</h2>
+            <h3>{course.uniqueName}</h3>
             {thisUserIsTeaching ? 
             
             <>
