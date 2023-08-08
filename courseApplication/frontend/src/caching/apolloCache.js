@@ -40,10 +40,7 @@ function addMessageRefToChatRoomCache(client, chatRoomId, message) {
     )
 }
 
-function freeChatRoomFromCache(client, chatRoomId) {
-    client.cache.evict({ id: `ChatRoom:${chatRoomId}` })
-    client.cache.gc()
-}
+
 
 function addChatRoomRefToCourseCache(client, courseUniqueName, result) {
     const course = client.readQuery({ query: GET_COURSE, variables: { uniqueName: courseUniqueName } }).getCourse
@@ -58,10 +55,7 @@ function addChatRoomRefToCourseCache(client, courseUniqueName, result) {
     })
 }
 
-function freeContentBlockFromCache(client, contentBlockId) {
-    client.cache.evict({ id: `ContentBlock:${contentBlockId}` })
-    client.cache.gc()
-}
+
 
 function addContentBlockToInfoPageCache(result, client, pageId) {
     const contentBlock = result.data.addContentBlockToInfoPage
@@ -75,10 +69,7 @@ function addContentBlockToInfoPageCache(result, client, pageId) {
     })
 }
 
-function freeInfoPageFromCache(client, infoPageId) {
-    client.cache.evict({ id: `InfoPage:${infoPageId}` })
-    client.cache.gc()
-}
+
 
 function addInfoPageRefToCourseCache(client, courseUniqueName, result) {
     const course = client.readQuery({ query: GET_COURSE, variables: { uniqueName: courseUniqueName } }).getCourse
@@ -92,15 +83,7 @@ function addInfoPageRefToCourseCache(client, courseUniqueName, result) {
     })
 }
 
-function freeSubmissionFromCache(client, submissionId) {
-    client.cache.evict({ id: `Submission:${submissionId}` })
-    client.cache.gc()
-}
 
-function freeTaskFromCache(client, taskId) {
-    client.cache.evict({ id: `Task:${taskId}` })
-    client.cache.gc()
-}
 
 function addSubmissionToCourseTaskCache(client, taskId, newSubmission) {
     client.cache.modify({
@@ -138,10 +121,7 @@ function addAttendsCourseRefToUser(apolloClient, course) {
     })
 }
 
-function freeCourseFromCache(apolloClient, course) {
-    apolloClient.cache.evict({ id: `Course:${course.id}` })
-    apolloClient.cache.gc()
-}
+
 
 function addTeachesCourseRefToUser(apolloClient, course) {
     apolloClient.cache.updateQuery({ query: ME }, (data) => {
@@ -163,6 +143,37 @@ const removeCourseFromUserAttendsListCache = (uniqueName, username, apolloClient
     {
         removeAttendsCourseRef(apolloClient, uniqueName)
     }
+}
+
+
+
+function freeContentBlockFromCache(client, contentBlockId) {
+    evictFromCache(client,`ContentBlock:${contentBlockId}`)
+}
+
+function freeCourseFromCache(client, course) {
+    evictFromCache(client,`Course:${course.id}`)
+}
+
+function freeSubmissionFromCache(client, submissionId) {
+    evictFromCache(client,`Submission:${submissionId}`)
+}
+
+function freeTaskFromCache(client, taskId) {
+    evictFromCache(client,`Task:${taskId}`)
+}
+
+function freeInfoPageFromCache(client, infoPageId) {
+    evictFromCache(client, `InfoPage:${infoPageId}`)
+}
+
+function freeChatRoomFromCache(client, chatRoomId) {
+    evictFromCache(client,`ChatRoom:${chatRoomId}`)
+}
+
+function evictFromCache(client, objId){
+    client.cache.evict({ id: objId})
+    client.cache.gc()
 }
 
 export default {
