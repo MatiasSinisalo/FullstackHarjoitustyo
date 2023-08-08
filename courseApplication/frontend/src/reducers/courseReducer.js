@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import store from "../store"
 const createNewCourse = async (courseUniqueName, courseName, client) => {
     
-const createdCourseQuery = await courseService.createCourse(courseUniqueName, courseName, "", client)
+const createdCourseQuery = await courseService.createCourse(courseUniqueName, courseName, client)
 if(!createdCourseQuery.error)
 {
     console.log(createdCourseQuery)

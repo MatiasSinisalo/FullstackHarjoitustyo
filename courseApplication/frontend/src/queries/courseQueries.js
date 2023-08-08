@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 
-export const CREATE_COURSE = gql`mutation Mutation($uniqueName: String!, $name: String!, $teacher: String!) {
-    createCourse(uniqueName: $uniqueName, name: $name, teacher: $teacher) {
+export const CREATE_COURSE = gql`mutation Mutation($uniqueName: String!, $name: String!) {
+    createCourse(uniqueName: $uniqueName, name: $name) {
       id
       uniqueName
       name
