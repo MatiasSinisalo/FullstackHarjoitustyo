@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
-const { taskSchema } = require('./task')
 const { infoPageSchema } = require('./infoPage')
 const { isValidAsUrl } = require('../regex')
 const { chatRoomSchema } = require('./chatRoom')
+const tasksSchema = require('./tasksSchema')
 const courseSchema = new mongoose.Schema({
     uniqueName: {
         type: String,
@@ -31,7 +31,7 @@ const courseSchema = new mongoose.Schema({
             ref: 'courseApplicationUser'
         }]
     },
-    tasks: [taskSchema],
+    tasks: tasksSchema,
     infoPages: [infoPageSchema],
     chatRooms: [chatRoomSchema]
 })
