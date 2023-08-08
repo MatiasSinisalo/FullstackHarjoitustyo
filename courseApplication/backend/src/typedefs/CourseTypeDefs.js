@@ -74,7 +74,6 @@ type Mutation{
     createCourse(
         uniqueName: String!
         name: String!
-        teacher: String
     ):Course
 
     removeCourse(

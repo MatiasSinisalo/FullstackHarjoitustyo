@@ -1,7 +1,7 @@
 const { gql } = require("apollo-server-core")
 
-const createCourse = `mutation Mutation($uniqueName: String!, $name: String!, $teacher: String!) {
-    createCourse(uniqueName: $uniqueName, name: $name, teacher: $teacher) {
+const createCourse = `mutation Mutation($uniqueName: String!, $name: String!) {
+    createCourse(uniqueName: $uniqueName, name: $name) {
       name
       students {
         name
