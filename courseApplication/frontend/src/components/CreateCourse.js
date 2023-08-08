@@ -23,12 +23,15 @@ const CreateCourse = () =>{
     <div className="container ">
       <h1>Create course page</h1>
       <form className="app-form container primary" onSubmit={submitCreateCourseForm}>
-          <input placeholder="Course unique name" type="text" name="courseUniqueName"></input>
-          <br></br>
+
+          <label htmlFor="courseName">Courses name: </label>
           <input  placeholder="Course name" type="text" name="courseName"></input>
           <br></br>
-          <input type="submit" value="submit"></input>
-      </form>
+         
+          <label htmlFor="courseName">Course unique name</label>
+          <p>/course/<input placeholder="Course-unique-name" type="text" name="courseUniqueName"></input>/</p>
+          <input className="action-button" type="submit" value="create new course"></input>
+        </form>
      </div>
      </div>
      </>
