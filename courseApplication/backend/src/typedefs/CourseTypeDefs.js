@@ -52,13 +52,17 @@ type InfoPage{
     contentBlocks: [ContentBlock!]!
 }
 
+type Tasks{
+    textTasks: [Task!]
+}
+
 type Course{
     id: ID!
     uniqueName: String!
     name: String!
     teacher: User!
     students: [User!]!
-    tasks: [Task!]
+    tasks: Tasks!
     infoPages: [InfoPage!]!
     chatRooms: [ChatRoom!]!
 }
