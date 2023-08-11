@@ -29,7 +29,7 @@ describe('removeTaskFromCourse tests', ()=> {
             deadline: new Date("2030-06-25"),
             submissions: []
         }
-        notToBeRemovedTaskQuery = await helpers.makeQuery({query: addTaskToCourse, variables: {
+        const notToBeRemovedTaskQuery = await helpers.makeQuery({query: addTaskToCourse, variables: {
             courseUniqueName: course.uniqueName, 
             description: notToBeRemovedTask.description, 
             deadline: notToBeRemovedTask.deadline.toString()
@@ -54,12 +54,8 @@ describe('removeTaskFromCourse tests', ()=> {
         expect(response.data.removeTaskFromCourse).toBe(true)
 
         const modifiedCourse = await Course.findOne({uniqueName: course.uniqueName})
-      
-        expect(modifiedCourse.tasks.length).toBe(1)
-        expect(modifiedCourse.tasks[0].description).toEqual("this task should not be removed")
-
-
-        
+        expect(modifiedCourse.tasks.textTasks.length).toBe(1)
+        expect(modifiedCourse.tasks.textTasks[0].description).toEqual("this task should not be removed")
     })
    
     test('removeTaskFromCourse returns Unauthorized if the user is not a teacher of the course', async () => {
@@ -91,7 +87,7 @@ describe('removeTaskFromCourse tests', ()=> {
         expect(response.data.removeTaskFromCourse).toBe(null)
 
         const modifiedCourse = await Course.findOne({uniqueName: course.uniqueName})
-        expect(modifiedCourse.tasks.length).toBe(1)
+        expect(modifiedCourse.tasks.textTasks.length).toBe(1)
     })
 
     test('removeTaskFromCourse returns given course not found if trying to remove task from a not existing course ', async () => {
@@ -121,7 +117,7 @@ describe('removeTaskFromCourse tests', ()=> {
         expect(response.data.removeTaskFromCourse).toBe(null)
 
         const modifiedCourse = await Course.findOne({uniqueName: course.uniqueName})
-        expect(modifiedCourse.tasks.length).toBe(1)
+        expect(modifiedCourse.tasks.textTasks.length).toBe(1)
     })
     
     test('removeTaskFromCourse returns given task not found if trying to remove an not existing task from a course ', async () => {
@@ -151,7 +147,7 @@ describe('removeTaskFromCourse tests', ()=> {
         expect(response.data.removeTaskFromCourse).toBe(null)
 
         const modifiedCourse = await Course.findOne({uniqueName: course.uniqueName})
-        expect(modifiedCourse.tasks.length).toBe(1)
+        expect(modifiedCourse.tasks.textTasks.length).toBe(1)
     })
     
 })
