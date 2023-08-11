@@ -130,6 +130,17 @@ const checkUserNotInChatRoom = (chatRoom, userId) => {
     }
 }
 
+const checkIsStudent = (course, userId) => {
+    if(!isStudent(course, userId))
+    {
+        return new UserInputError("Unauthorized")
+    }
+}
+
+const getStudentsSubmissions = (task, userId) => {
+    const submissions = task.submissions.filter((submission) => submission.fromUser.id === userId)
+    return submissions
+}
 
 module.exports= {fetchCourse,
                 fetchUser, 
@@ -144,5 +155,7 @@ module.exports= {fetchCourse,
                 isStudent,
                 checkIsAdminOrParticipant,
                 checkUserNotInChatRoom,
-                checkIsParticipant
+                checkIsParticipant,
+                checkIsStudent,
+                getStudentsSubmissions
             }

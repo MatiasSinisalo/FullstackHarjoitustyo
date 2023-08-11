@@ -14,21 +14,36 @@ const getAllCourses = async (userForToken) => {
     return courses
 }
 
-const getCourse = async(courseUniqueName, userForToken) => {
-    const course = await Course.findOne({uniqueName: courseUniqueName}).populate(["teacher"])
+const getCourse = async (courseUniqueName, userForToken) => {
+    const course = await Course.findOne({uniqueName: courseUniqueName}).populate(["teacher", "students", "tasks.textTasks.submissions.fromUser", "chatRooms.messages.fromUser", "chatRooms.admin", "chatRooms.users"])
     if(course.teacher.username === userForToken.username)
     {
-        const courseToReturn = await course.populate(["students", "tasks.textTasks.submissions.fromUser", "chatRooms.messages.fromUser", "chatRooms.admin", "chatRooms.users"])
-        return courseToReturn
+        return course
     }
     else
     {
-        const courseFiltered = await course.populate("students", null, {username: userForToken.username})
-        courseFiltered.tasks = courseFiltered.tasks.textTasks.map((task) => {
-            return {...task, submissions: task.submissions.filter((submission) => submission.fromUser == userForToken.id)}
+        serviceUtils.checkIsStudent(course, userForToken.id)
+        const textTasksWithFilteredSubmissions = course.tasks.textTasks.map((task) => {
+            const usersSubmissions = serviceUtils.getStudentsSubmissions(task, userForToken.id)
+            return {...task.toObject(), submissions: usersSubmissions, id: task.id}
         })
+
+        console.log(textTasksWithFilteredSubmissions)
+
+        const courseToReturn = {
+            id: course.id,
+            name: course.name,
+            uniqueName: course.uniqueName,
+            teacher: course.teacher,
+            students: [userForToken],
+            chatRooms: course.chatRooms,
+            infoPages: course.infoPages,
+            tasks: {
+                textTasks: textTasksWithFilteredSubmissions
+            }
+        }
         
-        const courseToReturn = await courseFiltered.populate(["tasks.textTasks.submissions.fromUser", "chatRooms.messages.fromUser", "chatRooms.admin", "chatRooms.users"])
+        console.log(courseToReturn)
         return courseToReturn
     }
 

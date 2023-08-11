@@ -144,14 +144,14 @@ describe('course querying tests', () => {
             await helpers.logIn("username")
 
             const courseInfoQuery =  await helpers.makeQuery({query: getCourse, variables: {uniqueName: "courses-name"}})
-          
+            
             const course = courseInfoQuery.data.getCourse
-          
             expect(course).toBeDefined()
-            expect(course.tasks.length).toBe(1)
-            expect(course.tasks[0].submissions.length).toBe(2)
-            expect(course.tasks[0].submissions[0].fromUser.id).toEqual(user.id)
-            expect(course.tasks[0].submissions[1].fromUser.id).toEqual(secondUser.id)
+            const textTasks = course.tasks.textTasks
+            expect(textTasks.length).toBe(1)
+            expect(textTasks[0].submissions.length).toBe(2)
+            expect(textTasks[0].submissions[0].fromUser.id).toEqual(user.id)
+            expect(textTasks[0].submissions[1].fromUser.id).toEqual(secondUser.id)
 
         })
 
@@ -197,13 +197,14 @@ describe('course querying tests', () => {
          
             
             const courseInfoQuery =  await helpers.makeQuery({query: getCourse, variables: {uniqueName: "courses-name"}})
-           
+            console.log(courseInfoQuery)
+
             const course = courseInfoQuery.data.getCourse
-          
             expect(course).toBeDefined()
-            expect(course.tasks.length).toBe(1)
-            expect(course.tasks[0].submissions.length).toBe(1)
-            expect(course.tasks[0].submissions[0].fromUser.id).toEqual(secondUser.id)
+            const textTasks = course.tasks.textTasks
+            expect(textTasks.length).toBe(1)
+            expect(textTasks[0].submissions.length).toBe(1)
+            expect(textTasks[0].submissions[0].fromUser.id).toEqual(secondUser.id)
           
 
         })
