@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const { infoPageSchema } = require('./infoPage')
 const { isValidAsUrl } = require('../regex')
 const { chatRoomSchema } = require('./chatRoom')
-const tasksSchema = require('./tasksSchema')
+const tasksSchema = require('./tasks')
 const courseSchema = new mongoose.Schema({
     uniqueName: {
         type: String,
