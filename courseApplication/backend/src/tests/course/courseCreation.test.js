@@ -27,7 +27,9 @@ describe('course creation tests', () => {
                 name: 'name'
             },
             students: [],
-            tasks: [],
+            tasks: {
+                textTasks: []
+            },
             infoPages: []
         }
         console.log(createdCourse)
@@ -45,6 +47,9 @@ describe('course creation tests', () => {
                 username: 'username',
                 name: 'name'
             },
+            tasks: {
+                textTasks: []
+            },
             students: [],
             infoPages: []
         }
@@ -53,13 +58,16 @@ describe('course creation tests', () => {
         const savedCourses = await Course.find({}).populate('teacher')
         expect(savedCourses.length).toBe(1)
         
-        const savedCourse = savedCourses[0]
-        expect(savedCourse.uniqueName).toEqual(correctReturnValue.uniqueName)
+        const savedCourse = savedCourses[0].toObject()
+        
         expect(savedCourse.name).toEqual(correctReturnValue.name)
         expect(savedCourse.teacher.username).toEqual(correctReturnValue.teacher.username)
         expect(savedCourse.teacher.name).toEqual(correctReturnValue.teacher.name)
         expect(savedCourse.students).toEqual(correctReturnValue.students)
         expect(savedCourse.infoPages).toEqual(correctReturnValue.infoPages)
+        
+        delete savedCourse.tasks._id
+        expect(savedCourse.tasks).toEqual(correctReturnValue.tasks)
     })
     test('createCourse query saves course reference to user correctly', async () => {
         const user = await helpers.logIn("username", "12345")
