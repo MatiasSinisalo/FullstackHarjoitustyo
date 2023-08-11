@@ -36,7 +36,8 @@ const removeTaskFromCourse = async (courseUniqueName, taskId, userForToken) =>{
     const task = serviceUtils.findTask(course, taskId)
 
     const updatedTaskList = course.tasks.textTasks.filter((task) => task.id != taskId)
-    await Course.findByIdAndUpdate(course.id, {tasks: updatedTaskList}, {new: true})
+    course.tasks.textTasks = updatedTaskList
+    await course.save()
     return true
 }
 
