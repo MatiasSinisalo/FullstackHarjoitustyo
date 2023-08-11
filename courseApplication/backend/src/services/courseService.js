@@ -28,7 +28,7 @@ const getCourse = async (courseUniqueName, userForToken) => {
             return {...task.toObject(), submissions: usersSubmissions, id: task.id}
         })
 
-        console.log(textTasksWithFilteredSubmissions)
+       
 
         const courseToReturn = {
             id: course.id,
@@ -43,7 +43,7 @@ const getCourse = async (courseUniqueName, userForToken) => {
             }
         }
         
-        console.log(courseToReturn)
+        
         return courseToReturn
     }
 
