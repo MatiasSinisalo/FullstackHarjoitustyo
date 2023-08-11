@@ -81,7 +81,7 @@ const gradeSubmission = async (courseUniqueName, taskId, submissionId, points, u
     
     submission.grade = gradeObj
     await course.save()
-    await course.populate({path: "tasks.submissions.fromUser", match: {id: submission.id}})
+    await course.populate({path: "tasks.textTasks.submissions.fromUser", match: {id: submission.id}})
     return submission
 }
 
