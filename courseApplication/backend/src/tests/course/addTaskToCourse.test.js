@@ -33,15 +33,7 @@ describe('addTaskToCourse query tests', () => {
        
         expect(new Date(dateReturned)).toEqual(task.deadline);
 
-        const CoursesInDataBase = await Course.find({}).populate('tasks')
-        expect(CoursesInDataBase.length).toBe(1)
-        const course = CoursesInDataBase[0]
-
-        expect(course.tasks.length).toEqual(1);
-        expect(course.tasks[0].description).toEqual(task.description);
-        expect(course.tasks[0].submissions.length).toEqual(0);
-        expect(course.tasks[0].deadline).toEqual(task.deadline);
-        expect(course.tasks[0].maxGrade).toEqual(task.maxGrade)
+        await checkDatabaseHasTextTask(task);
 
     })
     test('addTaskToCourse creates a new task on the course without giving maxGrade', async () => {
@@ -64,16 +56,7 @@ describe('addTaskToCourse query tests', () => {
        
         expect(new Date(dateReturned)).toEqual(task.deadline);
 
-        const CoursesInDataBase = await Course.find({}).populate('tasks')
-        expect(CoursesInDataBase.length).toBe(1)
-        const course = CoursesInDataBase[0]
-
-        expect(course.tasks.length).toEqual(1);
-        expect(course.tasks[0].description).toEqual(task.description);
-        expect(course.tasks[0].submissions.length).toEqual(0);
-        expect(course.tasks[0].deadline).toEqual(task.deadline);
-        expect(course.tasks[0].maxGrade).toEqual(undefined)
-
+        await checkDatabaseHasTextTask({...task, maxGrade: undefined});
     })
 
     test('addTaskToCourse creates a new task on the course that already has tasks with correct parameters', async () => {
@@ -116,18 +99,16 @@ describe('addTaskToCourse query tests', () => {
         expect(CoursesInDataBase.length).toBe(1)
         
         const course = CoursesInDataBase[0]
-        expect(course.tasks.length).toEqual(2);
-        expect(course.tasks[0].description).toEqual(task.description);
-        expect(course.tasks[0].submissions.length).toEqual(0);
-        expect(course.tasks[0].deadline).toEqual(task.deadline);
+        const textTasks = course.tasks.textTasks
+        expect(textTasks.length).toEqual(2);
+        expect(textTasks[0].description).toEqual(task.description);
+        expect(textTasks[0].submissions.length).toEqual(0);
+        expect(textTasks[0].deadline).toEqual(task.deadline);
 
 
-        expect(course.tasks[1].description).toEqual(secondTask.description);
-        expect(course.tasks[1].submissions.length).toEqual(0);
-        expect(course.tasks[1].deadline).toEqual(secondTask.deadline);
-
-    
-
+        expect(textTasks[1].description).toEqual(secondTask.description);
+        expect(textTasks[1].submissions.length).toEqual(0);
+        expect(textTasks[1].deadline).toEqual(secondTask.deadline);
     })
   
     test('addTaskToCourse does not create a new task on the course if the user is not the teacher of the course', async () => {
@@ -146,13 +127,7 @@ describe('addTaskToCourse query tests', () => {
         expect(response.data.addTaskToCourse).toBe(null)
         expect(response.errors[0].message).toBe("Unauthorized")
         
-        const CoursesInDataBase = await Course.find({}).populate('tasks')
-        expect(CoursesInDataBase.length).toBe(1)
-        
-        const course = CoursesInDataBase[0]
-
-      
-        expect(course.tasks).toEqual([])
+        await checkNoTextTasksCreatedInDB()
 
     })
 
@@ -168,18 +143,10 @@ describe('addTaskToCourse query tests', () => {
         }
         
         const response = await helpers.makeQuery({query: addTaskToCourse, variables: {courseUniqueName: task.courseUniqueName, description: task.description, deadline: task.deadline.toString()}});
-     
         expect(response.data.addTaskToCourse).toBe(null)
         expect(response.errors[0].message).toBe("Given course not found")
         
-        const CoursesInDataBase = await Course.find({}).populate('tasks')
-        expect(CoursesInDataBase.length).toBe(1)
-        
-        const course = CoursesInDataBase[0]
-
-      
-        expect(course.tasks).toEqual([])
-
+        await checkNoTextTasksCreatedInDB()
     })
 
     test('addTaskToCourse with empty date parameter', async () => {
@@ -199,10 +166,7 @@ describe('addTaskToCourse query tests', () => {
         console.log(newTaskQuery)
         expect(newTaskQuery.data.addTaskToCourse).toEqual(null);
         
-        const CoursesInDataBase = await Course.find({}).populate('tasks')
-        expect(CoursesInDataBase.length).toBe(1)
-        const course = CoursesInDataBase[0]
-        expect(course.tasks.length).toEqual(0);
+        await checkNoTextTasksCreatedInDB()
     })
 
     test('addTaskToCourse with incorrect date parameter', async () => {
@@ -222,9 +186,25 @@ describe('addTaskToCourse query tests', () => {
         console.log(newTaskQuery)
         expect(newTaskQuery.data.addTaskToCourse).toEqual(null);
         
-        const CoursesInDataBase = await Course.find({}).populate('tasks')
-        expect(CoursesInDataBase.length).toBe(1)
-        const course = CoursesInDataBase[0]
-        expect(course.tasks.length).toEqual(0);
+        await checkNoTextTasksCreatedInDB()
     })
 })
+
+async function checkDatabaseHasTextTask(task){
+    const CoursesInDataBase = await Course.find({}).populate('tasks')
+    expect(CoursesInDataBase.length).toBe(1)
+    const course = CoursesInDataBase[0]
+    const textTasks = course.tasks.textTasks
+    expect(textTasks.length).toEqual(1);
+    expect(textTasks[0].description).toEqual(task.description);
+    expect(textTasks[0].submissions.length).toEqual(0);
+    expect(textTasks[0].deadline).toEqual(task.deadline);
+    expect(textTasks[0].maxGrade).toEqual(task.maxGrade)
+}
+
+async function checkNoTextTasksCreatedInDB() {
+    const CoursesInDataBase = await Course.find({}).populate('tasks')
+    expect(CoursesInDataBase.length).toBe(1)
+    const course = CoursesInDataBase[0]
+    expect(course.tasks.textTasks.length).toEqual(0)
+}
