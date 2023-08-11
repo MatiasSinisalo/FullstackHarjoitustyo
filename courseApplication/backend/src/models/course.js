@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const { infoPageSchema } = require('./infoPage')
 const { isValidAsUrl } = require('../regex')
 const { chatRoomSchema } = require('./chatRoom')
-const tasksSchema = require('./tasks')
+const {tasksSchema} = require('./tasks')
 const courseSchema = new mongoose.Schema({
     uniqueName: {
         type: String,
@@ -33,7 +33,7 @@ const courseSchema = new mongoose.Schema({
     },
     tasks: tasksSchema,
     infoPages: [infoPageSchema],
-    chatRooms: [chatRoomSchema]
+    chatRooms: [chatRoomSchema],
 })
 
 module.exports = {Course: mongoose.model('courseApplicationCourse', courseSchema), courseSchema}

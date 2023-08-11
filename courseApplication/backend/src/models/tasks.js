@@ -8,4 +8,4 @@ const tasksSchema = new mongoose.Schema({
     //multipleChoiceTasks: [multipleChoiceTasksSchema]
 })
 
-module.exports = mongoose.model("tasksSchema", tasksSchema)
+module.exports = {Tasks: mongoose.model("tasksSchema", tasksSchema), tasksSchema}
