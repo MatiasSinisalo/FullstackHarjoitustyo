@@ -53,15 +53,7 @@ describe('addSubmissionToCourseTask tests', () => {
         expect(new Date(Number(createdSubmission.submittedDate)).toISOString().slice(0, 16)).toEqual(new Date(Date.now()).toISOString().slice(0, 16))
        
         
-        const courseInDB = await Course.findOne({courseUniqueName: course.uniqueName}).populate('tasks')
-        expect(courseInDB.tasks[0].description).toEqual(task.description)
-        expect(courseInDB.tasks[0].deadline).toEqual(task.deadline)
-        
-        expect(courseInDB.tasks[0].submissions.length).toBe(1)
-        expect(courseInDB.tasks[0].submissions[0].content).toEqual(submission.content)
-        expect(courseInDB.tasks[0].submissions[0].submitted).toEqual(submission.submitted)
-        expect(courseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(userid)
-        expect(new Date(courseInDB.tasks[0].submissions[0].submittedDate).toISOString().slice(0, 16)).toEqual(new Date(Date.now()).toISOString().slice(0, 16))
+        await checkSubmissionIsInDatase(course, task, submission, userid)
     })
     test('user can create a submission to a task only once', async () => {
         const userQuery = await helpers.logIn("username", "12345")
@@ -111,14 +103,18 @@ describe('addSubmissionToCourseTask tests', () => {
         expect(secondResponse.errors[0].message).toEqual("Given user is has already answered the question")
         expect(secondResponse.data.addSubmissionToCourseTask).toBe(null)
 
-
-        const courseInDB = await Course.findOne({courseUniqueName: course.uniqueName}).populate('tasks')
-        expect(courseInDB.tasks[0].description).toEqual(task.description)
-        expect(courseInDB.tasks[0].deadline).toEqual(task.deadline)
-        
-        expect(courseInDB.tasks[0].submissions.length).toBe(1)
-        expect(courseInDB.tasks[0].submissions[0].content).toEqual(submission.content)
-        expect(courseInDB.tasks[0].submissions[0].submitted).toEqual(submission.submitted)
-        expect(courseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(userid)
+        await checkSubmissionIsInDatase(course, task, submission, userid)
     })
 })
+
+async function checkSubmissionIsInDatase(course, task, submission, userid) {
+    const courseInDB = await Course.findOne({ courseUniqueName: course.uniqueName }).populate('tasks')
+    const taskInDB = courseInDB.tasks.textTasks[0]
+    expect(taskInDB.description).toEqual(task.description)
+    expect(taskInDB.deadline).toEqual(task.deadline)
+    expect(taskInDB.submissions.length).toBe(1)
+    expect(taskInDB.submissions[0].content).toEqual(submission.content)
+    expect(taskInDB.submissions[0].submitted).toEqual(submission.submitted)
+    expect(taskInDB.submissions[0].fromUser.toString()).toEqual(userid)
+    expect(new Date(taskInDB.submissions[0].submittedDate).toISOString().slice(0, 16)).toEqual(new Date(Date.now()).toISOString().slice(0, 16))
+}
