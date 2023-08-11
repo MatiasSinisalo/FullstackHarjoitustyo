@@ -96,7 +96,7 @@ describe('course querying tests', () => {
             const coursesQuery = await helpers.makeQuery({query: getAllCourses})
             const courses = coursesQuery.data.allCourses
             const course = courses[0]
-            expect(course.tasks).toBe(null)
+            expect(course.tasks).toEqual({textTasks: []})
         })
     })
     describe('getCourse query tests', () => {
