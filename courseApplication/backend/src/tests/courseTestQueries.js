@@ -12,7 +12,9 @@ const createCourse = `mutation Mutation($uniqueName: String!, $name: String!) {
         username
       }
       tasks{
-        description
+        textTasks{
+          description
+        }
       }
       uniqueName
       infoPages{
@@ -152,18 +154,20 @@ query AllCourses {
       id
     }
     tasks {
-      deadline
-      description
-      id
-      submissions {
-        content
-        fromUser {
-          id
-          name
-          username
-        }
-        submitted
+      textTasks{
+        deadline
+        description
         id
+        submissions {
+          content
+          fromUser {
+            id
+            name
+            username
+          }
+          submitted
+          id
+        }
       }
     }
     uniqueName
@@ -181,17 +185,19 @@ const getCourse = `query GetCourse($uniqueName: String!) {
       username
     }
     tasks {
-      deadline
-      description
-      id
-      submissions {
+      textTasks{
+        deadline
+        description
         id
-        content        
-        submitted
-        fromUser {
+        submissions {
+          content
+          fromUser {
+            id
+            name
+            username
+          }
+          submitted
           id
-          name
-          username
         }
       }
     }
