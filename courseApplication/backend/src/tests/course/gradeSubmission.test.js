@@ -28,7 +28,7 @@ describe('grade submission tests', () => {
         expect(gradedSubmission.grade.points).toBe(10)
 
         const courseInDB = await Course.findOne({uniqueName: course.uniqueName})
-        const taskInDB = courseInDB.tasks[0]
+        const taskInDB = courseInDB.tasks.textTasks[0]
         expect(taskInDB.submissions.length).toBe(1)
         
         const submissionInDB = taskInDB.submissions[0]
@@ -36,9 +36,8 @@ describe('grade submission tests', () => {
         expect(submissionInDB.fromUser.toString()).toEqual(user.id)
         expect(submissionInDB.submitted).toEqual(false)
         expect(submissionInDB.submittedDate).toEqual(null)
-
-
         expect(submissionInDB.grade.points).toBe(10)
+
         const gradingDate = new Date(Number(submissionInDB.grade.date)).toISOString().split('T')[0]
         const today = new Date(Date.now()).toISOString().split('T')[0]
         expect(gradingDate).toEqual(today)
@@ -57,17 +56,7 @@ describe('grade submission tests', () => {
         const gradedSubmission = gradeSubmissionQuery.data.gradeSubmission
         expect(gradedSubmission).toBe(null)
 
-        const courseInDB = await Course.findOne({uniqueName: course.uniqueName})
-        const taskInDB = courseInDB.tasks[0]
-        expect(taskInDB.submissions.length).toBe(1)
-        
-        const submissionInDB = taskInDB.submissions[0]
-        expect(submissionInDB.content).toEqual("this is an answer")
-        expect(submissionInDB.fromUser.toString()).toEqual(user.id)
-        expect(submissionInDB.submitted).toEqual(false)
-        expect(submissionInDB.submittedDate).toEqual(null)
-
-        expect(submissionInDB.grade).toBe(undefined)
+        await checkDatabaseSubmissionGradeNotChanged(course, user)
     })
     
     test('grade submission returns task not found if the task does not exist', async () => {
@@ -83,17 +72,7 @@ describe('grade submission tests', () => {
         const gradedSubmission = gradeSubmissionQuery.data.gradeSubmission
         expect(gradedSubmission).toBe(null)
 
-        const courseInDB = await Course.findOne({uniqueName: course.uniqueName})
-        const taskInDB = courseInDB.tasks[0]
-        expect(taskInDB.submissions.length).toBe(1)
-        
-        const submissionInDB = taskInDB.submissions[0]
-        expect(submissionInDB.content).toEqual("this is an answer")
-        expect(submissionInDB.fromUser.toString()).toEqual(user.id)
-        expect(submissionInDB.submitted).toEqual(false)
-        expect(submissionInDB.submittedDate).toEqual(null)
-
-        expect(submissionInDB.grade).toBe(undefined)
+        await checkDatabaseSubmissionGradeNotChanged(course, user)
     })
 
     test('grade submission returns submission not found if the submission does not exist', async () => {
@@ -109,17 +88,7 @@ describe('grade submission tests', () => {
         const gradedSubmission = gradeSubmissionQuery.data.gradeSubmission
         expect(gradedSubmission).toBe(null)
 
-        const courseInDB = await Course.findOne({uniqueName: course.uniqueName})
-        const taskInDB = courseInDB.tasks[0]
-        expect(taskInDB.submissions.length).toBe(1)
-        
-        const submissionInDB = taskInDB.submissions[0]
-        expect(submissionInDB.content).toEqual("this is an answer")
-        expect(submissionInDB.fromUser.toString()).toEqual(user.id)
-        expect(submissionInDB.submitted).toEqual(false)
-        expect(submissionInDB.submittedDate).toEqual(null)
-
-        expect(submissionInDB.grade).toBe(undefined)
+        await checkDatabaseSubmissionGradeNotChanged(course, user)
     })
 
     test('grade submission returns unauthorized if the user is not teacher', async () => {
@@ -138,17 +107,19 @@ describe('grade submission tests', () => {
         const gradedSubmission = gradeSubmissionQuery.data.gradeSubmission
         expect(gradedSubmission).toBe(null)
 
-        const courseInDB = await Course.findOne({uniqueName: course.uniqueName})
-        const taskInDB = courseInDB.tasks[0]
-        expect(taskInDB.submissions.length).toBe(1)
-        
-        const submissionInDB = taskInDB.submissions[0]
-        expect(submissionInDB.content).toEqual("this is an answer")
-        expect(submissionInDB.fromUser.toString()).toEqual(user.id)
-        expect(submissionInDB.submitted).toEqual(false)
-        expect(submissionInDB.submittedDate).toEqual(null)
-
-        expect(submissionInDB.grade).toBe(undefined)
+        await checkDatabaseSubmissionGradeNotChanged(course, user)
     })
 
 })
+
+async function checkDatabaseSubmissionGradeNotChanged(course, user) {
+    const courseInDB = await Course.findOne({ uniqueName: course.uniqueName })
+    const taskInDB = courseInDB.tasks.textTasks[0]
+    expect(taskInDB.submissions.length).toBe(1)
+    const submissionInDB = taskInDB.submissions[0]
+    expect(submissionInDB.content).toEqual("this is an answer")
+    expect(submissionInDB.fromUser.toString()).toEqual(user.id)
+    expect(submissionInDB.submitted).toEqual(false)
+    expect(submissionInDB.submittedDate).toEqual(null)
+    expect(submissionInDB.grade).toBe(undefined)
+}
