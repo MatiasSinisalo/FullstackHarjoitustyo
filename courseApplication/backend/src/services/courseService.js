@@ -44,7 +44,9 @@ const createCourse = async (uniqueName, name, teacherUsername) => {
         name: name,
         teacher: teacherID,
         students: [],
-        tasks: []
+        tasks: {
+            textTasks: []
+        }
     }
     try{
         const courseModel = new Course(course)
