@@ -27,7 +27,7 @@ const fetchUser = async (username, populateCommand) => {
 }
 
 const findTask = (course, taskId) => {
-    const taskInCourse = course.tasks.find((task) => task._id.toString() === taskId)
+    const taskInCourse = course.tasks.textTasks.find((task) => task._id.toString() === taskId)
     if(!taskInCourse)
     {
         throw new UserInputError("Given task not found")

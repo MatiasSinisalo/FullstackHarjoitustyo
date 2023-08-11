@@ -22,7 +22,7 @@ const addTaskToCourse = async (courseUniqueName, taskDescription, deadline, maxG
     }
 
     const taskObj = new Task(newTask)
-    course.tasks.push(taskObj)
+    course.tasks.textTasks.push(taskObj)
     await course.save()
    
     return taskObj
@@ -35,7 +35,7 @@ const removeTaskFromCourse = async (courseUniqueName, taskId, userForToken) =>{
     
     const task = serviceUtils.findTask(course, taskId)
 
-    const updatedTaskList = course.tasks.filter((task) => task.id != taskId)
+    const updatedTaskList = course.tasks.textTasks.filter((task) => task.id != taskId)
     await Course.findByIdAndUpdate(course.id, {tasks: updatedTaskList}, {new: true})
     return true
 }
