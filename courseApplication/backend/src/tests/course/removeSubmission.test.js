@@ -43,7 +43,7 @@ describe('removeSubmissionFromCourseTask tests', () => {
         const removedQuery = await helpers.makeQuery({query: removeSubmissionFromCourseTask, variables: {courseUniqueName: course.uniqueName, taskId: taskID,  submissionId: submissionID}})
         expect(removedQuery.data.removeSubmissionFromCourseTask).toBe(true)
         const courseInDB = await Course.findOne({uniqueName: course.uniqueName})
-        const taskInDB = courseInDB.tasks[0]
+        const taskInDB = courseInDB.tasks.textTasks[0]
         expect(taskInDB.submissions.length).toBe(0)
 
 
@@ -97,17 +97,12 @@ describe('removeSubmissionFromCourseTask tests', () => {
        
         const removedQuery = await helpers.makeQuery({query: removeSubmissionFromCourseTask, variables: {courseUniqueName: course.uniqueName, taskId: taskID,  submissionId: submissionID}})
         expect(removedQuery.data.removeSubmissionFromCourseTask).toBe(true)
-        const courseInDB = await Course.findOne({uniqueName: course.uniqueName})
-        const taskInDB = courseInDB.tasks[0]
-        expect(taskInDB.submissions.length).toBe(1)
-     
-        expect(taskInDB.submissions[0].fromUser.toString()).toEqual(otherUserQuery.id)
-        expect(taskInDB.submissions[0].content).toEqual("this is the answer to a task and should not be removed")
-
+        
+        await checkSubmissionExists(course, submissionToNotBeRemoved, otherUserQuery)
     })
 
     test('removeSubmissionFromCourseTask student can not remove other students submission', async () => {
-        await helpers.logIn("username")
+        const user = await helpers.logIn("username")
         const course = await helpers.createCourse("course-unique-name", "name of course", [])
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [])
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", true);
@@ -118,10 +113,10 @@ describe('removeSubmissionFromCourseTask tests', () => {
         expect(removedQuery.errors[0].message).toEqual("Unauthorized")
         expect(removedQuery.data.removeSubmissionFromCourseTask).toEqual(null)
         
-        const courseInDB = await Course.findOne({uniqueName: "course-unique-name"})
-        expect(courseInDB.tasks[0].submissions.length).toBe(1)
-        expect(courseInDB.tasks[0].submissions[0].content).toEqual(submission.content)
-        expect(courseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(submission.fromUser.id)
+
+       await checkSubmissionExists(course, submission, user)
+
+       
     })
 
     test('removeSubmissionFromCourseTask teacher can remove students submission', async () => {
@@ -139,11 +134,11 @@ describe('removeSubmissionFromCourseTask tests', () => {
         expect(removedQuery.data.removeSubmissionFromCourseTask).toEqual(true)
         
         const courseInDB = await Course.findOne({uniqueName: "course-unique-name"})
-        expect(courseInDB.tasks[0].submissions.length).toBe(0)
+        expect(courseInDB.tasks.textTasks[0].submissions.length).toBe(0)
     })
 
     test('removeSubmissionFromCourseTask returns course not found if course does not exist', async () => {
-        await helpers.logIn("username")
+        const user = await helpers.logIn("username")
         const course = await helpers.createCourse("course-unique-name", "name of course", [])
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [])
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", true);
@@ -155,14 +150,12 @@ describe('removeSubmissionFromCourseTask tests', () => {
         expect(removedQuery.errors[0].message).toEqual("Given course not found")
         expect(removedQuery.data.removeSubmissionFromCourseTask).toEqual(null)
         
-        const courseInDB = await Course.findOne({uniqueName: "course-unique-name"})
-        expect(courseInDB.tasks[0].submissions.length).toBe(1)
-        expect(courseInDB.tasks[0].submissions[0].content).toEqual(submission.content)
-        expect(courseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(submission.fromUser.id)
+
+        await checkSubmissionExists(course, submission, user)
     })
 
     test('removeSubmissionFromCourseTask returns task not found if task does not exist', async () => {
-        await helpers.logIn("username")
+        const user = await helpers.logIn("username")
         const course = await helpers.createCourse("course-unique-name", "name of course", [])
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [])
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", true);
@@ -178,19 +171,14 @@ describe('removeSubmissionFromCourseTask tests', () => {
         expect(removedQuery.errors[0].message).toEqual("Given task not found")
         expect(removedQuery.data.removeSubmissionFromCourseTask).toEqual(null)
         
-        const courseInDB = await Course.findOne({uniqueName: "course-unique-name"})
-        expect(courseInDB.tasks[0].submissions.length).toBe(1)
-        expect(courseInDB.tasks[0].submissions[0].content).toEqual(submission.content)
-        expect(courseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(submission.fromUser.id)
 
-        const secondCourseInDB = await Course.findOne({uniqueName: "second-course"})
-        expect(secondCourseInDB.tasks[0].submissions.length).toBe(1)
-        expect(secondCourseInDB.tasks[0].submissions[0].content).toEqual(differentSubmission.content)
-        expect(secondCourseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(differentSubmission.fromUser.id)
+        await checkSubmissionExists(course, submission, user)
+        
+        await checkSubmissionExists(anotherCourse, differentSubmission, user)
     })
 
     test('removeSubmissionFromCourseTask returns submission not found if submission does not exist', async () => {
-        await helpers.logIn("username")
+        const user = await helpers.logIn("username")
         const course = await helpers.createCourse("course-unique-name", "name of course", [])
         const task = await  helpers.createTask(course, "this is a task", new Date(Date.now()), [])
         const submission = await helpers.createSubmission(course, task.id, "this is an answer", true);
@@ -206,16 +194,18 @@ describe('removeSubmissionFromCourseTask tests', () => {
         expect(removedQuery.errors[0].message).toEqual("Given submission not found")
         expect(removedQuery.data.removeSubmissionFromCourseTask).toEqual(null)
         
-        const courseInDB = await Course.findOne({uniqueName: "course-unique-name"})
-        expect(courseInDB.tasks[0].submissions.length).toBe(1)
-        expect(courseInDB.tasks[0].submissions[0].content).toEqual(submission.content)
-        expect(courseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(submission.fromUser.id)
-
-        const secondCourseInDB = await Course.findOne({uniqueName: "second-course"})
-        expect(secondCourseInDB.tasks[0].submissions.length).toBe(1)
-        expect(secondCourseInDB.tasks[0].submissions[0].content).toEqual(differentSubmission.content)
-        expect(secondCourseInDB.tasks[0].submissions[0].fromUser.toString()).toEqual(differentSubmission.fromUser.id)
+        await checkSubmissionExists(course, submission, user)
+        
+        await checkSubmissionExists(anotherCourse, differentSubmission, user)
     })
 
 
 })
+
+async function checkSubmissionExists(course, submission, user) {
+    const courseInDB = await Course.findOne({ uniqueName: course.uniqueName })
+    const taskInDB = courseInDB.tasks.textTasks[0]
+    expect(taskInDB.submissions.length).toBe(1)
+    expect(taskInDB.submissions[0].content).toEqual(submission.content)
+    expect(taskInDB.submissions[0].fromUser.toString()).toEqual(user.id)
+}
