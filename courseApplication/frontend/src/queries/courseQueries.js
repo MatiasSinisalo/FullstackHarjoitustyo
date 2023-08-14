@@ -15,9 +15,11 @@ export const CREATE_COURSE = gql`mutation Mutation($uniqueName: String!, $name: 
         username
       }
       tasks{
-        id
-        deadline
-        description
+        textTasks{
+          id
+          deadline
+          description
+        }
       }
     }
   }`
@@ -56,22 +58,24 @@ query GetCourse($uniqueName: String!) {
       username
     }
     tasks {
-      id
-      deadline
-      description
-      maxGrade
-      submissions{
+      textTasks{
         id
-        content
-        submitted
-        submittedDate
-        fromUser{
-          username
-          name
-        }
-        grade{
-          points
-          date
+        deadline
+        description
+        maxGrade
+        submissions{
+          id
+          content
+          submitted
+          submittedDate
+          fromUser{
+            username
+            name
+          }
+          grade{
+            points
+            date
+          }
         }
       }
     }
@@ -126,9 +130,11 @@ export const ADD_STUDENT_TO_COURSE = gql`mutation AddStudentToCourse($username: 
         username
       }
       tasks{
-        deadline
-        description
-        id
+        textTasks{
+          deadline
+          description
+          id
+        }
       }
       
     }
