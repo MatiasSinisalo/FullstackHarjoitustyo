@@ -103,7 +103,8 @@ function addTaskToCourseCache(apolloClient, uniqueName, result) {
         fields: {
             tasks(cachedTasks) {
                 console.log(cachedTasks)
-                return cachedTasks.concat({ __ref: `Task:${result.data.addTaskToCourse.id}` })
+                const updatedTasks = cachedTasks.textTasks.concat({ __ref: `Task:${result.data.addTaskToCourse.id}` })
+                return {...cachedTasks, textTasks: updatedTasks}
             }
         }
     })
