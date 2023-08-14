@@ -32,15 +32,7 @@ describe('modify submission tests', () => {
         expect(returnedModifiedSubmission.submitted).toEqual(newSubmitted)
         expect(returnedModifiedSubmission.fromUser).toEqual({username: user.username, name: user.name, id: user.id})
         
-        const courseInDB = await Course.findOne({uniqueName: "course-unique-name"})
-        const tasks = courseInDB.tasks
-        expect(tasks.length).toBe(1)
-        expect(tasks[0].submissions.length).toBe(1)
-        
-        const submissionInDB = tasks[0].submissions[0]
-        expect(submissionInDB.content).toEqual(newContent)
-        expect(submissionInDB.submitted).toEqual(newSubmitted)
-        expect(submissionInDB.fromUser.toString()).toEqual(user.id)
+        await checkSubmissionInDB(newContent, newSubmitted, user)
 
 
     })
@@ -61,17 +53,7 @@ describe('modify submission tests', () => {
         expect(modifySubmissionQuery.errors[0].message).toEqual("This submission has already been returned")
         expect(modifySubmissionQuery.data.modifySubmission).toEqual(null)
         
-        const courseInDB = await Course.findOne({uniqueName: "course-unique-name"})
-        const tasks = courseInDB.tasks
-        expect(tasks.length).toBe(1)
-        expect(tasks[0].submissions.length).toBe(1)
-        
-        const submissionInDB = tasks[0].submissions[0]
-        expect(submissionInDB.content).toEqual(submission.content)
-        expect(submissionInDB.submitted).toEqual(submission.submitted)
-        expect(submissionInDB.fromUser.toString()).toEqual(user.id)
-
-
+        await checkSubmissionInDB(submission.content, submission.submitted, user)
     })
     test('user can not modify a submission made by another user', async () => {
         const user = await helpers.logIn("username")
@@ -88,17 +70,7 @@ describe('modify submission tests', () => {
         expect(modifySubmissionQuery.errors[0].message).toEqual("Unauthorized")
         expect(modifySubmissionQuery.data.modifySubmission).toEqual(null)
         
-        const courseInDB = await Course.findOne({uniqueName: "course-unique-name"})
-        const tasks = courseInDB.tasks
-        expect(tasks.length).toBe(1)
-        expect(tasks[0].submissions.length).toBe(1)
-        
-        const submissionInDB = tasks[0].submissions[0]
-        expect(submissionInDB.content).toEqual(submission.content)
-        expect(submissionInDB.submitted).toEqual(submission.submitted)
-        expect(submissionInDB.fromUser.toString()).toEqual(submission.fromUser.id)
-
-
+        await checkSubmissionInDB(submission.content, submission.submitted, submission.fromUser)
     })
     test('user must be logged in to modify a submission', async () => {
         const user = await helpers.logIn("username")
@@ -115,17 +87,8 @@ describe('modify submission tests', () => {
         expect(modifySubmissionQuery.errors[0].message).toEqual("Unauthorized")
         expect(modifySubmissionQuery.data.modifySubmission).toEqual(null)
         
-        const courseInDB = await Course.findOne({uniqueName: "course-unique-name"})
-        const tasks = courseInDB.tasks
-        expect(tasks.length).toBe(1)
-        expect(tasks[0].submissions.length).toBe(1)
-        
-        const submissionInDB = tasks[0].submissions[0]
-        expect(submissionInDB.content).toEqual(submission.content)
-        expect(submissionInDB.submitted).toEqual(submission.submitted)
-        expect(submissionInDB.fromUser.toString()).toEqual(submission.fromUser.id)
 
-
+        await checkSubmissionInDB(submission.content, submission.submitted, submission.fromUser)
     })
 
     test('modify submission returns course not found if given course is not found', async () => {
@@ -161,12 +124,10 @@ describe('modify submission tests', () => {
         expect(modifySubmissionQuery.errors[0].message).toEqual("Given task not found")
 
         const courseInDB = await Course.findOne({uniqueName: course.uniqueName})
-        expect(courseInDB.tasks).toEqual(course.tasks)
-
+        expect(courseInDB.tasks.textTasks).toEqual(course.tasks.textTasks)
         const anotherCourseInDB = await Course.findOne({uniqueName: anotherCourse.uniqueName})
-       
-        expect(anotherCourseInDB.tasks.length).toEqual(1)
-        expect(anotherCourseInDB.tasks[0].submissions.length).toEqual(0)
+        expect(anotherCourseInDB.tasks.textTasks.length).toEqual(1)
+        expect(anotherCourseInDB.tasks.textTasks[0].submissions.length).toEqual(0)
     })  
 
 
@@ -191,17 +152,27 @@ describe('modify submission tests', () => {
         expect(modifySubmissionQuery.errors[0].message).toEqual("Given submission not found")
 
         const courseInDB = await Course.findOne({uniqueName: course.uniqueName})
-        expect(courseInDB.tasks.length).toEqual(1)
-        expect(courseInDB.tasks[0].submissions.length).toEqual(1)
-        expect(courseInDB.tasks[0].submissions[0].content).toEqual(wrongSubmssionOnCourse.content)    
-        expect(courseInDB.tasks[0].submissions[0].submitted).toEqual(wrongSubmssionOnCourse.submitted)    
+        expect(courseInDB.tasks.textTasks.length).toEqual(1)
+        expect(courseInDB.tasks.textTasks[0].submissions.length).toEqual(1)
+        expect(courseInDB.tasks.textTasks[0].submissions[0].content).toEqual(wrongSubmssionOnCourse.content)    
+        expect(courseInDB.tasks.textTasks[0].submissions[0].submitted).toEqual(wrongSubmssionOnCourse.submitted)    
 
         const anotherCourseInDB = await Course.findOne({uniqueName: anotherCourse.uniqueName})
-        
-        expect(anotherCourseInDB.tasks.length).toEqual(1)
-        expect(anotherCourseInDB.tasks[0].submissions.length).toEqual(1)
-        expect(anotherCourseInDB.tasks[0].submissions[0].content).toEqual(submissionOnAnotherTask.content)    
-        expect(anotherCourseInDB.tasks[0].submissions[0].submitted).toEqual(submissionOnAnotherTask.submitted)    
+        expect(anotherCourseInDB.tasks.textTasks.length).toEqual(1)
+        expect(anotherCourseInDB.tasks.textTasks[0].submissions.length).toEqual(1)
+        expect(anotherCourseInDB.tasks.textTasks[0].submissions[0].content).toEqual(submissionOnAnotherTask.content)    
+        expect(anotherCourseInDB.tasks.textTasks[0].submissions[0].submitted).toEqual(submissionOnAnotherTask.submitted)    
 
     })  
 })
+async function checkSubmissionInDB(newContent, newSubmitted, user) {
+    const courseInDB = await Course.findOne({ uniqueName: "course-unique-name" })
+    const tasks = courseInDB.tasks.textTasks
+    expect(tasks.length).toBe(1)
+    expect(tasks[0].submissions.length).toBe(1)
+    const submissionInDB = tasks[0].submissions[0]
+    expect(submissionInDB.content).toEqual(newContent)
+    expect(submissionInDB.submitted).toEqual(newSubmitted)
+    expect(submissionInDB.fromUser.toString()).toEqual(user.id)
+}
+
