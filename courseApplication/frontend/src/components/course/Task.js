@@ -28,7 +28,7 @@ const Task = ({course}) => {
 
   
     const user = userQuery.data.me
-    const task = course.tasks.find((task) => task.id === taskId)
+    const task = course.tasks.textTasks.find((task) => task.id === taskId)
     
     if(!task){
         return (

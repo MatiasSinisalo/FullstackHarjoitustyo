@@ -27,8 +27,8 @@ const TaskListings = ({course}) => {
     const deadline = new Date(parseInt(task.deadline))
     return deadline < Date.now()
   }
-  const futureTasks = course.tasks.filter((task) => !isLate(task))
-  const lateTasks = course.tasks.filter((task) => isLate(task))
+  const futureTasks = course.tasks.textTasks.filter((task) => !isLate(task))
+  const lateTasks = course.tasks.textTasks.filter((task) => isLate(task))
   
   const updateDisplay = (event) => {
     setDisplay(event.target.value)

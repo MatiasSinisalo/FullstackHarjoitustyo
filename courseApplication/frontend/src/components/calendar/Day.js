@@ -37,7 +37,7 @@ const CourseTasksDayShowCase = ({course}) => {
     return (
         <>
         <div onClick={() => setDropDown(!showDropDown)} className='course-tasks-day-showcase'>
-            <p>tasks: {course.tasks.length}, {course.uniqueName}</p>
+            <p>tasks: {course.tasks.textTasks.length}, {course.uniqueName}</p>
         </div>
 
        {showDropDown ? <CourseTasksDropDown course={course}></CourseTasksDropDown> : <></>}
@@ -50,7 +50,7 @@ const CourseTasksDropDown = ({course}) => {
     return (
         <div className='course-tasks-dropdown'>
         {
-            course.tasks.map((task) => <TaskDayShowCase course={course} task={task}></TaskDayShowCase>)
+            course.tasks.textTasks.map((task) => <TaskDayShowCase course={course} task={task}></TaskDayShowCase>)
         }
     </div>
     )

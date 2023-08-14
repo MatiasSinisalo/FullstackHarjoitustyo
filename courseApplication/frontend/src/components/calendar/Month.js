@@ -18,12 +18,12 @@ const Month = ({currentDate, user, year, month}) => {
     }
     const getCoursesWithTasksForDay = (courses, day) => {
         return courses.map((course) => {
-            const tasks = course.tasks.filter((task) => {
+            const tasks = course.tasks.textTasks.filter((task) => {
                 const deadlineDate = new Date(parseInt(task.deadline))
                 return sameDate(deadlineDate, day)
             })
-            return {uniqueName: course.uniqueName, tasks: tasks}
-        }).filter((course) => course.tasks.length > 0)
+            return {uniqueName: course.uniqueName, tasks: {textTasks: tasks}}
+        }).filter((course) => course.tasks.textTasks.length > 0)
     }
     
     const daysInMonth = getDaysInMonth(new Date(year, month))
