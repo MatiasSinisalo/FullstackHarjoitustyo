@@ -29,15 +29,24 @@ query Me {
       id
       uniqueName
       name
+      tasks{
+        textTasks{
+          id
+          description
+          deadline
+        }
+      }
     }
     attendsCourses{
       id
       uniqueName
       name
       tasks{
-        id
-        description
-        deadline
+        textTasks{
+          id
+          description
+          deadline
+        }
       }
     }
   }
