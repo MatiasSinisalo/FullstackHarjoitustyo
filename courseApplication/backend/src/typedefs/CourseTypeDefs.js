@@ -26,6 +26,32 @@ type Task{
     maxGrade: Int
 }
 
+
+type MultipleChoiceTaskQuestion{
+    description: String!
+    isCorrect: Boolean!
+    points: Int
+}
+
+type MultipleChoiceTaskAnswerChoice{
+    option: MultipleChoiceTaskQuestion!
+    selected: Boolean!
+}
+
+type MultipleChoiceTaskAnswer{
+    fromUser: User!
+    choices: [MultipleChoiceTaskAnswerChoice!]!
+}
+
+type MultipleChoiceTask{
+    id: ID!
+    description: String!
+    deadline: String!
+    questions: [MultipleChoiceTaskQuestion!]!
+    answers: [MultipleChoiceTaskAnswer!]!
+}
+
+
 type Grade{
     id: ID!
     points: Int!
@@ -193,7 +219,6 @@ type Mutation{
         content: String!
     ):Message
 
-   
 }
 
 type Subscription {
