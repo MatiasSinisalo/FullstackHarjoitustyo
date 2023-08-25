@@ -205,8 +205,8 @@ const courseMutationResolvers = {
         const courseUniqueName = args.courseUniqueName
         const description = args.description
         const deadline = args.deadline
-        
-        return null
+        const newMultipleChoiceTask = await courseService.tasks.addMultipleChoiceTask(courseUniqueName, description, deadline, context.userForToken)
+        return newMultipleChoiceTask
     }
 }
 

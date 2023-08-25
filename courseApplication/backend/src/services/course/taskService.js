@@ -4,6 +4,8 @@ const {Course} = require('../../models/course')
 const { default: mongoose } = require('mongoose')
 const { Task, Submission, Grade } = require('../../models/task')
 const serviceUtils = require('../serviceUtils')
+const { MultipleChoiceTask } = require('../../models/multipleChoiceTask')
+
 
 
 
@@ -41,10 +43,29 @@ const removeTaskFromCourse = async (courseUniqueName, taskId, userForToken) =>{
     return true
 }
 
-
+const addMultipleChoiceTask = async (courseUniqueName, description, deadline, userForToken) => {
+    const course = await serviceUtils.fetchCourse(courseUniqueName)
+    serviceUtils.checkIsTeacher(course, userForToken)
+    
+    const validatedDeadline = serviceUtils.validateDate(deadline)
+    const newMultipleChoiceTask = {
+        id: mongoose.Types.ObjectId(),
+        description: description,
+        deadline: new Date(validatedDeadline),
+        questions: [],
+        answers: []
+    }
+    const multipleChoiceTaskObj = new MultipleChoiceTask(newMultipleChoiceTask)
+    course.tasks.multipleChoiceTasks.push(multipleChoiceTaskObj)
+    await course.save()
+    
+  
+    return newMultipleChoiceTask
+}
 
 
 module.exports = {  
                     addTaskToCourse, 
                     removeTaskFromCourse,
+                    addMultipleChoiceTask,
                 }
