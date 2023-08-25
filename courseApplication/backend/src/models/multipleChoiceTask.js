@@ -1,10 +1,6 @@
 const mongoose = require("mongoose")
 
-const multipleChoiceTaskAnswerSchema = new mongoose.Schema({
-    
-})
-
-multipleChoiceTaskQuestion = new mongoose.Schema({
+const multipleChoiceTaskQuestionSchema = new mongoose.Schema({
     description: {
         type: String,
         required: true
@@ -18,6 +14,22 @@ multipleChoiceTaskQuestion = new mongoose.Schema({
     }
 })
 
+
+const multipleChoiceTaskAnswerSchema = new mongoose.Schema({
+    fromUser: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'courseApplicationUser',
+    },
+    choices: [
+        {
+            option: {type: mongoose.Schema.Types.ObjectId, ref: "multipleChoiceTaskQuestion", required: true},
+            selected: {type: Boolean, required: true}
+        }
+    ],
+})
+
+
+
 const multipleChoiceTaskSchema = new mongoose.Schema({
     description: {
         type: String
@@ -25,9 +37,13 @@ const multipleChoiceTaskSchema = new mongoose.Schema({
     deadline: {
         type: Date
     },
-    questions: [multipleChoiceTaskQuestion],
+    questions: [multipleChoiceTaskQuestionSchema],
     answers: [multipleChoiceTaskAnswerSchema]
 })
 
 
-module.exports = {MultipleChoiceTask : mongoose.model("multipleChoiceTask", multipleChoiceTaskSchema), multipleChoiceTaskSchema}
+module.exports = {
+    MultipleChoiceTask : mongoose.model("multipleChoiceTask", multipleChoiceTaskSchema), multipleChoiceTaskSchema,
+    multipleChoiceTaskQuestion: mongoose.model("multipleChoiceTaskQuestion", multipleChoiceTaskQuestionSchema), multipleChoiceTaskQuestionSchema,
+    multipleChoiceTaskAnswer: mongoose.model("multipleChoiceTaskAnswer", multipleChoiceTaskAnswerSchema), multipleChoiceTaskAnswerSchema
+}
