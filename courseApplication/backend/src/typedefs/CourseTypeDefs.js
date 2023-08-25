@@ -219,6 +219,11 @@ type Mutation{
         content: String!
     ):Message
 
+    createMultipleChoiceTask(
+        courseUniqueName: String!
+        description: String!
+        deadline: String!
+    ):MultipleChoiceTask
 }
 
 type Subscription {

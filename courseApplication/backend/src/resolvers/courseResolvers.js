@@ -199,6 +199,14 @@ const courseMutationResolvers = {
         const newMessage = await courseService.chatRooms.createMessage(courseUniqueName, chatRoomId, content, context.userForToken)
         pubsub.publish('MESSAGE_CREATED', { messageCreated: {...newMessage, sendDate: newMessage.sendDate.getTime().toString()}, information: {courseUniqueName, chatRoomId} })
         return newMessage
+    },
+    createMultipleChoiceTask: async(root, args, context) => {
+        mustHaveToken(context)
+        const courseUniqueName = args.courseUniqueName
+        const description = args.description
+        const deadline = args.deadline
+        
+        return null
     }
 }
 

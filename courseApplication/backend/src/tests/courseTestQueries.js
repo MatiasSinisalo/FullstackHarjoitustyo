@@ -325,6 +325,36 @@ mutation Mutation($courseUniqueName: String!, $chatRoomId: String!, $username: S
   removeUserFromChatRoom(courseUniqueName: $courseUniqueName, chatRoomId: $chatRoomId, username: $username)
 }
 `
+
+
+const createMultipleChoiceTask = `
+mutation Mutation($courseUniqueName: String!, $description: String!, $deadline: String!) {
+  createMultipleChoiceTask(courseUniqueName: $courseUniqueName, description: $description, deadline: $deadline) {
+    answers {
+      choices {
+        option {
+          description
+          isCorrect
+          points
+        }
+        selected
+      }
+      fromUser {
+        id
+        name
+      }
+    }
+    deadline
+    description
+    id
+    questions {
+      description
+      isCorrect
+      points
+    }
+  }
+}
+`
 module.exports = {createCourse, 
                   removeCourse, 
                   addStudentToCourse, 
@@ -346,6 +376,7 @@ module.exports = {createCourse,
                   removeChatRoom,
                   createMessage,
                   addUserToChatRoom,
-                  removeUserFromChatRoom
+                  removeUserFromChatRoom,
+                  createMultipleChoiceTask
                 }
 
