@@ -48,7 +48,8 @@ describe('course creation tests', () => {
                 name: 'name'
             },
             tasks: {
-                textTasks: []
+                textTasks: [],
+                multipleChoiceTasks: [],
             },
             students: [],
             infoPages: []
