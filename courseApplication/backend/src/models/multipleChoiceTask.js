@@ -14,18 +14,18 @@ const multipleChoiceTaskQuestionSchema = new mongoose.Schema({
     }
 })
 
+const multipleChoiceTaskAnswerChoiceSchema = new mongoose.Schema({
+    option: {type: mongoose.Schema.Types.ObjectId, ref: "multipleChoiceTaskQuestion", required: true},
+    selected: {type: Boolean, required: true}
+})
+
 
 const multipleChoiceTaskAnswerSchema = new mongoose.Schema({
     fromUser: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'courseApplicationUser',
     },
-    choices: [
-        {
-            option: {type: mongoose.Schema.Types.ObjectId, ref: "multipleChoiceTaskQuestion", required: true},
-            selected: {type: Boolean, required: true}
-        }
-    ],
+    choices: [multipleChoiceTaskAnswerChoiceSchema],
 })
 
 
