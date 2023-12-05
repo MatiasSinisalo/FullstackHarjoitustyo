@@ -80,7 +80,6 @@ const taskResolvers = {
         mustHaveToken(context)
         const courseUniqueName = args.courseUniqueName
         const multipleChoiceTaskID = args.multipleChoiceTaskId
-        console.log(multipleChoiceTaskID)
         const multipleChoiceTaskRemoved = await taskService.removeMultipleChoiceTask(courseUniqueName, multipleChoiceTaskID, context.userForToken)
         return multipleChoiceTaskRemoved
     }
