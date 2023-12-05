@@ -113,5 +113,31 @@ describe('createMultipleChoiceTask tests', () => {
         checkCoursesNotChanged()
 
     })
+    test('createMultipleChoiceTask returns incorrect date when deadlinestring is completely wrong: ', async () => {
+       
+        const user = await helpers.logIn("username")
+        const course = await helpers.createCourse("course-url-name", "courses name", [])
+        
+        const expectedResult = {
+            description: "this is a description for multiple choice task", 
+            deadline: "this is just a sentence",
+            questions: [],
+            answers: []
+        }
+
+        const multipleChoiceTaskQuery = await helpers.makeQuery({
+            query: createMultipleChoiceTask, 
+            variables: {
+                courseUniqueName: course.uniqueName, 
+                description: expectedResult.description, 
+                deadline: expectedResult.deadline
+            }})
+        expect(multipleChoiceTaskQuery.errors[0].message).toEqual("Incorrect date")
+
+        checkCoursesNotChanged()
+    
+        
+    })
+
 
 })
