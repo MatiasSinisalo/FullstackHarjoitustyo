@@ -49,7 +49,6 @@ const addMultipleChoiceTask = async (courseUniqueName, description, deadline, us
     
     const validatedDeadline = serviceUtils.validateDate(deadline)
     const newMultipleChoiceTask = {
-        id: mongoose.Types.ObjectId(),
         description: description,
         deadline: new Date(validatedDeadline),
         questions: [],
@@ -60,12 +59,25 @@ const addMultipleChoiceTask = async (courseUniqueName, description, deadline, us
     await course.save()
     
   
-    return newMultipleChoiceTask
+    return {...newMultipleChoiceTask, id: multipleChoiceTaskObj._id.toString()}
 }
 
+
+const removeMultipleChoiceTask = async (courseUniqueName, multipleChoiceTaskID, userForToken) => {
+    const course = await serviceUtils.fetchCourse(courseUniqueName, ["tasks"])
+    serviceUtils.checkIsTeacher(course, userForToken)
+
+    serviceUtils.findMultipleChoiceTask(course, multipleChoiceTaskID)
+    
+    const updatedMultipleChoiceTaskList = course.tasks.multipleChoiceTasks.filter((task) => task.id != multipleChoiceTaskID )
+    course.tasks.multipleChoiceTasks = updatedMultipleChoiceTaskList
+    await course.save()
+    return true
+}
 
 module.exports = {  
                     addTaskToCourse, 
                     removeTaskFromCourse,
                     addMultipleChoiceTask,
+                    removeMultipleChoiceTask
                 }

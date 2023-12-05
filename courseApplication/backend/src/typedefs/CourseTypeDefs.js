@@ -224,6 +224,11 @@ type Mutation{
         description: String!
         deadline: String!
     ):MultipleChoiceTask
+
+    removeMultipleChoiceTask(
+        courseUniqueName: String!
+        multipleChoiceTaskId: String!
+    ):Boolean
 }
 
 type Subscription {

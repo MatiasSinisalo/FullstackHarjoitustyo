@@ -142,6 +142,16 @@ const getStudentsSubmissions = (task, userId) => {
     return submissions
 }
 
+const findMultipleChoiceTask = (course, multipleChoiceTaskID) => {
+    console.log(course.tasks.multipleChoiceTasks)
+    const multipleChoiceTask = course.tasks.multipleChoiceTasks.find((task) => task._id.toString() === multipleChoiceTaskID)
+    console.log(multipleChoiceTask)
+    if (multipleChoiceTask){
+        return multipleChoiceTask
+    }
+    throw new UserInputError("Given task not found!")
+}   
+
 module.exports= {fetchCourse,
                 fetchUser, 
                 findTask, 
@@ -157,5 +167,6 @@ module.exports= {fetchCourse,
                 checkUserNotInChatRoom,
                 checkIsParticipant,
                 checkIsStudent,
-                getStudentsSubmissions
+                getStudentsSubmissions,
+                findMultipleChoiceTask,
             }

@@ -355,6 +355,13 @@ mutation Mutation($courseUniqueName: String!, $description: String!, $deadline: 
   }
 }
 `
+
+const removeMultipleChoiceTask = `
+mutation RemoveMultipleChoiceTask($courseUniqueName: String!, $multipleChoiceTaskId: String!) {
+  removeMultipleChoiceTask(courseUniqueName: $courseUniqueName, multipleChoiceTaskId: $multipleChoiceTaskId)
+}
+
+`
 module.exports = {createCourse, 
                   removeCourse, 
                   addStudentToCourse, 
@@ -377,6 +384,7 @@ module.exports = {createCourse,
                   createMessage,
                   addUserToChatRoom,
                   removeUserFromChatRoom,
-                  createMultipleChoiceTask
+                  createMultipleChoiceTask,
+                  removeMultipleChoiceTask
                 }
 
