@@ -1,9 +1,10 @@
 const { UserInputError } = require('apollo-server-core')
-const courseService = require('../../services/courseService')
+
 const {Course} = require('../../models/course')
 const { mustHaveToken } = require('../resolverUtils')
 const  {pubsub} = require('../../publisher')
 const { withFilter } = require('graphql-subscriptions')
+const chatRoomService = require('../../services/course/chatRoomService')
 
 
 
@@ -12,7 +13,7 @@ const chatRoomResolvers = {
         mustHaveToken(context)
         const courseUniqueName = args.courseUniqueName
         const name = args.name
-        const newChatRoom = await courseService.chatRooms.createChatRoom(courseUniqueName, name, context.userForToken);
+        const newChatRoom = await chatRoomService.createChatRoom(courseUniqueName, name, context.userForToken);
         return newChatRoom
     },
     addUserToChatRoom: async (root, args, context) => {
@@ -20,7 +21,7 @@ const chatRoomResolvers = {
         const courseUniqueName = args.courseUniqueName
         const chatRoomId = args.chatRoomId
         const username = args.username
-        const added = await courseService.chatRooms.addUserToChatRoom(courseUniqueName, chatRoomId, username, context.userForToken)
+        const added = await chatRoomService.addUserToChatRoom(courseUniqueName, chatRoomId, username, context.userForToken)
         return added
     },
     removeUserFromChatRoom: async(root, args, context) => {
@@ -28,14 +29,14 @@ const chatRoomResolvers = {
         const courseUniqueName = args.courseUniqueName
         const chatRoomId = args.chatRoomId
         const username = args.username
-        const removed = await courseService.chatRooms.removeUserFromChatRoom(courseUniqueName, chatRoomId, username, context.userForToken)
+        const removed = await chatRoomService.removeUserFromChatRoom(courseUniqueName, chatRoomId, username, context.userForToken)
         return removed
     },
     removeChatRoom: async(root, args, context) => {
         mustHaveToken(context)
         const courseUniqueName = args.courseUniqueName
         const chatRoomId = args.chatRoomId
-        const removed = await courseService.chatRooms.removeChatRoom(courseUniqueName, chatRoomId, context.userForToken);
+        const removed = await chatRoomService.removeChatRoom(courseUniqueName, chatRoomId, context.userForToken);
         return removed
     },
     createMessage: async(root, args, context) => {
@@ -43,7 +44,7 @@ const chatRoomResolvers = {
         const courseUniqueName = args.courseUniqueName
         const chatRoomId = args.chatRoomId
         const content = args.content
-        const newMessage = await courseService.chatRooms.createMessage(courseUniqueName, chatRoomId, content, context.userForToken)
+        const newMessage = await chatRoomService.createMessage(courseUniqueName, chatRoomId, content, context.userForToken)
         pubsub.publish('MESSAGE_CREATED', { messageCreated: {...newMessage, sendDate: newMessage.sendDate.getTime().toString()}, information: {courseUniqueName, chatRoomId} })
         return newMessage
     },
@@ -58,7 +59,7 @@ const chatRoomSubscriptionResolvers = {
             mustHaveToken(context)
             const courseUniqueName = args.courseUniqueName
             const chatRoomId = args.chatRoomId
-            await courseService.chatRooms.checkCanSubscribeToMessageCreated(courseUniqueName, chatRoomId, context.userForToken);
+            await chatRoomService.checkCanSubscribeToMessageCreated(courseUniqueName, chatRoomId, context.userForToken);
 
             //very important, Do not forget to return withFilter(...)(root, args, context) because otherwise it will give the folowwing error:
             //Error: Subscription field must return Async Iterable

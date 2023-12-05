@@ -173,9 +173,5 @@ module.exports = {  createCourse,
                     addStudentToCourse,
                     removeStudentFromCourse, 
                     getAllCourses, 
-                    getCourse,
-                    submissions: submissionService,
-                    tasks: taskService,
-                    infoPages: infoPageService,
-                    chatRooms: chatRoomService
+                    getCourse
                 }

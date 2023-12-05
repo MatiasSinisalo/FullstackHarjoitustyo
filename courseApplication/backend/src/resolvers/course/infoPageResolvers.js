@@ -1,5 +1,5 @@
 
-const courseService = require('../../services/courseService')
+const infoPageService = require('../../services/course/infoPageService')
 const { mustHaveToken } = require('../resolverUtils')
 
 
@@ -8,14 +8,14 @@ const infoPageResolvers = {
         mustHaveToken(context)
         const courseUniqueName = args.courseUniqueName
         const locationUrl = args.locationUrl
-        const newInfoPage = await courseService.infoPages.addInfoPage(courseUniqueName, locationUrl, context.userForToken)
+        const newInfoPage = await infoPageService.addInfoPage(courseUniqueName, locationUrl, context.userForToken)
         return newInfoPage
     },
     removeInfoPageFromCourse: async(root, args, context) => {
         mustHaveToken(context)
         const courseUniqueName = args.courseUniqueName
         const infoPageId = args.infoPageId
-        const removed = await courseService.infoPages.removeInfoPage(courseUniqueName, infoPageId, context.userForToken)
+        const removed = await infoPageService.removeInfoPage(courseUniqueName, infoPageId, context.userForToken)
         return removed
     },
     addContentBlockToInfoPage: async(root, args, context) => {
@@ -24,7 +24,7 @@ const infoPageResolvers = {
         const infoPageId = args.infoPageId
         const content = args.content
         const position = args.position
-        const newContentBloc = await courseService.infoPages.addContentBlock(courseUniqueName, infoPageId, content, position, context.userForToken)
+        const newContentBloc = await infoPageService.addContentBlock(courseUniqueName, infoPageId, content, position, context.userForToken)
         return newContentBloc
     },
     modifyContentBlock: async(root, args, context) => {
@@ -33,7 +33,7 @@ const infoPageResolvers = {
         const infoPageId = args.infoPageId
         const contentBlockId = args.contentBlockId
         const content = args.content
-        const modifiedContentBlock = await courseService.infoPages.modifyContentBlock(courseUniqueName, infoPageId, contentBlockId, content, context.userForToken)
+        const modifiedContentBlock = await infoPageService.modifyContentBlock(courseUniqueName, infoPageId, contentBlockId, content, context.userForToken)
         return modifiedContentBlock
     },
     removeContentBlockFromInfoPage: async(root, args, context) => {
@@ -41,7 +41,7 @@ const infoPageResolvers = {
         const courseUniqueName = args.courseUniqueName
         const infoPageId = args.infoPageId
         const contentBlockId = args.contentBlockId
-        const removed = await courseService.infoPages.removeContentBlock(courseUniqueName, infoPageId, contentBlockId, context.userForToken)
+        const removed = await infoPageService.removeContentBlock(courseUniqueName, infoPageId, contentBlockId, context.userForToken)
         return removed
 
     },
