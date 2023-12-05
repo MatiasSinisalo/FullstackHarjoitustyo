@@ -89,4 +89,29 @@ describe('createMultipleChoiceTask tests', () => {
 
     })
 
+    test('createMultipleChoiceTask returns given course not found if course does not exist', async () => {
+        const user = await helpers.logIn("username")
+        const course = await helpers.createCourse("course-url-name", "courses name", [])
+        
+        const deadline = new Date("2030-06-25")
+        const expectedResult = {
+            description: "this is a description for multiple choice task", 
+            deadline: deadline.toString(),
+            questions: [],
+            answers: []
+        }
+
+        const multipleChoiceTaskQuery = await helpers.makeQuery({
+            query: createMultipleChoiceTask, 
+            variables: {
+                courseUniqueName: "this does not exist", 
+                description: expectedResult.description, 
+                deadline: expectedResult.deadline
+            }})
+        expect(multipleChoiceTaskQuery.errors[0].message).toEqual("Given course not found")
+
+        checkCoursesNotChanged()
+
+    })
+
 })
