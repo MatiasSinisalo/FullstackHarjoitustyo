@@ -9,6 +9,16 @@ const helpers = require('../testHelpers')
 const config = require('../../config')
 
 
+const checkCoursesNotChanged = async () => {
+    const coursesInDB = await Course.find({})
+    expect(coursesInDB.length).toBe(1)
+    
+    const courseInDB = coursesInDB[0]
+    expect(courseInDB.tasks.textTasks.length).toBe(0)
+    expect(courseInDB.tasks.multipleChoiceTasks.length).toBe(0)
+}
+
+
 describe('createMultipleChoiceTask tests', () => {
     test('createMultipleChoiceTask creates an multiple choice task to database correctly', async () => {
         const user = await helpers.logIn("username")
@@ -29,7 +39,7 @@ describe('createMultipleChoiceTask tests', () => {
                 description: expectedResult.description, 
                 deadline: expectedResult.deadline
             }})
-        console.log(multipleChoiceTaskQuery)
+       
         
         const queryReturnObject = multipleChoiceTaskQuery.data.createMultipleChoiceTask
         const returnedDate = new Date(parseInt(queryReturnObject.deadline)).toString()
@@ -51,4 +61,32 @@ describe('createMultipleChoiceTask tests', () => {
         expect(multipleChoiceTaskInDB.questions).toEqual([])
         expect(multipleChoiceTaskInDB.answers).toEqual([])
     })
+
+    test('createMultipleChoiceTask returns Unauthorized if user is not teacher', async () => {
+        const user = await helpers.logIn("username")
+        const course = await helpers.createCourse("course-url-name", "courses name", [])
+
+        const secondUser = await helpers.logIn("students username")
+        
+        const deadline = new Date("2030-06-25")
+        const expectedResult = {
+            description: "this is a description for multiple choice task", 
+            deadline: deadline.toString(),
+            questions: [],
+            answers: []
+        }
+
+        const multipleChoiceTaskQuery = await helpers.makeQuery({
+            query: createMultipleChoiceTask, 
+            variables: {
+                courseUniqueName: course.uniqueName, 
+                description: expectedResult.description, 
+                deadline: expectedResult.deadline
+            }})
+        expect(multipleChoiceTaskQuery.errors[0].message).toEqual("Unauthorized")
+
+        checkCoursesNotChanged()
+
+    })
+
 })
