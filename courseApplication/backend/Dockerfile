@@ -8,7 +8,7 @@ ARG NODE_VERSION=18.12.0
 
 FROM node:${NODE_VERSION}-alpine
 
-# Use production node environment by default.
+# Use development node environment
 ENV NODE_ENV development
 
 
@@ -17,10 +17,7 @@ WORKDIR /app
 # Copy the rest of the source files into the image.
 COPY . .
 
-# Download dependencies as a separate step to take advantage of Docker's caching.
-# Leverage a cache mount to /root/.npm to speed up subsequent builds.
-# Leverage a bind mounts to package.json and package-lock.json to avoid having to copy them into
-# into this layer.
+
 RUN npm install
 
 
