@@ -9,11 +9,22 @@
 # https://github.com/docker/awesome-compose
 services:
   
+  frontend:
+    build:
+      context: ./frontend
+    networks:
+      - app-network
+    ports:
+      - '3000:3000'
+    depends_on:
+      - server
+  
   server:
     build:
       context: ./backend
     networks:
-      - backend-network 
+      - backend-network
+      - app-network
     environment:
       NODE_ENV: development
     ports:
@@ -33,6 +44,8 @@ services:
       - '27017'
 networks:
   backend-network:
+    driver: bridge
+  app-network:
     driver: bridge
 volumes:
   mongo:
