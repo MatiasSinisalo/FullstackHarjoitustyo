@@ -8,11 +8,12 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
+  
   server:
+    build:
+      context: ./backend
     networks:
       - backend-network 
-    build:
-      context: .
     environment:
       NODE_ENV: development
     ports:
@@ -20,7 +21,8 @@ services:
     depends_on:
       - mongodb 
     env_file:
-      - .env
+      - ./backend/.env
+  
   mongodb:
     image: mongo
     networks:
