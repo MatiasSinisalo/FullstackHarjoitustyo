@@ -20,3 +20,14 @@ spec:
         image: matiassinisalo/fullstackopen:server
         ports:
           - containerPort: 4000
+        env: 
+          - name: MONGODB_URI
+            valueFrom:
+              secretKeyRef:
+                name: my-secret-3
+                key: MONGODB_URI
+          - name: SECRET
+            valueFrom:
+              secretKeyRef:
+                name: my-secret-3
+                key: SECRET
