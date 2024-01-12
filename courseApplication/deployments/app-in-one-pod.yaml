@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-app
+spec:
+  selector:
+    matchLabels:
+      app: hello-app
+  template:
+    metadata:
+      labels:
+        app: hello-app
+    spec:
+      containers:
+      - name: frontend
+        image: matiassinisalo/fullstackopen:frontend
+        ports:
+          - containerPort: 3000
+      - name: backend
+        image: matiassinisalo/fullstackopen:server
+        ports:
+          - containerPort: 4000
