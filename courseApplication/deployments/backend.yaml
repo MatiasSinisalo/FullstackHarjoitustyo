@@ -16,4 +16,9 @@ spec:
         secretKeyRef:
           name: my-secret-3
           key: MONGODB_URI
+    - name: SECRET
+      valueFrom:
+        secretKeyRef:
+          name: my-secret-3
+          key: SECRET
 
