@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend
+  labels:
+    name: backend
+spec:
+  containers:
+  - name: backend
+    image: matiassinisalo/fullstackopen:server
+    ports:
+      - containerPort: 4000
+    env:
+    - name: MONGODB_URI
+      valueFrom:
+        secretKeyRef:
+          name: my-secret-3
+          key: MONGODB_URI
+
