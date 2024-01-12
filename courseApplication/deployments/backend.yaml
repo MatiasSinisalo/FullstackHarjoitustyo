@@ -14,11 +14,11 @@ spec:
     - name: MONGODB_URI
       valueFrom:
         secretKeyRef:
-          name: my-secret-3
+          name: my-secret
           key: MONGODB_URI
     - name: SECRET
       valueFrom:
         secretKeyRef:
-          name: my-secret-3
+          name: my-secret
           key: SECRET
 
