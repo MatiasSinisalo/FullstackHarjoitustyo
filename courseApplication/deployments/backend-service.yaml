@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    name: backend
+    app: backend
   name: backend
   namespace: default
 spec:
@@ -11,6 +11,5 @@ spec:
       protocol: TCP
       targetPort: 4000
   selector:
-    name: backend
+    app: backend
   type: LoadBalancer
-  loadBalancerIP: ""

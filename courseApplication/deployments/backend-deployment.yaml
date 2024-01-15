@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: matiassinisalo/fullstackopen:server
+        resources:
+          limits:
+            memory: "500M"
+            cpu: "500m"
+        ports:
+        - containerPort: 4000
+        env:
+          - name: MONGODB_URI
+            valueFrom:
+              secretKeyRef:
+                name: my-secret
+                key: MONGODB_URI
+          - name: SECRET
+            valueFrom:
+              secretKeyRef:
+                name: my-secret
+                key: SECRET
