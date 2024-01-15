@@ -13,4 +13,4 @@ spec:
   selector:
     name: backend
   type: LoadBalancer
-  loadBalancerIP: "34.88.224.135"
+  loadBalancerIP: ""
