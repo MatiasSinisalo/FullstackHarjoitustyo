@@ -4,7 +4,6 @@ metadata:
   labels:
     app: frontend
   name: frontend
-  namespace: default
 spec:
   ports:
     - port: 80
