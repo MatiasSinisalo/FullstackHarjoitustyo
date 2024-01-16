@@ -14,8 +14,8 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { createClient } from 'graphql-ws'
 //Backendlink is just the server url for backend and its ok that it is on the client side
 
-const backEndURI = process.env.NODE_ENV === "production" ? `https://studastudy-backend.onrender.com` : 'http://localhost:4000'
-const backEndWsURL = process.env.NODE_ENV === "production" ? `wss://studastudy-backend.onrender.com` : 'ws://localhost:4000'
+const backEndURI = process.env.NODE_ENV === "production" ? `https://backend-ohtuprojekti-staging.apps.ocp-test-0.k8s.it.helsinki.fi/` : 'http://localhost:4000'
+const backEndWsURL = process.env.NODE_ENV === "production" ? `wss://backend-ohtuprojekti-staging.apps.ocp-test-0.k8s.it.helsinki.fi/` : 'ws://localhost:4000'
 
 const httpLink = new HttpLink({
     uri: backEndURI,

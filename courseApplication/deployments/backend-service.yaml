@@ -11,4 +11,4 @@ spec:
       targetPort: 4000
   selector:
     app: backend
-  type: LoadBalancer
+  type: ClusterIP
