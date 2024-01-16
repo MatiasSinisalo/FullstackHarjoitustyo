@@ -4,12 +4,9 @@
 # If you need more help, visit the Dockerfile reference guide at
 # https://docs.docker.com/engine/reference/builder/
 
-ARG NODE_VERSION=18.12.0
-
-FROM node:${NODE_VERSION}-alpine
-
+FROM node:latest
 # Use development node environment
-ENV NODE_ENV development
+ENV NODE_ENV production
 
 
 WORKDIR /app
@@ -26,4 +23,4 @@ RUN npm install
 EXPOSE 4000
 
 # Run the application.
-CMD npm run dev
+CMD node src/index.js

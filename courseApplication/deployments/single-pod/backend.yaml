@@ -7,7 +7,7 @@ metadata:
 spec:
   containers:
   - name: backend
-    image: matiassinisalo/fullstackopen:server
+    image: matiassinisalo/fullstackopen:server-latest
     ports:
       - containerPort: 4000
     env:

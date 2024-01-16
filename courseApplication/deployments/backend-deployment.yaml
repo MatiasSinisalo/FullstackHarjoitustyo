@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: matiassinisalo/fullstackopen:server
+        image: matiassinisalo/fullstackopen:server-latest2
         resources:
           limits:
             memory: "500M"
