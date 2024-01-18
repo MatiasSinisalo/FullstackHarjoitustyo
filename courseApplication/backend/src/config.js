@@ -24,4 +24,9 @@ const IS_TEST = process.env.NODE_ENV === 'test' ? true : false
 
 const LOCAL_SERVER_URL = "http://localhost:4000/"
 
-module.exports = {SECRET, PORT, MONGODB_URI, IS_TEST, LOCAL_SERVER_URL}
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
+
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+
+
+module.exports = {SECRET, PORT, MONGODB_URI, IS_TEST, LOCAL_SERVER_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET}

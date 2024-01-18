@@ -14,7 +14,7 @@ const GoogleLogin = ({}) => {
     authenticateGoogleUser(param, client)
     return("logging in with google...")
   }
-  const client_id = 'redacted';
+  const client_id = 'redacted'
   const redirect_uri = 'http://localhost:3000/';
 
   return(
