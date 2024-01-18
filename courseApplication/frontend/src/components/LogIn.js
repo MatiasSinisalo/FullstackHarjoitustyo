@@ -1,5 +1,31 @@
-import { Link } from "react-router-dom"
+import { Link, useParams, useSearchParams } from "react-router-dom"
 import "./styles/login.css"
+
+const GoogleLogin = ({}) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  console.log("heelou")
+  const param = searchParams.get("code")
+  console.log(param)
+  if(param != null){
+    // send code to backend to then get the user id token
+
+    return("logging in with google...")
+  }
+  const client_id = 'Redacted';
+  const redirect_uri = 'http://localhost:3000/success/';
+
+  return(
+    <>
+      <a href={`https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}&scope=openid%20email`}
+      >login using google</a>
+      
+    </>
+  )
+}
+
+
+
+
 const LogIn = ({handleLogIn}) =>{
     const submitLogInForm = async (event) => {
       event.preventDefault()
@@ -23,9 +49,11 @@ const LogIn = ({handleLogIn}) =>{
           <input className="important action-button" type = "submit" value="LogIn"></input>
         </form>
         <p className="create-user-promt">dont have an account? create one <Link to="/createAccount">here</Link></p>
+        <GoogleLogin></GoogleLogin>
       </div>
       </div>
     </div>
+    
     )
   }
   export default LogIn
