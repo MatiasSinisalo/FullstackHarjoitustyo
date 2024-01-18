@@ -1,18 +1,21 @@
 import { Link, useParams, useSearchParams } from "react-router-dom"
 import "./styles/login.css"
+import { authenticateGoogleUser } from "../reducers/userReducer";
+import { useApolloClient } from "@apollo/client";
 
 const GoogleLogin = ({}) => {
   const [searchParams, setSearchParams] = useSearchParams();
   console.log("heelou")
   const param = searchParams.get("code")
+  const client = useApolloClient()
   console.log(param)
   if(param != null){
     // send code to backend to then get the user id token
-
+    authenticateGoogleUser(param, client)
     return("logging in with google...")
   }
-  const client_id = 'Redacted';
-  const redirect_uri = 'http://localhost:3000/success/';
+  const client_id = 'redacted';
+  const redirect_uri = 'http://localhost:3000/';
 
   return(
     <>

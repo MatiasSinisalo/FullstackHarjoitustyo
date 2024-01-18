@@ -53,7 +53,7 @@ query Me {
 }
 `
 
-const AUTHENTICATE_GOOGLE_USER = gql`
+export const AUTHENTICATE_GOOGLE_USER = gql`
 mutation AuthenticateGoogleUser($googleToken: String!) {
   authenticateGoogleUser(google_token: $googleToken) {
     value
