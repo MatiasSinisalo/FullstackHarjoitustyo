@@ -4,7 +4,7 @@ const User = require('../models/user')
 const { mustHaveToken } = require('./resolverUtils')
 const { default: axios } = require('axios')
 const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = require('../config')
-
+const jwt = require('jsonwebtoken')
 
 const userQueryResolvers = {
     
@@ -34,6 +34,8 @@ const userMutationResolvers = {
         const token = userService.logIn(username, password)
         return {value: token}
     },
+
+    //this code is just a proof of concept prototype, TODO: refactor
     authenticateGoogleUser: async(root, args)=>{
         const googleCode = args.google_token
         console.log("startcode")
@@ -48,11 +50,17 @@ const userMutationResolvers = {
         })
         console.log("request result")
         console.log(result)
+        
+        const idToken = result.data.id_token
+        console.log(idToken)
+        const decodedTokenRequest = await axios.post(`https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`)
+        const email = decodedTokenRequest.data.email
+        console.log(email)
 
+        
+        //TODO: create user, for now just return the email
 
-
-
-        return {}
+        return {value: email}
     }
 
 }
