@@ -46,7 +46,7 @@ const App = () =>{
     const token = localStorage.getItem("courseApplicationUserToken")
     if(!token)
     {
-      navigate("/")
+     // navigate("/")
     }
   }, [])
 
