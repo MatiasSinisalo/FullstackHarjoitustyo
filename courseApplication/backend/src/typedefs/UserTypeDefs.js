@@ -23,6 +23,10 @@ type Mutation{
         name: String!
         password: String!
     ):User
+    
+    authenticateGoogleUser(
+        google_token: String!
+    ):Token
 
     logIn(
         username: String!

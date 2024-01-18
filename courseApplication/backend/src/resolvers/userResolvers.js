@@ -31,6 +31,12 @@ const userMutationResolvers = {
         const token = userService.logIn(username, password)
         return {value: token}
     },
+    authenticateGoogleUser: async(root, args)=>{
+        const googleCode = args.google_token
+        console.log(googleCode)
+        return {}
+    }
+
 }
 
 module.exports = {userQueryResolvers, userMutationResolvers}
