@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const config = require('../config')
 const {UserInputError} = require('apollo-server')
+const { default: axios } = require('axios')
 
 const createNewUser = async (username, name, password) => {
     const newUser = {
@@ -57,5 +58,22 @@ const logIn = async (username, password) => {
 }
 
 
+const authenticateGoogleUser = async (googleAuthCode) => {
+    const result = await axios.post('https://oauth2.googleapis.com/token', {
+        code: googleAuthCode,
+        client_id: config.GOOGLE_CLIENT_ID,
+        client_secret: config.GOOGLE_CLIENT_SECRET,
+        redirect_uri: 'http://localhost:3000/',
+        grant_type: "authorization_code"
+    })
+    const idToken = result.data.id_token
+    
+    const decodedTokenRequest = await axios.post(`https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`)
+    const email = decodedTokenRequest.data.email
 
-module.exports = {createNewUser, logIn, getUser}
+    return email
+}
+
+
+
+module.exports = {createNewUser, logIn, getUser, authenticateGoogleUser}
