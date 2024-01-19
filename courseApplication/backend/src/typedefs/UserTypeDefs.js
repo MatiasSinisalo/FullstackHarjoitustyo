@@ -12,6 +12,16 @@ type Token{
     value: String!
 }
 
+enum AuthenticateTokenType{
+    TOKEN_LOGIN_SUCCESS
+    TOKEN_CREATE_ACCOUNT
+}
+
+type AuthenticationResult{
+    type: AuthenticateTokenType
+    token: Token
+}
+
 type Query{
     allUsers: [User!]!
     me: User!
@@ -26,7 +36,7 @@ type Mutation{
     
     authenticateGoogleUser(
         google_token: String!
-    ):Token
+    ):AuthenticationResult
 
     logIn(
         username: String!
