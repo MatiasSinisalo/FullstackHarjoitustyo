@@ -51,6 +51,7 @@ export const finalizeGoogleUserCreation = async (username, createUserToken, clie
       store.dispatch(Notify(`successfully created user ${userFinalizeQuery.username}`, "successNotification", 5))
       localStorage.removeItem('courseApplicationCreateUserToken')
       console.log(userFinalizeQuery)
+      navigate('/')
       return true
   }
   else{
