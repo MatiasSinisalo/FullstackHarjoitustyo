@@ -14,7 +14,7 @@ import CourseBrowser from "./components/CourseBrowser";
 import Dashboard from "./components/Dashboard";
 import Messages from "./components/course/Messages";
 import LogIn from "./components/LogIn";
-import { getUserData, LogInAsUser } from './services/logInService'
+import loginService from './services/logInService'
 import {useNavigate} from 'react-router-dom'
 
 import { useApolloClient, useQuery} from "@apollo/client";
@@ -51,7 +51,7 @@ const App = () =>{
   }, [])
 
   const handleLogIn = async (username, password) => {
-    const userInfo = await LogInAsUser(username, password, client)
+    const userInfo = await loginService.LogInAsUser(username, password, client)
     console.log(userInfo)
     if(!userInfo.error)
     {
