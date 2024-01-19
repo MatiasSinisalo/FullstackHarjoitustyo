@@ -63,6 +63,12 @@ const createCourse = async (uniqueName, name, teacherUsername) => {
             textTasks: []
         }
     }
+
+    const courseAlreadyExistsWithName = await Course.findOne({courseUniqueName: uniqueName})
+    if(courseAlreadyExistsWithName){
+        throw new UserInputError("Course uniqueName must be unique")
+    }
+
     try{
         const courseModel = new Course(course)
         const savedCourse = await courseModel.save()
