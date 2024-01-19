@@ -63,8 +63,8 @@ const createCourse = async (uniqueName, name, teacherUsername) => {
             textTasks: []
         }
     }
-
-    const courseAlreadyExistsWithName = await Course.findOne({courseUniqueName: uniqueName})
+  
+    const courseAlreadyExistsWithName = await Course.findOne({uniqueName: uniqueName})
     if(courseAlreadyExistsWithName){
         throw new UserInputError("Course uniqueName must be unique")
     }
