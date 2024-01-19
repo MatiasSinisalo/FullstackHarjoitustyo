@@ -105,11 +105,19 @@ const authenticateGoogleUser = async (googleAuthCode) => {
 
 const createGoogleUserAccount = async (username, verifiedCreateUserToken) => {
     const newUser = {
-        type: 'google',
+        accountType: 'google',
         username: username,
         name: verifiedCreateUserToken.name,
         thirdPartyID: verifiedCreateUserToken.thirdPartyID,
     }
+    console.log(newUser)
+    
+    const userDBQuery = await User.findOne({accountType: 'google', thirdPartyID: newUser.thirdPartyID})
+    console.log(userDBQuery)
+    if(userDBQuery){
+        throw new UserInputError("Given user account already exists")
+    }
+
     try{
         const userObj = User(newUser)
         await userObj.save()
