@@ -62,5 +62,14 @@ mutation Mutation($googleToken: String!) {
     type
   }
 }
+`
 
+export const FINALIZE_GOOGLE_USER_CREATION = gql`
+mutation FinalizeGoogleUserCreation($username: String!, $createUserToken: String!) {
+  finalizeGoogleUserCreation(username: $username, createUserToken: $createUserToken) {
+    id
+    name
+    username
+  }
+}
 `
