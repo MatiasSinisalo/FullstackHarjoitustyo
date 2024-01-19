@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import loginService from '../services/logInService'
 import { Notify } from "./notificationReducer";
 import store from "../store"
-import { redirect } from 'react-router-dom';
+import { Navigate, redirect } from 'react-router-dom';
 
 export const createNewUser = (username, name, password, client) => {
   return async function (dispatch){
@@ -49,6 +49,7 @@ export const finalizeGoogleUserCreation = async (username, createUserToken, clie
   {
       console.log(userFinalizeQuery)
       store.dispatch(Notify(`successfully created user ${userFinalizeQuery.username}`, "successNotification", 5))
+      localStorage.removeItem('courseApplicationCreateUserToken')
       console.log(userFinalizeQuery)
       return true
   }
