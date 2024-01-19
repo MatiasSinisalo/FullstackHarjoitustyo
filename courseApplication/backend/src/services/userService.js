@@ -77,7 +77,7 @@ const authenticateGoogleUser = async (googleAuthCode) => {
     if(userDBQuery){
         const userInfo = {
             username: userDBQuery.username,
-            id: userInDatabase._id 
+            id: userDBQuery._id 
         }
         const appToken = await jwt.sign(userInfo, config.SECRET, {expiresIn: '1h'})
         return {type: 'TOKEN_LOGIN_SUCCESS', token: {value: appToken}}
