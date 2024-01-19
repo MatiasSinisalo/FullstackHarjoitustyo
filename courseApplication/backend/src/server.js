@@ -52,8 +52,13 @@ const startServer = async () => {
     })
    
 
-    await mongoose.connect(config.MONGODB_URI)
-    console.log("connected to database")
+    await mongoose.connect(config.MONGODB_URI).catch((error) => {
+        console.log(error)
+    })
+    .then(() => {
+        console.log("connected to database")
+    })
+  
 
     await apolloServer.start()
     app.use('/', cors(), express.json(), expressMiddleware(apolloServer, {context: normalContext}));

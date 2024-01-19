@@ -32,3 +32,19 @@ spec:
               secretKeyRef:
                 name: my-secret
                 key: SECRET
+          - name: GOOGLE_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: my-secret
+                key: GOOGLE_CLIENT_SECRET
+          - name: GOOGLE_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: my-secret
+                key: GOOGLE_CLIENT_ID
+          - name: GOOGLE_CREATE_ACCOUNT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: my-secret
+                key: GOOGLE_CREATE_ACCOUNT_SECRET
+
