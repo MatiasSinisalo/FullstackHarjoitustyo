@@ -38,9 +38,7 @@ const userMutationResolvers = {
     //this code is just a proof of concept prototype, TODO: refactor
     authenticateGoogleUser: async(root, args)=>{
         const googleCode = args.google_token
-        console.log("startcode")
-        console.log(googleCode)
-
+       
         const result = await axios.post('https://oauth2.googleapis.com/token', {
             code: googleCode,
             client_id: GOOGLE_CLIENT_ID,
@@ -48,18 +46,15 @@ const userMutationResolvers = {
             redirect_uri: 'http://localhost:3000/',
             grant_type: "authorization_code"
         })
-        console.log("request result")
-        console.log(result)
-        
+      
         const idToken = result.data.id_token
-        console.log(idToken)
+      
         const decodedTokenRequest = await axios.post(`https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`)
         const email = decodedTokenRequest.data.email
-        console.log(email)
+       
 
         
         //TODO: create user, for now just return the email
-
         return {value: email}
     }
 

@@ -5,10 +5,10 @@ import { useApolloClient } from "@apollo/client";
 
 const GoogleLogin = ({}) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  console.log("heelou")
+ 
   const param = searchParams.get("code")
   const client = useApolloClient()
-  console.log(param)
+ 
   if(param != null){
     // send code to backend to then get the user id token
     authenticateGoogleUser(param, client)
