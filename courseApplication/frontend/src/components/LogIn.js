@@ -16,7 +16,7 @@ const GoogleLogin = ({}) => {
     return("logging in with google...")
   }
   const client_id = '526000597568-srhi8bscvhvi2s7br23bomf7vvgrskkr.apps.googleusercontent.com'
-  const redirect_uri = 'http://localhost:3000/';
+  const redirect_uri = 'https://frontend-ohtuprojekti-staging.apps.ocp-test-0.k8s.it.helsinki.fi/';
 
   return(
     <>

@@ -64,7 +64,7 @@ const authenticateGoogleUser = async (googleAuthCode) => {
         code: googleAuthCode,
         client_id: config.GOOGLE_CLIENT_ID,
         client_secret: config.GOOGLE_CLIENT_SECRET,
-        redirect_uri: 'http://localhost:3000/',
+        redirect_uri: 'https://frontend-ohtuprojekti-staging.apps.ocp-test-0.k8s.it.helsinki.fi/',
         grant_type: "authorization_code"
     })
     const idToken = result.data.id_token
