@@ -27,8 +27,15 @@ export const authenticateGoogleUser = async (googleToken, client, navigate) => {
         console.log("redirecting")
         localStorage.setItem('courseApplicationCreateUserToken', userAuthQuery.token.value)
         navigate('/createAccount/fillInInformation')
+        return true
       }
-      return true
+      else if(userAuthQuery.type === "TOKEN_LOGIN_SUCCESS")
+      {
+        localStorage.setItem('courseApplicationUserToken', userAuthQuery.token.value)
+        navigate('/dashboard')
+        return true
+      }
+      
   }
   else{
       store.dispatch(Notify(`${userAuthQuery.error.message}`, "errorNotification", 5))
