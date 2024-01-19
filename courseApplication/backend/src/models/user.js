@@ -13,7 +13,6 @@ const userSchema = new mongoose.Schema({
     },
     thirdPartyID: {
         type: String,
-        unique: true,
     },
     username: {
         type: String,
