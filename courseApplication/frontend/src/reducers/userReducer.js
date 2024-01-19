@@ -25,6 +25,7 @@ export const authenticateGoogleUser = async (googleToken, client, navigate) => {
       if(userAuthQuery.type === "TOKEN_CREATE_ACCOUNT")
       {
         console.log("redirecting")
+        localStorage.setItem('courseApplicationCreateUserToken', userAuthQuery.token.value)
         navigate('/createAccount/fillInInformation')
       }
       return true
@@ -35,12 +36,13 @@ export const authenticateGoogleUser = async (googleToken, client, navigate) => {
   }
 }
 
-export const finalizeGoogleUserCreation = async (username, createUserToken, client) => {
+export const finalizeGoogleUserCreation = async (username, createUserToken, client, navigate) => {
   const userFinalizeQuery =  await loginService.finalizeGoogleUserCreation(username, createUserToken, client)
   if(!userFinalizeQuery.error)
   {
       console.log(userFinalizeQuery)
       store.dispatch(Notify(`successfully created user ${userFinalizeQuery.username}`, "successNotification", 5))
+      console.log(userFinalizeQuery)
       return true
   }
   else{
