@@ -37,6 +37,12 @@ type Mutation{
     authenticateGoogleUser(
         google_token: String!
     ):AuthenticationResult
+    
+    finalizeGoogleUserCreation(
+        username: String!
+        createUserToken: String!
+    ):User
+
 
     logIn(
         username: String!

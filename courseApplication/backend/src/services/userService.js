@@ -103,6 +103,23 @@ const authenticateGoogleUser = async (googleAuthCode) => {
     return {}
 }
 
+const createGoogleUserAccount = async (username, verifiedCreateUserToken) => {
+    const newUser = {
+        type: 'google',
+        username: username,
+        name: verifiedCreateUserToken.name,
+        thirdPartyID: verifiedCreateUserToken.thirdPartyID,
+    }
+    try{
+        const userObj = User(userToSave)
+        await userObj.save()
+        return newUser
+    }
+    catch(error){
+        throw new UserInputError("Given username already exists")
+    }
+} 
 
 
-module.exports = {createNewUser, logIn, getUser, authenticateGoogleUser}
+
+module.exports = {createNewUser, logIn, getUser, authenticateGoogleUser, createGoogleUserAccount}

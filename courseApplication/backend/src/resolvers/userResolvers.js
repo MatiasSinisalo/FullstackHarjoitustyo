@@ -2,6 +2,8 @@ const { UserInputError } = require('apollo-server-core')
 const userService = require('../services/userService')
 const User = require('../models/user')
 const { mustHaveToken } = require('./resolverUtils')
+const jwt = require('jsonwebtoken')
+const { GOOGLE_CREATE_ACCOUNT_SECRET } = require('../config')
 
 const userQueryResolvers = {
     
@@ -36,9 +38,24 @@ const userMutationResolvers = {
     authenticateGoogleUser: async(root, args)=>{
         const googleCode = args.google_token
         
-        authenticateResult = userService.authenticateGoogleUser(googleCode)
+        authenticateResult = await userService.authenticateGoogleUser(googleCode)
         
         return authenticateResult
+    },
+
+    finalizeGoogleUserCreation: async(root, args, context) => {
+        const username = args.username
+        const createUserToken = args.createUserToken
+
+        const verifiedCreateUserToken = jwt.verify(createUserToken, GOOGLE_CREATE_ACCOUNT_SECRET)
+        if(verifiedCreateUserToken){
+            const user = await userService.createGoogleUserAccount(username, verifiedCreateUserToken)
+            return user
+        }
+        else{
+            throw new UserInputError("Unauthorized")
+        }
+
     }
 
 }
