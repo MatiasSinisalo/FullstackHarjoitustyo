@@ -13,6 +13,8 @@ const {ApolloServerPluginDrainHttpServer } = require('@apollo/server/plugin/drai
 const { makeExecutableSchema } = require('@graphql-tools/schema')
 const { WebSocketServer } = require('ws')
 const { useServer } = require('graphql-ws/lib/use/ws')
+const { Course } = require('./models/course')
+const user = require('./models/user')
 const startServer = async () => {
     const app = express()
     const httpServer = http.createServer(app)
@@ -57,7 +59,10 @@ const startServer = async () => {
     })
     .then(() => {
         console.log("connected to database")
+        //sync indexes
+        mongoose.syncIndexes()
     })
+
   
 
     await apolloServer.start()
