@@ -111,9 +111,9 @@ const createGoogleUserAccount = async (username, verifiedCreateUserToken) => {
         thirdPartyID: verifiedCreateUserToken.thirdPartyID,
     }
     try{
-        const userObj = User(userToSave)
+        const userObj = User(newUser)
         await userObj.save()
-        return newUser
+        return userObj    
     }
     catch(error){
         throw new UserInputError("Given username already exists")
