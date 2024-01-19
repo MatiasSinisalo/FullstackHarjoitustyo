@@ -54,9 +54,12 @@ query Me {
 `
 
 export const AUTHENTICATE_GOOGLE_USER = gql`
-mutation AuthenticateGoogleUser($googleToken: String!) {
+mutation Mutation($googleToken: String!) {
   authenticateGoogleUser(google_token: $googleToken) {
-    value
+    token {
+      value
+    }
+    type
   }
 }
 

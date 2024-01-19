@@ -36,9 +36,9 @@ const userMutationResolvers = {
     authenticateGoogleUser: async(root, args)=>{
         const googleCode = args.google_token
         
-        token = userService.authenticateGoogleUser(googleCode)
+        authenticateResult = userService.authenticateGoogleUser(googleCode)
         
-        return {value: token}
+        return authenticateResult
     }
 
 }

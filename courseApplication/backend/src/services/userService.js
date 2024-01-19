@@ -5,6 +5,7 @@ const config = require('../config')
 const {UserInputError} = require('apollo-server')
 const { default: axios } = require('axios')
 
+
 const createNewUser = async (username, name, password) => {
     const newUser = {
         username: username,
@@ -69,9 +70,37 @@ const authenticateGoogleUser = async (googleAuthCode) => {
     const idToken = result.data.id_token
     
     const decodedTokenRequest = await axios.post(`https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`)
-    const email = decodedTokenRequest.data.email
+    const googleIDToken = decodedTokenRequest.data 
+    
+    //this blob of code is proof of concept... TODO: refactor
+    const userDBQuery = await User.findOne({accountType: 'google', thirdPartyID: googleIDToken.sub})
+    if(userDBQuery){
+        const userInfo = {
+            username: userDBQuery.username,
+            id: userInDatabase._id 
+        }
+        const appToken = await jwt.sign(userInfo, config.SECRET, {expiresIn: '1h'})
+        return {type: 'TOKEN_LOGIN_SUCCESS', token: {value: appToken}}
+    }
+    else{
+        console.log("starting account create progress")
+        const email = googleIDToken.email
+        const name = googleIDToken.name
+        const thirdPartyID = googleIDToken.sub
 
-    return email
+        const userCreationInfo = {
+            name: name,
+            thirdPartyID: thirdPartyID
+        }
+        const userProfileCreationToken = jwt.sign(userCreationInfo, config.GOOGLE_CREATE_ACCOUNT_SECRET, {expiresIn: '1h'})
+
+        return {type: 'TOKEN_CREATE_ACCOUNT', token: {value: userProfileCreationToken}}
+
+    }
+
+   
+
+    return {}
 }
 
 
