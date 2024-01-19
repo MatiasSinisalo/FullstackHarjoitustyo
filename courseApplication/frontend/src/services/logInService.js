@@ -1,6 +1,6 @@
 import {AUTHENTICATE_GOOGLE_USER, CREATE_USER, LOGIN, ME} from '../queries/userQueries'
 
- export const LogInAsUser = async (username, password, apolloClient) => {
+const LogInAsUser = async (username, password, apolloClient) => {
     try{
         const loginQuery = await apolloClient.mutate({mutation: LOGIN, variables: {username, password}})
         
@@ -15,12 +15,12 @@ import {AUTHENTICATE_GOOGLE_USER, CREATE_USER, LOGIN, ME} from '../queries/userQ
     }
 }
 
-export const getUserData = async (apolloClient) => {
+const getUserData = async (apolloClient) => {
     const userInfo = await apolloClient.query({query: ME})
     return {username: userInfo.data.me.username, name: userInfo.data.me.name}
 }
 
-export const createUser = async (username, name , password, apolloClient) => {
+const createUser = async (username, name , password, apolloClient) => {
     try{
         const newUserInfo = await apolloClient.mutate({mutation: CREATE_USER, variables: {username: username, name: name, password: password}})
         return newUserInfo.data?.createUser
@@ -33,7 +33,7 @@ export const createUser = async (username, name , password, apolloClient) => {
 }
 
 
-export const sendAuthenticateGoogleUser = async (googleToken, apolloClient) => {
+const authenticateGoogleUser = async (googleToken, apolloClient) => {
     try{
         const newUserInfo = await apolloClient.mutate({mutation: AUTHENTICATE_GOOGLE_USER, variables: {googleToken: googleToken}})
         return newUserInfo.data?.authenticateGoogleUser
@@ -43,4 +43,12 @@ export const sendAuthenticateGoogleUser = async (googleToken, apolloClient) => {
         console.log(err)
         return {error: err}
     }
+}
+
+
+export default {
+    LogInAsUser, 
+    getUserData,
+    createUser,
+    authenticateGoogleUser,
 }
