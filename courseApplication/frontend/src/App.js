@@ -32,6 +32,7 @@ import TaskListings from "./components/course/TaskListings";
 import CourseParticipants from "./components/course/CourseParticipants";
 import Submission from "./components/course/Submission";
 import { ME } from "./queries/userQueries";
+import FillInUserInformation from "./components/FillInUserInformation";
 
 
 const App = () =>{
@@ -88,6 +89,7 @@ const App = () =>{
       <Routes>
         <Route path="/" element={<LogIn handleLogIn={handleLogIn}/>}/>
         <Route path="/createAccount" element={<CreateAccount></CreateAccount>}/>
+        <Route path="/createAccount/fillInInformation" element={<FillInUserInformation></FillInUserInformation>}/>
         <Route path="/dashboard" element={<Dashboard/>}/>
         <Route path="/calendar" element={<Calendar/>}/>
         <Route path="/messages" element={<Messages/>}/>

@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import loginService from '../services/logInService'
 import { Notify } from "./notificationReducer";
 import store from "../store"
+import { redirect } from 'react-router-dom';
 
 export const createNewUser = (username, name, password, client) => {
   return async function (dispatch){
@@ -12,12 +13,20 @@ export const createNewUser = (username, name, password, client) => {
 }
 
 
-export const authenticateGoogleUser = async (googleToken, client) => {
+export const authenticateGoogleUser = async (googleToken, client, navigate) => {
   const userAuthQuery =  await loginService.authenticateGoogleUser(googleToken, client)
   if(!userAuthQuery.error)
   {
+
+
       console.log(userAuthQuery)
       store.dispatch(Notify(`successfully authenticated user ${userAuthQuery.value}`, "successNotification", 5))
+      console.log(userAuthQuery)
+      if(userAuthQuery.type === "TOKEN_CREATE_ACCOUNT")
+      {
+        console.log("redirecting")
+        navigate('/createAccount/fillInInformation')
+      }
       return true
   }
   else{
