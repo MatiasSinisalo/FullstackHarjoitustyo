@@ -1,4 +1,4 @@
-import { Link, useParams, useSearchParams } from "react-router-dom"
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import "./styles/login.css"
 import { authenticateGoogleUser } from "../reducers/userReducer";
 import { useApolloClient } from "@apollo/client";
@@ -8,10 +8,11 @@ const GoogleLogin = ({}) => {
  
   const param = searchParams.get("code")
   const client = useApolloClient()
+  const navigate = useNavigate()
  
   if(param != null){
     // send code to backend to then get the user id token
-    authenticateGoogleUser(param, client)
+    authenticateGoogleUser(param, client, navigate)
     return("logging in with google...")
   }
   const client_id = 'redacted'
@@ -19,7 +20,7 @@ const GoogleLogin = ({}) => {
 
   return(
     <>
-      <a href={`https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}&scope=openid%20email`}
+      <a href={`https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}&scope=openid%20email%20profile`}
       >login using google</a>
       
     </>
