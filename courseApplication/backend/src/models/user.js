@@ -1,7 +1,20 @@
 const mongoose = require('mongoose')
 
 
+
+
+
 const userSchema = new mongoose.Schema({
+    accountType: {
+      type: String,
+      enum: ['normal', 'google'],
+      default: 'normal',
+      required: true
+    },
+    thirdPartyID: {
+        type: String,
+        unique: true,
+    },
     username: {
         type: String,
         unique: true,
@@ -13,7 +26,6 @@ const userSchema = new mongoose.Schema({
     },
     passwordHash: {
         type: String,
-        required: true
     },
     teachesCourses: {
         type: [{
