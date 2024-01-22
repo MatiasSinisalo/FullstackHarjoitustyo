@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
+  labels:
+    owner-student: MatiasSinisalo
 spec:
   replicas: 1
   selector:
@@ -11,9 +13,10 @@ spec:
     metadata:
       labels:
         app: frontend
+        owner-student: MatiasSinisalo
     spec:
       containers:
       - name: frontend
-        image: matiassinisalo/fullstackopen:frontend-latest3
+        image: matiassinisalo/fullstackopen:frontend-latest5
         ports:
         - containerPort: 3000

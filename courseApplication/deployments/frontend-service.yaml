@@ -3,6 +3,7 @@ kind: Service
 metadata:
   labels:
     app: frontend
+    owner-student: MatiasSinisalo
   name: frontend
 spec:
   ports:

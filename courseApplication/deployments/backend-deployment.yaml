@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
+  labels:
+    owner-student: MatiasSinisalo
 spec:
   replicas: 1
   selector:
@@ -11,10 +13,11 @@ spec:
     metadata:
       labels:
         app: backend
+        owner-student: MatiasSinisalo
     spec:
       containers:
       - name: backend
-        image: matiassinisalo/fullstackopen:server-latest2
+        image: matiassinisalo/fullstackopen:server-latest5
         resources:
           limits:
             memory: "500M"
