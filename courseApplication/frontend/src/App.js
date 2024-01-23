@@ -33,6 +33,7 @@ import CourseParticipants from "./components/course/CourseParticipants";
 import Submission from "./components/course/Submission";
 import { ME } from "./queries/userQueries";
 import FillInUserInformation from "./components/FillInUserInformation";
+import PrivacyStatement from "./components/PrivacyStatement";
 
 
 const App = () =>{
@@ -95,8 +96,9 @@ const App = () =>{
         <Route path="/messages" element={<Messages/>}/>
         <Route path="/CourseBrowser" element={<CourseBrowser/>}/>
         <Route path="/CreateCourse" element={<CreateCourse/>}/>
-        <Route path="/course/:uniqueName/*" element={<Course/>}>
-      </Route>
+        <Route path="/course/:uniqueName/*" element={<Course/>}></Route>
+        <Route path="/privacyStatement" element={<PrivacyStatement></PrivacyStatement>}></Route>
+      
       
       </Routes>
     </div>
