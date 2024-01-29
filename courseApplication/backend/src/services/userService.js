@@ -131,21 +131,32 @@ const createGoogleUserAccount = async (username, verifiedCreateUserToken) => {
 
 
 const authenticateHYUser = async (HYUserToken) => {
-    const result = await axios.post('https://login-test.it.helsinki.fi/idp/profile/oidc/token', {
-        code: HYUserToken,
-        client_id: config.HY_CLIENT_ID,
-        client_secret: config.HY_CLIENT_SECRET,
-        redirect_uri: 'https://frontend-ohtuprojekti-staging.ext.ocp-test-0.k8s.it.helsinki.fi/login/HY',
-        grant_type: "authorization_code"
-    })
-    const idToken = result.data.id_token
+   try{
+        const result = await axios.post(`https://login-test.it.helsinki.fi/idp/profile/oidc/token`, {
+            grant_type: 'authorization_code',   
+            code: HYUserToken,
+            client_id: config.HY_CLIENT_ID,
+            client_secret: config.HY_CLIENT_SECRET,
+            redirect_uri: 'https://frontend-ohtuprojekti-staging.ext.ocp-test-0.k8s.it.helsinki.fi/login/HY'
+           
+        },
+        {
+            headers:{
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        )
+        console.log(result)
+        const idToken = result.data.id_token
 
-    const decodedTokenRequest = await axios.post(`https://login-test.it.helsinki.fi/idp/profile/oidc/userinfo?id_token=${idToken}`)
-    const HYUserData = decodedTokenRequest.data 
-    console.log(HYUserData)
 
+    }
 
-    throw new UserInputError("Unauthorized")
+    catch(e){
+        console.log(e)
+    }
+
+   return {}
 }
 
 
