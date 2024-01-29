@@ -140,16 +140,13 @@ const authenticateHYUser = async (HYUserToken) => {
             redirect_uri: 'https://frontend-ohtuprojekti-staging.ext.ocp-test-0.k8s.it.helsinki.fi/login/HY'
            
         },
-        {
-            headers:{
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        }
-        )
+        {headers:{'Content-Type': 'application/x-www-form-urlencoded'}})
         console.log(result)
-        const idToken = result.data.id_token
 
-
+        const access_Token = result.data.id_token
+        const decodedTokenRequest = await axios.get(`https://login-test.it.helsinki.fi/idp/profile/oidc/userinfo?id_token=${access_Token}`)
+        const HYUserData = decodedTokenRequest.data 
+        console.log(HYUserData)
     }
 
     catch(e){
