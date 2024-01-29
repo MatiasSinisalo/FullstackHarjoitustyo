@@ -30,7 +30,7 @@ const GoogleAuthenticate = ({}) => {
       return("logging in with google...")
     }
   
-    redirect('/')
+    navigate('/')
   }
 
 
