@@ -1,6 +1,6 @@
 const HYLogin = ({}) => {
     const client_id = 'id_af7f822a95ec6e8b8316268f679b9aa6'
-    const redirect_uri = 'https://frontend-ohtuprojekti-staging.ext.ocp-test-0.k8s.it.helsinki.fi/';
+    const redirect_uri = 'https://frontend-ohtuprojekti-staging.ext.ocp-test-0.k8s.it.helsinki.fi/login/HY';
   
   
     return(
@@ -14,10 +14,10 @@ const HYLogin = ({}) => {
 
 
 
-const HYLoginAuthenticate = ({}) => {
+const HYAuthenticate = ({}) => {
 
     return (<p>not implemented</p>)
 }
 
 
-export {HYLogin, HYLoginAuthenticate}
+export {HYLogin, HYAuthenticate}

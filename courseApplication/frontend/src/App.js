@@ -35,6 +35,7 @@ import { ME } from "./queries/userQueries";
 import FillInUserInformation from "./components/FillInUserInformation";
 import PrivacyStatement from "./components/PrivacyStatement";
 import { GoogleAuthenticate } from "./components/openID/GoogleLogin";
+import { HYAuthenticate } from "./components/openID/HYLogin";
 
 
 const App = () =>{
@@ -100,6 +101,7 @@ const App = () =>{
         <Route path="/course/:uniqueName/*" element={<Course/>}></Route>
         <Route path="/privacyStatement" element={<PrivacyStatement></PrivacyStatement>}></Route>
         <Route path="/login/google" element={<GoogleAuthenticate></GoogleAuthenticate>}></Route>
+        <Route path="/login/HY" element={<HYAuthenticate></HYAuthenticate>}></Route>
       
       </Routes>
     </div>
