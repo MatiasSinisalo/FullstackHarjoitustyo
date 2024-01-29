@@ -141,8 +141,8 @@ const authenticateHYUser = async (HYUserToken) => {
     const idToken = result.data.id_token
 
     const decodedTokenRequest = await axios.post(`https://login-test.it.helsinki.fi/idp/profile/oidc/userinfo?id_token=${idToken}`)
-    const HYUserToken = decodedTokenRequest.data 
-    console.log(HYUserToken)
+    const HYUserData = decodedTokenRequest.data 
+    console.log(HYUserData)
 
 
     throw new UserInputError("Unauthorized")
