@@ -43,7 +43,10 @@ type Mutation{
         createUserToken: String!
     ):User
 
-
+    authenticateHYUser(
+        HY_token: String!
+    ):AuthenticationResult
+    
     logIn(
         username: String!
         password: String!
