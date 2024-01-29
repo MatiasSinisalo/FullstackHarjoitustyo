@@ -59,3 +59,10 @@ export const finalizeGoogleUserCreation = async (username, createUserToken, clie
       return false
   }
 }
+
+
+export const authenticateHYUser = (HYToken, client, navigate) => {
+  const HYUserAuthQuery = loginService.authenticateHYUser(HYToken, client)
+  console.log(HYUserAuthQuery)
+
+}

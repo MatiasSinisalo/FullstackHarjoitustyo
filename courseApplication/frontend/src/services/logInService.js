@@ -57,11 +57,24 @@ const finalizeGoogleUserCreation = async (username, createUserToken,apolloClient
     }
 }
 
+const authenticateHYUser = async (HYToken, apolloClient) => {
+    try{
+       
+    }
+    catch(err)
+    {
+        console.log(err)
+        return {error: err}
+    }
+}
+
+
 
 export default {
     LogInAsUser, 
     getUserData,
     createUser,
     authenticateGoogleUser,
-    finalizeGoogleUserCreation
+    finalizeGoogleUserCreation,
+    authenticateHYUser
 }
