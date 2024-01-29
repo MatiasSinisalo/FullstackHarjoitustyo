@@ -17,6 +17,10 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: matiassinisalo/fullstackopen:frontend-latest5
+        image: matiassinisalo/fullstackopen:frontend-latest7
         ports:
         - containerPort: 3000
+        resources:
+          limits:
+            memory: "100M"
+            cpu: "100m"

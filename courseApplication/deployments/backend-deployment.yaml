@@ -17,11 +17,11 @@ spec:
     spec:
       containers:
       - name: backend
-        image: matiassinisalo/fullstackopen:server-latest5
         resources:
           limits:
-            memory: "500M"
-            cpu: "500m"
+            memory: "100M"
+            cpu: "100m"
+        image: matiassinisalo/fullstackopen:server-latest6
         ports:
         - containerPort: 4000
         env:
@@ -50,4 +50,14 @@ spec:
               secretKeyRef:
                 name: my-secret
                 key: GOOGLE_CREATE_ACCOUNT_SECRET
+          - name: HY_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: my-secret
+                key: HY_CLIENT_SECRET
+          - name: HY_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: my-secret
+                key: HY_CLIENT_ID
 

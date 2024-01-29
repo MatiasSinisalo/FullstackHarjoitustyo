@@ -22,7 +22,7 @@ spec:
       - name: mongo-database
         resources:
           limits:
-            memory: 300Mi
+            memory: 100Mi
           requests:
             cpu: 50m
             memory: 100Mi
@@ -48,3 +48,4 @@ spec:
               secretKeyRef:
                 name: mongo-config
                 key: MONGO_INITDB_ROOT_PASSWORD
+      
