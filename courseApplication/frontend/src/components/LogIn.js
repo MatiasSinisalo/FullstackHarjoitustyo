@@ -3,7 +3,8 @@ import "./styles/login.css"
 import { authenticateGoogleUser } from "../reducers/userReducer";
 import { useApolloClient } from "@apollo/client";
 import { useState } from "react";
-import GoogleLogin from "./openID/GoogleLogin";
+import { GoogleLogin } from "./openID/GoogleLogin";
+
 
 const HYLogin = ({}) => {
   const client_id = 'id_af7f822a95ec6e8b8316268f679b9aa6'

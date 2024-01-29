@@ -17,7 +17,7 @@ const GoogleLogin = ({}) => {
       return("logging in with google...")
     }
     const client_id = '526000597568-srhi8bscvhvi2s7br23bomf7vvgrskkr.apps.googleusercontent.com'
-    const redirect_uri = 'https://frontend-ohtuprojekti-staging.ext.ocp-test-0.k8s.it.helsinki.fi/';
+    const redirect_uri = 'https://frontend-ohtuprojekti-staging.ext.ocp-test-0.k8s.it.helsinki.fi/login/google';
   
     return(
       <>
@@ -28,7 +28,7 @@ const GoogleLogin = ({}) => {
     )
   }
   
-  const GoogleAuthenticate = ({}) => {
+const GoogleAuthenticate = ({}) => {
     const [searchParams, setSearchParams] = useSearchParams();
    
     const param = searchParams.get("code")
@@ -45,4 +45,4 @@ const GoogleLogin = ({}) => {
   }
 
 
-export default {GoogleLogin, GoogleAuthenticate}
+export {GoogleLogin, GoogleAuthenticate}

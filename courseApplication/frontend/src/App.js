@@ -34,6 +34,7 @@ import Submission from "./components/course/Submission";
 import { ME } from "./queries/userQueries";
 import FillInUserInformation from "./components/FillInUserInformation";
 import PrivacyStatement from "./components/PrivacyStatement";
+import { GoogleAuthenticate } from "./components/openID/GoogleLogin";
 
 
 const App = () =>{
@@ -98,7 +99,7 @@ const App = () =>{
         <Route path="/CreateCourse" element={<CreateCourse/>}/>
         <Route path="/course/:uniqueName/*" element={<Course/>}></Route>
         <Route path="/privacyStatement" element={<PrivacyStatement></PrivacyStatement>}></Route>
-      
+        <Route path="/login/google" element={<GoogleAuthenticate></GoogleAuthenticate>}></Route>
       
       </Routes>
     </div>
