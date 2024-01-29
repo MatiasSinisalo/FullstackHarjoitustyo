@@ -130,4 +130,9 @@ const createGoogleUserAccount = async (username, verifiedCreateUserToken) => {
 
 
 
-module.exports = {createNewUser, logIn, getUser, authenticateGoogleUser, createGoogleUserAccount}
+const authenticateHYUser = async (HYUserToken) => {
+    throw new UserInputError("Unauthorized")
+}
+
+
+module.exports = {createNewUser, logIn, getUser, authenticateGoogleUser, createGoogleUserAccount, authenticateHYUser}

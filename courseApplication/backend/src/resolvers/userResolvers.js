@@ -56,7 +56,14 @@ const userMutationResolvers = {
             throw new UserInputError("Unauthorized")
         }
 
-    }
+    },
+    authenticateHYUser: async(root, args)=>{
+        const HYCode = args.HY_token
+        
+        authenticateResult = await userService.authenticateHYUser(HYCode)
+        
+        return authenticateResult
+    },
 
 }
 
