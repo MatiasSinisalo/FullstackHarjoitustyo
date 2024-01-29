@@ -7,7 +7,7 @@ const mongoose = require('mongoose')
 const userSchema = new mongoose.Schema({
     accountType: {
       type: String,
-      enum: ['normal', 'google'],
+      enum: ['normal', 'google', 'HY'],
       default: 'normal',
       required: true
     },
