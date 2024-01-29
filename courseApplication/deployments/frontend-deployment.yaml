@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: matiassinisalo/fullstackopen:frontend-latest7
+        image: matiassinisalo/fullstackopen:frontend-latest8
         ports:
         - containerPort: 3000
         resources:

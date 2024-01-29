@@ -75,8 +75,8 @@ mutation FinalizeGoogleUserCreation($username: String!, $createUserToken: String
 `
 
 export const AUTHENTICATE_HY_USER = gql`
-mutation AuthenticateHYUser($hyToken: String!) {
-  authenticateHYUser(HY_token: $hyToken) {
+mutation AuthenticateHYUser($HYToken: String!) {
+  authenticateHYUser(HY_token: $HYToken) {
     type
     token {
       value
