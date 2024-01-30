@@ -63,7 +63,7 @@ export const finalizeGoogleUserCreation = async (username, createUserToken, clie
 
 export const authenticateHYUser = async (HYToken, client, navigate) => {
   const HYUserAuthQuery = await loginService.authenticateHYUser(HYToken, client)
-  if(!HYUserAuthQuery.error)
+  if(!HYUserAuthQuery?.error)
   {
       reactToAuthenticateResult(HYUserAuthQuery, "/createAccount/fillInInformation/HY", "/dashboard", navigate)
   }
@@ -92,7 +92,7 @@ const reactToAuthenticateResult = (userAuthQuery, accountCreateUrl, successLogin
 
 export const finalizeHYUserCreation = async (username, createUserToken, client, navigate) => {
   const userFinalizeQuery =  await loginService.finalizeHYUserCreation(username, createUserToken, client)
-  if(!userFinalizeQuery.error)
+  if(!userFinalizeQuery?.error)
   {
       console.log(userFinalizeQuery)
       store.dispatch(Notify(`successfully created user`, "successNotification", 5))
