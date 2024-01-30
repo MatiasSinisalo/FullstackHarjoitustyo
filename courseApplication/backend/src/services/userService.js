@@ -73,34 +73,10 @@ const authenticateGoogleUser = async (googleAuthCode) => {
     const googleIDToken = decodedTokenRequest.data 
     
     //this blob of code is proof of concept... TODO: refactor
-    const userDBQuery = await User.findOne({accountType: 'google', thirdPartyID: googleIDToken.sub})
-    if(userDBQuery){
-        const userInfo = {
-            username: userDBQuery.username,
-            id: userDBQuery._id 
-        }
-        const appToken = await jwt.sign(userInfo, config.SECRET, {expiresIn: '1h'})
-        return {type: 'TOKEN_LOGIN_SUCCESS', token: {value: appToken}}
-    }
-    else{
-        console.log("starting account create progress")
-        const email = googleIDToken.email
-        const name = googleIDToken.name
-        const thirdPartyID = googleIDToken.sub
-
-        const userCreationInfo = {
-            name: name,
-            thirdPartyID: thirdPartyID
-        }
-        const userProfileCreationToken = jwt.sign(userCreationInfo, config.GOOGLE_CREATE_ACCOUNT_SECRET, {expiresIn: '1h'})
-
-        return {type: 'TOKEN_CREATE_ACCOUNT', token: {value: userProfileCreationToken}}
-
-    }
-
    
 
-    return {}
+    const authenticateResult = await finishUserAuthentication('google', googleIDToken.sub, googleIDToken.name)
+    return authenticateResult
 }
 
 const createGoogleUserAccount = async (username, verifiedCreateUserToken) => {
