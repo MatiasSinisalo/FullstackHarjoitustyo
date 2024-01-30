@@ -79,16 +79,16 @@ const authenticateGoogleUser = async (googleAuthCode) => {
     return authenticateResult
 }
 
-const createGoogleUserAccount = async (username, verifiedCreateUserToken) => {
+const createOpenIDUserAccount = async (username, verifiedCreateUserToken, accountType) => {
     const newUser = {
-        accountType: 'google',
+        accountType: accountType,
         username: username,
         name: verifiedCreateUserToken.name,
         thirdPartyID: verifiedCreateUserToken.thirdPartyID,
     }
     console.log(newUser)
     
-    const userDBQuery = await User.findOne({accountType: 'google', thirdPartyID: newUser.thirdPartyID})
+    const userDBQuery = await User.findOne({accountType: accountType, thirdPartyID: newUser.thirdPartyID})
     console.log(userDBQuery)
     if(userDBQuery){
         throw new UserInputError("Given user account already exists")
@@ -170,4 +170,5 @@ const finishUserAuthentication = async (accountType, userSub, usersName, CREATE_
     }
 }
 
-module.exports = {createNewUser, logIn, getUser, authenticateGoogleUser, createGoogleUserAccount, authenticateHYUser}
+
+module.exports = {createNewUser, logIn, getUser, authenticateGoogleUser, createOpenIDUserAccount, authenticateHYUser}
