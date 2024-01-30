@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 const config = require('../config')
 const {UserInputError} = require('apollo-server')
 const { default: axios } = require('axios')
-
+const jwksClient = require('jwks-rsa');
 
 const createNewUser = async (username, name, password) => {
     const newUser = {
@@ -142,11 +142,25 @@ const authenticateHYUser = async (HYUserToken) => {
         },
         {headers:{'Content-Type': 'application/x-www-form-urlencoded'}})
         console.log(result)
+        
+        const id_token = result.data.id_token
+        const decodedIdToken = jwt.decode(id_token, {complete: true})
+        clientJwks = jwksClient({jwksUri:'https://login-test.it.helsinki.fi/idp/profile/oidc/keyset'})
+        const key = await clientJwks.getSigningKey(decodedIdToken.header.kid)
+        const publicKey = key.getPublicKey()
+        jwt.verify(id_token, publicKey, {complete: true})
+        
+        
+        const access_token = result.data.access_token
+        const response_userinfo = await axios.get(`https://login-test.it.helsinki.fi/idp/profile/oidc/userinfo?access_token=${access_token}`)
+        console.log(response_userinfo)
 
-        const access_Token = result.data.id_token
-        const decodedTokenRequest = await axios.get(`https://login-test.it.helsinki.fi/idp/profile/oidc/userinfo?id_token=${access_Token}`)
-        const HYUserData = decodedTokenRequest.data 
-        console.log(HYUserData)
+        
+       
+
+        
+
+       
     }
 
     catch(e){
