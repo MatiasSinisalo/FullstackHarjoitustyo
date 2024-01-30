@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: mongo-database
   labels:
+    app: mongo-database
     owner-student: MatiasSinisalo
 spec:
   replicas: 1
@@ -22,6 +23,7 @@ spec:
       - name: mongo-database
         resources:
           limits:
+            cpu: "100m"
             memory: 100Mi
           requests:
             cpu: 50m
