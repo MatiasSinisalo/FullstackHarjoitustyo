@@ -63,6 +63,28 @@ export const finalizeGoogleUserCreation = async (username, createUserToken, clie
 
 export const authenticateHYUser = (HYToken, client, navigate) => {
   const HYUserAuthQuery = loginService.authenticateHYUser(HYToken, client)
+  if(!HYUserAuthQuery.error)
+  {
+      reactToAuthenticateResult(HYUserAuthQuery, "/createAccount/fillInInformation/HY", "/dashboard", navigate)
+  }
   console.log(HYUserAuthQuery)
+}
 
+const reactToAuthenticateResult = (userAuthQuery, accountCreateUrl, successLoginUrl, navigate) => {
+      console.log(userAuthQuery)
+      store.dispatch(Notify(`successfully authenticated user ${userAuthQuery.value}`, "successNotification", 5))
+      console.log(userAuthQuery)
+      if(userAuthQuery.type === "TOKEN_CREATE_ACCOUNT")
+      {
+        console.log("redirecting")
+        localStorage.setItem('courseApplicationCreateUserToken', userAuthQuery.token.value)
+        navigate(accountCreateUrl)
+        return true
+      }
+      else if(userAuthQuery.type === "TOKEN_LOGIN_SUCCESS")
+      {
+        localStorage.setItem('courseApplicationUserToken', userAuthQuery.token.value)
+        navigate(successLoginUrl)
+        return true
+      }
 }
