@@ -149,18 +149,17 @@ const authenticateHYUser = async (HYUserToken) => {
         const key = await clientJwks.getSigningKey(decodedIdToken.header.kid)
         const publicKey = key.getPublicKey()
         jwt.verify(id_token, publicKey, {complete: true})
-        
-        
+
         const access_token = result.data.access_token
         const response_userinfo = await axios.get(`https://login-test.it.helsinki.fi/idp/profile/oidc/userinfo?access_token=${access_token}`)
         console.log(response_userinfo)
-
         
-       
+      
 
+        const HYUserInfo = response_userinfo.data
         
-
-       
+        const authenticateResult = await finishUserAuthentication("HY", HYUserInfo.sub, HYUserInfo.name)
+        return authenticateResult
     }
 
     catch(e){
@@ -170,5 +169,29 @@ const authenticateHYUser = async (HYUserToken) => {
    return {}
 }
 
+
+const finishUserAuthentication = async (accountType, userSub, usersName) => {
+    const userDBQuery = await User.findOne({accountType: accountType, thirdPartyID: userSub})
+    if(userDBQuery){
+        const userInfo = {
+            username: userDBQuery.username,
+            id: userDBQuery._id 
+        }
+        const appToken = jwt.sign(userInfo, config.SECRET, {expiresIn: '1h'})
+        return {type: 'TOKEN_LOGIN_SUCCESS', token: {value: appToken}}
+    }
+    else{
+        console.log("starting account create progress")
+        const name = usersName
+        const thirdPartyID = userSub
+
+        const userCreationInfo = {
+            name: name,
+            thirdPartyID: thirdPartyID
+        }
+        const userProfileCreationToken = jwt.sign(userCreationInfo, config.HY_CREATE_ACCOUNT_SECRET, {expiresIn: '1h'})
+        return {type: 'TOKEN_CREATE_ACCOUNT', token: {value: userProfileCreationToken}}
+    }
+}
 
 module.exports = {createNewUser, logIn, getUser, authenticateGoogleUser, createGoogleUserAccount, authenticateHYUser}
