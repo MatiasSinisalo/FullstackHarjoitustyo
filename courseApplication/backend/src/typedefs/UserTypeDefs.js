@@ -47,6 +47,11 @@ type Mutation{
         HY_token: String!
     ):AuthenticationResult
     
+    finalizeHYUserCreation(
+        username: String!
+        createUserToken: String!
+    ):User
+    
     logIn(
         username: String!
         password: String!
