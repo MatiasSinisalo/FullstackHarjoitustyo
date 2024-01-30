@@ -10,11 +10,11 @@ const HYLogin = ({}) => {
   
   
     return(
-      <>
+      <div>
         <a href={`https://login-test.it.helsinki.fi/idp/profile/oidc/authorize?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}&scope=openid%20profile%20uid%20name`}>
           log in using HY
         </a>
-      </>
+      </div>
     )
   }
 

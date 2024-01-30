@@ -9,11 +9,11 @@ const GoogleLogin = ({}) => {
     const redirect_uri = 'https://frontend-ohtuprojekti-staging.ext.ocp-test-0.k8s.it.helsinki.fi/login/google';
   
     return(
-      <>
+      <div>
         <a href={`https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}&scope=openid%20email%20profile`}
         >login using google</a>
         
-      </>
+      </div>
     )
   }
   
