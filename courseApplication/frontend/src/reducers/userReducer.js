@@ -45,19 +45,7 @@ export const authenticateGoogleUser = async (googleToken, client, navigate) => {
 
 export const finalizeGoogleUserCreation = async (username, createUserToken, client, navigate) => {
   const userFinalizeQuery =  await loginService.finalizeGoogleUserCreation(username, createUserToken, client)
-  if(!userFinalizeQuery.error)
-  {
-      console.log(userFinalizeQuery)
-      store.dispatch(Notify(`successfully created user ${userFinalizeQuery.username}`, "successNotification", 5))
-      localStorage.removeItem('courseApplicationCreateUserToken')
-      console.log(userFinalizeQuery)
-      navigate('/')
-      return true
-  }
-  else{
-      store.dispatch(Notify(`${userFinalizeQuery.error.message}`, "errorNotification", 5))
-      return false
-  }
+  return finishOpenIDUserCreation(userFinalizeQuery, navigate)
 }
 
 
