@@ -61,8 +61,8 @@ export const finalizeGoogleUserCreation = async (username, createUserToken, clie
 }
 
 
-export const authenticateHYUser = (HYToken, client, navigate) => {
-  const HYUserAuthQuery = loginService.authenticateHYUser(HYToken, client)
+export const authenticateHYUser = async (HYToken, client, navigate) => {
+  const HYUserAuthQuery = await loginService.authenticateHYUser(HYToken, client)
   if(!HYUserAuthQuery.error)
   {
       reactToAuthenticateResult(HYUserAuthQuery, "/createAccount/fillInInformation/HY", "/dashboard", navigate)
@@ -87,4 +87,22 @@ const reactToAuthenticateResult = (userAuthQuery, accountCreateUrl, successLogin
         navigate(successLoginUrl)
         return true
       }
+}
+
+
+export const finalizeHYUserCreation = async (username, createUserToken, client, navigate) => {
+  const userFinalizeQuery =  await loginService.finalizeHYUserCreation(username, createUserToken, client)
+  if(!userFinalizeQuery.error)
+  {
+      console.log(userFinalizeQuery)
+      store.dispatch(Notify(`successfully created user`, "successNotification", 5))
+      localStorage.removeItem('courseApplicationCreateUserToken')
+      console.log(userFinalizeQuery)
+      navigate('/')
+      return true
+  }
+  else{
+      store.dispatch(Notify(`${userFinalizeQuery.error.message}`, "errorNotification", 5))
+      return false
+  }
 }

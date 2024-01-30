@@ -84,3 +84,14 @@ mutation AuthenticateHYUser($HYToken: String!) {
   }
 }
 `
+
+
+export const FINALIZE_HY_USER_CREATION = gql`
+mutation FinalizeHYUserCreation($username: String!, $createUserToken: String!) {
+  finalizeHYUserCreation(username: $username, createUserToken: $createUserToken) {
+    id
+    name
+    username
+  }
+}
+`

@@ -1,4 +1,4 @@
-import {AUTHENTICATE_GOOGLE_USER, AUTHENTICATE_HY_USER, CREATE_USER, FINALIZE_GOOGLE_USER_CREATION, LOGIN, ME} from '../queries/userQueries'
+import {AUTHENTICATE_GOOGLE_USER, AUTHENTICATE_HY_USER, CREATE_USER, FINALIZE_GOOGLE_USER_CREATION, FINALIZE_HY_USER_CREATION, LOGIN, ME} from '../queries/userQueries'
 
 const LogInAsUser = async (username, password, apolloClient) => {
     try{
@@ -69,6 +69,17 @@ const authenticateHYUser = async (HYToken, apolloClient) => {
     }
 }
 
+const finalizeHYUserCreation = async (username, createUserToken,apolloClient) => {
+    try{
+        const newUserInfo = await apolloClient.mutate({mutation: FINALIZE_HY_USER_CREATION, variables: {username: username, createUserToken: createUserToken}})
+        return newUserInfo.data?.finalizeGoogleUserCreation
+    }
+    catch(err)
+    {
+        console.log(err)
+        return {error: err}
+    }
+}
 
 
 export default {
@@ -77,5 +88,6 @@ export default {
     createUser,
     authenticateGoogleUser,
     finalizeGoogleUserCreation,
-    authenticateHYUser
+    authenticateHYUser,
+    finalizeHYUserCreation
 }

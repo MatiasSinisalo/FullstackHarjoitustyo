@@ -2,7 +2,7 @@ import { Link, redirect, useNavigate, useParams, useSearchParams } from "react-r
 import "../styles/login.css"
 import { useApolloClient } from "@apollo/client";
 import { useState } from "react";
-import { authenticateHYUser } from "../../reducers/userReducer";
+import { authenticateHYUser, finalizeHYUserCreation } from "../../reducers/userReducer";
 
 const HYLogin = ({}) => {
     const client_id = 'id_af7f822a95ec6e8b8316268f679b9aa6'
@@ -47,6 +47,7 @@ const FillInUserInformationHY = () => {
       event.preventDefault();
       const username = event.target.username.value
       //TODO: call finalize user creation for HY
+      finalizeHYUserCreation(username, userCreateAccountToken, client, navigate)
   }
 
   return (
