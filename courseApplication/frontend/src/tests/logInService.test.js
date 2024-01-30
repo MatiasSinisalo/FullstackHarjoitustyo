@@ -1,4 +1,4 @@
-import { LogInAsUser } from "../services/logInService"
+import logInService from "../services/logInService"
 import client from "../client"
 import { LOGIN, ME } from "../queries/userQueries"
 
@@ -15,7 +15,7 @@ describe('LogInAsUser tests', () => {
     test('logIn function makes loginQuery mutation and ME query to backend correctly', async () => {
         mockClient.mutate = jest.fn(() => {return {data: {logIn: {value: "abc1234"}}}})
         mockClient.query = jest.fn(() => {return {data: {me: {username: "username", name: "name"}}}})
-        const result = await LogInAsUser("username", "password", mockClient)
+        const result = await logInService.LogInAsUser("username", "password", mockClient)
 
         expect(result.username).toEqual("username")
 
@@ -33,7 +33,7 @@ describe('LogInAsUser tests', () => {
     test('logIn returns error correctly', async () => {
         mockClient.mutate = jest.fn(() => {throw new Error("this is some kind of an error")})
         mockClient.query = jest.fn(() => {return {data: {me: {username: "username", name: "name"}}}})
-        const result = await LogInAsUser("username", "password", mockClient)
+        const result = await logInService.LogInAsUser("username", "password", mockClient)
         expect(result.error.message).toEqual("this is some kind of an error")
         
        
