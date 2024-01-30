@@ -32,10 +32,9 @@ import TaskListings from "./components/course/TaskListings";
 import CourseParticipants from "./components/course/CourseParticipants";
 import Submission from "./components/course/Submission";
 import { ME } from "./queries/userQueries";
-import FillInUserInformation from "./components/FillInUserInformation";
 import PrivacyStatement from "./components/PrivacyStatement";
-import { GoogleAuthenticate } from "./components/openID/GoogleLogin";
-import { HYAuthenticate } from "./components/openID/HYLogin";
+import { FillInUserInformationGoogle, GoogleAuthenticate } from "./components/openID/GoogleLogin";
+import { FillInUserInformationHY, HYAuthenticate } from "./components/openID/HYLogin";
 
 
 const App = () =>{
@@ -92,7 +91,8 @@ const App = () =>{
       <Routes>
         <Route path="/" element={<LogIn handleLogIn={handleLogIn}/>}/>
         <Route path="/createAccount" element={<CreateAccount></CreateAccount>}/>
-        <Route path="/createAccount/fillInInformation" element={<FillInUserInformation></FillInUserInformation>}/>
+        <Route path="/createAccount/fillInInformation/google" element={<FillInUserInformationGoogle></FillInUserInformationGoogle>}/>
+        <Route path="/createAccount/fillInInformation/HY" element={<FillInUserInformationHY></FillInUserInformationHY>}/>
         <Route path="/dashboard" element={<Dashboard/>}/>
         <Route path="/calendar" element={<Calendar/>}/>
         <Route path="/messages" element={<Messages/>}/>
