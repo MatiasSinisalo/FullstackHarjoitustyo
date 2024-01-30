@@ -3,7 +3,7 @@ const userService = require('../services/userService')
 const User = require('../models/user')
 const { mustHaveToken } = require('./resolverUtils')
 const jwt = require('jsonwebtoken')
-const { GOOGLE_CREATE_ACCOUNT_SECRET } = require('../config')
+const { GOOGLE_CREATE_ACCOUNT_SECRET, HY_CREATE_ACCOUNT_SECRET } = require('../config')
 
 const userQueryResolvers = {
     
@@ -49,7 +49,7 @@ const userMutationResolvers = {
 
         const verifiedCreateUserToken = jwt.verify(createUserToken, GOOGLE_CREATE_ACCOUNT_SECRET)
         if(verifiedCreateUserToken){
-            const user = await userService.createGoogleUserAccount(username, verifiedCreateUserToken)
+            const user = await userService.createOpenIDUserAccount(username, verifiedCreateUserToken, 'google')
             return user
         }
         else{
@@ -63,6 +63,20 @@ const userMutationResolvers = {
         authenticateResult = await userService.authenticateHYUser(HYCode)
         
         return authenticateResult
+    },
+    finalizeHYUserCreation: async(root, args, context) => {
+        const username = args.username
+        const createUserToken = args.createUserToken
+
+        const verifiedCreateUserToken = jwt.verify(createUserToken, HY_CREATE_ACCOUNT_SECRET)
+        if(verifiedCreateUserToken){
+            const user = await userService.createOpenIDUserAccount(username, verifiedCreateUserToken, 'HY')
+            return user
+        }
+        else{
+            throw new UserInputError("Unauthorized")
+        }
+
     },
 
 }
