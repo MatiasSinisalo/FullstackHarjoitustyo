@@ -25,6 +25,7 @@ const Dashboard = () =>{
       <div className="dashboard-greetings ">
         <h1>Dashboard</h1>
         <h2>Hello {user.username}</h2>
+        <p>users name: {user.name}</p>
       </div>
 
       
