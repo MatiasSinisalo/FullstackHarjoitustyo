@@ -1,6 +1,6 @@
 import { Link, redirect, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import "../styles/login.css"
-import { authenticateGoogleUser } from "../../reducers/userReducer";
+import { authenticateGoogleUser, finalizeGoogleUserCreation } from "../../reducers/userReducer";
 import { useApolloClient } from "@apollo/client";
 import { useState } from "react";
 
