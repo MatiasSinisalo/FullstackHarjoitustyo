@@ -92,17 +92,22 @@ const reactToAuthenticateResult = (userAuthQuery, accountCreateUrl, successLogin
 
 export const finalizeHYUserCreation = async (username, createUserToken, client, navigate) => {
   const userFinalizeQuery =  await loginService.finalizeHYUserCreation(username, createUserToken, client)
+  return finishOpenIDUserCreation(userFinalizeQuery, navigate)
+}
+
+
+const finishOpenIDUserCreation = (userFinalizeQuery, navigate) => {
   if(!userFinalizeQuery?.error)
   {
-      console.log(userFinalizeQuery)
-      store.dispatch(Notify(`successfully created user`, "successNotification", 5))
-      localStorage.removeItem('courseApplicationCreateUserToken')
-      console.log(userFinalizeQuery)
-      navigate('/')
-      return true
+    console.log(userFinalizeQuery)
+    store.dispatch(Notify(`successfully created user`, "successNotification", 5))
+    localStorage.removeItem('courseApplicationCreateUserToken')
+    console.log(userFinalizeQuery)
+    navigate('/')
+    return true
   }
   else{
-      store.dispatch(Notify(`${userFinalizeQuery.error.message}`, "errorNotification", 5))
-      return false
+    store.dispatch(Notify(`${userFinalizeQuery.error.message}`, "errorNotification", 5))
+    return false
   }
 }
