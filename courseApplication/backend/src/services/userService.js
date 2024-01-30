@@ -60,11 +60,12 @@ const logIn = async (username, password) => {
 
 
 const authenticateGoogleUser = async (googleAuthCode) => {
+    try{
     const result = await axios.post('https://oauth2.googleapis.com/token', {
         code: googleAuthCode,
         client_id: config.GOOGLE_CLIENT_ID,
         client_secret: config.GOOGLE_CLIENT_SECRET,
-        redirect_uri: 'https://frontend-ohtuprojekti-staging.ext.ocp-test-0.k8s.it.helsinki.fi/',
+        redirect_uri: 'https://frontend-ohtuprojekti-staging.ext.ocp-test-0.k8s.it.helsinki.fi/login/google',
         grant_type: "authorization_code"
     })
     const idToken = result.data.id_token
@@ -75,8 +76,13 @@ const authenticateGoogleUser = async (googleAuthCode) => {
     //this blob of code is proof of concept... TODO: refactor
    
 
-    const authenticateResult = await finishUserAuthentication('google', googleIDToken.sub, googleIDToken.name, config.GOOGLE_CREATE_ACCOUNT_SECRET)
+    const authenticateResult = await finishUserAuthentication("google", googleIDToken.sub, googleIDToken.name, config.GOOGLE_CREATE_ACCOUNT_SECRET)
     return authenticateResult
+    }
+    catch(e){
+        console.log(e)
+        return {}
+    }
 }
 
 const createOpenIDUserAccount = async (username, verifiedCreateUserToken, accountType) => {
