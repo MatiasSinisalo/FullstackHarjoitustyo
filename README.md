@@ -2,7 +2,7 @@
 [![CI](https://github.com/MatiasSinisalo/FullstackHarjoitustyo/actions/workflows/main.yml/badge.svg)](https://github.com/MatiasSinisalo/FullstackHarjoitustyo/actions/workflows/main.yml)
 
 ## The app can be tested at:  
-https://studastudy.onrender.com/  
+https://frontend-ohtuprojekti-staging.ext.ocp-test-0.k8s.it.helsinki.fi/  
 
 ## Current features:  
 
