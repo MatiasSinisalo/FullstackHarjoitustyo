@@ -75,7 +75,7 @@ const authenticateGoogleUser = async (googleAuthCode) => {
     //this blob of code is proof of concept... TODO: refactor
    
 
-    const authenticateResult = await finishUserAuthentication('google', googleIDToken.sub, googleIDToken.name)
+    const authenticateResult = await finishUserAuthentication('google', googleIDToken.sub, googleIDToken.name, config.GOOGLE_CREATE_ACCOUNT_SECRET)
     return authenticateResult
 }
 
@@ -134,7 +134,7 @@ const authenticateHYUser = async (HYUserToken) => {
 
         const HYUserInfo = response_userinfo.data
         
-        const authenticateResult = await finishUserAuthentication("HY", HYUserInfo.sub, HYUserInfo.name)
+        const authenticateResult = await finishUserAuthentication("HY", HYUserInfo.sub, HYUserInfo.name, config.HY_CREATE_ACCOUNT_SECRET)
         return authenticateResult
     }
 
@@ -146,7 +146,7 @@ const authenticateHYUser = async (HYUserToken) => {
 }
 
 
-const finishUserAuthentication = async (accountType, userSub, usersName) => {
+const finishUserAuthentication = async (accountType, userSub, usersName, CREATE_ACCOUNT_SECRET) => {
     const userDBQuery = await User.findOne({accountType: accountType, thirdPartyID: userSub})
     if(userDBQuery){
         const userInfo = {
@@ -165,7 +165,7 @@ const finishUserAuthentication = async (accountType, userSub, usersName) => {
             name: name,
             thirdPartyID: thirdPartyID
         }
-        const userProfileCreationToken = jwt.sign(userCreationInfo, config.HY_CREATE_ACCOUNT_SECRET, {expiresIn: '1h'})
+        const userProfileCreationToken = jwt.sign(userCreationInfo, CREATE_ACCOUNT_SECRET, {expiresIn: '1h'})
         return {type: 'TOKEN_CREATE_ACCOUNT', token: {value: userProfileCreationToken}}
     }
 }
