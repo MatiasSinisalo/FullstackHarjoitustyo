@@ -24,10 +24,10 @@ spec:
         resources:
           limits:
             cpu: "100m"
-            memory: 100Mi
+            memory: 400M
           requests:
-            cpu: 50m
-            memory: 100Mi
+            cpu: 100m
+            memory: 100M
         image: mongo
         ports:
           - containerPort: 27017
