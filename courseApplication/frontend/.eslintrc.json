@@ -4,7 +4,6 @@
         "es2021": true
     },
     "extends": [
-        "google",
         "plugin:react/recommended"
     ],
     "parserOptions": {
@@ -15,5 +14,7 @@
         "react"
     ],
     "rules": {
+        "max-len": ["error", {"code":200 }],
+        "react/prop-types": 0
     }
 }

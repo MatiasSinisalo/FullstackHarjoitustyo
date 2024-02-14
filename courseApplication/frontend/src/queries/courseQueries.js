@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import {gql} from '@apollo/client';
 
 
 export const CREATE_COURSE = gql`mutation Mutation($uniqueName: String!, $name: String!) {
@@ -22,14 +22,14 @@ export const CREATE_COURSE = gql`mutation Mutation($uniqueName: String!, $name: 
         }
       }
     }
-  }`
+  }`;
 
 
-export const REMOVE_COURSE  = gql`
+export const REMOVE_COURSE = gql`
 mutation Mutation($uniqueName: String!) {
   removeCourse(uniqueName: $uniqueName)
 }
-`
+`;
 
 export const GET_ALL_COURSES = gql`query AllCourses {
     allCourses {
@@ -45,7 +45,7 @@ export const GET_ALL_COURSES = gql`query AllCourses {
         username
       }
     }
-  }`
+  }`;
 
 export const GET_COURSE = gql`
 query GetCourse($uniqueName: String!) {
@@ -114,7 +114,7 @@ query GetCourse($uniqueName: String!) {
     }
   }
 }
-`
+`;
 
 export const ADD_STUDENT_TO_COURSE = gql`mutation AddStudentToCourse($username: String!, $courseUniqueName: String!) {
     addStudentToCourse(username: $username, courseUniqueName: $courseUniqueName) {
@@ -138,7 +138,7 @@ export const ADD_STUDENT_TO_COURSE = gql`mutation AddStudentToCourse($username: 
       }
       
     }
-  }`
+  }`;
 
 export const REMOVE_STUDENT_FROM_COURSE = gql`mutation RemoveStudentFromCourse($username: String!, $courseUniqueName: String!) {
   removeStudentFromCourse(username: $username, courseUniqueName: $courseUniqueName) {
@@ -154,7 +154,7 @@ export const REMOVE_STUDENT_FROM_COURSE = gql`mutation RemoveStudentFromCourse($
       username
     }
   }
-}`
+}`;
 
 export const ADD_TASK_TO_COURSE = gql`
 mutation AddTaskToCourse($courseUniqueName: String!, $description: String!, $deadline: String!, $maxGrade: Int) {
@@ -174,7 +174,7 @@ mutation AddTaskToCourse($courseUniqueName: String!, $description: String!, $dea
   }
 }
 
-`
+`;
 
 export const ADD_SUBMISSION_TO_COURSE = gql`
 mutation Mutation($courseUniqueName: String!, $taskId: String!, $content: String!, $submitted: Boolean!) {
@@ -189,19 +189,19 @@ mutation Mutation($courseUniqueName: String!, $taskId: String!, $content: String
     }
   }
 }
-`
+`;
 
 export const REMOVE_TASK_FROM_COURSE = gql`
 mutation RemoveTaskFromCourse($courseUniqueName: String!, $taskId: String!) {
   removeTaskFromCourse(courseUniqueName: $courseUniqueName, taskId: $taskId)
 }
-`
+`;
 
 export const REMOVE_SUBMISSION_FROM_COURSE_TASK = gql`
 mutation RemoveSubmissionFromCourseTask($courseUniqueName: String!, $taskId: String!, $submissionId: String!) {
   removeSubmissionFromCourseTask(courseUniqueName: $courseUniqueName, taskId: $taskId, submissionId: $submissionId)
 }
-`
+`;
 
 export const MODIFY_SUBMISSION = gql`
 mutation ModifySubmission($courseUniqueName: String!, $taskId: String!, $submissionId: String!, $content: String!, $submitted: Boolean!) {
@@ -217,7 +217,7 @@ mutation ModifySubmission($courseUniqueName: String!, $taskId: String!, $submiss
     submittedDate
   }
 }
-`
+`;
 
 export const GRADE_SUBMISSION = gql`
 mutation GradeSubmission($courseUniqueName: String!, $taskId: String!, $submissionId: String!, $points: Int!) {
@@ -238,7 +238,7 @@ mutation GradeSubmission($courseUniqueName: String!, $taskId: String!, $submissi
     submittedDate
   }
 }
-`
+`;
 
 export const ADD_INFO_PAGE_TO_COURSE = gql`
 mutation AddInfoPageToCourse($locationUrl: String!, $courseUniqueName: String!) {
@@ -251,13 +251,13 @@ mutation AddInfoPageToCourse($locationUrl: String!, $courseUniqueName: String!) 
     locationUrl
   }
 }
-` 
+`;
 
 export const REMOVE_INFO_PAGE_FROM_COURSE = gql`
 mutation RemoveInfoPageFromCourse($courseUniqueName: String!, $infoPageId: String!) {
   removeInfoPageFromCourse(courseUniqueName: $courseUniqueName, infoPageId: $infoPageId)
 }
-`
+`;
 
 export const ADD_CONTENT_BLOCK_TO_INFO_PAGE = gql`
 mutation AddContentBlockToInfoPage($courseUniqueName: String!, $content: String!, $position: Int!, $infoPageId: String!) {
@@ -267,13 +267,13 @@ mutation AddContentBlockToInfoPage($courseUniqueName: String!, $content: String!
     position
   }
 }
-`
+`;
 
 export const REMOVE_CONTENT_BLOCK_FROM_INFO_PAGE = gql`
 mutation RemoveContentBlockFromInfoPage($courseUniqueName: String!, $infoPageId: String!, $contentBlockId: String!) {
   removeContentBlockFromInfoPage(courseUniqueName: $courseUniqueName, infoPageId: $infoPageId, contentBlockId: $contentBlockId)
 }
-`
+`;
 
 export const MODIFY_CONTENT_BLOCK = gql`
 mutation ModifyContentBlock($courseUniqueName: String!, $infoPageId: String!, $contentBlockId: String!, $content: String!) {
@@ -283,7 +283,7 @@ mutation ModifyContentBlock($courseUniqueName: String!, $infoPageId: String!, $c
     position
   }
 }
-`
+`;
 
 export const CREATE_CHAT_ROOM = gql`
 mutation CreateChatRoom($courseUniqueName: String!, $name: String!) {
@@ -312,13 +312,13 @@ mutation CreateChatRoom($courseUniqueName: String!, $name: String!) {
     }
   }
 }
-`
+`;
 
 export const REMOVE_CHAT_ROOM = gql`
 mutation Mutation($courseUniqueName: String!, $chatRoomId: String!) {
   removeChatRoom(courseUniqueName: $courseUniqueName, chatRoomId: $chatRoomId)
 }
-`
+`;
 
 export const CREATE_MESSAGE = gql`
 mutation Mutation($courseUniqueName: String!, $chatRoomId: String!, $content: String!) {
@@ -331,7 +331,7 @@ mutation Mutation($courseUniqueName: String!, $chatRoomId: String!, $content: St
     sendDate
   }
 }
-`
+`;
 
 export const ADD_USER_TO_CHAT_ROOM = gql`
 mutation AddUserToChatRoom($courseUniqueName: String!, $chatRoomId: String!, $username: String!) {
@@ -341,13 +341,13 @@ mutation AddUserToChatRoom($courseUniqueName: String!, $chatRoomId: String!, $us
     username
   }
 }
-`
+`;
 
 export const REMOVE_USER_FROM_CHAT_ROOM = gql`
 mutation Mutation($courseUniqueName: String!, $chatRoomId: String!, $username: String!) {
   removeUserFromChatRoom(courseUniqueName: $courseUniqueName, chatRoomId: $chatRoomId, username: $username)
 }
-`
+`;
 
 export const SUBSCRIBE_TO_MESSAGE_CREATED = gql`
 subscription Subscription($courseUniqueName: String!, $chatRoomId: String!) {
@@ -362,4 +362,4 @@ subscription Subscription($courseUniqueName: String!, $chatRoomId: String!) {
     sendDate
   }
 }
-`
+`;

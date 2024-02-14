@@ -1,33 +1,23 @@
-import { useApolloClient, useQuery } from "@apollo/client"
-import { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import {
-  Link,
-  useNavigate,
-    useParams
-} from "react-router-dom"
-import { GET_COURSE } from "../../queries/courseQueries"
-import courseService from "../../services/courseService"
-import Task from "./Task"
-import { Notify } from "../../reducers/notificationReducer"
-import TaskListings from "./TaskListings"
-import "../styles/course.css"
-import { createNewTaskOnCourse, removeCourse, removeStudentFromCourse } from "../../reducers/courseReducer"
+import {useApolloClient} from '@apollo/client';
+import React from 'react'
+import {useDispatch} from 'react-redux';
+import '../styles/course.css';
+import {removeStudentFromCourse} from '../../reducers/courseReducer';
 
 
 const StudentListing = ({student, course}) => {
-  const client = useApolloClient()
-  const dispatch = useDispatch()
+  const client = useApolloClient();
+  const dispatch = useDispatch();
   const removeStudent = async () => {
-    await removeStudentFromCourse(course.uniqueName, student.username, client)
-  }
+    await removeStudentFromCourse(course.uniqueName, student.username, client);
+  };
   return (
     <tr>
-        <td>{student.username}</td>
-        <td><button className="dangerous-button" onClick={() => removeStudent()}>remove from course</button></td>
+      <td>{student.username}</td>
+      <td><button className="dangerous-button" onClick={() => removeStudent()}>remove from course</button></td>
     </tr>
-  )
-}
+  );
+};
 
 const CourseParticipants = ({course}) => {
   return (
@@ -35,17 +25,17 @@ const CourseParticipants = ({course}) => {
       <h3>participating students</h3>
       <table>
         <thead>
-            <tr>
-                <th>username</th>
-                <th>remove</th>
-            </tr>
+          <tr>
+            <th>username</th>
+            <th>remove</th>
+          </tr>
         </thead>
         <tbody>
-            {course.students.map((student) => <StudentListing student={student} course={course} key={student.username}></StudentListing>)}
+          {course.students.map((student) => <StudentListing student={student} course={course} key={student.username}></StudentListing>)}
         </tbody>
-    </table>
+      </table>
     </div>
-  )
-}
+  );
+};
 
-export default CourseParticipants
+export default CourseParticipants;

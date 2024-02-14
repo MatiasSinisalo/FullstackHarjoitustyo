@@ -1,52 +1,53 @@
-import { useApolloClient } from "@apollo/client"
-import { useDispatch, useSelector } from "react-redux"
-import { useLocation, useNavigate } from "react-router-dom"
-import { addStudentToCourse, removeStudentFromCourse } from "../../reducers/courseReducer"
-import '../styles/course.css'
+import {useApolloClient} from '@apollo/client';
+import React from 'react'
+import {useDispatch} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
+import {addStudentToCourse, removeStudentFromCourse} from '../../reducers/courseReducer';
+import '../styles/course.css';
 
 const CourseShowCase = ({course, currentUser}) => {
-    const thisUserIsParticipating = currentUser.attendsCourses.find((other) => other.id == course.id)
-    const thisUserIsTeaching = currentUser.teachesCourses.find((other) => other.id == course.id)
-    const client = useApolloClient()
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
-    const joinToCourse = async () => {
-        console.log(`Joining course ${course.uniqueName}`)
-        await addStudentToCourse(course.uniqueName, currentUser.username, client)
-    }
-    
+  const thisUserIsParticipating = currentUser.attendsCourses.find((other) => other.id == course.id);
+  const thisUserIsTeaching = currentUser.teachesCourses.find((other) => other.id == course.id);
+  const client = useApolloClient();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const joinToCourse = async () => {
+    console.log(`Joining course ${course.uniqueName}`);
+    await addStudentToCourse(course.uniqueName, currentUser.username, client);
+  };
 
-    const leaveFromCourse = async () => {
-        await removeStudentFromCourse(course.uniqueName, currentUser.username, client)
-    }
 
-    const seeCourse = () => {
-        navigate(`/course/${course.uniqueName}`)
-    }
+  const leaveFromCourse = async () => {
+    await removeStudentFromCourse(course.uniqueName, currentUser.username, client);
+  };
 
-    const seeCourseAsTeacher = () => {
-        navigate(`/course/${course.uniqueName}/teacher`)
-    }
+  const seeCourse = () => {
+    navigate(`/course/${course.uniqueName}`);
+  };
 
-    return (
-        <div className={`course:${course.id} container primary course-showcase`}>
-            <h2>{course.name}</h2>
-            <h3>{course.uniqueName}</h3>
-            {thisUserIsTeaching ? 
-            
+  const seeCourseAsTeacher = () => {
+    navigate(`/course/${course.uniqueName}/teacher`);
+  };
+
+  return (
+    <div className={`course:${course.id} container primary course-showcase`}>
+      <h2>{course.name}</h2>
+      <h3>{course.uniqueName}</h3>
+      {thisUserIsTeaching ?
+
             <>
-                <button className="action-button" onClick={seeCourseAsTeacher}>See Teachers Course Page</button>
-            </>
-            :
+              <button className="action-button" onClick={seeCourseAsTeacher}>See Teachers Course Page</button>
+            </> :
                 <>
-                    {thisUserIsParticipating? <button className="action-button" onClick={seeCourse}>See Course Page</button> : <></>}
-                    {thisUserIsParticipating ?  <button className="dangerous-button" onClick={leaveFromCourse}>Leave course</button> : <button className="action-button" onClick={joinToCourse}>Join</button>}
+                  {thisUserIsParticipating? <button className="action-button" onClick={seeCourse}>See Course Page</button> : <></>}
+                  {thisUserIsParticipating ? <button className="dangerous-button" onClick={leaveFromCourse}>Leave course</button> 
+                  : <button className="action-button" onClick={joinToCourse}>Join</button>}
                 </>
-            }
-        </div>
-        
-    )
-}
+      }
+    </div>
+
+  );
+};
 
 
-export default CourseShowCase
+export default CourseShowCase;

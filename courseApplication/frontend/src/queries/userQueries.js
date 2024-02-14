@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import {gql} from '@apollo/client';
 
 
 export const LOGIN = gql`
@@ -7,7 +7,7 @@ mutation LogIn($username: String!, $password: String!) {
       value
     }
   }
-`
+`;
 
 export const CREATE_USER = gql`
 mutation Mutation($username: String!, $name: String!, $password: String!) {
@@ -16,7 +16,7 @@ mutation Mutation($username: String!, $name: String!, $password: String!) {
     username
   }
 }
-`
+`;
 
 
 export const ME = gql`
@@ -51,7 +51,7 @@ query Me {
     }
   }
 }
-`
+`;
 
 export const AUTHENTICATE_GOOGLE_USER = gql`
 mutation Mutation($googleToken: String!) {
@@ -62,7 +62,7 @@ mutation Mutation($googleToken: String!) {
     type
   }
 }
-`
+`;
 
 export const FINALIZE_GOOGLE_USER_CREATION = gql`
 mutation FinalizeGoogleUserCreation($username: String!, $createUserToken: String!) {
@@ -72,7 +72,7 @@ mutation FinalizeGoogleUserCreation($username: String!, $createUserToken: String
     username
   }
 }
-`
+`;
 
 export const AUTHENTICATE_HY_USER = gql`
 mutation AuthenticateHYUser($HYToken: String!) {
@@ -83,7 +83,7 @@ mutation AuthenticateHYUser($HYToken: String!) {
     }
   }
 }
-`
+`;
 
 
 export const FINALIZE_HY_USER_CREATION = gql`
@@ -94,4 +94,4 @@ mutation FinalizeHYUserCreation($username: String!, $createUserToken: String!) {
     username
   }
 }
-`
+`;
