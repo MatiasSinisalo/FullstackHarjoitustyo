@@ -1,219 +1,211 @@
 
-const request = require('supertest')
-const {Course} = require('../../models/course')
-const User = require('../../models/user')
-const {Task} = require('../../models/task')
-const { userCreateQuery, userLogInQuery, createSpesificUserQuery } = require('../userTestQueries')
-const { addContentBlockToInfoPage, addInfoPageToCourse, removeContentBlockFromInfoPage} = require('../courseTestQueries')
-const { query } = require('express')
-const mongoose = require('mongoose')
-const helpers = require('../testHelpers')
-const config = require('../../config')
 
+const {Course} = require('../../models/course');
+const {addContentBlockToInfoPage, addInfoPageToCourse, removeContentBlockFromInfoPage} = require('../courseTestQueries');
+const helpers = require('../testHelpers');
 
 
 describe('removeContentBlockFromInfoPage tests', () => {
-    test('removeContentBlockFromInfoPage removes contentBlock correctly', async () => {
-        await helpers.logIn("username")
-        const coursename = "courses-unique-name"
-        const course = await helpers.createCourse(coursename, "name", [])
-        
-        const allowedLocationUrl = "test123-1234abc-a1b2c"
-        const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse, 
-            variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
-        const infoPage = infoPageQuery.data.addInfoPageToCourse
-        
-      
-        
-        const contentBlockThatShouldNotBeRemoved = await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
-            courseUniqueName: course.uniqueName, 
-            infoPageId: infoPage.id, 
-            content: "should not be removed",
-            position: 1
-        }})
+  test('removeContentBlockFromInfoPage removes contentBlock correctly', async () => {
+    await helpers.logIn('username');
+    const coursename = 'courses-unique-name';
+    const course = await helpers.createCourse(coursename, 'name', []);
 
-        const content = "this is some info content"
-        const position = 2
-        const contentBlockQuery = await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
-            courseUniqueName: course.uniqueName, 
-            infoPageId: infoPage.id, 
-            content: content,
-            position: position
-        }})
-        const contentBlock = contentBlockQuery.data.addContentBlockToInfoPage
-        
-        const removed = await helpers.makeQuery({query: removeContentBlockFromInfoPage, 
-            variables: {courseUniqueName: course.uniqueName, infoPageId: infoPage.id, contentBlockId: contentBlock.id}})
+    const allowedLocationUrl = 'test123-1234abc-a1b2c';
+    const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse,
+      variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}});
+    const infoPage = infoPageQuery.data.addInfoPageToCourse;
 
-        expect(removed.data.removeContentBlockFromInfoPage).toBe(true)
 
-        const coursesInDB = await Course.find({})
-        expect(coursesInDB.length).toBe(1)
+    await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
+      courseUniqueName: course.uniqueName,
+      infoPageId: infoPage.id,
+      content: 'should not be removed',
+      position: 1,
+    }});
 
-        const courseInDB = coursesInDB[0]
-        expect(courseInDB.infoPages.length).toBe(1)
+    const content = 'this is some info content';
+    const position = 2;
+    const contentBlockQuery = await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
+      courseUniqueName: course.uniqueName,
+      infoPageId: infoPage.id,
+      content: content,
+      position: position,
+    }});
+    const contentBlock = contentBlockQuery.data.addContentBlockToInfoPage;
 
-        const infoPageInDB = courseInDB.infoPages[0]
-        expect(infoPageInDB.contentBlocks.length).toBe(1)
+    const removed = await helpers.makeQuery({query: removeContentBlockFromInfoPage,
+      variables: {courseUniqueName: course.uniqueName, infoPageId: infoPage.id, contentBlockId: contentBlock.id}});
 
-        const contentBlockInDB = infoPageInDB.contentBlocks[0]
-        expect(contentBlockInDB.content).toEqual("should not be removed")
-    })
+    expect(removed.data.removeContentBlockFromInfoPage).toBe(true);
 
-    test('removeContentBlockFromInfoPage returns Unauthorized if the user is not a teacher', async () => {
-        await helpers.logIn("username")
-        const coursename = "courses-unique-name"
-        const course = await helpers.createCourse(coursename, "name", [])
-        
-        const allowedLocationUrl = "test123-1234abc-a1b2c"
-        const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse, 
-            variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
-        const infoPage = infoPageQuery.data.addInfoPageToCourse
-              
-        const content = "this is some info content"
-        const position = 2
-        const contentBlockQuery = await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
-            courseUniqueName: course.uniqueName, 
-            infoPageId: infoPage.id, 
-            content: content,
-            position: position
-        }})
-        const contentBlock = contentBlockQuery.data.addContentBlockToInfoPage
+    const coursesInDB = await Course.find({});
+    expect(coursesInDB.length).toBe(1);
 
-        await helpers.logIn("students username")
-        const removed = await helpers.makeQuery({query: removeContentBlockFromInfoPage, 
-            variables: {courseUniqueName: course.uniqueName, infoPageId: infoPage.id, contentBlockId: contentBlock.id}})
-        
-        expect(removed.data.removeContentBlockFromInfoPage).toBe(null)
-        expect(removed.errors[0].message).toEqual("Unauthorized")
+    const courseInDB = coursesInDB[0];
+    expect(courseInDB.infoPages.length).toBe(1);
 
-        const coursesInDB = await Course.find({})
-        expect(coursesInDB.length).toBe(1)
+    const infoPageInDB = courseInDB.infoPages[0];
+    expect(infoPageInDB.contentBlocks.length).toBe(1);
 
-        const courseInDB = coursesInDB[0]
-        expect(courseInDB.infoPages.length).toBe(1)
+    const contentBlockInDB = infoPageInDB.contentBlocks[0];
+    expect(contentBlockInDB.content).toEqual('should not be removed');
+  });
 
-        const infoPageInDB = courseInDB.infoPages[0]
-        expect(infoPageInDB.contentBlocks.length).toBe(1)
+  test('removeContentBlockFromInfoPage returns Unauthorized if the user is not a teacher', async () => {
+    await helpers.logIn('username');
+    const coursename = 'courses-unique-name';
+    const course = await helpers.createCourse(coursename, 'name', []);
 
-        const contentBlockInDB = infoPageInDB.contentBlocks[0]
-        expect(contentBlockInDB.content).toEqual(content)
-    })
+    const allowedLocationUrl = 'test123-1234abc-a1b2c';
+    const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse,
+      variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}});
+    const infoPage = infoPageQuery.data.addInfoPageToCourse;
 
-    test('removeContentBlockFromInfoPage returns given course not found if the course is not found', async () => {
-        await helpers.logIn("username")
-        const coursename = "courses-unique-name"
-        const course = await helpers.createCourse(coursename, "name", [])
-        
-        const allowedLocationUrl = "test123-1234abc-a1b2c"
-        const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse, 
-            variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
-        const infoPage = infoPageQuery.data.addInfoPageToCourse
-              
-        const content = "this is some info content"
-        const position = 2
-        const contentBlockQuery = await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
-            courseUniqueName: course.uniqueName, 
-            infoPageId: infoPage.id, 
-            content: content,
-            position: position
-        }})
-        const contentBlock = contentBlockQuery.data.addContentBlockToInfoPage
+    const content = 'this is some info content';
+    const position = 2;
+    const contentBlockQuery = await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
+      courseUniqueName: course.uniqueName,
+      infoPageId: infoPage.id,
+      content: content,
+      position: position,
+    }});
+    const contentBlock = contentBlockQuery.data.addContentBlockToInfoPage;
 
-        const removed = await helpers.makeQuery({query: removeContentBlockFromInfoPage, 
-            variables: {courseUniqueName: "course that does not exist", infoPageId: infoPage.id, contentBlockId: contentBlock.id}})
-        
-        expect(removed.data.removeContentBlockFromInfoPage).toBe(null)
-        expect(removed.errors[0].message).toEqual("Given course not found")
+    await helpers.logIn('students username');
+    const removed = await helpers.makeQuery({query: removeContentBlockFromInfoPage,
+      variables: {courseUniqueName: course.uniqueName, infoPageId: infoPage.id, contentBlockId: contentBlock.id}});
 
-        const coursesInDB = await Course.find({})
-        expect(coursesInDB.length).toBe(1)
+    expect(removed.data.removeContentBlockFromInfoPage).toBe(null);
+    expect(removed.errors[0].message).toEqual('Unauthorized');
 
-        const courseInDB = coursesInDB[0]
-        expect(courseInDB.infoPages.length).toBe(1)
+    const coursesInDB = await Course.find({});
+    expect(coursesInDB.length).toBe(1);
 
-        const infoPageInDB = courseInDB.infoPages[0]
-        expect(infoPageInDB.contentBlocks.length).toBe(1)
+    const courseInDB = coursesInDB[0];
+    expect(courseInDB.infoPages.length).toBe(1);
 
-        const contentBlockInDB = infoPageInDB.contentBlocks[0]
-        expect(contentBlockInDB.content).toEqual(content)
-    })
+    const infoPageInDB = courseInDB.infoPages[0];
+    expect(infoPageInDB.contentBlocks.length).toBe(1);
 
-    test('removeContentBlockFromInfoPage returns given info page not found if the infoPage is not found', async () => {
-        await helpers.logIn("username")
-        const coursename = "courses-unique-name"
-        const course = await helpers.createCourse(coursename, "name", [])
-        
-        const allowedLocationUrl = "test123-1234abc-a1b2c"
-        const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse, 
-            variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
-        const infoPage = infoPageQuery.data.addInfoPageToCourse
-              
-        const content = "this is some info content"
-        const position = 2
-        const contentBlockQuery = await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
-            courseUniqueName: course.uniqueName, 
-            infoPageId: infoPage.id, 
-            content: content,
-            position: position
-        }})
-        const contentBlock = contentBlockQuery.data.addContentBlockToInfoPage
+    const contentBlockInDB = infoPageInDB.contentBlocks[0];
+    expect(contentBlockInDB.content).toEqual(content);
+  });
 
-        const removed = await helpers.makeQuery({query: removeContentBlockFromInfoPage, 
-            variables: {courseUniqueName: course.uniqueName, infoPageId: "abc1234", contentBlockId: contentBlock.id}})
-        
-        expect(removed.data.removeContentBlockFromInfoPage).toBe(null)
-        expect(removed.errors[0].message).toEqual("Given info page not found")
+  test('removeContentBlockFromInfoPage returns given course not found if the course is not found', async () => {
+    await helpers.logIn('username');
+    const coursename = 'courses-unique-name';
+    const course = await helpers.createCourse(coursename, 'name', []);
 
-        const coursesInDB = await Course.find({})
-        expect(coursesInDB.length).toBe(1)
+    const allowedLocationUrl = 'test123-1234abc-a1b2c';
+    const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse,
+      variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}});
+    const infoPage = infoPageQuery.data.addInfoPageToCourse;
 
-        const courseInDB = coursesInDB[0]
-        expect(courseInDB.infoPages.length).toBe(1)
+    const content = 'this is some info content';
+    const position = 2;
+    const contentBlockQuery = await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
+      courseUniqueName: course.uniqueName,
+      infoPageId: infoPage.id,
+      content: content,
+      position: position,
+    }});
+    const contentBlock = contentBlockQuery.data.addContentBlockToInfoPage;
 
-        const infoPageInDB = courseInDB.infoPages[0]
-        expect(infoPageInDB.contentBlocks.length).toBe(1)
+    const removed = await helpers.makeQuery({query: removeContentBlockFromInfoPage,
+      variables: {courseUniqueName: 'course that does not exist', infoPageId: infoPage.id, contentBlockId: contentBlock.id}});
 
-        const contentBlockInDB = infoPageInDB.contentBlocks[0]
-        expect(contentBlockInDB.content).toEqual(content)
-    })
+    expect(removed.data.removeContentBlockFromInfoPage).toBe(null);
+    expect(removed.errors[0].message).toEqual('Given course not found');
 
-    test('removeContentBlockFromInfoPage returns given content block not found if the infoPage is not found', async () => {
-        await helpers.logIn("username")
-        const coursename = "courses-unique-name"
-        const course = await helpers.createCourse(coursename, "name", [])
-        
-        const allowedLocationUrl = "test123-1234abc-a1b2c"
-        const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse, 
-            variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}})
-        const infoPage = infoPageQuery.data.addInfoPageToCourse
-              
-        const content = "this is some info content"
-        const position = 2
-        const contentBlockQuery = await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
-            courseUniqueName: course.uniqueName, 
-            infoPageId: infoPage.id, 
-            content: content,
-            position: position
-        }})
-        const contentBlock = contentBlockQuery.data.addContentBlockToInfoPage
+    const coursesInDB = await Course.find({});
+    expect(coursesInDB.length).toBe(1);
 
-        const removed = await helpers.makeQuery({query: removeContentBlockFromInfoPage, 
-            variables: {courseUniqueName: course.uniqueName, infoPageId: infoPage.id, contentBlockId: "abc1234"}})
-        
-        expect(removed.data.removeContentBlockFromInfoPage).toBe(null)
-        expect(removed.errors[0].message).toEqual("Given content block not found")
+    const courseInDB = coursesInDB[0];
+    expect(courseInDB.infoPages.length).toBe(1);
 
-        const coursesInDB = await Course.find({})
-        expect(coursesInDB.length).toBe(1)
+    const infoPageInDB = courseInDB.infoPages[0];
+    expect(infoPageInDB.contentBlocks.length).toBe(1);
 
-        const courseInDB = coursesInDB[0]
-        expect(courseInDB.infoPages.length).toBe(1)
+    const contentBlockInDB = infoPageInDB.contentBlocks[0];
+    expect(contentBlockInDB.content).toEqual(content);
+  });
 
-        const infoPageInDB = courseInDB.infoPages[0]
-        expect(infoPageInDB.contentBlocks.length).toBe(1)
+  test('removeContentBlockFromInfoPage returns given info page not found if the infoPage is not found', async () => {
+    await helpers.logIn('username');
+    const coursename = 'courses-unique-name';
+    const course = await helpers.createCourse(coursename, 'name', []);
 
-        const contentBlockInDB = infoPageInDB.contentBlocks[0]
-        expect(contentBlockInDB.content).toEqual(content)
-    })
-})
+    const allowedLocationUrl = 'test123-1234abc-a1b2c';
+    const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse,
+      variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}});
+    const infoPage = infoPageQuery.data.addInfoPageToCourse;
+
+    const content = 'this is some info content';
+    const position = 2;
+    const contentBlockQuery = await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
+      courseUniqueName: course.uniqueName,
+      infoPageId: infoPage.id,
+      content: content,
+      position: position,
+    }});
+    const contentBlock = contentBlockQuery.data.addContentBlockToInfoPage;
+
+    const removed = await helpers.makeQuery({query: removeContentBlockFromInfoPage,
+      variables: {courseUniqueName: course.uniqueName, infoPageId: 'abc1234', contentBlockId: contentBlock.id}});
+
+    expect(removed.data.removeContentBlockFromInfoPage).toBe(null);
+    expect(removed.errors[0].message).toEqual('Given info page not found');
+
+    const coursesInDB = await Course.find({});
+    expect(coursesInDB.length).toBe(1);
+
+    const courseInDB = coursesInDB[0];
+    expect(courseInDB.infoPages.length).toBe(1);
+
+    const infoPageInDB = courseInDB.infoPages[0];
+    expect(infoPageInDB.contentBlocks.length).toBe(1);
+
+    const contentBlockInDB = infoPageInDB.contentBlocks[0];
+    expect(contentBlockInDB.content).toEqual(content);
+  });
+
+  test('removeContentBlockFromInfoPage returns given content block not found if the infoPage is not found', async () => {
+    await helpers.logIn('username');
+    const coursename = 'courses-unique-name';
+    const course = await helpers.createCourse(coursename, 'name', []);
+
+    const allowedLocationUrl = 'test123-1234abc-a1b2c';
+    const infoPageQuery = await helpers.makeQuery({query: addInfoPageToCourse,
+      variables: {courseUniqueName: course.uniqueName, locationUrl: allowedLocationUrl}});
+    const infoPage = infoPageQuery.data.addInfoPageToCourse;
+
+    const content = 'this is some info content';
+    const position = 2;
+    const contentBlockQuery = await helpers.makeQuery({query: addContentBlockToInfoPage, variables: {
+      courseUniqueName: course.uniqueName,
+      infoPageId: infoPage.id,
+      content: content,
+      position: position,
+    }});
+    contentBlockQuery.data.addContentBlockToInfoPage;
+
+    const removed = await helpers.makeQuery({query: removeContentBlockFromInfoPage,
+      variables: {courseUniqueName: course.uniqueName, infoPageId: infoPage.id, contentBlockId: 'abc1234'}});
+
+    expect(removed.data.removeContentBlockFromInfoPage).toBe(null);
+    expect(removed.errors[0].message).toEqual('Given content block not found');
+
+    const coursesInDB = await Course.find({});
+    expect(coursesInDB.length).toBe(1);
+
+    const courseInDB = coursesInDB[0];
+    expect(courseInDB.infoPages.length).toBe(1);
+
+    const infoPageInDB = courseInDB.infoPages[0];
+    expect(infoPageInDB.contentBlocks.length).toBe(1);
+
+    const contentBlockInDB = infoPageInDB.contentBlocks[0];
+    expect(contentBlockInDB.content).toEqual(content);
+  });
+});

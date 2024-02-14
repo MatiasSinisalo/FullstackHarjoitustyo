@@ -1,124 +1,118 @@
-const {Course} = require('../../models/course')
-const User = require('../../models/user')
-const {Task} = require('../../models/task')
-const { userCreateQuery, userLogInQuery, createSpesificUserQuery } = require('../userTestQueries')
-const { createMultipleChoiceTask, removeMultipleChoiceTask} = require('../courseTestQueries')
-const { query } = require('express')
-const mongoose = require('mongoose')
-const helpers = require('../testHelpers')
-const config = require('../../config')
+const {Course} = require('../../models/course');
+const {createMultipleChoiceTask, removeMultipleChoiceTask} = require('../courseTestQueries');
+const helpers = require('../testHelpers');
+
 
 const checkCoursesNotChanged = async () => {
-    const coursesInDB = await Course.find({})
-    expect(coursesInDB.length).toBe(1)
-    const courseInDB = coursesInDB[0]
-    expect(courseInDB.tasks.multipleChoiceTasks.length).toBe(1)
-}
+  const coursesInDB = await Course.find({});
+  expect(coursesInDB.length).toBe(1);
+  const courseInDB = coursesInDB[0];
+  expect(courseInDB.tasks.multipleChoiceTasks.length).toBe(1);
+};
 
 describe('removeMultipleChoiceTask tests', () => {
-    test('removeMultipleChoiceTask removes multipleChoiceTask from course correctly', async() => {
-        const user = await helpers.logIn("username")
-        const course = await helpers.createCourse("courseUniqueName", "courses name", [])
+  test('removeMultipleChoiceTask removes multipleChoiceTask from course correctly', async () => {
+    await helpers.logIn('username');
+    const course = await helpers.createCourse('courseUniqueName', 'courses name', []);
 
-        const deadline = new Date("2030-06-25")
-        const example = {
-            description: "this is a description for multiple choice task", 
-            deadline: deadline.toString(),
-            questions: [],
-            answers: []
-        }
-        const createMultipleChoiceTaskQuery = await helpers.makeQuery({query: createMultipleChoiceTask, 
-            variables: {courseUniqueName: course.uniqueName, description: example.description, deadline: example.deadline}})
-      
-        
-        const removeMultipleChoiceTaskQuery = await helpers.makeQuery({
-            query: removeMultipleChoiceTask,
-            variables: {courseUniqueName: course.uniqueName, multipleChoiceTaskId: createMultipleChoiceTaskQuery.data.createMultipleChoiceTask.id}
-        })
-        
-        expect(removeMultipleChoiceTaskQuery.data.removeMultipleChoiceTask).toBe(true)
+    const deadline = new Date('2030-06-25');
+    const example = {
+      description: 'this is a description for multiple choice task',
+      deadline: deadline.toString(),
+      questions: [],
+      answers: [],
+    };
+    const createMultipleChoiceTaskQuery = await helpers.makeQuery({query: createMultipleChoiceTask,
+      variables: {courseUniqueName: course.uniqueName, description: example.description, deadline: example.deadline}});
 
-        const coursesInDB = await Course.find({})
-        expect(coursesInDB.length).toBe(1)
 
-        const courseInDB = coursesInDB[0]
-        expect(courseInDB.tasks.multipleChoiceTasks.length).toBe(0)
-    })
+    const removeMultipleChoiceTaskQuery = await helpers.makeQuery({
+      query: removeMultipleChoiceTask,
+      variables: {courseUniqueName: course.uniqueName, multipleChoiceTaskId: createMultipleChoiceTaskQuery.data.createMultipleChoiceTask.id},
+    });
 
-    test('removeMultipleChoiceTask returns Unauthorized if user is not teacher', async() => {
-        const user = await helpers.logIn("username")
-        const course = await helpers.createCourse("courseUniqueName", "courses name", [])
+    expect(removeMultipleChoiceTaskQuery.data.removeMultipleChoiceTask).toBe(true);
 
-        const deadline = new Date("2030-06-25")
-        const example = {
-            description: "this is a description for multiple choice task", 
-            deadline: deadline.toString(),
-            questions: [],
-            answers: []
-        }
-        const createMultipleChoiceTaskQuery = await helpers.makeQuery({query: createMultipleChoiceTask, 
-            variables: {courseUniqueName: course.uniqueName, description: example.description, deadline: example.deadline}})
-      
-        const studentUser = await helpers.logIn("students username")
-        
-        const removeMultipleChoiceTaskQuery = await helpers.makeQuery({
-            query: removeMultipleChoiceTask,
-            variables: {courseUniqueName: course.uniqueName, multipleChoiceTaskId: createMultipleChoiceTaskQuery.data.createMultipleChoiceTask.id}
-        })
-        
-        expect(removeMultipleChoiceTaskQuery.errors[0].message).toEqual("Unauthorized")
+    const coursesInDB = await Course.find({});
+    expect(coursesInDB.length).toBe(1);
 
-        await checkCoursesNotChanged()
-    })
+    const courseInDB = coursesInDB[0];
+    expect(courseInDB.tasks.multipleChoiceTasks.length).toBe(0);
+  });
 
-    test('removeMultipleChoiceTask returns given course not found if course is not found', async() => {
-        const user = await helpers.logIn("username")
-        const course = await helpers.createCourse("courseUniqueName", "courses name", [])
+  test('removeMultipleChoiceTask returns Unauthorized if user is not teacher', async () => {
+    await helpers.logIn('username');
+    const course = await helpers.createCourse('courseUniqueName', 'courses name', []);
 
-        const deadline = new Date("2030-06-25")
-        const example = {
-            description: "this is a description for multiple choice task", 
-            deadline: deadline.toString(),
-            questions: [],
-            answers: []
-        }
-        const createMultipleChoiceTaskQuery = await helpers.makeQuery({query: createMultipleChoiceTask, 
-            variables: {courseUniqueName: course.uniqueName, description: example.description, deadline: example.deadline}})
-      
-        
-        const removeMultipleChoiceTaskQuery = await helpers.makeQuery({
-            query: removeMultipleChoiceTask,
-            variables: {courseUniqueName: "does not exist", multipleChoiceTaskId: createMultipleChoiceTaskQuery.data.createMultipleChoiceTask.id}
-        })
-        
-        expect(removeMultipleChoiceTaskQuery.errors[0].message).toEqual("Given course not found")
+    const deadline = new Date('2030-06-25');
+    const example = {
+      description: 'this is a description for multiple choice task',
+      deadline: deadline.toString(),
+      questions: [],
+      answers: [],
+    };
+    const createMultipleChoiceTaskQuery = await helpers.makeQuery({query: createMultipleChoiceTask,
+      variables: {courseUniqueName: course.uniqueName, description: example.description, deadline: example.deadline}});
 
-        await checkCoursesNotChanged()
-    })
+    await helpers.logIn('students username');
 
-    test('removeMultipleChoiceTask returns given task not found if multiple choice task is not found', async() => {
-        const user = await helpers.logIn("username")
-        const course = await helpers.createCourse("courseUniqueName", "courses name", [])
+    const removeMultipleChoiceTaskQuery = await helpers.makeQuery({
+      query: removeMultipleChoiceTask,
+      variables: {courseUniqueName: course.uniqueName, multipleChoiceTaskId: createMultipleChoiceTaskQuery.data.createMultipleChoiceTask.id},
+    });
 
-        const deadline = new Date("2030-06-25")
-        const example = {
-            description: "this is a description for multiple choice task", 
-            deadline: deadline.toString(),
-            questions: [],
-            answers: []
-        }
-        const createMultipleChoiceTaskQuery = await helpers.makeQuery({query: createMultipleChoiceTask, 
-            variables: {courseUniqueName: course.uniqueName, description: example.description, deadline: example.deadline}})
-      
-        
-        const removeMultipleChoiceTaskQuery = await helpers.makeQuery({
-            query: removeMultipleChoiceTask,
-            variables: {courseUniqueName: course.uniqueName, multipleChoiceTaskId: "imaginaryId1234"}
-        })
-        
-        expect(removeMultipleChoiceTaskQuery.errors[0].message).toEqual("Given task not found")
+    expect(removeMultipleChoiceTaskQuery.errors[0].message).toEqual('Unauthorized');
 
-        await checkCoursesNotChanged()
-    })
+    await checkCoursesNotChanged();
+  });
 
-})
+  test('removeMultipleChoiceTask returns given course not found if course is not found', async () => {
+    await helpers.logIn('username');
+    const course = await helpers.createCourse('courseUniqueName', 'courses name', []);
+
+    const deadline = new Date('2030-06-25');
+    const example = {
+      description: 'this is a description for multiple choice task',
+      deadline: deadline.toString(),
+      questions: [],
+      answers: [],
+    };
+    const createMultipleChoiceTaskQuery = await helpers.makeQuery({query: createMultipleChoiceTask,
+      variables: {courseUniqueName: course.uniqueName, description: example.description, deadline: example.deadline}});
+
+
+    const removeMultipleChoiceTaskQuery = await helpers.makeQuery({
+      query: removeMultipleChoiceTask,
+      variables: {courseUniqueName: 'does not exist', multipleChoiceTaskId: createMultipleChoiceTaskQuery.data.createMultipleChoiceTask.id},
+    });
+
+    expect(removeMultipleChoiceTaskQuery.errors[0].message).toEqual('Given course not found');
+
+    await checkCoursesNotChanged();
+  });
+
+  test('removeMultipleChoiceTask returns given task not found if multiple choice task is not found', async () => {
+    await helpers.logIn('username');
+    const course = await helpers.createCourse('courseUniqueName', 'courses name', []);
+
+    const deadline = new Date('2030-06-25');
+    const example = {
+      description: 'this is a description for multiple choice task',
+      deadline: deadline.toString(),
+      questions: [],
+      answers: [],
+    };
+    await helpers.makeQuery({query: createMultipleChoiceTask,
+      variables: {courseUniqueName: course.uniqueName, description: example.description, deadline: example.deadline}});
+
+
+    const removeMultipleChoiceTaskQuery = await helpers.makeQuery({
+      query: removeMultipleChoiceTask,
+      variables: {courseUniqueName: course.uniqueName, multipleChoiceTaskId: 'imaginaryId1234'},
+    });
+
+    expect(removeMultipleChoiceTaskQuery.errors[0].message).toEqual('Given task not found');
+
+    await checkCoursesNotChanged();
+  });
+});

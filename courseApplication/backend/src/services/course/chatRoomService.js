@@ -1,126 +1,115 @@
 
 
-const { UserInputError } = require('apollo-server-core')
-
-const {Course} = require('../../models/course')
-const { default: mongoose } = require('mongoose')
-const { Task, Submission, Grade } = require('../../models/task')
-const serviceUtils = require('../serviceUtils')
-const { InfoPage, ContentBlock } = require('../../models/infoPage')
-const { ChatRoom, Message } = require('../../models/chatRoom')
-const { PubSub, withFilter } = require('graphql-subscriptions')
-const pubsub = new PubSub()
+const {UserInputError} = require('apollo-server-core');
+const serviceUtils = require('../serviceUtils');
+const {ChatRoom, Message} = require('../../models/chatRoom');
 
 const createChatRoom = async (courseUniqueName, name, userForToken) => {
-    const course = await serviceUtils.fetchCourse(courseUniqueName)
-    serviceUtils.checkIsTeacher(course, userForToken)
+  const course = await serviceUtils.fetchCourse(courseUniqueName);
+  serviceUtils.checkIsTeacher(course, userForToken);
 
-    const chatRoom = {
-        name: name,
-        admin: userForToken.id,
-        messages: [],
-        users: [],
-    }
-    const chatRoomObj = new ChatRoom(chatRoom)
-    course.chatRooms.push(chatRoomObj)
-    await course.save()
+  const chatRoom = {
+    name: name,
+    admin: userForToken.id,
+    messages: [],
+    users: [],
+  };
+  const chatRoomObj = new ChatRoom(chatRoom);
+  course.chatRooms.push(chatRoomObj);
+  await course.save();
 
-    return {...chatRoomObj.toObject(), id: chatRoomObj._id.toString(), admin: {username: userForToken.username, name: userForToken.name, id: userForToken.id}}
-}
+  return {...chatRoomObj.toObject(), id: chatRoomObj._id.toString(), admin: {username: userForToken.username, name: userForToken.name, id: userForToken.id}};
+};
 
 const removeChatRoom = async (courseUniqueName, chatRoomId, userForToken) => {
-    const course = await serviceUtils.fetchCourse(courseUniqueName)
-    serviceUtils.checkIsTeacher(course, userForToken)
+  const course = await serviceUtils.fetchCourse(courseUniqueName);
+  serviceUtils.checkIsTeacher(course, userForToken);
 
-    const chatRoom = serviceUtils.findChatRoom(course, chatRoomId)
+  serviceUtils.findChatRoom(course, chatRoomId);
 
-    const filteredChatRooms = course.chatRooms.filter((room) => room.id !== chatRoomId)
-    course.chatRooms = filteredChatRooms
-    await course.save()
+  const filteredChatRooms = course.chatRooms.filter((room) => room.id !== chatRoomId);
+  course.chatRooms = filteredChatRooms;
+  await course.save();
 
-    return true
-}
+  return true;
+};
 
 const addUserToChatRoom = async (courseUniqueName, chatRoomId, username, userForToken) => {
-    const course = await serviceUtils.fetchCourse(courseUniqueName)
-    const user = await serviceUtils.fetchUser(username)
-    const chatRoom = await serviceUtils.findChatRoom(course, chatRoomId)
-    
-    if(chatRoom.admin.toString() !== userForToken.id)
-    {
-        throw new UserInputError("Unauthorized")
-    }
-    
-    if(!serviceUtils.isStudent(course, user.id))
-    {
-        throw new UserInputError("Given user is not participating in the course")
-    }
+  const course = await serviceUtils.fetchCourse(courseUniqueName);
+  const user = await serviceUtils.fetchUser(username);
+  const chatRoom = await serviceUtils.findChatRoom(course, chatRoomId);
 
-    serviceUtils.checkUserNotInChatRoom(chatRoom, user.id)
+  if (chatRoom.admin.toString() !== userForToken.id) {
+    throw new UserInputError('Unauthorized');
+  }
 
-    chatRoom.users.push(user.id)
-    await course.save()
-    delete user.passwordHash
-    return user
-}
+  if (!serviceUtils.isStudent(course, user.id)) {
+    throw new UserInputError('Given user is not participating in the course');
+  }
+
+  serviceUtils.checkUserNotInChatRoom(chatRoom, user.id);
+
+  chatRoom.users.push(user.id);
+  await course.save();
+  delete user.passwordHash;
+  return user;
+};
 
 const removeUserFromChatRoom = async (courseUniqueName, chatRoomId, username, userForToken) => {
-    const course = await serviceUtils.fetchCourse(courseUniqueName)
-    const userToRemove = await serviceUtils.fetchUser(username)
-    const chatRoom = await serviceUtils.findChatRoom(course, chatRoomId)
-    
-    //admin can remove anybody, user can remove only itself
-    if(chatRoom.admin.toString() !== userForToken.id && userForToken.username !== userToRemove.username)
-    {
-        throw new UserInputError("Unauthorized")
-    }
-    
-    if(!serviceUtils.isStudent(course, userToRemove.id))
-    {
-        throw new UserInputError("Given user is not participating in the course")
-    }
+  const course = await serviceUtils.fetchCourse(courseUniqueName);
+  const userToRemove = await serviceUtils.fetchUser(username);
+  const chatRoom = await serviceUtils.findChatRoom(course, chatRoomId);
 
-    serviceUtils.checkIsParticipant(chatRoom, userToRemove)
+  // admin can remove anybody, user can remove only itself
+  if (chatRoom.admin.toString() !== userForToken.id && userForToken.username !== userToRemove.username) {
+    throw new UserInputError('Unauthorized');
+  }
 
-    const filteredUsers =  chatRoom.users.filter((roomUser) => roomUser.toString() !== userToRemove.id)
-    chatRoom.users = filteredUsers
-    await course.save()
-    return true
-}
+  if (!serviceUtils.isStudent(course, userToRemove.id)) {
+    throw new UserInputError('Given user is not participating in the course');
+  }
+
+  serviceUtils.checkIsParticipant(chatRoom, userToRemove);
+
+  const filteredUsers = chatRoom.users.filter((roomUser) => roomUser.toString() !== userToRemove.id);
+  chatRoom.users = filteredUsers;
+  await course.save();
+  return true;
+};
 
 const createMessage = async (courseUniqueName, chatRoomId, content, userForToken) => {
-    const course = await serviceUtils.fetchCourse(courseUniqueName)
-    
-    const chatRoom = serviceUtils.findChatRoom(course, chatRoomId)
+  const course = await serviceUtils.fetchCourse(courseUniqueName);
 
-    serviceUtils.checkIsAdminOrParticipant(chatRoom, userForToken)
+  const chatRoom = serviceUtils.findChatRoom(course, chatRoomId);
 
-    const message = {
-        fromUser: userForToken.id,
-        sendDate: new Date(Date.now()),
-        content: content,
-    }
-    const messageObj = new Message(message)
-    chatRoom.messages.push(messageObj)
-    await course.save()
-    const messageCreated = {...messageObj.toObject(), id: messageObj._id.toString(), fromUser: {username: userForToken.username, name: userForToken.name, id: userForToken.id}}
-    return messageCreated
-}
+  serviceUtils.checkIsAdminOrParticipant(chatRoom, userForToken);
+
+  const message = {
+    fromUser: userForToken.id,
+    sendDate: new Date(Date.now()),
+    content: content,
+  };
+  const messageObj = new Message(message);
+  chatRoom.messages.push(messageObj);
+  await course.save();
+  const messageCreated = {...messageObj.toObject(), id: messageObj._id.toString(), fromUser: {username: userForToken.username, name: userForToken.name, id: userForToken.id}};
+  return messageCreated;
+};
 
 const checkCanSubscribeToMessageCreated = async (courseUniqueName, chatRoomId, userForToken) => {
-    const course = await serviceUtils.fetchCourse(courseUniqueName)
-    const chatRoom = serviceUtils.findChatRoom(course, chatRoomId)
+  const course = await serviceUtils.fetchCourse(courseUniqueName);
+  const chatRoom = serviceUtils.findChatRoom(course, chatRoomId);
 
-    serviceUtils.checkIsAdminOrParticipant(chatRoom, userForToken)
+  serviceUtils.checkIsAdminOrParticipant(chatRoom, userForToken);
 
-    return true
-}
+  return true;
+};
 
 module.exports = {
-    createChatRoom, 
-    removeChatRoom,
-    createMessage,
-    addUserToChatRoom,
-    checkCanSubscribeToMessageCreated,
-    removeUserFromChatRoom
-}
+  createChatRoom,
+  removeChatRoom,
+  createMessage,
+  addUserToChatRoom,
+  checkCanSubscribeToMessageCreated,
+  removeUserFromChatRoom,
+};

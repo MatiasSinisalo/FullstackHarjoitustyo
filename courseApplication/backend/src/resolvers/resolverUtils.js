@@ -1,11 +1,11 @@
-const { UserInputError } = require("apollo-server-core")
+const {UserInputError} = require('apollo-server-core');
 
 
 const mustHaveToken = (context) => {
-    if(!context.userForToken){
-        throw new UserInputError("Unauthorized")
-    }
-}
+  if (!context.userForToken) {
+    throw new UserInputError('Unauthorized');
+  }
+};
 
 
-module.exports={mustHaveToken}
+module.exports={mustHaveToken};

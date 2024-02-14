@@ -1,100 +1,94 @@
 
 
-
-const { UserInputError } = require('apollo-server-core')
-
-const {Course} = require('../../models/course')
-const { default: mongoose } = require('mongoose')
-const { Task, Submission, Grade } = require('../../models/task')
-const serviceUtils = require('../serviceUtils')
-const { InfoPage, ContentBlock } = require('../../models/infoPage')
+const {UserInputError} = require('apollo-server-core');
+const serviceUtils = require('../serviceUtils');
+const {InfoPage, ContentBlock} = require('../../models/infoPage');
 
 const addInfoPage = async (uniqueName, locationUrl, userForToken) => {
-    const course =  await serviceUtils.fetchCourse(uniqueName)
-    
-    serviceUtils.checkIsTeacher(course, userForToken)
+  const course = await serviceUtils.fetchCourse(uniqueName);
 
-    const alreadyExistingInfoPage = course.infoPages.find((page) => page.locationUrl === locationUrl)
-    if(alreadyExistingInfoPage)
-    {
-        throw new UserInputError("Given page already exists")
-    }
+  serviceUtils.checkIsTeacher(course, userForToken);
 
-    const infoPage = {
-        locationUrl: locationUrl,
-        blocks: []
-    }
+  const alreadyExistingInfoPage = course.infoPages.find((page) => page.locationUrl === locationUrl);
+  if (alreadyExistingInfoPage) {
+    throw new UserInputError('Given page already exists');
+  }
 
-    const infoPageObj = new InfoPage(infoPage)
-    course.infoPages.push(infoPageObj)
-    await course.save()
-    return infoPageObj
-}
+  const infoPage = {
+    locationUrl: locationUrl,
+    blocks: [],
+  };
+
+  const infoPageObj = new InfoPage(infoPage);
+  course.infoPages.push(infoPageObj);
+  await course.save();
+  return infoPageObj;
+};
 
 const removeInfoPage = async (uniqueName, infoPageId, userForToken) => {
-    const course = await serviceUtils.fetchCourse(uniqueName)
-    
-    serviceUtils.checkIsTeacher(course, userForToken)
-    
-    const infoPage = serviceUtils.findInfoPage(course, infoPageId)
+  const course = await serviceUtils.fetchCourse(uniqueName);
 
-    const filteredInfoPages = course.infoPages.filter((page) => page.id !== infoPageId)
-    course.infoPages = filteredInfoPages
-    await course.save()
-    return true
-}
+  serviceUtils.checkIsTeacher(course, userForToken);
+
+  serviceUtils.findInfoPage(course, infoPageId);
+
+  const filteredInfoPages = course.infoPages.filter((page) => page.id !== infoPageId);
+  course.infoPages = filteredInfoPages;
+  await course.save();
+  return true;
+};
 
 const addContentBlock = async (uniqueName, infoPageId, content, position, userForToken) => {
-    const course =  await serviceUtils.fetchCourse(uniqueName)
-    
-    serviceUtils.checkIsTeacher(course, userForToken)
+  const course = await serviceUtils.fetchCourse(uniqueName);
 
-    const infoPage = serviceUtils.findInfoPage(course, infoPageId)
+  serviceUtils.checkIsTeacher(course, userForToken);
 
-    const contentBlock = {
-        content: content,
-        position: position
-    }
+  const infoPage = serviceUtils.findInfoPage(course, infoPageId);
 
-    const contentBlockObj = new ContentBlock(contentBlock)
-    infoPage.contentBlocks.push(contentBlockObj)
-    await course.save()
-    return contentBlockObj
-}
+  const contentBlock = {
+    content: content,
+    position: position,
+  };
 
-const modifyContentBlock = async(uniqueName, infoPageId, contentBlockId, newContent, userForToken) => {
-    const course = await serviceUtils.fetchCourse(uniqueName)
+  const contentBlockObj = new ContentBlock(contentBlock);
+  infoPage.contentBlocks.push(contentBlockObj);
+  await course.save();
+  return contentBlockObj;
+};
 
-    serviceUtils.checkIsTeacher(course, userForToken)
+const modifyContentBlock = async (uniqueName, infoPageId, contentBlockId, newContent, userForToken) => {
+  const course = await serviceUtils.fetchCourse(uniqueName);
 
-    const infoPage = serviceUtils.findInfoPage(course, infoPageId)
+  serviceUtils.checkIsTeacher(course, userForToken);
 
-    const contentBlock = serviceUtils.findContentBlock(infoPage, contentBlockId)
+  const infoPage = serviceUtils.findInfoPage(course, infoPageId);
 
-    contentBlock.content = newContent
-    await course.save()
-    return contentBlock
-}
+  const contentBlock = serviceUtils.findContentBlock(infoPage, contentBlockId);
+
+  contentBlock.content = newContent;
+  await course.save();
+  return contentBlock;
+};
 
 const removeContentBlock = async (courseUniqueName, infoPageId, contentBlockId, userForToken) => {
-    const course = await serviceUtils.fetchCourse(courseUniqueName)
-    
-    serviceUtils.checkIsTeacher(course, userForToken)
+  const course = await serviceUtils.fetchCourse(courseUniqueName);
 
-    const infoPage = serviceUtils.findInfoPage(course, infoPageId)
+  serviceUtils.checkIsTeacher(course, userForToken);
 
-    const contentBlock = serviceUtils.findContentBlock(infoPage, contentBlockId)
+  const infoPage = serviceUtils.findInfoPage(course, infoPageId);
 
-    const filteredBlocks = infoPage.contentBlocks.filter((block) => block.id !== contentBlock.id)
-    infoPage.contentBlocks = filteredBlocks
-    await course.save()
-    return true
-}
+  const contentBlock = serviceUtils.findContentBlock(infoPage, contentBlockId);
+
+  const filteredBlocks = infoPage.contentBlocks.filter((block) => block.id !== contentBlock.id);
+  infoPage.contentBlocks = filteredBlocks;
+  await course.save();
+  return true;
+};
 
 module.exports = {
-    addInfoPage,
-    addContentBlock,
-    removeContentBlock,
-    removeInfoPage,
-    modifyContentBlock
-}
+  addInfoPage,
+  addContentBlock,
+  removeContentBlock,
+  removeInfoPage,
+  modifyContentBlock,
+};

@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server-core")
+
 
 const createCourse = `mutation Mutation($uniqueName: String!, $name: String!) {
     createCourse(uniqueName: $uniqueName, name: $name) {
@@ -21,13 +21,13 @@ const createCourse = `mutation Mutation($uniqueName: String!, $name: String!) {
         locationUrl
       }
     }
-  }`
+  }`;
 
 const removeCourse = `
 mutation Mutation($uniqueName: String!) {
   removeCourse(uniqueName: $uniqueName)
 }
-`
+`;
 const addInfoPageToCourse = `
 mutation AddInfoPageToCourse($locationUrl: String!, $courseUniqueName: String!) {
   addInfoPageToCourse(locationUrl: $locationUrl, courseUniqueName: $courseUniqueName) {
@@ -39,13 +39,13 @@ mutation AddInfoPageToCourse($locationUrl: String!, $courseUniqueName: String!) 
     locationUrl
   }
 }
-`
+`;
 
 const removeInfoPageFromCourse = `
 mutation RemoveInfoPageFromCourse($courseUniqueName: String!, $infoPageId: String!) {
   removeInfoPageFromCourse(courseUniqueName: $courseUniqueName, infoPageId: $infoPageId)
 }
-`
+`;
 
 const addContentBlockToInfoPage = `
 mutation AddContentBlockToInfoPage($courseUniqueName: String!, $content: String!, $position: Int!, $infoPageId: String!) {
@@ -55,7 +55,7 @@ mutation AddContentBlockToInfoPage($courseUniqueName: String!, $content: String!
     position
   }
 }
-`
+`;
 
 const modifyContentBlock = `
 mutation ModifyContentBlock($courseUniqueName: String!, $infoPageId: String!, $contentBlockId: String!, $content: String!) {
@@ -65,12 +65,12 @@ mutation ModifyContentBlock($courseUniqueName: String!, $infoPageId: String!, $c
     position
   }
 }
-`
+`;
 const removeContentBlockFromInfoPage = `
 mutation RemoveContentBlockFromInfoPage($courseUniqueName: String!, $infoPageId: String!, $contentBlockId: String!) {
   removeContentBlockFromInfoPage(courseUniqueName: $courseUniqueName, infoPageId: $infoPageId, contentBlockId: $contentBlockId)
 }
-`
+`;
 
 const addStudentToCourse = `mutation AddStudentToCourse($addStudentToCourseUsername: String!, $courseUniqueName: String!) {
   addStudentToCourse(username: $addStudentToCourseUsername, courseUniqueName: $courseUniqueName) {
@@ -85,7 +85,7 @@ const addStudentToCourse = `mutation AddStudentToCourse($addStudentToCourseUsern
     }
     uniqueName
   }
-}`
+}`;
 
 const removeStudentFromCourse = `mutation RemoveStudentFromCourse($username: String!, $courseUniqueName: String!) {
   removeStudentFromCourse(username: $username, courseUniqueName: $courseUniqueName) {
@@ -100,7 +100,7 @@ const removeStudentFromCourse = `mutation RemoveStudentFromCourse($username: Str
     }
     uniqueName
   }
-}`
+}`;
 
 const addTaskToCourse = `mutation Mutation($courseUniqueName: String!, $description: String!, $deadline: String!, $maxGrade: Int) {
   addTaskToCourse(courseUniqueName: $courseUniqueName, description: $description, deadline: $deadline, maxGrade: $maxGrade) {
@@ -120,7 +120,7 @@ const addTaskToCourse = `mutation Mutation($courseUniqueName: String!, $descript
     
   }
 }
-`
+`;
 
 const addSubmissionToCourseTask = `
 mutation Mutation($courseUniqueName: String!, $taskId: String!, $content: String!, $submitted: Boolean!) {
@@ -136,7 +136,7 @@ mutation Mutation($courseUniqueName: String!, $taskId: String!, $content: String
     submittedDate
   }
 }
-`
+`;
 
 const getAllCourses = `
 query AllCourses {
@@ -173,7 +173,7 @@ query AllCourses {
     uniqueName
   }
 }
-`
+`;
 
 const getCourse = `query GetCourse($uniqueName: String!) {
   getCourse(uniqueName: $uniqueName) {
@@ -209,18 +209,18 @@ const getCourse = `query GetCourse($uniqueName: String!) {
     uniqueName
   }
 }
-`
+`;
 const removeTaskFromCourse = `
 mutation RemoveTaskFromCourse($courseUniqueName: String!, $taskId: String!) {
   removeTaskFromCourse(courseUniqueName: $courseUniqueName, taskId: $taskId)
 }
-`
+`;
 
 const removeSubmissionFromCourseTask = `
 mutation RemoveSubmissionFromCourseTask($courseUniqueName: String!, $taskId: String!, $submissionId: String!) {
   removeSubmissionFromCourseTask(courseUniqueName: $courseUniqueName, taskId: $taskId, submissionId: $submissionId)
 }
-`
+`;
 
 
 const modifySubmission = `
@@ -237,7 +237,7 @@ mutation ModifySubmission($courseUniqueName: String!, $taskId: String!, $submiss
     submittedDate
   }
 }
-`
+`;
 
 const gradeSubmission = `
 mutation GradeSubmission($courseUniqueName: String!, $taskId: String!, $submissionId: String!, $points: Int!) {
@@ -258,7 +258,7 @@ mutation GradeSubmission($courseUniqueName: String!, $taskId: String!, $submissi
     submittedDate
   }
 }
-`
+`;
 
 const createChatRoom = `
 mutation CreateChatRoom($courseUniqueName: String!, $name: String!) {
@@ -287,13 +287,13 @@ mutation CreateChatRoom($courseUniqueName: String!, $name: String!) {
     }
   }
 }
-`
+`;
 
 const removeChatRoom = `
 mutation RemoveChatRoom($courseUniqueName: String!, $chatRoomId: String!) {
   removeChatRoom(courseUniqueName: $courseUniqueName, chatRoomId: $chatRoomId)
 }
-`
+`;
 
 const createMessage = `
 mutation RemoveChatRoom($courseUniqueName: String!, $chatRoomId: String!, $content: String!) {
@@ -308,7 +308,7 @@ mutation RemoveChatRoom($courseUniqueName: String!, $chatRoomId: String!, $conte
     sendDate
   }
 }
-`
+`;
 
 const addUserToChatRoom = `
 mutation AddUserToChatRoom($courseUniqueName: String!, $chatRoomId: String!, $username: String!) {
@@ -318,13 +318,13 @@ mutation AddUserToChatRoom($courseUniqueName: String!, $chatRoomId: String!, $us
     username
   }
 }
-`
+`;
 
 const removeUserFromChatRoom = `
 mutation Mutation($courseUniqueName: String!, $chatRoomId: String!, $username: String!) {
   removeUserFromChatRoom(courseUniqueName: $courseUniqueName, chatRoomId: $chatRoomId, username: $username)
 }
-`
+`;
 
 
 const createMultipleChoiceTask = `
@@ -354,37 +354,37 @@ mutation Mutation($courseUniqueName: String!, $description: String!, $deadline: 
     }
   }
 }
-`
+`;
 
 const removeMultipleChoiceTask = `
 mutation RemoveMultipleChoiceTask($courseUniqueName: String!, $multipleChoiceTaskId: String!) {
   removeMultipleChoiceTask(courseUniqueName: $courseUniqueName, multipleChoiceTaskId: $multipleChoiceTaskId)
 }
 
-`
-module.exports = {createCourse, 
-                  removeCourse, 
-                  addStudentToCourse, 
-                  removeStudentFromCourse, 
-                  addTaskToCourse, 
-                  addSubmissionToCourseTask, 
-                  getAllCourses, 
-                  getCourse, 
-                  removeTaskFromCourse, 
-                  removeSubmissionFromCourseTask, 
-                  modifySubmission,
-                  gradeSubmission,
-                  addInfoPageToCourse,
-                  removeInfoPageFromCourse,
-                  addContentBlockToInfoPage,
-                  removeContentBlockFromInfoPage,
-                  modifyContentBlock,
-                  createChatRoom,
-                  removeChatRoom,
-                  createMessage,
-                  addUserToChatRoom,
-                  removeUserFromChatRoom,
-                  createMultipleChoiceTask,
-                  removeMultipleChoiceTask
-                }
+`;
+module.exports = {createCourse,
+  removeCourse,
+  addStudentToCourse,
+  removeStudentFromCourse,
+  addTaskToCourse,
+  addSubmissionToCourseTask,
+  getAllCourses,
+  getCourse,
+  removeTaskFromCourse,
+  removeSubmissionFromCourseTask,
+  modifySubmission,
+  gradeSubmission,
+  addInfoPageToCourse,
+  removeInfoPageFromCourse,
+  addContentBlockToInfoPage,
+  removeContentBlockFromInfoPage,
+  modifyContentBlock,
+  createChatRoom,
+  removeChatRoom,
+  createMessage,
+  addUserToChatRoom,
+  removeUserFromChatRoom,
+  createMultipleChoiceTask,
+  removeMultipleChoiceTask,
+};
 

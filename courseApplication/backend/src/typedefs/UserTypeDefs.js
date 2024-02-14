@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server");
+const {gql} = require('apollo-server');
 const UserTypeDefs = gql`
 type User{
     id: ID!
@@ -58,6 +58,6 @@ type Mutation{
     ):Token
 }
 
-`
+`;
 
-module.exports = {UserTypeDefs}
+module.exports = {UserTypeDefs};

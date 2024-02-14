@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server");
+const {gql} = require('apollo-server');
 const CourseTypeDefs = gql`
 
 type Message{
@@ -237,6 +237,6 @@ type Subscription {
         chatRoomId: String!
     ): Message!
 } 
-`
+`;
 
-module.exports = {CourseTypeDefs}
+module.exports = {CourseTypeDefs};

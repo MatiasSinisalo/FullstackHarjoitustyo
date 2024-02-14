@@ -1,120 +1,111 @@
 
 
-const request = require('supertest')
-const {Course} = require('../../models/course')
-const User = require('../../models/user')
-const {Task} = require('../../models/task')
-const { userCreateQuery, userLogInQuery, createSpesificUserQuery } = require('../userTestQueries')
-const { createCourse, addTaskToCourse, removeCourse, addSubmissionToCourseTask} = require('../courseTestQueries')
-const { query } = require('express')
-const mongoose = require('mongoose')
-const helpers = require('../testHelpers')
-const config = require('../../config')
-
+const {Course} = require('../../models/course');
+const {createCourse, addTaskToCourse, addSubmissionToCourseTask} = require('../courseTestQueries');
+const helpers = require('../testHelpers');
 
 
 describe('addSubmissionToCourseTask tests', () => {
-    test('user can create a submission to a task', async () => {
-        const userQuery = await helpers.logIn("username", "12345")
-        const userid = userQuery._id.toString()
-        const course = {uniqueName: "course-owned-by-username", name: "common name", teacher: "username", tasks: []}
-        const createdCourse = await helpers.makeQuery({query: createCourse, variables: course})
-        const task = {
-            description:  "this is the description of a task that is about testing",
-            deadline: new Date("2030-06-25"),
-            submissions: []
-        }
-       
-        const createdTask = await helpers.makeQuery({query: addTaskToCourse, variables: {courseUniqueName: course.uniqueName, description: task.description, deadline: task.deadline.toString()}});
-        const taskID = createdTask.data.addTaskToCourse.id
+  test('user can create a submission to a task', async () => {
+    const userQuery = await helpers.logIn('username', '12345');
+    const userid = userQuery._id.toString();
+    const course = {uniqueName: 'course-owned-by-username', name: 'common name', teacher: 'username', tasks: []};
+    await helpers.makeQuery({query: createCourse, variables: course});
+    const task = {
+      description: 'this is the description of a task that is about testing',
+      deadline: new Date('2030-06-25'),
+      submissions: [],
+    };
 
-        const submission = {
-            content : "this is the answer to a task",
-            submitted: true,
-            taskId: taskID
-        }
-        
-        const response = await helpers.makeQuery({query: addSubmissionToCourseTask, 
-            variables: {
-            courseUniqueName: course.uniqueName, 
-            taskId: submission.taskId,
-            content: submission.content, 
-            submitted: submission.submitted,
-        }});
-        
-      
-        
-        const createdSubmission = response.data.addSubmissionToCourseTask
-        expect(createdSubmission.content).toEqual(submission.content)
-        expect(createdSubmission.submitted).toEqual(submission.submitted)
-        expect(createdSubmission.fromUser.username).toEqual("username")
-        expect(createdSubmission.fromUser.name).toEqual("name")
-     
-        expect(new Date(Number(createdSubmission.submittedDate)).toISOString().slice(0, 16)).toEqual(new Date(Date.now()).toISOString().slice(0, 16))
-       
-        
-        await checkSubmissionIsInDatase(course, task, submission, userid)
-    })
-    test('user can create a submission to a task only once', async () => {
-        const userQuery = await helpers.logIn("username", "12345")
-        const userid = userQuery._id.toString()
-      
-        const course = {uniqueName: "course-owned-by-username", name: "common name", teacher: "username", tasks: []}
-        const createdCourse = await helpers.makeQuery({query: createCourse, variables: course})
-        const task = {
-            description:  "this is the description of a task that is about testing",
-            deadline: new Date("2030-06-25"),
-            submissions: []
-        }
-       
-        const createdTask = await helpers.makeQuery({query: addTaskToCourse, variables: {courseUniqueName: course.uniqueName, description: task.description, deadline: task.deadline.toString()}});
-        const taskID = createdTask.data.addTaskToCourse.id
+    const createdTask = await helpers.makeQuery({query: addTaskToCourse, variables: {courseUniqueName: course.uniqueName, description: task.description, deadline: task.deadline.toString()}});
+    const taskID = createdTask.data.addTaskToCourse.id;
 
-        const submission = {
-            content : "this is the answer to a task",
-            submitted: true,
-            taskId: taskID
-        }
-        
-        const response = await helpers.makeQuery({query: addSubmissionToCourseTask, 
-            variables: {
-            courseUniqueName: course.uniqueName, 
-            taskId: submission.taskId,
-            content: submission.content, 
-            submitted: submission.submitted,
-        }});
-        const createdSubmission = response.data.addSubmissionToCourseTask
-        expect(createdSubmission.content).toEqual(submission.content)
-        expect(createdSubmission.submitted).toEqual(submission.submitted)
-        expect(createdSubmission.fromUser.username).toEqual("username")
-        expect(createdSubmission.fromUser.name).toEqual("name")
-        
-        const secondSubmission = {
-            content : "this is the second answer to a task by the same user",
-            submitted: true,
-            taskId: taskID
-        }
-        const secondResponse = await helpers.makeQuery({query: addSubmissionToCourseTask, variables: {
-            courseUniqueName: course.uniqueName,
-            taskId: secondSubmission.taskId,
-            content: secondSubmission.content,
-            submitted: secondSubmission.submitted
-        }})
-        expect(secondResponse.errors[0].message).toEqual("Given user is has already answered the question")
-        expect(secondResponse.data.addSubmissionToCourseTask).toBe(null)
+    const submission = {
+      content: 'this is the answer to a task',
+      submitted: true,
+      taskId: taskID,
+    };
 
-        await checkSubmissionIsInDatase(course, task, submission, userid)
-    })
-})
+    const response = await helpers.makeQuery({query: addSubmissionToCourseTask,
+      variables: {
+        courseUniqueName: course.uniqueName,
+        taskId: submission.taskId,
+        content: submission.content,
+        submitted: submission.submitted,
+      }});
+
+
+    const createdSubmission = response.data.addSubmissionToCourseTask;
+    expect(createdSubmission.content).toEqual(submission.content);
+    expect(createdSubmission.submitted).toEqual(submission.submitted);
+    expect(createdSubmission.fromUser.username).toEqual('username');
+    expect(createdSubmission.fromUser.name).toEqual('name');
+
+    expect(new Date(Number(createdSubmission.submittedDate)).toISOString().slice(0, 16)).toEqual(new Date(Date.now()).toISOString().slice(0, 16));
+
+
+    await checkSubmissionIsInDatase(course, task, submission, userid);
+  });
+  test('user can create a submission to a task only once', async () => {
+    const userQuery = await helpers.logIn('username', '12345');
+    const userid = userQuery._id.toString();
+
+    const course = {uniqueName: 'course-owned-by-username', name: 'common name', teacher: 'username', tasks: []};
+    await helpers.makeQuery({query: createCourse, variables: course});
+    const task = {
+      description: 'this is the description of a task that is about testing',
+      deadline: new Date('2030-06-25'),
+      submissions: [],
+    };
+
+    const createdTask = await helpers.makeQuery({query: addTaskToCourse, variables: {courseUniqueName: course.uniqueName, description: task.description, deadline: task.deadline.toString()}});
+    const taskID = createdTask.data.addTaskToCourse.id;
+
+    const submission = {
+      content: 'this is the answer to a task',
+      submitted: true,
+      taskId: taskID,
+    };
+
+    const response = await helpers.makeQuery({query: addSubmissionToCourseTask,
+      variables: {
+        courseUniqueName: course.uniqueName,
+        taskId: submission.taskId,
+        content: submission.content,
+        submitted: submission.submitted,
+      }});
+    const createdSubmission = response.data.addSubmissionToCourseTask;
+    expect(createdSubmission.content).toEqual(submission.content);
+    expect(createdSubmission.submitted).toEqual(submission.submitted);
+    expect(createdSubmission.fromUser.username).toEqual('username');
+    expect(createdSubmission.fromUser.name).toEqual('name');
+
+    const secondSubmission = {
+      content: 'this is the second answer to a task by the same user',
+      submitted: true,
+      taskId: taskID,
+    };
+    const secondResponse = await helpers.makeQuery({query: addSubmissionToCourseTask, variables: {
+      courseUniqueName: course.uniqueName,
+      taskId: secondSubmission.taskId,
+      content: secondSubmission.content,
+      submitted: secondSubmission.submitted,
+    }});
+    expect(secondResponse.errors[0].message).toEqual('Given user is has already answered the question');
+    expect(secondResponse.data.addSubmissionToCourseTask).toBe(null);
+
+    await checkSubmissionIsInDatase(course, task, submission, userid);
+  });
+});
 
 async function checkSubmissionIsInDatase(course, task, submission, userid) {
-    const courseInDB = await Course.findOne({ courseUniqueName: course.uniqueName }).populate('tasks')
-    const taskInDB = courseInDB.tasks.textTasks[0]
-    expect(taskInDB.description).toEqual(task.description)
-    expect(taskInDB.deadline).toEqual(task.deadline)
-    expect(taskInDB.submissions.length).toBe(1)
-    expect(taskInDB.submissions[0].content).toEqual(submission.content)
-    expect(taskInDB.submissions[0].submitted).toEqual(submission.submitted)
-    expect(taskInDB.submissions[0].fromUser.toString()).toEqual(userid)
-    expect(new Date(taskInDB.submissions[0].submittedDate).toISOString().slice(0, 16)).toEqual(new Date(Date.now()).toISOString().slice(0, 16))
+  const courseInDB = await Course.findOne({courseUniqueName: course.uniqueName}).populate('tasks');
+  const taskInDB = courseInDB.tasks.textTasks[0];
+  expect(taskInDB.description).toEqual(task.description);
+  expect(taskInDB.deadline).toEqual(task.deadline);
+  expect(taskInDB.submissions.length).toBe(1);
+  expect(taskInDB.submissions[0].content).toEqual(submission.content);
+  expect(taskInDB.submissions[0].submitted).toEqual(submission.submitted);
+  expect(taskInDB.submissions[0].fromUser.toString()).toEqual(userid);
+  expect(new Date(taskInDB.submissions[0].submittedDate).toISOString().slice(0, 16)).toEqual(new Date(Date.now()).toISOString().slice(0, 16));
 }
