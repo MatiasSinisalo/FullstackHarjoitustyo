@@ -24,7 +24,7 @@ describe('submission removal tests teacher', () => {
         createSubmissionToATask( "this is a task","this is an answer to a task")
 
         cy.intercept('POST', 'http://localhost:4000', (request) => {
-            if(request.body.query.includes('removeSubmissionFromCourseTask'))
+            if(request.body?.query.includes('removeSubmissionFromCourseTask'))
             {
                 request.alias = "removeSolution"
             }

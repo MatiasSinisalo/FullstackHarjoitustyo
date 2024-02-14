@@ -32,7 +32,7 @@ describe('task removal tests', () => {
         const removeButton =  createdTask.get(`button`).contains("remove task")
     
         cy.intercept('POST', 'http://localhost:4000/', (request) => {
-            if(request.body.query.includes('removeTaskFromCourse'))
+            if(request.body?.query.includes('removeTaskFromCourse'))
             {
                 request.alias = "removeTask"
             }
