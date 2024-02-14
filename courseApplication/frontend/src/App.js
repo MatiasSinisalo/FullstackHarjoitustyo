@@ -38,7 +38,7 @@ const App = () =>{
   }, []);
 
   const handleLogIn = async (username, password) => {
-    const userInfo = await loginService.LogInAsUser(username, password, client);
+    const userInfo = await loginService.logInAsUser(username, password, client);
     console.log(userInfo);
     if (!userInfo.error) {
       navigate('/dashboard');
