@@ -148,8 +148,12 @@ function freeContentBlockFromCache(client, contentBlockId) {
   evictFromCache(client, `ContentBlock:${contentBlockId}`);
 }
 
-function freeCourseFromCache(client, course) {
-  evictFromCache(client, `Course:${course.id}`);
+/**
+ * Removes a course from cache
+ * @param {*} courseId id of the course to be removed from cache
+ */
+function freeCourseFromCache(courseId) {
+  evictFromCache(client, `Course:${courseId}`);
 }
 
 function freeSubmissionFromCache(client, submissionId) {

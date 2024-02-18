@@ -42,7 +42,7 @@ export const removeCourse = async (uniqueName, courseId)=>{
   const result = client.mutate({mutation: REMOVE_COURSE, variables: {uniqueName: uniqueName}})
   .then((response) => {
     const removeCourseBool = response.data.removeCourse
-    apolloCache.freeCourseFromCache(client, {id: courseId});
+    apolloCache.freeCourseFromCache(courseId);
     return {data: removeCourseBool, error: null}
   })
   .catch((error) => {return {data: null, error: error}})
