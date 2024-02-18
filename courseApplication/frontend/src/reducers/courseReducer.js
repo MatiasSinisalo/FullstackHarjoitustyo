@@ -14,7 +14,7 @@ const createNewCourse = async (courseUniqueName, courseName, client) => {
 };
 
 const addStudentToCourse = async (courseUniqueName, username, client) => {
-  const courseWithAddedStudent = await courseService.addUserToCourse(courseUniqueName, username, client);
+  const courseWithAddedStudent = await courseService.addUserToCourse(courseUniqueName, username);
 };
 
 const removeStudentFromCourse = async (courseUniqueName, username, client) => {

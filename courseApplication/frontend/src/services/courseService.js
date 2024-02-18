@@ -55,19 +55,21 @@ export const getCourse = async (uniqueName, apolloClient) => {
   return course.data.getCourse;
 };
 
-
-export const addUserToCourse = async (uniqueName, username, apolloClient) => {
-  try {
-    const courseWithAddedStudent = await apolloClient.mutate({mutation: ADD_STUDENT_TO_COURSE, variables: {courseUniqueName: uniqueName, username: username}});
-    const course = courseWithAddedStudent?.data?.addStudentToCourse;
-    if (course) {
-      apolloCache.addUserToUserAttendsListCache(username, course, apolloClient);
-      return courseWithAddedStudent.data.addStudentToCourse;
-    }
-  } catch (err) {
-    console.log(err);
-    return {error: err};
-  }
+/**
+ * Request backend to add a user as a student to a course
+ * @param {*} uniqueName unique name of the course where user is to be added
+ * @param {*} username username of the user to be added to the course
+ * @returns 
+ * Success: data: Student data, error: null. 
+ * Failure: data: null, error: Servers error message.
+ */
+export const addUserToCourse = async (uniqueName, username) => {
+  const result = serviceHelpers.mutateBackend(ADD_STUDENT_TO_COURSE, {courseUniqueName: uniqueName, username: username}, (response) => {
+    const course = response.data.addStudentToCourse;
+    apolloCache.addUserToUserAttendsListCache(username, course, client);
+    return course
+  })
+  return result
 };
 
 
