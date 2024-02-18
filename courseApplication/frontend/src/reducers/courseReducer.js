@@ -20,7 +20,7 @@ const addStudentToCourse = async (courseUniqueName, username, client) => {
 const removeStudentFromCourse = async (courseUniqueName, username, client) => {
   const prompt = window.prompt(`type ${username} to confirm removal`);
   if (prompt === username) {
-    const updatedCourse = await courseService.removeUserFromCourse(courseUniqueName, username, client);
+    const updatedCourse = await courseService.removeUserFromCourse(courseUniqueName, username);
     if (!updatedCourse.error) {
       store.dispatch(Notify('successfully removed student', 'successNotification', 3));
       return true;

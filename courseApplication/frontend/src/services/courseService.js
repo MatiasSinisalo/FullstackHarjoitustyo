@@ -72,20 +72,22 @@ export const addUserToCourse = async (uniqueName, username) => {
   return result
 };
 
-
-export const removeUserFromCourse = async (uniqueName, username, apolloClient) => {
-  try {
-    const updatedCourse = await apolloClient.mutate({mutation: REMOVE_STUDENT_FROM_COURSE, variables: {courseUniqueName: uniqueName, username: username}});
-    const course = updatedCourse?.data?.removeStudentFromCourse;
-    if (course) {
-      apolloCache.removeCourseFromUserAttendsListCache(uniqueName, username, apolloClient);
-      return updatedCourse.data.removeStudentFromCourse;
-    }
-  } catch (err) {
-    console.log(err);
-    return {error: err};
-  }
+/**
+ * Request the backend to remove a user from a course
+ * @param {*} uniqueName unique name of the course from where the user should be removed
+ * @param {*} username username of the user that should be removed
+ * @returns 
+ * Success: data: bool, error: null. 
+ * Failure: data: null, error: Servers error message.
+ */
+export const removeUserFromCourse = async (uniqueName, username) => {
+  const result = serviceHelpers.mutateBackend(REMOVE_STUDENT_FROM_COURSE, {courseUniqueName: uniqueName, username: username}, (response) => {
+    apolloCache.removeCourseFromUserAttendsListCache(uniqueName, username, client);
+    return updatedCourse.data.removeStudentFromCourse;
+  })
+  return result
 };
+
 // adds task to a course an returns a list of all the courses in that course
 export const addTaskToCourse = async (uniqueName, description, deadline, maxGrade, apolloClient) => {
   try {
