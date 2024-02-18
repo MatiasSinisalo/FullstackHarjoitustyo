@@ -113,8 +113,12 @@ function removeAttendsCourseRef(apolloClient, uniqueName) {
   });
 }
 
-function addAttendsCourseRefToUser(apolloClient, course) {
-  apolloClient.cache.updateQuery({query: ME}, (data) => {
+/**
+ * Appends a course object to users attendsCourses lists
+ * @param {*} course course object to concat into users attendsCourses list 
+ */
+function addAttendsCourseRefToUser(course) {
+  client.cache.updateQuery({query: ME}, (data) => {
     return {me: {...data.me, attendsCourses: data.me.attendsCourses.concat(course)}};
   });
 }
@@ -129,10 +133,15 @@ function addTeachesCourseRefToUser(course) {
   });
 }
 
-const addUserToUserAttendsListCache = (username, course, apolloClient) => {
-  const currentUser = apolloClient.readQuery({query: ME})?.me;
+/**
+ * Appends a course object to users locally cached attendsCourses list if the logged in user has been added to a course
+ * @param {*} username username of the user that was added to a course
+ * @param {*} course course where the user has been added
+ */
+const updateAttendsListCache = (username, course) => {
+  const currentUser = client.readQuery({query: ME})?.me;
   if (currentUser?.username === username) {
-    addAttendsCourseRefToUser(apolloClient, course);
+    addAttendsCourseRefToUser(course);
   }
 };
 
@@ -187,7 +196,7 @@ export default {
   addTaskToCourseCache,
   addTeachesCourseRefToUser,
   addUserRefToChatRoomCache,
-  addUserToUserAttendsListCache,
+  updateAttendsListCache,
   freeChatRoomFromCache,
   freeContentBlockFromCache,
   freeCourseFromCache,

@@ -66,7 +66,7 @@ export const getCourse = async (uniqueName, apolloClient) => {
 export const addUserToCourse = async (uniqueName, username) => {
   const result = serviceHelpers.mutateBackend(ADD_STUDENT_TO_COURSE, {courseUniqueName: uniqueName, username: username}, (response) => {
     const course = response.data.addStudentToCourse;
-    apolloCache.addUserToUserAttendsListCache(username, course, client);
+    apolloCache.updateAttendsListCache(username, course);
     return course
   })
   return result
