@@ -2,10 +2,10 @@ import courseService from '../services/courseService';
 import {Notify} from './notificationReducer';
 import store from '../store';
 const createNewCourse = async (courseUniqueName, courseName, client) => {
-  const createdCourseQuery = await courseService.createCourse(courseUniqueName, courseName, client);
+  const createdCourseQuery = await courseService.createCourse(courseUniqueName, courseName);
   if (!createdCourseQuery.error) {
     console.log(createdCourseQuery);
-    store.dispatch(Notify(`successfully created course ${createdCourseQuery.uniqueName}`, 'successNotification', 5));
+    store.dispatch(Notify(`successfully created course ${createdCourseQuery.data.uniqueName}`, 'successNotification', 5));
     return true;
   } else {
     store.dispatch(Notify(`${createdCourseQuery.error.message}`, 'errorNotification', 5));

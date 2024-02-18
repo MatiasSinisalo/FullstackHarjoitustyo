@@ -5,23 +5,30 @@ import {ADD_CONTENT_BLOCK_TO_INFO_PAGE, ADD_INFO_PAGE_TO_COURSE, ADD_STUDENT_TO_
   REMOVE_STUDENT_FROM_COURSE, REMOVE_SUBMISSION_FROM_COURSE_TASK, 
   REMOVE_TASK_FROM_COURSE, REMOVE_USER_FROM_CHAT_ROOM} from '../queries/courseQueries';
 import apolloCache from '../caching/apolloCache';
+import client from '../client';
+
+
 export const getAllCourses = async (apolloClient) => {
   const allCourses = await apolloClient.query({query: GET_ALL_COURSES});
   return allCourses.data.allCourses;
 };
 
-
-export const createCourse = async (uniqueName, name, apolloClient) => {
-  try {
-    const createdCourse = await apolloClient.mutate({mutation: CREATE_COURSE, variables: {uniqueName, name}});
-    const course = createdCourse.data?.createCourse;
-    if (course) {
-      apolloCache.addTeachesCourseRefToUser(apolloClient, course);
-      return course;
-    }
-  } catch (err) {
-    return {error: err};
-  }
+/**
+ * Requests backend to create a new course
+ * @param {*} uniqueName Unique name of the created course.
+ * @param {*} name Display name of the course
+ * @returns 
+ * Successfull creation: data: created course data, error: null.
+ * Failure: data: null, error: servers error message.
+ */
+export const createCourse = async (uniqueName, name) => {
+  const result = client.mutate({mutation: CREATE_COURSE, variables: {uniqueName, name}})
+  .then((result) => {
+    const course = result.data.createCourse
+    apolloCache.addTeachesCourseRefToUser(apolloClient, course);
+    return {data: course, error: null}})
+  .catch((error) => {return {data: null, error: error}})
+  return result
 };
 
 export const removeCourse = async (course, apolloClient)=>{
