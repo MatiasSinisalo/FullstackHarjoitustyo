@@ -6,6 +6,7 @@ import {ADD_CONTENT_BLOCK_TO_INFO_PAGE, ADD_INFO_PAGE_TO_COURSE, ADD_STUDENT_TO_
   REMOVE_TASK_FROM_COURSE, REMOVE_USER_FROM_CHAT_ROOM} from '../queries/courseQueries';
 import apolloCache from '../caching/apolloCache';
 import client from '../client';
+import serviceHelpers from './serviceHelpers';
 
 
 export const getAllCourses = async (apolloClient) => {
@@ -22,12 +23,11 @@ export const getAllCourses = async (apolloClient) => {
  * Failure: data: null, error: servers error message.
  */
 export const createCourse = async (uniqueName, name) => {
-  const result = client.mutate({mutation: CREATE_COURSE, variables: {uniqueName, name}})
-  .then((result) => {
+  const result = serviceHelpers.mutateBackend(CREATE_COURSE, {uniqueName: uniqueName, name: name}, (result) => {
     const course = result.data.createCourse
     apolloCache.addTeachesCourseRefToUser(course);
-    return {data: course, error: null}})
-  .catch((error) => {return {data: null, error: error}})
+    return course
+  })
   return result
 };
 
@@ -48,6 +48,8 @@ export const removeCourse = async (uniqueName, courseId)=>{
   .catch((error) => {return {data: null, error: error}})
   return result
 };
+
+
 
 
 export const getCourse = async (uniqueName, apolloClient) => {
@@ -295,6 +297,8 @@ const removeUserFromChatRoom = async (course, chatRoomId, userToRemove, client) 
     return {error: err};
   }
 };
+
+
 
 export default {getAllCourses,
   createCourse,
