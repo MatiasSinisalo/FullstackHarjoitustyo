@@ -113,7 +113,7 @@ const removeCourse = async (course, client, navigate) => {
   const prompt = window.prompt(`type ${course.uniqueName} to confirm removal`);
   if (prompt === course.uniqueName) {
     console.log('removing course');
-    const removed = await courseService.removeCourse(course, client);
+    const removed = await courseService.removeCourse(course.uniqueName, course.id);
     if (!removed.error) {
       store.dispatch(Notify(`successfully removed course`, 'successNotification', 5));
       navigate('/dashboard');

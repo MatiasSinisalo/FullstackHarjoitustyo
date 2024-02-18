@@ -31,17 +31,22 @@ export const createCourse = async (uniqueName, name) => {
   return result
 };
 
-export const removeCourse = async (course, apolloClient)=>{
-  try {
-    const removed = await apolloClient.mutate({mutation: REMOVE_COURSE, variables: {uniqueName: course.uniqueName}});
-
-    if (removed.data.removeCourse) {
-      apolloCache.freeCourseFromCache(apolloClient, course);
-    }
-    return removed.data.removeCourse;
-  } catch (err) {
-    return {error: err};
-  }
+/**
+ * Request backend to remove a course
+ * @param {*} uniqueName unique name of the course that should be removed 
+ * @param {*} courseId id of the course that should be removed
+ * @returns 
+ * Success: data: bool, error: null. Failure: data: null, error: Servers error message
+ */
+export const removeCourse = async (uniqueName, courseId)=>{
+  const result = client.mutate({mutation: REMOVE_COURSE, variables: {uniqueName: uniqueName}})
+  .then((response) => {
+    const removeCourseBool = response.data.removeCourse
+    apolloCache.freeCourseFromCache(client, {id: courseId});
+    return {data: removeCourseBool, error: null}
+  })
+  .catch((error) => {return {data: null, error: error}})
+  return result
 };
 
 
