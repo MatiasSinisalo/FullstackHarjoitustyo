@@ -25,7 +25,7 @@ export const createCourse = async (uniqueName, name) => {
   const result = client.mutate({mutation: CREATE_COURSE, variables: {uniqueName, name}})
   .then((result) => {
     const course = result.data.createCourse
-    apolloCache.addTeachesCourseRefToUser(apolloClient, course);
+    apolloCache.addTeachesCourseRefToUser(course);
     return {data: course, error: null}})
   .catch((error) => {return {data: null, error: error}})
   return result

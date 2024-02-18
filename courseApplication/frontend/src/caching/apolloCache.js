@@ -1,5 +1,6 @@
 import {ME} from '../queries/userQueries';
 import {GET_COURSE} from '../queries/courseQueries';
+import client from '../client';
 
 function removeUserRefFromChatRoomCache(client, chatRoomId, userToRemove) {
   client.cache.modify(
@@ -118,9 +119,12 @@ function addAttendsCourseRefToUser(apolloClient, course) {
   });
 }
 
-
-function addTeachesCourseRefToUser(apolloClient, course) {
-  apolloClient.cache.updateQuery({query: ME}, (data) => {
+/**
+ * Appends a course object to users locally cached teachedCourses list
+ * @param {*} course course object to append to teachers teaches courses list
+ */
+function addTeachesCourseRefToUser(course) {
+  client.cache.updateQuery({query: ME}, (data) => {
     return {me: {...data.me, teachesCourses: data.me.teachesCourses.concat(course)}};
   });
 }
