@@ -107,8 +107,12 @@ function addTaskToCourseCache(apolloClient, uniqueName, result) {
   });
 }
 
-function removeAttendsCourseRef(apolloClient, uniqueName) {
-  apolloClient.cache.updateQuery({query: ME}, (data) => {
+/**
+ * Remove course from locally cached attendsCourses list
+ * @param {*} uniqueName uniqueName of the course that should be removed from the list 
+ */
+function removeAttendsCourseRef(uniqueName) {
+  client.cache.updateQuery({query: ME}, (data) => {
     return {me: {...data.me, attendsCourses: data.me.attendsCourses.filter((course) => course.uniqueName != uniqueName)}};
   });
 }
@@ -145,10 +149,16 @@ const updateAttendsListCache = (username, course) => {
   }
 };
 
-const removeCourseFromUserAttendsListCache = (uniqueName, username, apolloClient) => {
-  const currentUser = apolloClient.readQuery({query: ME})?.me;
+
+/**
+ * Removes course with unique name from cached attendsCourses list if username matches the logged in user
+ * @param {*} uniqueName unique name of the course 
+ * @param {*} username username of user that was removed from the course
+ */
+const removeCourseFromUserAttendsListCache = (uniqueName, username) => {
+  const currentUser = client.readQuery({query: ME})?.me;
   if (currentUser?.username === username) {
-    removeAttendsCourseRef(apolloClient, uniqueName);
+    removeAttendsCourseRef(uniqueName);
   }
 };
 

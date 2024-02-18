@@ -82,7 +82,7 @@ export const addUserToCourse = async (uniqueName, username) => {
  */
 export const removeUserFromCourse = async (uniqueName, username) => {
   const result = serviceHelpers.mutateBackend(REMOVE_STUDENT_FROM_COURSE, {courseUniqueName: uniqueName, username: username}, (response) => {
-    apolloCache.removeCourseFromUserAttendsListCache(uniqueName, username, client);
+    apolloCache.removeCourseFromUserAttendsListCache(uniqueName, username);
     return updatedCourse.data.removeStudentFromCourse;
   })
   return result
