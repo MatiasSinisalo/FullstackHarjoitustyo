@@ -39,13 +39,11 @@ export const createCourse = async (uniqueName, name) => {
  * Success: data: bool, error: null. Failure: data: null, error: Servers error message
  */
 export const removeCourse = async (uniqueName, courseId)=>{
-  const result = client.mutate({mutation: REMOVE_COURSE, variables: {uniqueName: uniqueName}})
-  .then((response) => {
+  const result = serviceHelpers.mutateBackend(REMOVE_COURSE, {uniqueName: uniqueName}, (response) => {
     const removeCourseBool = response.data.removeCourse
     apolloCache.freeCourseFromCache(courseId);
-    return {data: removeCourseBool, error: null}
+    return removeCourseBool
   })
-  .catch((error) => {return {data: null, error: error}})
   return result
 };
 
